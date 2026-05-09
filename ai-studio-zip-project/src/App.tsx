@@ -566,7 +566,7 @@ const SPRING_CONFIG = { mass: 1, tension: 120, friction: 14 };
 const NOTHING_EASE = [0.16, 1, 0.3, 1];
 const COOKIE_CONSENT_KEY = "cookie_consent_v1";
 const DEFAULT_DEV_API_URL = "http://localhost:3001";
-const DEFAULT_PROD_API_URL = "/.netlify/functions";
+const DEFAULT_PROD_API_URL = "/api";
 const LEGAL_OPERATOR = {
   name: "Елыгин Юрий Сергеевич",
   inn: "526219298988",

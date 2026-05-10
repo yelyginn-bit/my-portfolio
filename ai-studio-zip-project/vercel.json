@@ -6,10 +6,5 @@
       "source": "/privacy-policy",
       "destination": "/privacy-policy.html"
     }
-  ],
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  ]
 }

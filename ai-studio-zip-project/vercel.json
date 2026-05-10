@@ -1,8 +1,19 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/privacy-policy",
       "destination": "/privacy-policy.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "env": {
+    "TELEGRAM_BOT_TOKEN": "@TELEGRAM_BOT_TOKEN",
+    "TELEGRAM_CHAT_ID": "@TELEGRAM_CHAT_ID"
+  }
 }

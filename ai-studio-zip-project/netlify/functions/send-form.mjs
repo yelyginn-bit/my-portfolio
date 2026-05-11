@@ -1,107 +1,127 @@
-const json = (body, init = {}) =>
-  new Response(JSON.stringify(body), {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store',
-    },
-    ...init,
-  });
+/**
+ * Vercel Serverless Function for sending form submissions to Telegram
+ * Only sends to Telegram - no email duplicates
+ */
 
-const escapeHtml = (value = '') =>
-  value
+const escapeHtml = (text) => {
+  if (!text) return '';
+  return String(text)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
 
-const trimTo = (value = '', limit = 1200) => value.trim().slice(0, limit);
+const trimTo = (value = '', limit = 1500) => {
+  return String(value).trim().slice(0, limit);
+};
 
-export default async (request) => {
-  if (request.method !== 'POST') {
-    return json({ error: 'Method Not Allowed' }, { status: 405 });
+export default async function handler(req, res) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({ ok: true });
   }
 
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!botToken || !chatId) {
-    return json(
-      { error: 'На сервере не настроены TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID.' },
-      { status: 500 }
-    );
+  // Only accept POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const payload = await request.json();
-    const name = trimTo(String(payload?.name || ''), 160);
-    const contact = trimTo(String(payload?.contact || ''), 200);
-    // Support both 'message' and 'brief' field names
-    const brief = trimTo(String(payload?.brief || payload?.message || ''), 1500);
-    const source = trimTo(String(payload?.source || ''), 500);
-    const honeypot = trimTo(String(payload?.website || ''), 200);
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    if (honeypot) {
-      return json({ ok: true });
+    if (!botToken || !chatId) {
+      console.error('❌ Missing Telegram credentials');
+      return res.status(500).json({
+        error: 'Server misconfigured: Missing Telegram credentials',
+        ok: false
+      });
     }
 
-    if (!name || !contact || !brief) {
-      return json(
-        { error: 'Нужны имя, контакт и краткое описание проекта.' },
-        { status: 400 }
-      );
+    const { name, contact, message } = req.body;
+
+    // Validate inputs
+    if (!name || !contact || !message) {
+      return res.status(400).json({
+        error: 'Missing required fields: name, contact, message',
+        ok: false
+      });
     }
 
+    const trimmedName = trimTo(name, 160);
+    const trimmedContact = trimTo(contact, 200);
+    const trimmedMessage = trimTo(message, 1500);
+
+    // Format timestamp
     const now = new Intl.DateTimeFormat('ru-RU', {
       timeZone: 'Europe/Moscow',
       dateStyle: 'short',
       timeStyle: 'medium',
     }).format(new Date());
 
-    const text = [
-      '<b>Новая заявка с сайта</b>',
+    // Build Telegram message with HTML formatting
+    const telegramText = [
+      '<b>🎬 Новая заявка с сайта yelyginn.ru</b>',
       '',
-      `<b>Имя:</b> ${escapeHtml(name)}`,
-      `<b>Контакт:</b> ${escapeHtml(contact)}`,
-      `<b>Задача:</b> ${escapeHtml(brief)}`,
-      `<b>Время (МСК):</b> ${escapeHtml(now)}`,
-      source ? `<b>Источник:</b> ${escapeHtml(source)}` : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
+      `<b>👤 Имя:</b> <i>${escapeHtml(trimmedName)}</i>`,
+      `<b>📞 Контакт:</b> <code>${escapeHtml(trimmedContact)}</code>`,
+      `<b>📝 Задача:</b>`,
+      `<i>${escapeHtml(trimmedMessage)}</i>`,
+      '',
+      `<b>🕐 Время:</b> ${escapeHtml(now)} (МСК)`,
+    ].join('\n');
 
-    const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true,
-      }),
+    console.log('📤 Sending to Telegram...', {
+      botToken: botToken.slice(0, 10) + '***',
+      chatId,
+      messageLength: telegramText.length
     });
 
-    const telegramResult = await telegramResponse.json().catch(() => ({}));
+    // Send to Telegram
+    const telegramResponse = await fetch(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: telegramText,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        }),
+      }
+    );
 
-    if (!telegramResponse.ok || telegramResult?.ok !== true) {
-      const reason =
-        typeof telegramResult?.description === 'string'
-          ? telegramResult.description
-          : 'Telegram API error';
+    const telegramData = await telegramResponse.json();
 
-      return json({ error: `Telegram не принял сообщение: ${reason}` }, { status: 502 });
+    if (!telegramResponse.ok || !telegramData.ok) {
+      const errorMsg = telegramData.description || 'Unknown Telegram error';
+      console.error('❌ Telegram error:', errorMsg);
+      return res.status(502).json({
+        error: `Telegram API error: ${errorMsg}`,
+        ok: false
+      });
     }
 
-    return json({ ok: true });
+    console.log('✅ Message sent to Telegram successfully', {
+      messageId: telegramData.result?.message_id
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Form submitted successfully',
+      telegramMessageId: telegramData.result?.message_id
+    });
+
   } catch (error) {
-    return json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Не удалось обработать запрос.',
-      },
-      { status: 500 }
-    );
+    console.error('❌ Error processing form:', error);
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : 'Internal server error',
+      ok: false
+    });
   }
-};
+}

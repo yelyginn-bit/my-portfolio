@@ -1857,13 +1857,6 @@ export default function App() {
     const envApiUrl = (import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/u, "");
     const baseApiUrl = envApiUrl || (import.meta.env.DEV ? DEFAULT_DEV_API_URL : DEFAULT_PROD_API_URL);
     const endpoint = `${baseApiUrl}/send-form`;
-    const isProd = import.meta.env.PROD;
-    if (isProd && !endpoint.startsWith("https://")) {
-      setSubmitStatus("error");
-      setSubmitError("Ошибка отправки");
-      console.error("[form] blocked: production endpoint must be HTTPS", { endpoint });
-      return;
-    }
 
     setIsSubmitting(true);
     setSubmitStatus("idle");

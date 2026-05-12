@@ -1,4 +1,7 @@
-/**
+curl -s "https://api.telegram.org/bot8609966931:AAFRbn4eEwGGfnnUuvqA4B4_IGp1d1bWAmA
+/sendMessage" \
+  -d "chat_id=612114861
+&text=test"/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */

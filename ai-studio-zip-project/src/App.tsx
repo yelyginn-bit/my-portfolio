@@ -1811,10 +1811,51 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moscowTime, setMoscowTime] = useState(getMoscowTime);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [heroViewport, setHeroViewport] = useState({ width: 1440, height: 900 });
   const isDarkMode = false; // Switch to light mode for better readability as requested
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const readViewport = () => ({
+      width: Math.max(320, Math.round(window.innerWidth)),
+      height: Math.max(520, Math.round(window.innerHeight)),
+    });
+
+    const initial = readViewport();
+    setHeroViewport(initial);
+
+    let last = initial;
+    let rafId = 0;
+
+    const updateStableViewport = () => {
+      const next = readViewport();
+      const widthChanged = Math.abs(next.width - last.width) > 4;
+      const bigHeightShift = Math.abs(next.height - last.height) > 120;
+
+      // Ignore Safari toolbar micro-resizes during scroll.
+      if (!widthChanged && !bigHeightShift) return;
+
+      last = next;
+      setHeroViewport(next);
+    };
+
+    const onResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(updateStableViewport);
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("orientationchange", onResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -1837,6 +1878,32 @@ export default function App() {
   
   const bgY = useTransform(scrollYProgress, [0, 0.5], [0, 200]);
   const bg2Y = useTransform(scrollYProgress, [0, 0.5], [0, -150]);
+
+  const heroVideoFrameStyle = React.useMemo(() => {
+    const sourceWidth = 16;
+    const sourceHeight = 9;
+    const sourceRatio = sourceWidth / sourceHeight;
+    const viewportRatio = heroViewport.width / heroViewport.height;
+    const bufferScale = isMobileViewport ? 1.28 : 1.16;
+
+    let width = heroViewport.width * bufferScale;
+    let height = width / sourceRatio;
+    if (height < heroViewport.height * bufferScale) {
+      height = heroViewport.height * bufferScale;
+      width = height * sourceRatio;
+    }
+
+    // Taller devices need stronger horizontal overscan.
+    if (viewportRatio < 0.58) {
+      width *= 1.12;
+      height *= 1.04;
+    }
+
+    return {
+      width: `${Math.round(width)}px`,
+      height: `${Math.round(height)}px`,
+    };
+  }, [heroViewport.height, heroViewport.width, isMobileViewport]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -2288,10 +2355,13 @@ export default function App() {
             <section className="hero-section relative overflow-hidden">
               <div className="absolute inset-0 dot-grid -z-10" />
 
-              <div className="relative h-[100dvh] min-h-[620px] md:min-h-[680px] overflow-hidden bg-nothing-black">
+              <div
+                className="relative overflow-hidden bg-nothing-black"
+                style={{ height: `${heroViewport.height}px`, minHeight: isMobileViewport ? "620px" : "680px" }}
+              >
                 <motion.div
-                  style={{ y: isMobileViewport ? 0 : bgY }}
-                  className="absolute -inset-[10%] sm:-inset-[8%] md:inset-0 z-0 overflow-hidden"
+                  style={{ y: 0 }}
+                  className="absolute inset-0 z-0 overflow-hidden"
                 >
                   <iframe
                     src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=auto"
@@ -2302,7 +2372,8 @@ export default function App() {
                     loading="eager"
                     aria-hidden="true"
                     tabIndex={-1}
-                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
+                    style={heroVideoFrameStyle}
                   />
                 </motion.div>
 
@@ -2332,7 +2403,7 @@ export default function App() {
                   initial="hidden"
                   animate="show"
                   variants={STAGGER_CONTAINER}
-                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1vh,14px)] px-[clamp(14px,4.2vw,26px)] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(12px,env(safe-area-inset-bottom))] sm:pb-[max(18px,env(safe-area-inset-bottom))] md:pb-[clamp(44px,5vh,72px)] pt-[max(18px,env(safe-area-inset-top))] sm:pt-[clamp(24px,3.4vh,44px)]"
+                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1vw,14px)] px-[clamp(14px,4.2vw,26px)] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(12px,env(safe-area-inset-bottom))] sm:pb-[max(18px,env(safe-area-inset-bottom))] md:pb-[clamp(44px,4.2vw,72px)] pt-[max(18px,env(safe-area-inset-top))] sm:pt-[clamp(24px,3.2vw,44px)]"
                 >
                   <div className="hero-copy-wrap max-w-[1240px] relative z-10">
                     <motion.div variants={STAGGER_ITEM} className="flex items-start gap-2.5 sm:gap-4 mb-2.5 sm:mb-6">
@@ -2376,7 +2447,7 @@ export default function App() {
                   </div>
                   <motion.div
                     variants={STAGGER_ITEM}
-                    className="mt-[clamp(8px,1.35vh,14px)] sm:mt-[clamp(12px,1.8vh,20px)] pt-[clamp(8px,1.15vh,12px)] sm:pt-[clamp(12px,1.6vh,18px)] border-t border-white/20 max-w-[860px] lg:max-w-[980px] relative z-10"
+                    className="mt-[clamp(8px,1vw,14px)] sm:mt-[clamp(12px,1.4vw,20px)] pt-[clamp(8px,0.95vw,12px)] sm:pt-[clamp(12px,1.25vw,18px)] border-t border-white/20 max-w-[860px] lg:max-w-[980px] relative z-10"
                   >
                     <p className="max-w-[38rem] text-[clamp(0.95rem,4.2vw,1.12rem)] sm:text-[clamp(1rem,2.3vw,1.25rem)] xl:text-[1.3rem] font-semibold leading-[1.3] sm:leading-[1.38] text-white/92">
                       Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.

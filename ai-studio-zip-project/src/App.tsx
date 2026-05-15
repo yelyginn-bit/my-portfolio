@@ -1899,6 +1899,8 @@ export default function App() {
       height *= 1.04;
     }
 
+    if (!isMobileViewport) return undefined;
+
     return {
       width: `${Math.round(width)}px`,
       height: `${Math.round(height)}px`,
@@ -1907,7 +1909,7 @@ export default function App() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const media = window.matchMedia("(max-width: 1024px)");
+    const media = window.matchMedia("(max-width: 767px)");
     const updateViewportMode = () => setIsMobileViewport(media.matches);
     updateViewportMode();
     media.addEventListener("change", updateViewportMode);
@@ -2356,8 +2358,8 @@ export default function App() {
               <div className="absolute inset-0 dot-grid -z-10" />
 
               <div
-                className="relative overflow-hidden bg-nothing-black"
-                style={{ height: `${heroViewport.height}px`, minHeight: isMobileViewport ? "620px" : "680px" }}
+                className="relative h-[100svh] min-h-[620px] md:min-h-[680px] overflow-hidden bg-nothing-black"
+                style={isMobileViewport ? { height: `${heroViewport.height}px` } : undefined}
               >
                 <motion.div
                   style={{ y: 0 }}
@@ -2372,7 +2374,7 @@ export default function App() {
                     loading="eager"
                     aria-hidden="true"
                     tabIndex={-1}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
+                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
                     style={heroVideoFrameStyle}
                   />
                 </motion.div>
@@ -2413,7 +2415,7 @@ export default function App() {
                       </h2>
                     </motion.div>
 
-                    <h1 className="hero-headline text-[clamp(1.85rem,12.2vw,3.8rem)] sm:text-[clamp(2.35rem,9.1vw,5rem)] lg:text-[clamp(4.2rem,6.5vw,8rem)] xl:text-[clamp(4.8rem,6vw,8.8rem)] font-display font-bold leading-[0.88] tracking-[-0.052em] uppercase text-white max-w-[11ch] sm:max-w-[12ch]">
+                    <h1 className="hero-headline text-[clamp(1.85rem,12.2vw,3.8rem)] sm:text-[clamp(2.35rem,9.1vw,5rem)] lg:text-[clamp(3.95rem,5.7vw,7.1rem)] xl:text-[clamp(4.45rem,5.3vw,8rem)] font-display font-bold leading-[0.88] tracking-[-0.052em] uppercase text-white max-w-[11ch] sm:max-w-[12ch]">
                       <div className="text-mask">
                         <motion.span variants={TEXT_REVEAL} className="block">Снимаю рекламные</motion.span>
                       </div>

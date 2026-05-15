@@ -20,6 +20,7 @@ export default defineConfig(({mode}) => {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           photo: path.resolve(__dirname, 'photo.html'),
+          portfolio: path.resolve(__dirname, 'portfolio.html'),
           project: path.resolve(__dirname, 'project.html'),
         },
       },

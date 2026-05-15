@@ -20,3 +20,13 @@
   from = "/project"
   to = "/project.html"
   status = 200
+
+[[redirects]]
+  from = "/portfolio"
+  to = "/portfolio.html"
+  status = 200
+
+[[redirects]]
+  from = "/portfolio/*"
+  to = "/project.html?slug=:splat"
+  status = 200

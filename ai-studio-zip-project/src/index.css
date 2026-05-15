@@ -22,8 +22,18 @@
     overflow-x: hidden;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-nothing-white text-nothing-black font-sans antialiased selection:bg-nothing-red selection:text-white transition-colors duration-700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 

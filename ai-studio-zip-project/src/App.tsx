@@ -1717,7 +1717,7 @@ const PortfolioGrid = () => {
 
   return (
     <section id="projects" className="portfolio-section pt-[clamp(2.6rem,9vw,5rem)] pb-[clamp(3.2rem,10vw,6.5rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-10 mb-[clamp(1.8rem,7vw,5.5rem)]">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 sm:gap-10 mb-[clamp(1.8rem,7vw,5.5rem)]">
         <div className="max-w-2xl">
           <motion.span 
             initial={{ opacity: 0 }}
@@ -1738,7 +1738,7 @@ const PortfolioGrid = () => {
           </div>
         </div>
         
-        <div className="flex flex-nowrap md:flex-wrap gap-2 sm:gap-3 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex flex-nowrap md:flex-wrap md:content-start gap-2 sm:gap-3 overflow-x-auto md:overflow-x-visible pb-3 md:pb-0 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
           {PORTFOLIO_DATA.map((cat) => (
             <button
               key={cat.category}
@@ -1985,6 +1985,21 @@ export default function App() {
     }
   }, [formName, formContact, formMessage, isSubmitting, personalDataAccepted, privacyAccepted]);
 
+  const handleNavAnchorClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    if (typeof window === "undefined") return;
+    const onHomePage = pathname === "/" || pathname === "/index.html";
+    if (!onHomePage) return;
+
+    event.preventDefault();
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const navHeight = window.innerWidth >= 640 ? 86 : 74;
+    const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    if (isMenuOpen) setIsMenuOpen(false);
+  }, [isMenuOpen, pathname]);
+
   const renderNav = (className: string) => (
     <nav className={className}>
       <div className="flex items-center gap-3 sm:gap-6">
@@ -2036,13 +2051,13 @@ export default function App() {
           variants={STAGGER_CONTAINER}
           className="hidden md:flex gap-8 font-mono text-[9px] uppercase tracking-[0.2em] text-nothing-black font-medium"
         >
-          <motion.a variants={STAGGER_ITEM} href="#projects" className="group flex items-center gap-2 hover:text-nothing-red transition-all">
+          <motion.a variants={STAGGER_ITEM} href="#projects" onClick={(event) => handleNavAnchorClick(event, "projects")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
             <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">01</span> Кейсы
           </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="#services" className="group flex items-center gap-2 hover:text-nothing-red transition-all">
+          <motion.a variants={STAGGER_ITEM} href="#services" onClick={(event) => handleNavAnchorClick(event, "services")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
             <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">02</span> Услуги
           </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="#contact" className="group flex items-center gap-2 hover:text-nothing-red transition-all">
+          <motion.a variants={STAGGER_ITEM} href="#contact" onClick={(event) => handleNavAnchorClick(event, "contact")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
             <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">04</span> Контакты
           </motion.a>
         </motion.div>
@@ -2215,16 +2230,19 @@ export default function App() {
               animate="show"
               className="flex flex-col items-center gap-8"
             >
-              {[
-                { label: "Кейсы", href: "#projects" },
-                { label: "Услуги", href: "#services" },
-                { label: "Контакты", href: "#contact" }
+                {[
+                { label: "Кейсы", href: "#projects", targetId: "projects" },
+                { label: "Услуги", href: "#services", targetId: "services" },
+                { label: "Контакты", href: "#contact", targetId: "contact" }
               ].map((link, i) => (
                 <motion.a
                   key={link.label}
                   variants={STAGGER_ITEM}
                   href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(event) => {
+                    handleNavAnchorClick(event, link.targetId);
+                    setIsMenuOpen(false);
+                  }}
                   className="text-4xl sm:text-6xl font-bold uppercase tracking-tighter hover:text-nothing-red transition-colors text-nothing-black"
                 >
                   <span className="font-mono text-xs opacity-80 mr-4">0{i + 1}</span>
@@ -2260,7 +2278,7 @@ export default function App() {
             <section className="hero-section relative overflow-hidden">
               <div className="absolute inset-0 dot-grid -z-10" />
 
-              <div className="relative h-[100svh] md:h-[100svh] overflow-hidden bg-nothing-black">
+              <div className="relative h-[100dvh] min-h-[620px] md:min-h-[680px] overflow-hidden bg-nothing-black">
                 <motion.div
                   style={{ y: bgY }}
                   className="absolute inset-0 z-0 overflow-hidden"
@@ -2274,7 +2292,7 @@ export default function App() {
                     loading="eager"
                     aria-hidden="true"
                     tabIndex={-1}
-                    className="absolute top-[53%] sm:top-[52%] md:top-[51%] left-1/2 h-[114%] w-[188vw] sm:w-[166vw] md:w-[130vw] lg:w-[118vw] xl:w-[112vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
+                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[116%] w-[186vw] sm:w-[164vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
                   />
                 </motion.div>
 
@@ -2304,9 +2322,9 @@ export default function App() {
                   initial="hidden"
                   animate="show"
                   variants={STAGGER_CONTAINER}
-                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1vh,14px)] px-[clamp(14px,4.2vw,26px)] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(12px,env(safe-area-inset-bottom))] sm:pb-[max(18px,env(safe-area-inset-bottom))] md:pb-[clamp(42px,4.8vh,64px)] pt-[max(18px,env(safe-area-inset-top))] sm:pt-[clamp(24px,3.4vh,44px)]"
+                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1vh,14px)] px-[clamp(14px,4.2vw,26px)] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(12px,env(safe-area-inset-bottom))] sm:pb-[max(18px,env(safe-area-inset-bottom))] md:pb-[clamp(44px,5vh,72px)] pt-[max(18px,env(safe-area-inset-top))] sm:pt-[clamp(24px,3.4vh,44px)]"
                 >
-                  <div className="max-w-[1100px] relative z-10">
+                  <div className="hero-copy-wrap max-w-[1240px] relative z-10">
                     <motion.div variants={STAGGER_ITEM} className="flex items-start gap-2.5 sm:gap-4 mb-2.5 sm:mb-6">
                       <div className="w-6 sm:w-12 h-[1px] mt-1 bg-nothing-red" />
                       <h2 className="font-mono text-[9px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.38em] text-white/88 leading-relaxed">
@@ -2314,7 +2332,7 @@ export default function App() {
                       </h2>
                     </motion.div>
 
-                    <h1 className="hero-headline text-[clamp(2.05rem,13.4vw,4.2rem)] sm:text-[clamp(2.5rem,10.3vw,5.3rem)] lg:text-[clamp(3.5rem,7.2vw,8.4rem)] font-display font-bold leading-[0.88] tracking-[-0.048em] uppercase text-white max-w-[10.6ch] sm:max-w-[12ch]">
+                    <h1 className="hero-headline text-[clamp(1.85rem,12.2vw,3.8rem)] sm:text-[clamp(2.35rem,9.1vw,5rem)] lg:text-[clamp(4.2rem,6.5vw,8rem)] xl:text-[clamp(4.8rem,6vw,8.8rem)] font-display font-bold leading-[0.88] tracking-[-0.052em] uppercase text-white max-w-[11ch] sm:max-w-[12ch]">
                       <div className="text-mask">
                         <motion.span variants={TEXT_REVEAL} className="block">Снимаю рекламные</motion.span>
                       </div>
@@ -2328,7 +2346,7 @@ export default function App() {
 
                     <motion.div
                       variants={STAGGER_ITEM}
-                    className="hero-cta-wrap mt-2.5 sm:mt-4 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-start gap-2 sm:gap-3 w-full sm:w-auto max-w-[min(94vw,560px)]"
+                    className="hero-cta-wrap mt-2.5 sm:mt-4 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-start gap-2 sm:gap-3 w-full sm:w-auto max-w-[min(94vw,620px)]"
                     >
                       <a
                         href="#contact"
@@ -2348,15 +2366,15 @@ export default function App() {
                   </div>
                   <motion.div
                     variants={STAGGER_ITEM}
-                    className="mt-[clamp(8px,1.45vh,16px)] sm:mt-[clamp(12px,1.8vh,20px)] pt-[clamp(8px,1.25vh,14px)] sm:pt-[clamp(12px,1.6vh,18px)] border-t border-white/20 max-w-[980px] relative z-10"
+                    className="mt-[clamp(8px,1.35vh,14px)] sm:mt-[clamp(12px,1.8vh,20px)] pt-[clamp(8px,1.15vh,12px)] sm:pt-[clamp(12px,1.6vh,18px)] border-t border-white/20 max-w-[860px] lg:max-w-[980px] relative z-10"
                   >
-                    <p className="max-w-[38rem] text-[clamp(1rem,4.5vw,1.2rem)] sm:text-lg md:text-[1.18rem] xl:text-[1.34rem] font-semibold leading-[1.26] sm:leading-[1.4] text-white/92">
+                    <p className="max-w-[38rem] text-[clamp(0.95rem,4.2vw,1.12rem)] sm:text-[clamp(1rem,2.3vw,1.25rem)] xl:text-[1.3rem] font-semibold leading-[1.3] sm:leading-[1.38] text-white/92">
                       Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
                       Делаю визуальный контент, который хочется досмотреть до конца. При необходимости дополняю
                       проект фотосъёмкой.
                     </p>
 
-                    <div className="hero-features mt-2.5 sm:mt-4.5 hidden min-[431px]:flex flex-col items-start gap-y-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 xl:gap-x-8 sm:gap-y-3.5">
+                    <div className="hero-features mt-2.5 sm:mt-4.5 hidden md:flex flex-col items-start gap-y-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 xl:gap-x-8 sm:gap-y-3.5">
                       <div className="flex items-center gap-3">
                         <Camera className="w-4 h-4 text-nothing-red" />
                         <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Рекламные ролики и Reels</span>
@@ -2372,7 +2390,7 @@ export default function App() {
                     </div>
                   </motion.div>
 
-                  <div className="absolute z-0 inset-x-0 bottom-0 h-12 sm:h-20 md:h-24 lg:h-28 bg-gradient-to-b from-transparent via-nothing-black/10 to-nothing-white pointer-events-none transform-gpu" />
+                  <div className="absolute z-0 inset-x-0 bottom-0 h-10 sm:h-16 md:h-20 lg:h-28 bg-gradient-to-b from-transparent via-nothing-black/10 to-nothing-white pointer-events-none transform-gpu" />
                 </motion.div>
               </div>
 

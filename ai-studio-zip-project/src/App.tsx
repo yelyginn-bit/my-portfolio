@@ -27,8 +27,7 @@ import {
   Zap,
   Sun,
   Moon,
-  Image as ImageIcon,
-  Construction
+  Image as ImageIcon
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -135,7 +134,7 @@ const getMoscowTime = () => MOSCOW_TIME_FORMATTER.format(new Date());
 
 const PORTFOLIO_DATA = [
   {
-    category: "Избранное",
+    category: "Избранные кейсы",
     projects: [
       { title: "Метро Горьковская", embedId: "deV36JQbK25yhFKf2zHs3G", size: "2x2", ratio: "56.25%" },
       { title: "Университет Сбера", embedId: "wrf4URJ9Q7P7g5B1SZ5A7W", size: "2x1", ratio: "56.25%" },
@@ -146,20 +145,20 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Концерты",
+    category: "Event и концерты",
     projects: [
       { title: "Метро Горьковская", embedId: "deV36JQbK25yhFKf2zHs3G", size: "2x2", ratio: "56.25%" }
     ]
   },
   {
-    category: "Интервью",
+    category: "Интервью и подкасты",
     projects: [
       { title: "Сбер. Архитектура", embedId: "wrf4URJ9Q7P7g5B1SZ5A7W", size: "2x1", ratio: "56.25%" },
       { title: "Женщины СИБУРа", embedId: "51pL5GtYFvJB1f9Nf52HHN", size: "2x1", ratio: "56.25%" }
     ]
   },
   {
-    category: "Тизеры",
+    category: "Рекламные тизеры",
     projects: [
       { title: "Тизер клипа «хорошо»", embedId: "6j8wPfXv6Keka6JTCoiwUC", size: "1x2", ratio: "177.78%" },
       { title: "Женщины СИБУРа", embedId: "fvxndmGGHqWtuCcK5TnB4j", size: "2x1", ratio: "56.25%" },
@@ -167,14 +166,14 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Обучающие",
+    category: "Обучающие видео",
     projects: [
       { title: "Caprigo", embedId: "66ZCTTLVXKieRDjSn2vAYp", size: "2x1", ratio: "56.25%" },
       { title: "BARYER", embedId: "oVqtn1J5sip4R8aNBMY1mi", size: "1x1", ratio: "56.25%" }
     ]
   },
   {
-    category: "Архитектура",
+    category: "Архитектура и интерьеры",
     projects: [
       { title: "Архитектура 1", embedId: "ibJsptvZeqt8fe3BBdXvQm", size: "2x1", ratio: "56.25%" },
       { title: "Архитектура 2", embedId: "7UV55F6RMQseCjQ1fyRTtd", size: "1x1", ratio: "56.25%" },
@@ -183,7 +182,7 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Reels",
+    category: "Reels для бизнеса",
     projects: [
       { title: "Подкаст 1", embedId: "2GgtwiWuq6XaS3yeXbWhRq", size: "1x2", ratio: "177.78%" },
       { title: "Подкаст 2", embedId: "pskL2K5zWzBGMuUH8ZaG6P", size: "1x2", ratio: "177.78%" },
@@ -202,7 +201,7 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Товары",
+    category: "Съёмка товаров",
     projects: [
       { title: "HOFF 1", embedId: "vFFSNV1fcvUEAPjk5gGMV7", size: "2x1", ratio: "56.25%" },
       { title: "HOFF 2", embedId: "arCgJWNsD245SvtkZ4FVAL", size: "1x1", ratio: "56.25%" },
@@ -213,7 +212,7 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Отчеты",
+    category: "Event-отчёты",
     projects: [
       { title: "Тренировка Основа", embedId: "9sZonV2HK653PfPqxqdGbH", size: "2x1", ratio: "56.25%" },
       { title: "Йога", embedId: "o1R5MSC6VZDRYGdvkejSkN", size: "1x1", ratio: "56.25%" },
@@ -223,7 +222,7 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Презентации",
+    category: "Презентационные видео",
     projects: [
       { title: "YANGO", embedId: "mLGNoFi4cj3vAdBrqrsdtP", size: "2x1", ratio: "56.25%" },
       { title: "THERAFLEX", embedId: "7MmmoQkeKtLJFA3aqZGToF", size: "1x1", ratio: "56.25%" },
@@ -231,7 +230,7 @@ const PORTFOLIO_DATA = [
     ]
   },
   {
-    category: "Производство",
+    category: "Промышленная видеосъёмка",
     projects: [
       { title: "KORONA", embedId: "hyQindossxyWZfRxLuDacu", size: "2x2", ratio: "56.25%" }
     ]
@@ -464,18 +463,18 @@ const PROJECT_TEXT_OVERRIDES: Record<string, Partial<ProjectMeta>> = {
 
 const SERVICES = [
   {
-    title: "Съемка видео",
-    description: "Снимаю рекламу, интервью, события и ролики для соцсетей. Помогаю спокойно пройти путь от идеи до готовой съемки.",
+    title: "Видеосъёмка для бизнеса",
+    description: "Снимаю рекламные ролики, интервью, Reels и event-видео для брендов и бизнеса в Нижнем Новгороде. Помогаю выстроить идею, подготовить съёмку и довести проект до готового результата.",
     icon: <Camera className="w-6 h-6" />
   },
   {
-    title: "Монтаж и сборка",
-    description: "Собираю материал в понятное и живое видео. Делаю так, чтобы ролик держал внимание и хорошо смотрелся на любом экране.",
+    title: "Монтаж и постпродакшн",
+    description: "Монтирую рекламные ролики, Reels, интервью и коммерческие видео с акцентом на ритм, структуру и современную визуальную подачу.",
     icon: <Video className="w-6 h-6" />
   },
   {
-    title: "Фотосъемка",
-    description: "Если проекту нужны не только видео, но и фотографии, тоже помогу. Снимаю портреты, репортаж и кадры для бренда.",
+    title: "Фотосъёмка для брендов",
+    description: "Дополняю видеопроекты фотосъёмкой для брендов, соцсетей и бизнеса. Снимаю портреты, репортаж и визуальный контент в едином стиле с видео.",
     icon: <ImageIcon className="w-6 h-6" />
   }
 ];
@@ -486,52 +485,52 @@ const CATEGORY_DESCRIPTION_TEMPLATES: Record<string, string[]> = {
     "Ключевая видео-история с плотным монтажным ритмом",
     "Сильный кейс с акцентом на визуал и финальный результат"
   ],
-  "Концерты": [
+  "Event и концерты": [
     "Концертный ролик с живой энергией сцены и зала",
     "Видео события с фокусом на эмоции и динамику",
     "Музыкальный кейс с плотной ритмической сборкой"
   ],
-  "Интервью": [
+  "Интервью и подкасты": [
     "Интервью-формат с акцентом на героя и смысл",
     "Разговорный ролик с чистой драматургией кадра",
     "Видео с фокусом на подачу, интонацию и темп"
   ],
-  "Тизеры": [
+  "Рекламные тизеры": [
     "Короткий тизер для быстрого захвата внимания",
     "Тизерный формат с ярким стартом и точным ритмом",
     "Лаконичный промо-ролик для анонса проекта"
   ],
-  "Обучающие": [
+  "Обучающие видео": [
     "Обучающий ролик с понятной логикой подачи",
     "Видео-инструкция с простым и ясным объяснением",
     "Образовательный формат с аккуратным монтажом"
   ],
-  "Архитектура": [
+  "Архитектура и интерьеры": [
     "Архитектурный ролик с акцентом на форму и масштаб",
     "Видео про пространство, фактуру и детали объекта",
     "Спокойная визуальная подача с чистой геометрией кадра"
   ],
-  "Reels": [
+  "Reels для бизнеса": [
     "Вертикальный reels-формат с быстрым входом в тему",
     "Короткое видео под соцсети с упором на удержание",
     "Мобильный ролик с энергичным и точным монтажом"
   ],
-  "Товары": [
+  "Съёмка товаров": [
     "Продуктовый ролик с акцентом на детали и подачу",
     "Коммерческое видео о товаре с чистым визуалом",
     "Видео-кейс с фокусом на образ и преимущества продукта"
   ],
-  "Отчеты": [
+  "Event-отчёты": [
     "Отчетный ролик с понятной хронологией события",
     "Видео-отчет с акцентом на ключевые моменты проекта",
     "Краткая сборка результатов в уверенной подаче"
   ],
-  "Презентации": [
+  "Презентационные видео": [
     "Презентационный ролик для бизнеса и встреч с клиентами",
     "Имиджевое видео для представления продукта и команды",
     "Подача проекта в формате ясной и аккуратной презентации"
   ],
-  "Производство": [
+  "Промышленная видеосъёмка": [
     "Видео-кейс о производстве с акцентом на масштаб",
     "Ролик о процессе с фокусом на надежность и детали",
     "Промышленный формат с уверенной документальной подачей"
@@ -1560,19 +1559,14 @@ const ProjectCard = ({ project, index, onClick }: { project: any, index: number,
   );
 };
 
+const getProjectUrl = (embedId: string) => `/project.html?id=${encodeURIComponent(embedId)}`;
+
 const PortfolioGrid = () => {
   const [activeCategory, setActiveCategory] = useState(PORTFOLIO_DATA[0].category);
   const [activeReelsGroup, setActiveReelsGroup] = useState<string | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<{
-    id: string;
-    ratio: string;
-    title: string;
-    description: string;
-    task: string;
-  } | null>(null);
 
   const currentProjects = PORTFOLIO_DATA.find(c => c.category === activeCategory)?.projects || [];
-  const isReelsCategory = activeCategory === "Reels";
+  const isReelsCategory = activeCategory === "Reels для бизнеса";
 
   useEffect(() => {
     setActiveReelsGroup(null);
@@ -1671,7 +1665,7 @@ const PortfolioGrid = () => {
             whileInView={{ opacity: 0.8 }}
             className="ndot text-xs mb-4 block uppercase tracking-widest"
           >
-            01 / Мои видео
+            01 / Кейсы и видеопроекты
           </motion.span>
           <div className="text-mask">
             <motion.h2 
@@ -1680,7 +1674,7 @@ const PortfolioGrid = () => {
               transition={{ duration: 1, ease: NOTHING_EASE }}
               className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tighter uppercase leading-none text-nothing-black"
             >
-              Работы
+              Кейсы
             </motion.h2>
           </div>
         </div>
@@ -1690,8 +1684,8 @@ const PortfolioGrid = () => {
             <button
               key={cat.category}
               onClick={() => {
-                if (cat.category === "Reels") {
-                  setActiveCategory("Reels");
+                if (cat.category === "Reels для бизнеса") {
+                  setActiveCategory("Reels для бизнеса");
                   setActiveReelsGroup(null);
                   return;
                 }
@@ -1718,7 +1712,7 @@ const PortfolioGrid = () => {
             onClick={() => setActiveReelsGroup(null)}
             className="px-4 py-2 rounded-full border border-nothing-black/20 hover:border-nothing-red font-mono text-[10px] sm:text-xs uppercase tracking-widest transition-all"
           >
-            ← Все серии Reels
+            ← Все серии Reels для бизнеса
           </button>
           <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest opacity-70">
             {activeReelsGroup}
@@ -1742,28 +1736,12 @@ const PortfolioGrid = () => {
                   return;
                 }
 
-                setSelectedVideo({
-                  id: project.embedId,
-                  ratio: project.ratio || "56.25%",
-                  title: project.title,
-                  description: project.description,
-                  task: project.task
-                });
+                window.location.href = getProjectUrl(project.embedId);
               }}
             />
           ))}
         </AnimatePresence>
       </div>
-
-      <VideoModal 
-        isOpen={!!selectedVideo} 
-        onClose={() => setSelectedVideo(null)} 
-        embedId={selectedVideo?.id || ""} 
-        ratio={selectedVideo?.ratio || "56.25%"}
-        title={selectedVideo?.title || ""}
-        description={selectedVideo?.description || ""}
-        task={selectedVideo?.task || ""}
-      />
     </section>
   );
 };
@@ -1772,7 +1750,6 @@ const PortfolioGrid = () => {
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [portfolioType, setPortfolioType] = useState<'video' | 'photo'>('video');
   const [moscowTime, setMoscowTime] = useState(getMoscowTime);
   const isDarkMode = false; // Switch to light mode for better readability as requested
 
@@ -1812,9 +1789,11 @@ export default function App() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const isContactValid = formContact.includes("@");
   const showContactError = (formContact.trim().length > 0 || submitAttempted) && !isContactValid;
-  const isPrivacyPolicyPage = typeof window !== "undefined" && (
-    window.location.pathname === "/privacy-policy" || window.location.pathname === "/privacy-policy.html"
-  );
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+  const isPrivacyPolicyPage = pathname === "/privacy-policy" || pathname === "/privacy-policy.html";
+  const isProjectPage = pathname === "/project" || pathname === "/project.html";
+  const projectSearchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const projectId = projectSearchParams?.get("id") || "";
 
   const openPrivacy = useCallback(() => setPrivacyOpen(true), []);
   const closePrivacy = useCallback(() => setPrivacyOpen(false), []);
@@ -1834,6 +1813,32 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [privacyOpen]);
+
+  const projectCatalog = PORTFOLIO_DATA.flatMap((category) =>
+    category.projects.map((project, index) => ({ category: category.category, project, index }))
+  );
+  const matchedProject = projectCatalog.find((item) => item.project.embedId === projectId);
+  const matchedProjectMeta = matchedProject
+    ? getProjectMeta(matchedProject.category, matchedProject.project, matchedProject.index)
+    : null;
+  const projectTitle = matchedProjectMeta?.title || "Проект";
+  const projectDescription = matchedProjectMeta?.description || "Описание проекта";
+  const projectTask = matchedProjectMeta?.task || "Задача проекта";
+  const projectRatio = matchedProject?.project.ratio || "56.25%";
+  const numericRatio = Number.parseFloat(projectRatio);
+  const isVerticalProject = Number.isFinite(numericRatio) ? numericRatio > 100 : false;
+
+  useEffect(() => {
+    if (!isProjectPage || typeof document === "undefined") return;
+    document.title = `${projectTitle} | ELYGIN PROJECT`;
+    const descriptionMeta = document.querySelector('meta[name="description"]');
+    if (descriptionMeta) {
+      descriptionMeta.setAttribute(
+        "content",
+        `${projectDescription}. ${projectTask}. Видео для брендов и бизнеса в Нижнем Новгороде.`
+      );
+    }
+  }, [isProjectPage, projectDescription, projectTask, projectTitle]);
 
   const handleFormSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -1856,8 +1861,9 @@ export default function App() {
 
     const envApiUrl = (import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/u, "");
     const baseApiUrl = envApiUrl || (import.meta.env.DEV ? DEFAULT_DEV_API_URL : DEFAULT_PROD_API_URL);
-    const endpoint = `${baseApiUrl}/send-form`;
 
+
+    const endpoint = `${baseApiUrl}/send-form`;
     setIsSubmitting(true);
     setSubmitStatus("idle");
     setSubmitError("");
@@ -1925,30 +1931,28 @@ export default function App() {
         </motion.div>
 
         <div className="flex items-center p-0.5 sm:p-1 bg-nothing-black/5 rounded-full border border-nothing-black/10">
-          <button
-            onClick={() => setPortfolioType('video')}
+          <a
+            href="/"
             className={cn(
               "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 sm:gap-2",
-              portfolioType === 'video' 
+              true
                 ? "bg-nothing-black text-nothing-white shadow-sm" 
                 : "text-nothing-black/70 hover:text-nothing-black"
             )}
           >
             <Video className="w-2.5 h-2.5 sm:w-3 h-3" />
             <span className="hidden xxs:inline">Видео</span>
-          </button>
-          <button
-            onClick={() => setPortfolioType('photo')}
+          </a>
+          <a
+            href="/photo.html"
             className={cn(
               "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 sm:gap-2",
-              portfolioType === 'photo' 
-                ? "bg-nothing-black text-nothing-white shadow-sm" 
-                : "text-nothing-black/70 hover:text-nothing-black"
+              "text-nothing-black/70 hover:text-nothing-black"
             )}
           >
             <ImageIcon className="w-2.5 h-2.5 sm:w-3 h-3" />
             <span className="hidden xxs:inline">Фото</span>
-          </button>
+          </a>
         </div>
       </div>
       
@@ -1960,7 +1964,7 @@ export default function App() {
           className="hidden md:flex gap-8 font-mono text-[9px] uppercase tracking-[0.2em] text-nothing-black font-medium"
         >
           <motion.a variants={STAGGER_ITEM} href="#projects" className="group flex items-center gap-2 hover:text-nothing-red transition-all">
-            <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">01</span> Проекты
+            <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">01</span> Кейсы
           </motion.a>
           <motion.a variants={STAGGER_ITEM} href="#services" className="group flex items-center gap-2 hover:text-nothing-red transition-all">
             <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">02</span> Услуги
@@ -1982,7 +1986,7 @@ export default function App() {
 
   if (isPrivacyPolicyPage) {
     return (
-      <div className="min-h-screen bg-nothing-white px-4 sm:px-6 md:px-10 xl:px-12 py-8 sm:py-10 md:py-12">
+      <div ref={containerRef} className="min-h-screen bg-nothing-white px-4 sm:px-6 md:px-10 xl:px-12 py-8 sm:py-10 md:py-12">
         <main className="max-w-[1100px] mx-auto">
           <a href="/" className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/70 hover:text-nothing-red transition-colors">
             <ArrowLeft className="w-4 h-4" />
@@ -1996,7 +2000,87 @@ export default function App() {
       </div>
     );
   }
-  
+
+  if (isProjectPage) {
+    if (!projectId || !matchedProject) {
+      return (
+        <div className="min-h-screen bg-nothing-white px-4 sm:px-6 md:px-10 xl:px-12 py-8 sm:py-10 md:py-12">
+          <main className="max-w-[900px] mx-auto">
+            <a href="/#projects" className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/70 hover:text-nothing-red transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              К портфолио
+            </a>
+            <div className="mt-6 rounded-[2rem] border border-nothing-black/10 bg-white/90 p-6 sm:p-8 md:p-10">
+              <h1 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight mb-4">Проект не найден</h1>
+              <p className="text-base sm:text-lg text-nothing-black/85 leading-relaxed">
+                Проверьте ссылку или откройте проект заново из раздела кейсов.
+              </p>
+            </div>
+          </main>
+          <CookieBanner />
+        </div>
+      );
+    }
+
+    return (
+      <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
+        <NoiseOverlay />
+        <DotGrid />
+        <main className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 md:px-8 pb-20 pt-6 sm:pt-8">
+          <a
+            href="/#projects"
+            className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/75 hover:text-nothing-red transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            К портфолио
+          </a>
+
+          <section className="mt-5 sm:mt-8">
+            <div
+              className={cn(
+                "w-full mx-auto overflow-hidden bg-nothing-black hardware-border",
+                isVerticalProject
+                  ? "max-w-[420px] rounded-[1.35rem] sm:rounded-[1.75rem]"
+                  : "rounded-[1.35rem] sm:rounded-[2rem]"
+              )}
+            >
+              <div
+                className={cn("relative w-full", isVerticalProject ? "pt-[177.78%]" : "pt-[56.25%]")}
+              >
+                <iframe
+                  src={`https://kinescope.io/embed/${projectId}`}
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
+                  frameBorder="0"
+                  allowFullScreen
+                  title={projectTitle}
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="mt-8 sm:mt-12 space-y-4 sm:space-y-5">
+            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 block mb-2">Проект</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-nothing-black leading-tight">
+                {projectTitle}
+              </h1>
+            </article>
+            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
+              <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 mb-2">Описание</h2>
+              <p className="text-lg sm:text-xl font-semibold leading-relaxed text-nothing-black">{projectDescription}</p>
+            </article>
+            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
+              <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 mb-2">Задача</h2>
+              <p className="text-base sm:text-lg leading-relaxed text-nothing-black/90">{projectTask}</p>
+            </article>
+          </section>
+        </main>
+        <CookieBanner />
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
       <NoiseOverlay />
@@ -2036,7 +2120,7 @@ export default function App() {
               className="flex flex-col items-center gap-8"
             >
               {[
-                { label: "Проекты", href: "#projects" },
+                { label: "Кейсы", href: "#projects" },
                 { label: "Услуги", href: "#services" },
                 { label: "Контакты", href: "#contact" }
               ].map((link, i) => (
@@ -2069,240 +2153,137 @@ export default function App() {
 
       {/* Main Content */}
       <AnimatePresence mode="wait">
-        {portfolioType === 'video' ? (
-          <motion.div
-            key="video-portfolio"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: NOTHING_EASE }}
-          >
+        <motion.div
+          key="video-portfolio"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.6, ease: NOTHING_EASE }}
+        >
             {/* Hero Section */}
-            <section className="hero-section relative min-h-screen px-4 sm:px-6 md:px-10 xl:px-14 overflow-hidden">
-        {/* Tech Decor */}
-        <div className="absolute top-0 left-0 w-full h-full dot-grid -z-10" />
-        <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="hero-shell max-w-[1720px] mx-auto w-full relative z-10 px-0 grid gap-8 md:gap-10">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: NOTHING_EASE }}
-            className="hero-rail hidden lg:grid lg:grid-cols-[minmax(130px,160px)_minmax(0,1fr)_minmax(130px,160px)] items-center gap-6"
-          >
-            <div className="hero-rail-note flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.3em] opacity-90">
-              <span>Видео / Фото</span>
-              <span>Нижний Новгород</span>
-            </div>
-            {renderNav("site-nav site-nav-inline relative left-auto top-auto translate-x-0 z-20 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center glass rounded-full w-full max-w-none border-white/20")}
-            <div className="hero-rail-note flex flex-col items-end gap-2 font-mono text-[10px] uppercase tracking-[0.3em] opacity-90 text-right">
-              <span>На связи</span>
-              <span>Свободные даты</span>
-            </div>
-          </motion.div>
+            <section className="hero-section relative overflow-hidden">
+              <div className="absolute inset-0 dot-grid -z-10" />
 
-          <div className="hero-grid grid items-start gap-8 md:gap-10 xl:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <motion.div 
-            initial="hidden"
-            animate="show"
-            variants={STAGGER_CONTAINER}
-            className="hero-media order-1 pt-0"
-          >
-            <motion.div 
-              variants={STAGGER_ITEM}
-              className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6"
-            >
-              <div className="w-8 sm:w-12 h-[1px] bg-nothing-red" />
-              <p className="max-w-[18rem] sm:max-w-none font-mono text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.42em] opacity-90 text-nothing-black leading-relaxed">
-                Видео для брендов, событий и соцсетей
-              </p>
-            </motion.div>
-            
-            <h1 className="hero-title text-[12vw] xs:text-[11vw] sm:text-[9vw] md:text-[7vw] lg:text-[5.8vw] xl:text-[5.1vw] 2xl:text-[4.8vw] font-display font-bold leading-[0.9] tracking-[-0.06em] uppercase mb-8 sm:mb-10 text-nothing-black max-w-full">
-              <div className="text-mask">
-                <motion.span 
-                  variants={TEXT_REVEAL}
-                  className="block"
+              <div className="relative h-[100svh] md:h-[100svh] overflow-hidden bg-nothing-black">
+                <motion.div
+                  style={{ y: bgY }}
+                  className="absolute inset-0 z-0 overflow-hidden"
                 >
-                  Снимаю
-                </motion.span>
-              </div>
-              <div className="text-mask">
-                <motion.span 
-                  variants={TEXT_REVEAL}
-                  className="block"
-                >
-                  и монтирую
-                </motion.span>
-              </div>
-              <div className="text-mask text-nothing-red">
-                <motion.span 
-                  variants={TEXT_REVEAL}
-                  className="block"
-                >
-                  видео
-                </motion.span>
-              </div>
-            </h1>
-
-            <motion.p 
-              variants={STAGGER_ITEM}
-              className="hero-lead max-w-2xl text-base sm:text-xl md:text-[1.5rem] xl:text-[1.7rem] font-semibold leading-relaxed opacity-90 mb-8 sm:mb-10 text-nothing-black"
-            >
-              Для Вашего бизнеса, бренда. Помогаю экспертам делать видео, которые хочется досмотреть.
-              Снимаю рекламу, reels, интервью и события. Если проекту нужны фотографии, тоже могу помочь.
-            </motion.p>
-
-            <motion.div
-              variants={STAGGER_ITEM}
-              className="hero-actions flex flex-col sm:flex-row sm:flex-wrap items-start gap-4 mb-8"
-            >
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-3 rounded-full bg-nothing-black px-6 py-4 text-nothing-white transition-all duration-500 hover:bg-nothing-red"
-              >
-                <span className="font-mono text-[10px] uppercase tracking-[0.35em]">Обсудить съёмку</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-              <a
-                href="#projects"
-                className="inline-flex items-center gap-3 rounded-full border border-nothing-black/15 px-6 py-4 text-nothing-black transition-all duration-500 hover:border-nothing-red hover:text-nothing-red"
-              >
-                <span className="font-mono text-[10px] uppercase tracking-[0.35em]">Посмотреть работы</span>
-                <Play className="w-4 h-4 fill-current" />
-              </a>
-            </motion.div>
-
-            <motion.div 
-              variants={STAGGER_ITEM}
-              className="hero-features flex flex-col items-start gap-y-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 xl:gap-x-10 sm:gap-y-5"
-            >
-              <div className="flex items-center gap-3">
-                <Camera className="w-4 h-4 text-nothing-red" />
-                <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest opacity-90">Реклама и reels</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Video className="w-4 h-4 text-nothing-red" />
-                <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest opacity-90">События и интервью</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <ImageIcon className="w-4 h-4 text-nothing-red" />
-                <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest opacity-90">Фото для бренда</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.8, ease: NOTHING_EASE }}
-            className="hero-copy w-full relative order-2"
-          >
-            <div className="hero-showreel-card hardware-border rounded-[2rem] md:rounded-[2.25rem] bg-white/70 backdrop-blur-xl p-3 md:p-4 shadow-[0_20px_80px_-30px_rgba(10,10,10,0.15)]">
-              <div className="hero-showreel-grid grid gap-4 md:gap-5">
-                <div className="hero-showreel-head flex items-center justify-between gap-3 px-1">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.28em] opacity-80">16:9</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-nothing-red animate-pulse" />
-                  </div>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.28em] opacity-70">Видео-превью</span>
-                </div>
-
-                <div className="relative pt-[56.25%] w-full rounded-[1.5rem] md:rounded-[1.75rem] overflow-hidden bg-nothing-black shadow-2xl">
-                  <div className="absolute inset-0 z-10 pointer-events-none noise-overlay" />
-                  <div className="absolute inset-0 z-10 pointer-events-none scanline opacity-20" />
-                  
-                  <iframe 
-                    src="https://kinescope.io/embed/536k65CQjewFX9nVqG7Yse" 
-                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;" 
-                    frameBorder="0" 
-                    allowFullScreen 
-                    style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}
+                  <iframe
+                    src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=auto"
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
+                    frameBorder="0"
+                    allowFullScreen
+                    title="Hero background video"
+                    loading="eager"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                    className="absolute top-1/2 md:top-[51%] left-1/2 h-[112%] w-[220vw] sm:w-[170vw] md:w-[130vw] lg:w-[118vw] xl:w-[112vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
                   />
-                </div>
+                </motion.div>
 
-                <div className="hero-showreel-meta grid gap-3 md:gap-4 xl:gap-0 xl:grid-cols-[0.95fr_1.1fr_0.8fr_1.35fr_64px] xl:items-center xl:border-t xl:border-nothing-black/8 xl:pt-4">
-                  <div className="xl:pr-4 xl:border-r xl:border-nothing-black/10">
-                    <span className="font-mono text-[10px] uppercase tracking-widest opacity-90 mb-1 block">Формат</span>
-                    <span className="font-mono text-xs font-bold">16:9</span>
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-nothing-black/72 via-nothing-black/35 to-nothing-black/15" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-r from-nothing-black/60 via-transparent to-nothing-black/20" />
+                <div className="absolute inset-0 z-10 noise-overlay opacity-25 pointer-events-none" />
+
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.25, ease: NOTHING_EASE }}
+                  className="hero-rail hidden lg:grid lg:grid-cols-[minmax(130px,160px)_minmax(0,1fr)_minmax(130px,160px)] items-center gap-6 px-[clamp(32px,5vw,96px)] pt-8 relative z-20"
+                >
+                  <div className="hero-rail-note flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">
+                    <span>Видеопродакшн / Фото</span>
+                    <span>Нижний Новгород</span>
                   </div>
-                  <div className="xl:px-4 xl:border-r xl:border-nothing-black/10">
-                    <span className="font-mono text-[10px] uppercase tracking-widest opacity-90 mb-1 block">Статус</span>
-                    <span className="flex items-center gap-2 font-mono text-xs font-bold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-nothing-red animate-pulse" />
-                      Готов к просмотру
-                    </span>
+                  {renderNav("site-nav site-nav-inline relative left-auto top-auto translate-x-0 z-20 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center glass rounded-full w-full max-w-none border-white/20 text-white")}
+                  <div className="hero-rail-note flex flex-col items-end gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85 text-right">
+                    <span>На связи</span>
+                    <span>Свободные даты</span>
                   </div>
-                  <div className="xl:px-4 xl:border-r xl:border-nothing-black/10">
-                    <span className="font-mono text-[10px] uppercase tracking-widest opacity-90 mb-1 block">Длина</span>
-                    <span className="font-mono text-xs font-bold">50 сек.</span>
-                  </div>
-                  <div className="rounded-full bg-nothing-black/5 px-4 py-3 xl:mx-4">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-3 h-3 opacity-80" />
-                      <span className="font-mono text-[10px] uppercase tracking-widest opacity-90">Реклама / Reels / Фото</span>
-                    </div>
-                  </div>
-                  <MagneticButton strength={0.5} className="xl:justify-self-end">
-                    <a
-                      href="https://t.me/YuriElygin"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Открыть Telegram"
-                      className="w-12 h-12 rounded-full border border-nothing-black/10 inline-flex items-center justify-center hover:bg-nothing-black hover:text-nothing-white transition-all duration-500"
+                </motion.div>
+
+                <motion.div
+                  style={{ opacity: heroOpacity }}
+                  initial="hidden"
+                  animate="show"
+                  variants={STAGGER_CONTAINER}
+                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1.25vh,15px)] px-[20px] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(20px,env(safe-area-inset-bottom))] md:pb-[clamp(42px,4.8vh,64px)] pt-[clamp(28px,4.2vh,64px)] [@media(max-height:900px)]:pb-[clamp(28px,3.8vh,44px)] [@media(max-height:760px)]:pb-[clamp(18px,2.8vh,30px)] [@media(max-height:680px)]:pb-[max(12px,env(safe-area-inset-bottom))]"
+                >
+                  <div className="max-w-[1100px] relative z-10">
+                    <motion.div variants={STAGGER_ITEM} className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+                      <div className="w-8 sm:w-12 h-[1px] bg-nothing-red" />
+                      <h2 className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.42em] text-white/88 leading-relaxed">
+                        Рекламные ролики, Reels и видео для бизнеса
+                      </h2>
+                    </motion.div>
+
+                    <h1 className="hero-title text-[clamp(40px,10.2vmin,148px)] sm:text-[clamp(52px,9.2vmin,148px)] [@media(max-height:900px)]:text-[clamp(38px,7.8vmin,108px)] [@media(max-height:760px)]:text-[clamp(30px,6.7vmin,84px)] [@media(max-height:680px)]:text-[clamp(28px,6.1vmin,72px)] font-display font-bold leading-[0.9] tracking-[-0.06em] uppercase text-white max-w-[15ch]">
+                      <div className="text-mask">
+                        <motion.span variants={TEXT_REVEAL} className="block">Снимаю рекламные</motion.span>
+                      </div>
+                      <div className="text-mask">
+                        <motion.span variants={TEXT_REVEAL} className="block">ролики и</motion.span>
+                      </div>
+                      <div className="text-mask text-nothing-red">
+                        <motion.span variants={TEXT_REVEAL} className="block">Reels контент</motion.span>
+                      </div>
+                    </h1>
+
+                    <motion.div
+                      variants={STAGGER_ITEM}
+                    className="hero-actions mt-3 sm:mt-4 [@media(max-height:900px)]:mt-2 [@media(max-height:760px)]:mt-1.5 [@media(max-height:680px)]:mt-1 flex flex-col sm:flex-row sm:flex-wrap items-start gap-2.5 sm:gap-3"
                     >
-                      <Send className="w-4 h-4" />
-                    </a>
-                  </MagneticButton>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-          </div>
+                      <a
+                        href="#contact"
+                        className="inline-flex items-center gap-3 rounded-full bg-nothing-black/85 px-6 py-4 text-nothing-white transition-all duration-500 hover:bg-nothing-red"
+                      >
+                        <span className="font-mono text-[10px] uppercase tracking-[0.35em]">Обсудить проект</span>
+                        <ArrowUpRight className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="#projects"
+                        className="inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/8 backdrop-blur-sm px-6 py-4 text-white transition-all duration-500 hover:border-white/70 hover:bg-white/12"
+                      >
+                        <span className="font-mono text-[10px] uppercase tracking-[0.35em]">Посмотреть кейсы</span>
+                        <Play className="w-4 h-4 fill-current" />
+                      </a>
+                    </motion.div>
+                  </div>
+                  <motion.div
+                    variants={STAGGER_ITEM}
+                    className="mt-[clamp(10px,1.7vh,18px)] sm:mt-[clamp(12px,1.8vh,20px)] [@media(max-height:900px)]:mt-2.5 [@media(max-height:760px)]:mt-2 [@media(max-height:680px)]:mt-1.5 pt-[clamp(10px,1.5vh,16px)] sm:pt-[clamp(12px,1.6vh,18px)] [@media(max-height:900px)]:pt-2 [@media(max-height:760px)]:pt-1.5 border-t border-white/20 max-w-[980px] relative z-10"
+                  >
+                    <p className="max-w-4xl text-[15px] sm:text-lg md:text-[1.18rem] xl:text-[1.34rem] [@media(max-height:900px)]:text-[15px] [@media(max-height:760px)]:text-[14px] [@media(max-height:680px)]:text-[13px] font-semibold leading-[1.43] [@media(max-height:760px)]:leading-[1.33] [@media(max-height:680px)]:leading-[1.3] text-white/92">
+                      Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
+                      Делаю визуальный контент, который хочется досмотреть до конца. При необходимости дополняю
+                      проект фотосъёмкой.
+                    </p>
 
-          <Marquee compact />
-        </motion.div>
+                    <div className="hero-features mt-3.5 sm:mt-4.5 flex flex-col items-start gap-y-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 xl:gap-x-8 sm:gap-y-3.5 [@media(max-height:900px)]:hidden">
+                      <div className="flex items-center gap-3">
+                        <Camera className="w-4 h-4 text-nothing-red" />
+                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Рекламные ролики и Reels</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Video className="w-4 h-4 text-nothing-red" />
+                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Съёмка событий и интервью</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <ImageIcon className="w-4 h-4 text-nothing-red" />
+                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Фотосъёмка для бренда</span>
+                      </div>
+                    </div>
+                  </motion.div>
 
-        {/* Bottom Tech Bar */}
-        <div className="hero-bottom-bar absolute bottom-6 left-0 w-full px-8 xl:px-12 hidden lg:flex justify-between items-end">
-          <div className="flex gap-12">
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`w-1 h-3 ${i < 4 ? 'bg-nothing-red' : 'bg-nothing-black/10'}`} />
-                ))}
+                  <div className="absolute z-0 inset-x-0 bottom-0 h-16 sm:h-20 md:h-24 lg:h-28 [@media(max-height:900px)]:h-16 [@media(max-height:760px)]:h-12 [@media(max-height:680px)]:h-10 bg-gradient-to-b from-transparent via-nothing-black/12 to-nothing-white pointer-events-none transform-gpu" />
+                </motion.div>
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] opacity-90">На связи</span>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-1">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className={`w-3 h-1 ${i < 6 ? 'bg-nothing-black' : 'bg-nothing-black/10'}`} />
-                ))}
-              </div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] opacity-90">Видео / Фото</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-8">
-            <div className="text-right">
-              <p className="font-mono text-xs font-bold">{moscowTime}</p>
-              <p className="font-mono text-[10px] uppercase tracking-widest opacity-90">Москва</p>
-            </div>
-            <div className="w-16 h-16 rounded-full border border-nothing-black/5 flex items-center justify-center">
-              <div className="w-2 h-2 bg-nothing-red rounded-full animate-ping" />
-            </div>
-          </div>
-        </div>
 
-        {/* Background Depth Elements */}
-        <motion.div 
-          style={{ y: bgY }}
-          className="absolute top-1/2 right-0 -translate-y-1/2 w-[60vw] h-[60vw] bg-nothing-red/5 rounded-full blur-[120px] -z-10" 
-        />
-        <motion.div 
-          style={{ y: bg2Y }}
-          className="absolute top-1/4 left-0 w-[40vw] h-[40vw] bg-nothing-black/[0.02] rounded-full blur-[100px] -z-10" 
-        />
-      </section>
+              <div className="relative z-20">
+                <Marquee compact />
+              </div>
+            </section>
 
       {/* Portfolio Section */}
       <PortfolioGrid />
@@ -2319,7 +2300,7 @@ export default function App() {
           >
             <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">02</motion.span>
             <div className="text-mask">
-              <motion.h2 variants={TEXT_REVEAL} className="text-4xl md:text-7xl font-bold tracking-tighter uppercase">Чем могу помочь</motion.h2>
+              <motion.h2 variants={TEXT_REVEAL} className="text-4xl md:text-7xl font-bold tracking-tighter uppercase">Услуги видеопродакшна</motion.h2>
             </div>
           </motion.div>
           
@@ -2334,51 +2315,51 @@ export default function App() {
               <div className="mb-6 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
                 <Camera className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Съемка видео</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Видеосъёмка для бизнеса</h3>
               <p className="text-xs sm:text-sm font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-6 sm:mb-8">
-                Снимаю рекламу, интервью, события и ролики для соцсетей.
-                Помогаю собрать понятную идею и спокойно довожу её до съемочного дня.
+                Снимаю рекламные ролики, интервью, Reels и event-видео для брендов и бизнеса в Нижнем Новгороде.
+                Помогаю выстроить идею, подготовить съёмку и довести проект до готового результата.
               </p>
               <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Реклама и презентации</li>
-                <li>• Интервью и события</li>
-                <li>• Reels и Shorts</li>
+                <li>• Рекламные ролики</li>
+                <li>• Интервью и event-видео</li>
+                <li>• Reels и Shorts для бизнеса</li>
               </ul>
             </motion.div>
             <motion.div variants={STAGGER_ITEM} className="p-6 sm:p-8 md:p-12 hardware-border hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 group rounded-[1.5rem] sm:rounded-[2rem] bg-nothing-white">
               <div className="mb-6 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
                 <Video className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Монтаж</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Монтаж и постпродакшн</h3>
               <p className="text-xs sm:text-sm font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-6 sm:mb-8">
-                Собираю материал в живое и понятное видео.
-                Делаю так, чтобы ролик не провисал по темпу и хорошо смотрелся на любом экране.
+                Монтирую рекламные ролики, Reels, интервью и коммерческие видео с акцентом на ритм,
+                структуру и современную визуальную подачу.
               </p>
               <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Ритм и структура</li>
-                <li>• Цвет и звук</li>
-                <li>• Готовые версии под площадки</li>
+                <li>• Динамичный монтаж</li>
+                <li>• Цветокоррекция и звук</li>
+                <li>• Версии для соцсетей и рекламы</li>
               </ul>
             </motion.div>
             <motion.div variants={STAGGER_ITEM} className="p-6 sm:p-8 md:p-12 hardware-border hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 group rounded-[1.5rem] sm:rounded-[2rem] bg-nothing-white">
               <div className="mb-6 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
                 <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Фото</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-display font-bold uppercase mb-4 sm:mb-6 tracking-tighter">Фотосъёмка для брендов</h3>
               <p className="text-xs sm:text-sm font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-6 sm:mb-8">
-                Если проекту нужны не только видео, но и фотографии, тоже возьму это на себя.
-                Снимаю портреты, репортаж и контент для бренда в одном стиле с видео.
+                Дополняю видеопроекты фотосъёмкой для брендов, соцсетей и бизнеса.
+                Снимаю портреты, репортаж и визуальный контент в едином стиле с видео.
               </p>
               <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Портреты</li>
-                <li>• Репортаж</li>
-                <li>• Кадры для бренда и соцсетей</li>
+                <li>• Портретная фотосъёмка</li>
+                <li>• Репортажная съёмка</li>
+                <li>• Контент для бренда и соцсетей</li>
               </ul>
             </motion.div>
           </motion.div>
         </div>
         <div className="absolute bottom-0 right-0 text-[20vw] font-display font-bold uppercase tracking-tighter text-nothing-black/[0.02] leading-none select-none -z-0">
-          ВИДЕО
+          КОНТЕНТ
         </div>
       </section>
 
@@ -2387,33 +2368,33 @@ export default function App() {
 
       {/* Contact Section */}
       <section id="contact" className="contact-section py-20 md:py-32 px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
-        <div className="contact-grid grid grid-cols-1 xl:grid-cols-12 gap-14 lg:gap-20 xl:gap-16">
+        <div className="contact-grid grid grid-cols-1 xl:grid-cols-12 xl:items-stretch gap-14 lg:gap-20 xl:gap-16">
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
             variants={STAGGER_CONTAINER}
-            className="contact-copy xl:col-span-6"
+            className="contact-copy xl:col-span-6 xl:h-full"
           >
             <div className="mb-12 md:mb-24">
-              <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">05</motion.span>
+              <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">03</motion.span>
               <div className="text-mask">
-                <motion.h2 variants={TEXT_REVEAL} className="text-4xl sm:text-5xl md:text-7xl font-display font-bold tracking-tighter uppercase">Давайте сотрудничать</motion.h2>
+                <motion.h2 variants={TEXT_REVEAL} className="text-4xl sm:text-5xl md:text-7xl font-display font-bold tracking-tighter uppercase">Обсудим видеопроект</motion.h2>
               </div>
             </div>
             <motion.p variants={STAGGER_ITEM} className="text-xl sm:text-2xl md:text-4xl font-semibold leading-tight opacity-100 mb-12">
-              Нужен ролик, reels, съемка события или фотографии? <br />
-              Напишите пару слов о задаче - подскажу, как лучше сделать.
+              Нужны рекламные ролики, Reels, event-видео или фотосъёмка для бизнеса? <br />
+              Опишите задачу — помогу подобрать формат съёмки и оптимальное решение для проекта.
             </motion.p>
             
-            <motion.div variants={STAGGER_ITEM} className="flex flex-col gap-4 sm:gap-8 mt-12 sm:mt-16">
-              <a href="mailto:y.elyginn@gmail.com" className="group flex items-center gap-4 sm:gap-8 p-6 sm:p-8 hardware-border rounded-[1.5rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">
+            <motion.div variants={STAGGER_ITEM} className="flex flex-col gap-4 sm:gap-8 mt-12 sm:mt-16 xl:mt-auto">
+              <a href="mailto:yelyginn@gmail.com" className="group flex items-center gap-4 sm:gap-8 p-6 sm:p-8 hardware-border rounded-[1.5rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full glass flex items-center justify-center group-hover:bg-nothing-red group-hover:text-nothing-white transition-all duration-300">
                   <Mail className="w-5 h-5 sm:w-6 h-6" />
                 </div>
                 <div>
                   <p className="font-mono text-[10px] uppercase opacity-90 mb-1 tracking-widest">Email</p>
-                  <p className="text-lg sm:text-xl font-bold">y.elyginn@gmail.com</p>
+                  <p className="text-lg sm:text-xl font-bold">yelyginn@gmail.com</p>
                 </div>
               </a>
               <a href="https://t.me/YuriElygin" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 sm:gap-8 p-6 sm:p-8 hardware-border rounded-[1.5rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">
@@ -2433,17 +2414,17 @@ export default function App() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: NOTHING_EASE }}
-            className="contact-form liquid-glass p-6 sm:p-8 md:p-9 relative overflow-hidden group rounded-[2rem] sm:rounded-[2.25rem] shadow-[0_30px_90px_-40px_rgba(10,10,10,0.18)] xl:col-span-6"
+            className="contact-form liquid-glass p-6 sm:p-8 md:p-9 relative overflow-hidden group rounded-[2rem] sm:rounded-[2.25rem] shadow-[0_30px_90px_-40px_rgba(10,10,10,0.18)] xl:col-span-6 xl:h-full"
           >
             <div className="relative z-10">
               <span className="font-mono text-[10px] uppercase tracking-[0.24em] opacity-70 block mb-2.5 sm:mb-3">
-                Короткая заявка
+                Заявка на видеосъёмку
               </span>
               <h3 className="text-[1.45rem] sm:text-[1.85rem] md:text-[2.35rem] font-bold uppercase tracking-tighter mb-2.5 sm:mb-3 leading-[0.93]">
-                Расскажите <br /><span className="text-nothing-red">о проекте</span>.
+                Расскажите <br /><span className="text-nothing-red">о видеопроекте</span>.
               </h3>
               <p className="max-w-lg text-[12px] sm:text-[13px] leading-relaxed text-nothing-black/66 mb-4 sm:mb-5">
-                Достаточно имени, контакта и пары слов о задаче. Я свяжусь с вами и помогу понять, как лучше снять проект.
+                Оставьте контакт и короткое описание задачи. Помогу подобрать формат съёмки, визуальную подачу и оптимальное решение для проекта.
               </p>
               
               <form className="space-y-3.5 sm:space-y-4" onSubmit={handleFormSubmit}>
@@ -2455,7 +2436,7 @@ export default function App() {
                     name="name"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    placeholder="Ваше имя"
+                    placeholder="Ваше имя или название компании"
                     className="w-full bg-transparent border-b border-nothing-black/16 py-2 sm:py-2.5 focus:border-nothing-red outline-none transition-colors placeholder:opacity-45 font-semibold text-[15px] sm:text-base text-nothing-black"
                   />
                 </div>
@@ -2472,7 +2453,7 @@ export default function App() {
                         setSubmitError("");
                       }
                     }}
-                    placeholder="@telegram или email"
+                    placeholder="Telegram, email или телефон"
                     aria-invalid={showContactError}
                     className={`w-full bg-transparent border-b py-2 sm:py-2.5 outline-none transition-colors placeholder:opacity-45 font-semibold text-[15px] sm:text-base ${
                       showContactError
@@ -2488,13 +2469,13 @@ export default function App() {
                 </div>
                 </div>
                 <div className="contact-field contact-field-full space-y-2">
-                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Что планируем снимать</label>
+                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Какой проект планируем</label>
                   <textarea 
                     rows={2}
                     name="message"
                     value={formMessage}
                     onChange={(e) => setFormMessage(e.target.value)}
-                    placeholder="Коротко опишите задачу"
+                    placeholder="Например: рекламный ролик, Reels, интервью, event-видео или контент для бренда"
                     className="min-h-[64px] w-full bg-transparent border-b border-nothing-black/18 py-2 sm:py-2.5 focus:border-nothing-red outline-none transition-colors resize-none placeholder:opacity-50 font-semibold text-[15px] sm:text-base text-nothing-black"
                   />
                 </div>
@@ -2551,7 +2532,7 @@ export default function App() {
                   disabled={!privacyAccepted || !personalDataAccepted || !isContactValid || isSubmitting}
                   className="w-full py-4 sm:py-4.5 bg-nothing-black text-nothing-white rounded-full font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.34em] hover:bg-nothing-red transition-all duration-500 mt-2.5 sm:mt-3 nothing-shadow disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-nothing-black"
                 >
-                  {isSubmitting ? "ОТПРАВКА..." : "Отправить заявку"}
+                  {isSubmitting ? "ОТПРАВКА..." : "Обсудить проект"}
                 </motion.button>
                 {submitStatus === "success" && (
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-green-700 leading-relaxed">
@@ -2564,7 +2545,7 @@ export default function App() {
                   </p>
                 )}
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] opacity-55 leading-relaxed">
-                  После отправки заявка придёт мне в Telegram и на email.
+                  После отправки заявки свяжусь с вами в Telegram или по email.
                 </p>
               </form>
             </div>
@@ -2573,52 +2554,12 @@ export default function App() {
         </div>
       </section>
 
-      <section id="privacy-policy" className="px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto pb-20 md:pb-28 is-hidden" aria-hidden="true">
-        <div className="rounded-[2rem] border border-nothing-black/10 bg-white/70 p-8 sm:p-10 md:p-12 backdrop-blur-sm">
-          <PrivacyContent />
-        </div>
-      </section>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="photo-portfolio"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.8, ease: NOTHING_EASE }}
-            className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
-          >
-            <div className="relative mb-12">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-48 h-48 rounded-full border border-dashed border-nothing-black/20 flex items-center justify-center"
-              >
-                <Construction className="w-12 h-12 opacity-60 text-nothing-black" />
-              </motion.div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-2 h-2 bg-nothing-red rounded-full animate-ping" />
-              </div>
+          <section id="privacy-policy" className="px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto pb-20 md:pb-28 is-hidden" aria-hidden="true">
+            <div className="rounded-[2rem] border border-nothing-black/10 bg-white/70 p-8 sm:p-10 md:p-12 backdrop-blur-sm">
+              <PrivacyContent />
             </div>
-
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase mb-6 text-nothing-black">
-              Фото <br />
-              <span className="text-nothing-red">скоро добавлю</span>
-            </h2>
-            <p className="max-w-xl text-xl opacity-100 font-bold mb-12 text-nothing-black">
-              Я тоже снимаю фото: портреты, репортаж и контент для брендов.
-              Скоро здесь появятся лучшие серии и отдельные съемки.
-            </p>
-
-            <button 
-              onClick={() => setPortfolioType('video')}
-              className="group flex items-center gap-4 px-8 py-4 rounded-full glass border-white/20 hover:bg-nothing-black hover:text-nothing-white transition-all text-nothing-black"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
-              <span className="font-mono text-xs uppercase tracking-widest">Вернуться к видео</span>
-            </button>
-          </motion.div>
-        )}
+          </section>
+        </motion.div>
       </AnimatePresence>
 
       <AnimatePresence>
@@ -2663,18 +2604,18 @@ export default function App() {
             <div className="col-span-1 md:col-span-2 lg:col-span-3">
               <span className="font-display font-bold text-4xl uppercase tracking-tighter mb-8 block text-nothing-black">ELYGIN</span>
               <p className="text-sm font-medium opacity-100 max-w-xs leading-relaxed text-nothing-black">
-                Снимаю и монтирую видео для брендов, бизнеса и событий.
-                Если проекту нужны фотографии, тоже могу помочь.
+                Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
+                При необходимости дополняю проект фотосъёмкой.
               </p>
             </div>
             
             <div>
               <span className="font-mono text-xs uppercase tracking-widest opacity-90 mb-8 block text-nothing-black">Навигация</span>
               <ul className="space-y-4 text-sm font-bold text-nothing-black">
-                <li><a href="#portfolio" className="hover:text-nothing-red transition-colors">Портфолио</a></li>
+                <li><a href="#portfolio" className="hover:text-nothing-red transition-colors">Кейсы</a></li>
                 <li><a href="#services" className="hover:text-nothing-red transition-colors">Услуги</a></li>
                 <li><a href="#contact" className="hover:text-nothing-red transition-colors">Контакты</a></li>
-                <li><a href="/privacy-policy.html" className="hover:text-nothing-red transition-colors">Политика ПДн</a></li>
+                <li><a href="/privacy-policy.html" className="hover:text-nothing-red transition-colors">Политика конфиденциальности</a></li>
               </ul>
             </div>
 
@@ -2701,7 +2642,7 @@ export default function App() {
           <div className="flex justify-center items-center pt-12 border-t border-nothing-black/10">
             <div className="text-center">
               <div className="font-mono text-sm md:text-base uppercase tracking-[0.14em] opacity-90 text-nothing-black">
-                © 2026 ELYGIN VIDEO & PHOTO / ВСЕ ПРАВА ЗАЩИЩЕНЫ
+                © 2026 ELYGIN VIDEO & PHOTO / ВИДЕОПРОДАКШН В НИЖНЕМ НОВГОРОДЕ
               </div>
               <p className="mt-2 text-[11px] sm:text-xs text-nothing-black/60">
                 Оператор: {LEGAL_OPERATOR.name}. Плательщик налога на профессиональный доход (самозанятый). ИНН: {LEGAL_OPERATOR.inn}.

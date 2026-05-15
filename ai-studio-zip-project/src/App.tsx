@@ -2374,7 +2374,7 @@ export default function App() {
                     loading="eager"
                     aria-hidden="true"
                     tabIndex={-1}
-                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
+                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[130vw] lg:w-[118vw] xl:w-[112vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
                     style={heroVideoFrameStyle}
                   />
                 </motion.div>
@@ -2497,7 +2497,7 @@ export default function App() {
           >
             <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">02</motion.span>
             <div className="text-mask">
-              <motion.h2 variants={TEXT_REVEAL} className="text-[clamp(2rem,9.3vw,4.8rem)] font-bold tracking-tighter uppercase leading-[0.92]">Услуги видеопродакшна</motion.h2>
+              <motion.h2 variants={TEXT_REVEAL} className="max-w-[12ch] sm:max-w-none text-[clamp(1.72rem,8.1vw,4.8rem)] font-bold tracking-tighter uppercase leading-[0.92]">Услуги видеопродакшна</motion.h2>
             </div>
           </motion.div>
           

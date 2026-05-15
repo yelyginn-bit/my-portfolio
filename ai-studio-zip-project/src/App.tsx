@@ -1810,6 +1810,7 @@ const PortfolioGrid = () => {
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moscowTime, setMoscowTime] = useState(getMoscowTime);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const isDarkMode = false; // Switch to light mode for better readability as requested
 
   useEffect(() => {
@@ -1836,6 +1837,15 @@ export default function App() {
   
   const bgY = useTransform(scrollYProgress, [0, 0.5], [0, 200]);
   const bg2Y = useTransform(scrollYProgress, [0, 0.5], [0, -150]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(max-width: 1024px)");
+    const updateViewportMode = () => setIsMobileViewport(media.matches);
+    updateViewportMode();
+    media.addEventListener("change", updateViewportMode);
+    return () => media.removeEventListener("change", updateViewportMode);
+  }, []);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [personalDataAccepted, setPersonalDataAccepted] = useState(false);
   const [formName, setFormName] = useState("");
@@ -2280,8 +2290,8 @@ export default function App() {
 
               <div className="relative h-[100dvh] min-h-[620px] md:min-h-[680px] overflow-hidden bg-nothing-black">
                 <motion.div
-                  style={{ y: bgY }}
-                  className="absolute inset-0 z-0 overflow-hidden"
+                  style={{ y: isMobileViewport ? 0 : bgY }}
+                  className="absolute -inset-[10%] sm:-inset-[8%] md:inset-0 z-0 overflow-hidden"
                 >
                   <iframe
                     src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=auto"
@@ -2292,7 +2302,7 @@ export default function App() {
                     loading="eager"
                     aria-hidden="true"
                     tabIndex={-1}
-                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[116%] w-[186vw] sm:w-[164vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
+                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[132vw] lg:w-[122vw] xl:w-[114vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu"
                   />
                 </motion.div>
 

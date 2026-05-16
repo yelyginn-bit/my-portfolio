@@ -17,6 +17,16 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
+  // Health check
+  if (req.method === 'GET') {
+    const hasToken = !!process.env.TELEGRAM_BOT_TOKEN;
+    const hasChatId = !!process.env.TELEGRAM_CHAT_ID;
+    return res.status(200).json({
+      ok: true,
+      envVars: { TELEGRAM_BOT_TOKEN: hasToken, TELEGRAM_CHAT_ID: hasChatId }
+    });
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

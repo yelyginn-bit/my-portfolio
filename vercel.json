@@ -18,6 +18,8 @@
     { "source": "/reklamnye-roliki", "destination": "/reklamnye-roliki.html" },
     { "source": "/event-video", "destination": "/event-video.html" },
     { "source": "/video-dlya-marketpleysov", "destination": "/video-dlya-marketpleysov.html" },
-    { "source": "/ceny", "destination": "/ceny.html" }
+    { "source": "/ceny", "destination": "/ceny.html" },
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug.html" }
   ]
 }

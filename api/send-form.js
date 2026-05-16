@@ -19,11 +19,22 @@ export default async function handler(req, res) {
 
   // Health check
   if (req.method === 'GET') {
-    const hasToken = !!process.env.TELEGRAM_BOT_TOKEN;
-    const hasChatId = !!process.env.TELEGRAM_CHAT_ID;
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    let telegramCheck = null;
+    if (botToken) {
+      try {
+        const r = await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
+        const d = await r.json();
+        telegramCheck = { ok: d.ok, botUsername: d.result?.username, error: d.description };
+      } catch (e) {
+        telegramCheck = { ok: false, error: e.message };
+      }
+    }
     return res.status(200).json({
       ok: true,
-      envVars: { TELEGRAM_BOT_TOKEN: hasToken, TELEGRAM_CHAT_ID: hasChatId }
+      envVars: { TELEGRAM_BOT_TOKEN: !!botToken, TELEGRAM_CHAT_ID: !!chatId, chatIdValue: chatId },
+      telegram: telegramCheck
     });
   }
 

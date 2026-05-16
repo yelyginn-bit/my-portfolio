@@ -70,12 +70,103 @@
       .pkg-price { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px; }
       .pkg-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.55; }
       .links-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 2px; }
-      .tag:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+      .tag-link { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 2px; }
+      .tag-link:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
       footer { padding: 40px 0; }
       .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
       .foot-copy { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
       @media (max-width: 640px) { table { display: block; overflow-x: auto; } }
+
+      /* ─── Calculator ─── */
+      .cc-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+      .cc-card {
+        background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+      .cc-cardHeader { padding: 20px 20px 0; }
+      .cc-cardTitle { margin: 0 0 6px; font-weight: 700; font-size: 15px; }
+      .cc-cardHint { margin: 0 0 12px; color: rgba(255,255,255,.6); font-size: 13px; line-height: 1.35; }
+      .cc-cardBody { padding: 0 20px 20px; }
+      .cc-typeGrid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+      .cc-typeBtn {
+        appearance: none; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.02);
+        color: var(--white); padding: 10px 10px; border-radius: 14px; font-weight: 600; font-size: 12px;
+        line-height: 1.2; cursor: pointer; transition: transform .12s, border-color .12s, background .12s;
+        text-align: left; min-height: 40px;
+      }
+      .cc-typeBtn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.2); }
+      .cc-typeBtn[data-active="true"] {
+        border-color: rgba(254,44,31,.7);
+        background: linear-gradient(180deg, rgba(254,44,31,.18), rgba(254,44,31,.08));
+      }
+      .cc-divider { height: 1px; background: rgba(255,255,255,.08); margin: 14px 0; }
+      .cc-sliderRow { display: flex; align-items: center; gap: 14px; padding: 2px 0 6px; }
+      .cc-sliderLabel { flex: 0 0 auto; font-weight: 600; font-size: 13px; color: rgba(255,255,255,.6); }
+      .cc-sliderWrap { flex: 1 1 auto; }
+      input.cc-range { width: 100%; accent-color: var(--red); }
+      .cc-sliderMeta { display: flex; justify-content: space-between; margin-top: 6px; color: rgba(255,255,255,.4); font-size: 12px; }
+      .cc-sliderValue {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 42px; height: 32px; padding: 0 10px; border-radius: 999px;
+        border: 1px solid rgba(254,44,31,.4); background: rgba(254,44,31,.1);
+        font-weight: 700; font-size: 14px;
+      }
+      .cc-locked { background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.08); border-radius: 18px; padding: 14px; }
+      .cc-lockedTop { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+      .cc-badge {
+        display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03);
+        color: rgba(255,255,255,.5); font-weight: 600; font-size: 11px; white-space: nowrap;
+      }
+      .cc-svcList { display: flex; flex-direction: column; gap: 6px; }
+      .cc-svcRow {
+        display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+        padding: 8px 10px; border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.05); background: rgba(0,0,0,.12);
+      }
+      .cc-svcName { font-size: 12px; line-height: 1.25; font-weight: 600; }
+      .cc-svcMeta { font-size: 11px; line-height: 1.2; color: rgba(255,255,255,.4); margin-top: 3px; }
+      .cc-svcPrice { flex: 0 0 auto; text-align: right; color: rgba(255,255,255,.9); font-weight: 700; font-size: 12px; padding-left: 8px; white-space: nowrap; }
+      .cc-optGrid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+      .cc-optCard {
+        border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: rgba(255,255,255,.02);
+        padding: 10px 12px; cursor: pointer; transition: border-color .12s, transform .12s, background .12s; min-height: 66px;
+      }
+      .cc-optCard:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.15); }
+      .cc-optCard[data-checked="true"] {
+        border-color: rgba(254,44,31,.7);
+        background: linear-gradient(180deg, rgba(254,44,31,.16), rgba(254,44,31,.07));
+      }
+      .cc-optTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+      .cc-optName { font-weight: 700; font-size: 12px; line-height: 1.25; }
+      .cc-optSub { margin-top: 5px; color: rgba(255,255,255,.45); font-size: 11px; line-height: 1.2; }
+      .cc-optCheck { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 1px; accent-color: var(--red); }
+      .cc-summary { position: sticky; top: 18px; }
+      .cc-totalBox { padding: 20px; }
+      .cc-totalValue { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin: 6px 0 4px; }
+      .cc-totalHint { color: rgba(255,255,255,.55); font-size: 12px; margin: 0 0 14px; line-height: 1.4; }
+      .cc-miniStats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+      .cc-stat { border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.02); border-radius: 14px; padding: 10px 12px; }
+      .cc-statLabel { color: rgba(255,255,255,.4); font-size: 11px; }
+      .cc-statValue { margin-top: 4px; font-weight: 800; font-size: 13px; }
+      .cc-cta { display: flex; gap: 8px; margin-top: 12px; }
+      .cc-btn {
+        appearance: none; border: none; background: var(--red); color: #fff;
+        border-radius: 14px; padding: 12px 14px; font-weight: 800; font-size: 12px;
+        cursor: pointer; flex: 1 1 auto; letter-spacing: 0.05em;
+        transition: transform .12s, opacity .12s; text-align: center;
+      }
+      .cc-btn:hover { transform: translateY(-1px); opacity: .9; }
+      .cc-btnGhost { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); color: var(--white); font-weight: 700; }
+      .cc-fine { margin-top: 12px; color: rgba(255,255,255,.35); font-size: 11px; line-height: 1.4; }
+      @media (max-width: 980px) { .cc-grid { grid-template-columns: 1fr; } .cc-summary { position: static; } }
+      @media (max-width: 640px) {
+        .cc-typeGrid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .cc-optGrid { grid-template-columns: 1fr; }
+        input.cc-range { height: 32px; }
+      }
     </style>
   </head>
   <body>
@@ -99,9 +190,96 @@
         <div class="wrap">
           <p class="eyebrow">Нижний Новгород / Прайс-лист 2026</p>
           <h1>Цены на<br />видео-<br /><em>съёмку</em></h1>
-          <p class="lead">Актуальные ставки на съёмку, монтаж, цветокоррекцию и постпродакшн. Окончательная стоимость формируется по ТЗ — пишите в Telegram, рассчитаю смету бесплатно.</p>
+          <p class="lead">Актуальные ставки на съёмку, монтаж, цветокоррекцию и постпродакшн. Воспользуйтесь калькулятором ниже или пишите в Telegram — рассчитаю смету бесплатно.</p>
         </div>
       </div>
+
+      <!-- CALCULATOR -->
+      <section id="kalkulator">
+        <div class="wrap">
+          <div class="section-head">
+            <h2><span>Калькулятор</span> сметы</h2>
+            <span style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);">Ориентировочный расчёт</span>
+          </div>
+
+          <div class="cc-grid">
+            <!-- Left: controls -->
+            <div class="cc-card">
+              <div class="cc-cardHeader">
+                <div class="cc-cardTitle">1) Тип проекта</div>
+                <div class="cc-cardHint">12 направлений. Нажмите, чтобы увидеть типовой состав сметы.</div>
+              </div>
+              <div class="cc-cardBody">
+                <div class="cc-typeGrid" id="ccTypeGrid"></div>
+
+                <div class="cc-divider"></div>
+
+                <div class="cc-sliderRow">
+                  <div class="cc-sliderLabel">Съёмочные смены</div>
+                  <div class="cc-sliderWrap">
+                    <input id="ccDays" class="cc-range" type="range" min="1" max="10" value="1" />
+                    <div class="cc-sliderMeta"><span>1</span><span>10</span></div>
+                  </div>
+                  <div class="cc-sliderValue" id="ccDaysValue">1</div>
+                </div>
+
+                <div class="cc-divider"></div>
+
+                <div class="cc-locked">
+                  <div class="cc-lockedTop">
+                    <div class="cc-cardTitle" style="margin:0">2) Обязательные услуги (база)</div>
+                    <div class="cc-badge">фиксированные</div>
+                  </div>
+                  <div class="cc-svcList" id="ccBaseList"></div>
+                </div>
+
+                <div class="cc-divider"></div>
+
+                <div class="cc-cardTitle">3) Дополнительные услуги</div>
+                <div class="cc-cardHint" style="margin-top:4px">Отметьте нужные — они добавятся к итогу.</div>
+                <div class="cc-optGrid" id="ccOptionsGrid"></div>
+              </div>
+            </div>
+
+            <!-- Right: summary -->
+            <div class="cc-card cc-summary">
+              <div class="cc-totalBox">
+                <div class="cc-cardTitle">Итоговая смета</div>
+                <div class="cc-totalValue" id="ccTotal">—</div>
+                <p class="cc-totalHint" id="ccTotalHint">Выберите тип проекта, затем добавьте опции.</p>
+
+                <div class="cc-miniStats">
+                  <div class="cc-stat">
+                    <div class="cc-statLabel">Смены</div>
+                    <div class="cc-statValue" id="ccStatDays">1</div>
+                  </div>
+                  <div class="cc-stat">
+                    <div class="cc-statLabel">Команда (person)</div>
+                    <div class="cc-statValue">5</div>
+                  </div>
+                  <div class="cc-stat">
+                    <div class="cc-statLabel">Выбрано опций</div>
+                    <div class="cc-statValue" id="ccStatOpts">0</div>
+                  </div>
+                  <div class="cc-stat">
+                    <div class="cc-statLabel">Тип проекта</div>
+                    <div class="cc-statValue" id="ccStatType">—</div>
+                  </div>
+                </div>
+
+                <div class="cc-cta">
+                  <a href="https://t.me/YuriElygin" class="cc-btn" target="_blank" rel="noopener">Обсудить проект</a>
+                  <button class="cc-btn cc-btnGhost" id="ccResetBtn" type="button">Сброс</button>
+                </div>
+
+                <div class="cc-fine">
+                  Цифры — ориентир. Финальная смета зависит от задач, локаций, логистики и требований к постпродакшену. Пишите — рассчитаю точно.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- 1. СЪЁМКА -->
       <section>
@@ -413,7 +591,7 @@
       <section>
         <div class="wrap">
           <h2>Условия <span>работы</span></h2>
-          <table>
+          <table style="margin-top:24px">
             <tbody>
               <tr>
                 <td>Выезд специалиста на объект</td>
@@ -475,12 +653,12 @@
         <div class="wrap">
           <h2 style="margin-bottom:16px;">Страницы <span>услуг</span></h2>
           <div class="links-row">
-            <a href="/reklamnye-roliki" class="tag">Рекламные ролики</a>
-            <a href="/reels" class="tag">Reels для бизнеса</a>
-            <a href="/event-video" class="tag">Event-видео</a>
-            <a href="/video-dlya-marketpleysov" class="tag">Видео для маркетплейсов</a>
-            <a href="/portfolio" class="tag">Портфолио</a>
-            <a href="/photo" class="tag">Фотосъёмка</a>
+            <a href="/reklamnye-roliki" class="tag-link">Рекламные ролики</a>
+            <a href="/reels" class="tag-link">Reels для бизнеса</a>
+            <a href="/event-video" class="tag-link">Event-видео</a>
+            <a href="/video-dlya-marketpleysov" class="tag-link">Видео для маркетплейсов</a>
+            <a href="/portfolio" class="tag-link">Портфолио</a>
+            <a href="/photo" class="tag-link">Фотосъёмка</a>
           </div>
         </div>
       </section>
@@ -494,5 +672,127 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      window.__ESTIMATE_DATA__={"Ролики для маркетплейсов":{"base":[{"name":"Разработка концепции и сценария","priceMin":5000,"priceMax":10000,"unit":"project"},{"name":"Кастинг","priceMin":3000,"priceMax":5000,"unit":"project"},{"name":"Локация","priceMin":5000,"priceMax":15000,"unit":"project"},{"name":"Реквизит","priceMin":1000,"priceMax":5000,"unit":"project"},{"name":"Режиссёр","priceMin":10000,"priceMax":15000,"unit":"day"},{"name":"Операторская группа","priceMin":15000,"priceMax":20000,"unit":"day"},{"name":"Осветитель","priceMin":10000,"priceMax":15000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":15000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":5000,"priceMax":15000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":10000,"priceMax":20000,"unit":"day"},{"name":"Монтаж","priceMin":1500,"priceMax":4000,"unit":"project"},{"name":"Цветокоррекция","priceMin":500,"priceMax":1000,"unit":"project"}],"options":[{"name":"Гримёр","priceMin":10000,"priceMax":15000,"unit":"project"},{"name":"Музыка/Саунддизайн","priceMin":1000,"priceMax":5000,"unit":"day"},{"name":"Запись дубляжа","priceMin":7000,"priceMax":15000,"unit":"person"},{"name":"VFX-визуальные эффекты","priceMin":3000,"priceMax":5000,"unit":"project"}]},"Репортаж":{"base":[{"name":"Разработка концепции","priceMin":5000,"priceMax":20000,"unit":"project"},{"name":"Режиссёр","priceMin":15000,"priceMax":35000,"unit":"day"},{"name":"Операторская группа","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":12000,"priceMax":30000,"unit":"day"},{"name":"Аренда стабилизации","priceMin":5000,"priceMax":10000,"unit":"project"}],"options":[{"name":"Гримёр","priceMin":7000,"priceMax":15000,"unit":"project"},{"name":"Монтаж","priceMin":1500,"priceMax":4000,"unit":"project"},{"name":"Цветокоррекция","priceMin":500,"priceMax":1000,"unit":"project"},{"name":"Музыка/Саунддизайн","priceMin":1000,"priceMax":5000,"unit":"day"},{"name":"VFX-визуальные эффекты","priceMin":500,"priceMax":5000,"unit":"project"}]},"Промо":{"base":[{"name":"Разработка концепции и сценария","priceMin":10000,"priceMax":30000,"unit":"project"},{"name":"Кастинг","priceMin":5000,"priceMax":20000,"unit":"project"},{"name":"Подбор локаций","priceMin":10000,"priceMax":25000,"unit":"project"},{"name":"Реквизит","priceMin":5000,"priceMax":30000,"unit":"project"},{"name":"Режиссёр","priceMin":20000,"priceMax":40000,"unit":"day"},{"name":"Креативный продюсер","priceMin":20000,"priceMax":40000,"unit":"day"},{"name":"Операторская группа","priceMin":20000,"priceMax":30000,"unit":"day"},{"name":"Осветитель","priceMin":15000,"priceMax":30000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Актёры первого плана","priceMin":15000,"priceMax":35000,"unit":"person"},{"name":"Аренда осветительной техники","priceMin":15000,"priceMax":35000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":20000,"priceMax":40000,"unit":"day"}],"options":[{"name":"Гример/стилист","priceMin":15000,"priceMax":20000,"unit":"day"},{"name":"Музыка/Саунддизайн","priceMin":5000,"priceMax":15000,"unit":"day"},{"name":"Монтаж","priceMin":3000,"priceMax":4000,"unit":"project"},{"name":"Цветокоррекция","priceMin":500,"priceMax":1000,"unit":"project"},{"name":"VFX-визуальные эффекты","priceMin":3000,"priceMax":20000,"unit":"project"}]},"Подкасты":{"base":[{"name":"Разработка концепции и сценария","priceMin":15000,"priceMax":20000,"unit":"project"},{"name":"Подбор гостей и согласование графика","priceMin":0,"priceMax":20000,"unit":"project"},{"name":"Креативный продюсер","priceMin":15000,"priceMax":35000,"unit":"day"},{"name":"Операторская группа","priceMin":15000,"priceMax":35000,"unit":"day"},{"name":"Осветитель","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":10000,"priceMax":30000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":10000,"priceMax":30000,"unit":"day"},{"name":"Монтаж","priceMin":2000,"priceMax":5000,"unit":"project"},{"name":"Цветокоррекция","priceMin":500,"priceMax":1000,"unit":"project"}],"options":[{"name":"Гример/стилист","priceMin":5000,"priceMax":15000,"unit":"day"},{"name":"Музыка/Саунддизайн","priceMin":5000,"priceMax":10000,"unit":"day"},{"name":"Аренда звукозаписывающей студии","priceMin":2000,"priceMax":6000,"unit":"day"},{"name":"Звукорежиссёр","priceMin":2000,"priceMax":5000,"unit":"day"}]},"Вертикалка":{"base":[{"name":"Разработка концепции и сценария","priceMin":5000,"priceMax":15000,"unit":"project"},{"name":"Подбор локаций","priceMin":0,"priceMax":10000,"unit":"project"},{"name":"Режиссёр","priceMin":15000,"priceMax":20000,"unit":"day"},{"name":"Оператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Осветитель","priceMin":5000,"priceMax":10000,"unit":"day"},{"name":"Звукооператор","priceMin":5000,"priceMax":10000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":5000,"priceMax":15000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":5000,"priceMax":15000,"unit":"day"},{"name":"Монтаж","priceMin":2000,"priceMax":5000,"unit":"project"}],"options":[{"name":"Кастинг","priceMin":0,"priceMax":5000,"unit":"project"},{"name":"Актёры первого плана","priceMin":5000,"priceMax":20000,"unit":"person"},{"name":"Музыка/Саунддизайн","priceMin":1500,"priceMax":3000,"unit":"day"},{"name":"VFX-визуальные эффекты","priceMin":1000,"priceMax":3000,"unit":"project"}]},"Анимация":{"base":[{"name":"Разработка концепции и сценария","priceMin":20000,"priceMax":100000,"unit":"project"},{"name":"Раскадровка","priceMin":15000,"priceMax":55000,"unit":"project"},{"name":"Дизайн персонажей/объектов","priceMin":10000,"priceMax":50000,"unit":"project"},{"name":"2D-аниматор","priceMin":1000,"priceMax":5000,"unit":"project"},{"name":"3D-аниматор","priceMin":2000,"priceMax":8000,"unit":"project"},{"name":"Монтаж","priceMin":1500,"priceMax":4000,"unit":"project"},{"name":"Цветокоррекция","priceMin":1500,"priceMax":3000,"unit":"project"}],"options":[{"name":"Диктор","priceMin":5000,"priceMax":15000,"unit":"person"},{"name":"Риггер","priceMin":15000,"priceMax":50000,"unit":"project"},{"name":"Музыка/Саунддизайн","priceMin":15000,"priceMax":70000,"unit":"day"},{"name":"VFX-визуальные эффекты","priceMin":3000,"priceMax":15000,"unit":"project"}]},"Корпоративное":{"base":[{"name":"Разработка концепции и сценария","priceMin":15000,"priceMax":40000,"unit":"project"},{"name":"Реквизит","priceMin":5000,"priceMax":30000,"unit":"project"},{"name":"Режиссёр","priceMin":20000,"priceMax":60000,"unit":"day"},{"name":"Продюсер","priceMin":25000,"priceMax":70000,"unit":"day"},{"name":"Операторская группа","priceMin":40000,"priceMax":80000,"unit":"day"},{"name":"Осветитель","priceMin":7000,"priceMax":15000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":800,"priceMax":1500,"unit":"day"},{"name":"Аренда операторской техники","priceMin":15000,"priceMax":30000,"unit":"day"}],"options":[{"name":"Актёры первого плана","priceMin":20000,"priceMax":100000,"unit":"person"},{"name":"Музыка/Саунддизайн","priceMin":10000,"priceMax":100000,"unit":"day"},{"name":"Монтаж","priceMin":1500,"priceMax":5000,"unit":"project"},{"name":"Цветокоррекция","priceMin":1000,"priceMax":3000,"unit":"project"},{"name":"VFX-визуальные эффекты","priceMin":3000,"priceMax":15000,"unit":"project"}]},"Клипы":{"base":[{"name":"Разработка концепции","priceMin":15000,"priceMax":50000,"unit":"project"},{"name":"Сценарий и раскадровка","priceMin":30000,"priceMax":150000,"unit":"project"},{"name":"Кастинг","priceMin":5000,"priceMax":30000,"unit":"project"},{"name":"Подбор локаций","priceMin":10000,"priceMax":70000,"unit":"project"},{"name":"Реквизит","priceMin":10000,"priceMax":100000,"unit":"project"},{"name":"Режиссер-постановщик","priceMin":30000,"priceMax":100000,"unit":"day"},{"name":"Операторская группа","priceMin":50000,"priceMax":90000,"unit":"day"},{"name":"Осветитель","priceMin":8000,"priceMax":18000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":20000,"priceMax":100000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":20000,"priceMax":100000,"unit":"day"}],"options":[{"name":"Актёры первого плана","priceMin":30000,"priceMax":150000,"unit":"person"},{"name":"Гримёр","priceMin":20000,"priceMax":50000,"unit":"project"},{"name":"Монтаж","priceMin":3000,"priceMax":8000,"unit":"project"},{"name":"Цветокоррекция","priceMin":1500,"priceMax":5000,"unit":"project"},{"name":"VFX-визуальные эффекты","priceMin":5000,"priceMax":50000,"unit":"project"}]},"Блогеры":{"base":[{"name":"Разработка концепции","priceMin":5000,"priceMax":40000,"unit":"project"},{"name":"Подбор локаций","priceMin":5000,"priceMax":30000,"unit":"project"},{"name":"Режиссер-постановщик","priceMin":15000,"priceMax":40000,"unit":"day"},{"name":"Операторская группа","priceMin":20000,"priceMax":50000,"unit":"day"},{"name":"Осветитель","priceMin":7000,"priceMax":15000,"unit":"day"},{"name":"Звукооператор","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":5000,"priceMax":20000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":10000,"priceMax":40000,"unit":"day"}],"options":[{"name":"Монтаж","priceMin":2000,"priceMax":5000,"unit":"project"},{"name":"Цветокоррекция","priceMin":800,"priceMax":2000,"unit":"project"},{"name":"Создание превью","priceMin":2000,"priceMax":7000,"unit":"project"},{"name":"Графические эффекты","priceMin":1000,"priceMax":3000,"unit":"project"},{"name":"VFX-визуальные эффекты","priceMin":2000,"priceMax":7000,"unit":"project"}]},"Трансляции":{"base":[{"name":"Разработка концепции","priceMin":10000,"priceMax":30000,"unit":"project"},{"name":"Режиссер-постановщик","priceMin":20000,"priceMax":50000,"unit":"day"},{"name":"Ведущий/спикер","priceMin":10000,"priceMax":50000,"unit":"person"},{"name":"Операторская группа","priceMin":20000,"priceMax":100000,"unit":"day"},{"name":"Поддержание стабильного интернета","priceMin":5000,"priceMax":20000,"unit":"project"},{"name":"Осветитель","priceMin":10000,"priceMax":25000,"unit":"day"},{"name":"Звукооператор","priceMin":15000,"priceMax":30000,"unit":"day"},{"name":"Аренда осветительной техники","priceMin":10000,"priceMax":30000,"unit":"day"},{"name":"Аренда операторской техники","priceMin":10000,"priceMax":40000,"unit":"day"},{"name":"Аренда видеомикшера","priceMin":5000,"priceMax":20000,"unit":"project"}],"options":[{"name":"Гримёр","priceMin":7000,"priceMax":15000,"unit":"project"},{"name":"Монтаж","priceMin":1500,"priceMax":4000,"unit":"project"},{"name":"Музыка/Саунддизайн","priceMin":2000,"priceMax":10000,"unit":"day"}]},"Нейросети":{"base":[{"name":"Разработка концепции","priceMin":10000,"priceMax":30000,"unit":"project"},{"name":"Сценарий и раскадровка","priceMin":15000,"priceMax":50000,"unit":"project"},{"name":"Специалист по нейросетям","priceMin":15000,"priceMax":50000,"unit":"project"},{"name":"Оплата работы нейросети","priceMin":5000,"priceMax":50000,"unit":"project"},{"name":"Доработка сгенерированного контента","priceMin":2000,"priceMax":7000,"unit":"project"},{"name":"Монтаж","priceMin":1500,"priceMax":4000,"unit":"project"},{"name":"Обработка аудио","priceMin":3000,"priceMax":20000,"unit":"project"}],"options":[]},"Иностранные языки":{"base":[{"name":"Переводчик","priceMin":20000,"priceMax":60000,"unit":"person"},{"name":"Питание","priceMin":500,"priceMax":1000,"unit":"project"}],"options":[]}};
+    </script>
+
+    <script>
+      const CC_TYPES = ["Ролики для маркетплейсов","Репортаж","Промо","Подкасты","Вертикалка","Анимация","Корпоративное","Клипы","Блогеры","Трансляции","Нейросети","Иностранные языки"];
+      const CC_PEOPLE = 5;
+
+      const cc = {
+        typeGrid: document.getElementById("ccTypeGrid"),
+        baseList: document.getElementById("ccBaseList"),
+        optGrid: document.getElementById("ccOptionsGrid"),
+        days: document.getElementById("ccDays"),
+        daysVal: document.getElementById("ccDaysValue"),
+        total: document.getElementById("ccTotal"),
+        totalHint: document.getElementById("ccTotalHint"),
+        statDays: document.getElementById("ccStatDays"),
+        statType: document.getElementById("ccStatType"),
+        statOpts: document.getElementById("ccStatOpts"),
+        resetBtn: document.getElementById("ccResetBtn"),
+      };
+
+      const ccState = { type: CC_TYPES[0], days: 1, opts: new Set() };
+
+      function ccRub(n) { return Math.round(n).toLocaleString("ru-RU") + " ₽"; }
+      function ccUnit(u) { return u === "day" ? "за смену" : u === "person" ? "за чел." : "за проект"; }
+
+      function ccSanitize(items) {
+        return (items || [])
+          .filter(it => it && typeof it.name === "string")
+          .map(it => ({ name: it.name.trim(), priceMin: Number(it.priceMin || 0), priceMax: Number(it.priceMax || 0), unit: it.unit === "day" || it.unit === "person" ? it.unit : "project" }))
+          .filter(it => it.name && it.priceMax >= it.priceMin && (it.priceMin === 0 || it.priceMin >= 100) && (it.priceMax === 0 || it.priceMax >= 100));
+      }
+
+      function ccGetData(type) {
+        const d = window.__ESTIMATE_DATA__?.[type] || { base: [], options: [] };
+        return { base: ccSanitize(d.base), options: ccSanitize(d.options) };
+      }
+
+      function ccCost(item, days) {
+        if (item.unit === "day") return { min: item.priceMin * days, max: item.priceMax * days };
+        if (item.unit === "person") return { min: item.priceMin * CC_PEOPLE * days, max: item.priceMax * CC_PEOPLE * days };
+        return { min: item.priceMin, max: item.priceMax };
+      }
+
+      function ccSum(items, days) {
+        return items.reduce((a, it) => { const c = ccCost(it, days); a.min += c.min; a.max += c.max; return a; }, { min: 0, max: 0 });
+      }
+
+      function ccRenderTypes() {
+        cc.typeGrid.innerHTML = "";
+        CC_TYPES.forEach(t => {
+          const b = document.createElement("button");
+          b.type = "button"; b.className = "cc-typeBtn"; b.textContent = t;
+          b.dataset.active = String(t === ccState.type);
+          b.addEventListener("click", () => { ccState.type = t; ccState.opts.clear(); ccRenderAll(); });
+          cc.typeGrid.appendChild(b);
+        });
+      }
+
+      function ccRenderBase(base) {
+        cc.baseList.innerHTML = "";
+        base.forEach(it => {
+          const row = document.createElement("div"); row.className = "cc-svcRow";
+          const left = document.createElement("div");
+          const nm = document.createElement("div"); nm.className = "cc-svcName"; nm.textContent = it.name;
+          const meta = document.createElement("div"); meta.className = "cc-svcMeta"; meta.textContent = ccUnit(it.unit);
+          left.appendChild(nm); left.appendChild(meta);
+          const c = ccCost(it, ccState.days);
+          const pr = document.createElement("div"); pr.className = "cc-svcPrice";
+          pr.textContent = c.min === c.max ? ccRub(c.min) : `${ccRub(c.min)}–${ccRub(c.max)}`;
+          row.appendChild(left); row.appendChild(pr); cc.baseList.appendChild(row);
+        });
+      }
+
+      function ccRenderOptions(options) {
+        cc.optGrid.innerHTML = "";
+        options.forEach(it => {
+          const key = it.name;
+          const checked = ccState.opts.has(key);
+          const card = document.createElement("label"); card.className = "cc-optCard"; card.dataset.checked = String(checked);
+          const top = document.createElement("div"); top.className = "cc-optTop";
+          const left = document.createElement("div");
+          const nm = document.createElement("div"); nm.className = "cc-optName"; nm.textContent = it.name;
+          const sub = document.createElement("div"); sub.className = "cc-optSub";
+          const c = ccCost(it, ccState.days);
+          sub.textContent = `${c.min === c.max ? ccRub(c.min) : ccRub(c.min) + "–" + ccRub(c.max)} · ${ccUnit(it.unit)}`;
+          left.appendChild(nm); left.appendChild(sub);
+          const cb = document.createElement("input"); cb.type = "checkbox"; cb.className = "cc-optCheck"; cb.checked = checked;
+          cb.addEventListener("change", () => { if (cb.checked) ccState.opts.add(key); else ccState.opts.delete(key); ccRenderAll(); });
+          card.addEventListener("click", e => { if (e.target === cb) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event("change", { bubbles: true })); });
+          top.appendChild(left); top.appendChild(cb); card.appendChild(top); cc.optGrid.appendChild(card);
+        });
+      }
+
+      function ccRenderTotal(base, options) {
+        const chosen = options.filter(it => ccState.opts.has(it.name));
+        const rb = ccSum(base, ccState.days), ro = ccSum(chosen, ccState.days);
+        const min = rb.min + ro.min, max = rb.max + ro.max;
+        cc.total.textContent = min === max ? ccRub(min) : `${ccRub(min)}–${ccRub(max)}`;
+        cc.totalHint.textContent = `${ccState.type} · ${ccState.days} смен(а) · выбрано опций: ${chosen.length}`;
+        cc.statDays.textContent = String(ccState.days);
+        cc.statType.textContent = ccState.type;
+        cc.statOpts.textContent = String(chosen.length);
+      }
+
+      function ccRenderAll() {
+        [...cc.typeGrid.children].forEach(b => b.dataset.active = String(b.textContent === ccState.type));
+        cc.daysVal.textContent = String(ccState.days);
+        const { base, options } = ccGetData(ccState.type);
+        ccRenderBase(base);
+        ccRenderOptions(options);
+        ccRenderTotal(base, options);
+      }
+
+      cc.days.addEventListener("input", () => { ccState.days = Number(cc.days.value); ccRenderAll(); });
+      cc.resetBtn.addEventListener("click", () => { ccState.type = CC_TYPES[0]; ccState.days = 1; ccState.opts.clear(); cc.days.value = "1"; ccRenderAll(); });
+
+      ccRenderTypes();
+      ccRenderAll();
+    </script>
   </body>
 </html>

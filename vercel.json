@@ -1,6 +1,13 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "https://www.yelyginn.ru/:path*",
+      "destination": "https://yelyginn.ru/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
     { "source": "/photo", "destination": "/photo.html" },

@@ -2097,30 +2097,6 @@ export default function App() {
           <span>V.2026</span>
         </motion.div>
 
-        <div className="flex items-center p-0.5 sm:p-1 bg-nothing-black/5 rounded-full border border-nothing-black/10">
-          <a
-            href="/"
-            className={cn(
-              "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 sm:gap-2",
-              true
-                ? "bg-nothing-black text-nothing-white shadow-sm" 
-                : "text-nothing-black/70 hover:text-nothing-black"
-            )}
-          >
-            <Video className="w-2.5 h-2.5 sm:w-3 h-3" />
-            <span className="hidden xxs:inline">Видео</span>
-          </a>
-          <a
-            href="/photo.html"
-            className={cn(
-              "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono uppercase tracking-wider transition-all flex items-center gap-1.5 sm:gap-2",
-              "text-nothing-black/70 hover:text-nothing-black"
-            )}
-          >
-            <ImageIcon className="w-2.5 h-2.5 sm:w-3 h-3" />
-            <span className="hidden xxs:inline">Фото</span>
-          </a>
-        </div>
       </div>
       
       <div className="flex items-center gap-3 sm:gap-6">

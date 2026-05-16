@@ -2,9 +2,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    {
-      "source": "/privacy-policy",
-      "destination": "/privacy-policy.html"
-    }
+    { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+    { "source": "/photo", "destination": "/photo.html" },
+    { "source": "/portfolio", "destination": "/portfolio.html" },
+    { "source": "/portfolio/:path*", "destination": "/project.html" },
+    { "source": "/project", "destination": "/project.html" }
   ]
 }

@@ -2561,13 +2561,13 @@ export default function App() {
             </motion.p>
             
             <motion.div variants={STAGGER_ITEM} className="flex flex-col gap-3 sm:gap-6 mt-7 sm:mt-10 xl:mt-auto">
-              <a href="mailto:yelyginn@gmail.com" className="group flex items-center gap-3.5 sm:gap-8 p-4 sm:p-7 hardware-border rounded-[1.25rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">
+              <a href="mailto:y.elyginn@gmail.com" className="group flex items-center gap-3.5 sm:gap-8 p-4 sm:p-7 hardware-border rounded-[1.25rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full glass flex items-center justify-center group-hover:bg-nothing-red group-hover:text-nothing-white transition-all duration-300">
                   <Mail className="w-5 h-5 sm:w-6 h-6" />
                 </div>
                 <div>
                   <p className="font-mono text-[10px] uppercase opacity-90 mb-1 tracking-widest">Email</p>
-                  <p className="text-[clamp(1rem,4.5vw,1.25rem)] font-bold">yelyginn@gmail.com</p>
+                  <p className="text-[clamp(1rem,4.5vw,1.25rem)] font-bold">y.elyginn@gmail.com</p>
                 </div>
               </a>
               <a href="https://t.me/YuriElygin" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3.5 sm:gap-8 p-4 sm:p-7 hardware-border rounded-[1.25rem] sm:rounded-[2rem] hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 bg-nothing-white">

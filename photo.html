@@ -3,141 +3,317 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Фотосъёмка для брендов и бизнеса | ELYGIN PHOTO</title>
-    <meta name="description" content="Фотосъёмка для брендов, бизнеса, событий и соцсетей в Нижнем Новгороде. Портреты, репортаж и визуальный контент." />
+    <title>Фотосъёмка для брендов и бизнеса в Нижнем Новгороде — портрет, предметка, репортаж | Yelyginn</title>
+    <meta name="description" content="Фотосъёмка для брендов и бизнеса в Нижнем Новгороде: студийные портреты, контент и репортаж. Съёмка от 12 000 ₽, студия оплачивается отдельно." />
+    <meta name="keywords" content="фотосъемка нижний новгород, фотограф нижний новгород, предметная съемка, контент для соцсетей, бизнес фотосессия, репортажная съемка" />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://yelyginn.ru/photo" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://yelyginn.ru/photo" />
     <meta property="og:title" content="Фотосъёмка для брендов и бизнеса | ELYGIN PHOTO" />
-    <meta property="og:description" content="Фотосъёмка для брендов, бизнеса, событий и соцсетей в Нижнем Новгороде. Портреты, репортаж и визуальный контент." />
+    <meta property="og:description" content="Контент для соцсетей, предметная съёмка, портреты и репортаж в Нижнем Новгороде." />
     <meta property="og:locale" content="ru_RU" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Yelyginn — фотосъёмка",
+      "description": "Фотосъёмка для брендов и бизнеса в Нижнем Новгороде",
+      "url": "https://yelyginn.ru/photo",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Нижний Новгород",
+        "addressRegion": "Нижегородская область",
+        "addressCountry": "RU"
+      },
+      "priceRange": "от 12 000 ₽",
+      "sameAs": ["https://t.me/YuriElygin"]
+    }
+    </script>
     <style>
-      :root {
-        color-scheme: light;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: #f5f5f4;
-        color: #0a0a0a;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .dot-grid {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0.22;
-        background-image: radial-gradient(circle, rgba(10, 10, 10, 0.18) 0.9px, transparent 0.9px);
-        background-size: 32px 32px;
-      }
-
-      main {
-        min-height: 100vh;
-        width: min(1100px, calc(100% - 32px));
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 48px 0;
-        position: relative;
-      }
-
-      .badge {
-        width: 192px;
-        height: 192px;
-        border-radius: 999px;
-        border: 1px dashed rgba(10, 10, 10, 0.24);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 48px;
-      }
-
-      .badge-mark {
-        width: 14px;
-        height: 14px;
-        border-radius: 999px;
-        background: #fe2c1f;
-      }
-
-      h1 {
-        margin: 0 0 20px;
-        font-size: clamp(44px, 8vw, 112px);
-        line-height: 0.95;
-        text-transform: uppercase;
-        letter-spacing: -0.045em;
-        font-weight: 800;
-      }
-
-      h1 span {
-        color: #fe2c1f;
-      }
-
-      p {
-        margin: 0;
-        max-width: 760px;
-        font-size: clamp(24px, 2.3vw, 40px);
-        line-height: 1.08;
-        font-weight: 700;
-      }
-
-      .back {
-        margin-top: 52px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 56px;
-        padding: 0 32px;
-        border-radius: 999px;
-        border: 1px solid rgba(10, 10, 10, 0.14);
-        color: #0a0a0a;
-        text-decoration: none;
-        text-transform: uppercase;
-        font-size: 12px;
-        letter-spacing: 0.3em;
-        font-weight: 500;
-        transition: all 0.35s ease;
-      }
-
-      .back:hover {
-        background: #0a0a0a;
-        color: #ffffff;
-      }
-
-      @media (max-width: 768px) {
-        .badge {
-          width: 148px;
-          height: 148px;
-          margin-bottom: 36px;
-        }
-
-        p {
-          font-size: clamp(20px, 6vw, 30px);
-        }
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root { --red: #fe2c1f; --black: #0a0a0a; --white: #f5f5f4; --gray: #888; }
+      body { background: var(--black); color: var(--white); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      a { color: inherit; text-decoration: none; }
+      .wrap { width: min(1100px, 100% - 40px); margin: 0 auto; }
+      header { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
+      header .inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .logo { font-size: 13px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; }
+      .logo span { color: var(--red); }
+      nav { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6); flex-wrap: wrap; }
+      nav a:hover { color: var(--white); }
+      .hero { padding: 72px 0 60px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
+      h1 { font-size: clamp(2.4rem, 6vw, 5.2rem); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; max-width: 16ch; }
+      h1 em { color: var(--red); font-style: normal; display: block; }
+      .lead { font-size: clamp(1rem, 1.6vw, 1.2rem); color: rgba(255,255,255,0.7); max-width: 62ch; margin: 28px 0 36px; line-height: 1.65; }
+      .cta { display: inline-flex; align-items: center; gap: 10px; background: var(--red); color: var(--white); font-size: 12px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; padding: 16px 32px; border-radius: 4px; transition: opacity 0.2s; }
+      .cta:hover { opacity: 0.88; }
+      .cta-ghost { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; padding: 15px 28px; border-radius: 4px; transition: all 0.2s; }
+      .cta-ghost:hover { border-color: var(--white); color: var(--white); }
+      .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+      section { padding: 64px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 40px; }
+      h2 span { color: var(--red); }
+      /* Trust numbers */
+      .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); margin-top: 48px; }
+      @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+      .stat { background: var(--black); padding: 26px 22px; }
+      .stat-num { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; }
+      .stat-num span { color: var(--red); }
+      .stat-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-top: 6px; }
+      .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+      .card { background: var(--black); padding: 32px 28px; }
+      .card-num { font-size: 10px; letter-spacing: 0.3em; color: var(--red); text-transform: uppercase; margin-bottom: 14px; }
+      .card h3 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; text-transform: uppercase; }
+      .card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+      .price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+      .price-card { border: 1px solid rgba(255,255,255,0.1); padding: 28px 24px; border-radius: 4px; }
+      .price-card.featured { border-color: var(--red); }
+      .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
+      .price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+      .price-desc { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.55; margin-top: 12px; }
+      .portfolio-request { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.6fr); gap: 24px; align-items: end; border: 1px solid rgba(255,255,255,0.1); padding: clamp(24px, 5vw, 48px); }
+      .portfolio-request p { max-width: 58ch; color: rgba(255,255,255,0.65); }
+      @media (max-width: 720px) { .portfolio-request { grid-template-columns: 1fr; } }
+      .faq { display: grid; gap: 0; }
+      .faq-item { padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+      .faq-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+      .faq-a { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+      .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 2px; }
+      .tag:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+      .cta-band { text-align: center; }
+      .cta-band h2 { margin-bottom: 16px; }
+      .cta-band p { color: rgba(255,255,255,0.6); max-width: 52ch; margin: 0 auto 28px; }
+      footer { padding: 40px 0; }
+      .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+      .foot-copy { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
     </style>
+    <link rel="stylesheet" href="/site-skin.css" />
+
   </head>
   <body>
-    <div class="dot-grid" aria-hidden="true"></div>
-    <main>
-      <div class="badge" aria-hidden="true">
-        <div class="badge-mark"></div>
+    <header>
+      <div class="wrap">
+        <div class="inner">
+          <a href="/" class="logo">YELYGINN <span>·</span> ФОТО</a>
+          <nav>
+            <a href="/">Главная</a>
+            <a href="/#all-sections">Все разделы</a>
+            <a href="/portfolio">Портфолио</a>
+            <a href="/calculator">Калькулятор</a>
+            <a href="/ceny">Цены</a>
+            <a href="/account">Кабинет</a>
+            <a href="/#contact">Контакт</a>
+          </nav>
+        </div>
       </div>
-      <h1>Фото<br /><span>скоро добавлю</span></h1>
-      <p>
-        Я тоже снимаю фото: портреты, репортаж и контент для брендов.
-        Скоро здесь появятся лучшие серии и отдельные съёмки.
-      </p>
-      <a class="back" href="/">Вернуться к видео</a>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Нижний Новгород / Фотосъёмка для бизнеса</p>
+          <h1>Фото,<br />которое<br /><em>продаёт</em></h1>
+          <p class="lead">
+            Снимаю визуальный контент для брендов и бизнеса: предметную и продуктовую съёмку,
+            портреты и команду, репортаж с мероприятий, контент для соцсетей. Тот же почерк,
+            свет и постобработка, что и в видео — фото и видео в одном продакшене.
+          </p>
+          <div class="ctas">
+            <a href="/calculator" class="cta">Рассчитать стоимость</a>
+            <a href="https://t.me/YuriElygin" class="cta-ghost">Обсудить съёмку</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><div class="stat-num">7<span>+</span></div><div class="stat-label">лет в съёмке</div></div>
+            <div class="stat"><div class="stat-num">300<span>+</span></div><div class="stat-label">проектов</div></div>
+            <div class="stat"><div class="stat-num">40<span>+</span></div><div class="stat-label">брендов</div></div>
+            <div class="stat"><div class="stat-num">48<span>ч</span></div><div class="stat-label">отдаю превью</div></div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <div class="wrap">
+          <h2>Что <span>снимаю</span></h2>
+          <div class="grid-3">
+            <div class="card">
+              <p class="card-num">01</p>
+              <h3>Контент для соцсетей</h3>
+              <p>Серии кадров под контент-план: продукт, процесс, атмосфера. Готовые форматы под ленту, сторис и карточки.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">02</p>
+              <h3>Предметная и продуктовая</h3>
+              <p>Товар с выгодной стороны: свет, фактура, деталь. Для сайта, маркетплейсов и рекламы. Каталожная и имиджевая съёмка.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">03</p>
+              <h3>Портрет и команда</h3>
+              <p>Деловые и имиджевые портреты, фото сотрудников и руководителей. Единый стиль для сайта и соцсетей компании.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">04</p>
+              <h3>Репортаж и события</h3>
+              <p>Конференции, открытия, корпоративы. Живые кадры, эмоции и динамика мероприятия — для отчётов и анонсов.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">05</p>
+              <h3>Интерьер и пространство</h3>
+              <p>Рестораны, шоурумы, отели, офисы. Подача пространства так, чтобы хотелось прийти. Свет и геометрия кадра.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">06</p>
+              <h3>Lookbook и каталог</h3>
+              <p>Съёмка коллекций и линеек под каталог или лукбук. Единый визуальный ряд, готовый к печати и публикации.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2>Пакеты и <span>цены</span></h2>
+          <div class="price-row">
+            <div class="price-card">
+              <p class="price-label">Контент для соцсетей</p>
+              <p class="price-tag">от 18 000 ₽</p>
+              <p class="price-desc">Съёмка до 2 часов и 20 обработанных кадров для сайта и социальных сетей.</p>
+            </div>
+            <div class="price-card featured">
+              <p class="price-label">Бренд-день</p>
+              <p class="price-tag">от 38 000 ₽</p>
+              <p class="price-desc">Съёмка продукта, команды и пространства до 5 часов. Итоговый объём согласуем в брифе.</p>
+            </div>
+            <div class="price-card">
+              <p class="price-label">Предметная съёмка</p>
+              <p class="price-tag">от 1 200 ₽/кадр</p>
+              <p class="price-desc">Каталожная или имиджевая. Чистый фон или композиция. Обработка и ретушь включены.</p>
+            </div>
+          </div>
+          <div class="price-row" style="margin-top:12px;">
+            <div class="price-card">
+              <p class="price-label">Репортаж с мероприятия</p>
+              <p class="price-tag">от 6 000 ₽/час</p>
+              <p class="price-desc">Минимум 2 часа. Отбор, цветокоррекция и передача через закрытую онлайн-галерею.</p>
+            </div>
+            <div class="price-card">
+              <p class="price-label">Портретная сессия</p>
+              <p class="price-tag">от 13 000 ₽</p>
+              <p class="price-desc">Съёмка до 1 часа и 10 кадров в ретуши. Аренда студии оплачивается отдельно.</p>
+            </div>
+            <div class="price-card featured">
+              <p class="price-label">Фото + Видео</p>
+              <p class="price-tag">−15%</p>
+              <p class="price-desc">Заказываете фото и видео в одну смену — скидка на весь проект. Один продакшен, единый стиль.</p>
+            </div>
+          </div>
+          <p style="font-size:0.85rem; color:rgba(255,255,255,0.45); margin-top:20px;">
+            Постоянным клиентам — скидка по уровню (до −15%). Точную смету соберите в
+            <a href="/calculator" style="color:var(--red);">калькуляторе</a> или обсудим в Telegram.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2>Примеры <span>работ</span></h2>
+          <div class="portfolio-request">
+            <div>
+              <p class="eyebrow">Подборка под задачу</p>
+              <p>Подборка фоторабот доступна по запросу. Напишите нишу и формат проекта — отправлю релевантные предметные, портретные, интерьерные или репортажные серии.</p>
+            </div>
+            <a href="https://t.me/YuriElygin" class="cta">Получить подборку</a>
+          </div>
+          <p style="font-size:0.85rem; color:rgba(255,255,255,0.45); margin-top:20px;">
+            Полное портфолио и кейсы — в <a href="/portfolio" style="color:var(--red);">разделе работ</a>
+            или по запросу в Telegram под вашу нишу.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2>Как <span>проходит</span> съёмка</h2>
+          <div class="grid-3">
+            <div class="card">
+              <p class="card-num">01</p>
+              <h3>Бриф и подготовка</h3>
+              <p>Обсуждаем задачу, референсы и список кадров. Подбираем локацию, свет и реквизит под результат, а не «на удачу».</p>
+            </div>
+            <div class="card">
+              <p class="card-num">02</p>
+              <h3>Съёмочный день</h3>
+              <p>Работаю быстро и спокойно: помогаю с позированием и композицией. Контролирую кадр на площадке — вы видите результат сразу.</p>
+            </div>
+            <div class="card">
+              <p class="card-num">03</p>
+              <h3>Отбор и обработка</h3>
+              <p>Превью — в течение 48 часов. Цветокоррекция и ретушь в едином стиле. Готовые файлы в нужных форматах для печати и сети.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2>Часто <span>спрашивают</span></h2>
+          <div class="faq">
+            <div class="faq-item">
+              <p class="faq-q">Можно заказать фото и видео в одну смену?</p>
+              <p class="faq-a">Да, это самый выгодный вариант — единый стиль и скидка −15% на проект. Планирую смену так, чтобы получить и фото, и видео без потери качества.</p>
+            </div>
+            <div class="faq-item">
+              <p class="faq-q">Сколько кадров я получу и в каком виде?</p>
+              <p class="faq-a">Зависит от пакета: от 15 до 60+ обработанных кадров. Отдаю в JPEG высокого разрешения, по запросу — версии под печать и под соцсети.</p>
+            </div>
+            <div class="faq-item">
+              <p class="faq-q">Как быстро будут готовы фото?</p>
+              <p class="faq-a">Превью отобранных кадров — в течение 48 часов после съёмки. Финальная обработка — 3–7 рабочих дней в зависимости от объёма.</p>
+            </div>
+            <div class="faq-item">
+              <p class="faq-q">Помогаете с образом и позированием?</p>
+              <p class="faq-a">Да. Подскажу, что надеть, как держаться в кадре и как выстроить композицию. С вами будет комфортно, даже если вы не любите фотографироваться.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div class="wrap">
+          <h2>Соберём <span>проект</span>?</h2>
+          <p>Рассчитайте стоимость в калькуляторе за минуту или напишите в Telegram — обсудим задачу и подберём формат под бюджет.</p>
+          <div class="ctas" style="justify-content:center;">
+            <a href="/calculator" class="cta">Рассчитать стоимость</a>
+            <a href="https://t.me/YuriElygin" class="cta-ghost">Написать в Telegram</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2>Другие <span>услуги</span></h2>
+          <div class="links-row">
+            <a href="/reels" class="tag">Reels</a>
+            <a href="/reklamnye-roliki" class="tag">Рекламные ролики</a>
+            <a href="/event-video" class="tag">Event-видео</a>
+            <a href="/video-dlya-marketpleysov" class="tag">Видео для маркетплейсов</a>
+            <a href="/ceny" class="tag">Все цены</a>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      <div class="wrap">
+        <div class="foot">
+          <p class="foot-copy">© 2026 Yelyginn — фото и видеопродакшн в Нижнем Новгороде</p>
+          <a href="https://t.me/YuriElygin" class="cta" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

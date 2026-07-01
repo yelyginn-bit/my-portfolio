@@ -1,12 +1,49 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
+
+const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
+  name: 'shared-head-assets',
+  transformIndexHtml(html: string) {
+    const isReactPage = html.includes('<div id="root"');
+    const tags: HtmlTagDescriptor[] = [
+      { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }, injectTo: 'head' },
+      { tag: 'link', attrs: { rel: 'manifest', href: '/site.webmanifest' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { name: 'theme-color', content: '#f7f7f5' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { property: 'og:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { property: 'og:image:height', content: '630' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Юрий Елыгин — видео, фото и монтаж' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
+    ];
+    if (!isReactPage) {
+      tags.push({
+        tag: 'script',
+        attrs: {
+          src: '/static-analytics.js',
+          defer: true,
+          'data-metrika-id': metrikaId,
+          'data-ga-id': gaId,
+        },
+        injectTo: 'body',
+      });
+    }
+    return {
+      html,
+      tags,
+    };
+  },
+});
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID || '', env.VITE_GA_ID || ''),
+    ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
@@ -21,7 +58,29 @@ export default defineConfig(({mode}) => {
           main: path.resolve(__dirname, 'index.html'),
           photo: path.resolve(__dirname, 'photo.html'),
           portfolio: path.resolve(__dirname, 'portfolio.html'),
+          portfolioReels: path.resolve(__dirname, 'portfolio-reels.html'),
+          portfolioEvents: path.resolve(__dirname, 'portfolio-events.html'),
+          portfolioConcerts: path.resolve(__dirname, 'portfolio-concerts.html'),
+          portfolioPhoto: path.resolve(__dirname, 'portfolio-photo.html'),
+          portfolioEditing: path.resolve(__dirname, 'portfolio-editing.html'),
           project: path.resolve(__dirname, 'project.html'),
+          contentDay: path.resolve(__dirname, 'content-day.html'),
+          calculator: path.resolve(__dirname, 'calculator.html'),
+          account: path.resolve(__dirname, 'account.html'),
+          admin: path.resolve(__dirname, 'admin.html'),
+          gallery: path.resolve(__dirname, 'gallery.html'),
+          cases: path.resolve(__dirname, 'cases.html'),
+          journal: path.resolve(__dirname, 'journal.html'),
+          prices: path.resolve(__dirname, 'ceny.html'),
+          eventVideo: path.resolve(__dirname, 'event-video.html'),
+          reels: path.resolve(__dirname, 'reels.html'),
+          advertising: path.resolve(__dirname, 'reklamnye-roliki.html'),
+          marketplace: path.resolve(__dirname, 'video-dlya-marketpleysov.html'),
+          blog: path.resolve(__dirname, 'blog/index.html'),
+          blogReels: path.resolve(__dirname, 'blog/kak-snimat-reels-dlya-biznesa.html'),
+          blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),
+          blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),
+          blogEvents: path.resolve(__dirname, 'blog/videosemka-meropriyatiy-nn.html'),
         },
       },
     },
@@ -29,12 +88,13 @@ export default defineConfig(({mode}) => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',      // Proxy for Netlify Functions during local development
+      // Прокси serverless-функций (api/) на локальный сервер функций в dev.
       proxy: {
-        '/.netlify/functions': {
+        '/api': {
           target: 'http://localhost:3001',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/.netlify\/functions/, ''),
         },
-      },    },
+      },
+    },
   };
 });

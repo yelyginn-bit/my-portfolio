@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Личный кабинет | Yelyginn</title>
+    <meta name="description" content="Личный кабинет клиента: история заказов, статус и накопленная скидка." />
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+      :root {
+        --red: #fe2c1f;
+        --black: #0a0a0a;
+        --panel: #121212;
+        --panel-2: #181818;
+        --white: #f5f5f4;
+        --gray: #8e8e8c;
+        --line: rgba(255, 255, 255, 0.1);
+        --line-soft: rgba(255, 255, 255, 0.06);
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--black); color: var(--white);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55; -webkit-font-smoothing: antialiased; min-height: 100vh;
+      }
+      a { color: inherit; text-decoration: none; }
+
+      .acc-wrap { width: min(840px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
+      .acc-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 28px; }
+      .acc-logo { font-size: 15px; font-weight: 800; }
+      .acc-logo span { color: var(--red); }
+      .acc-back { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); transition: color 0.2s; }
+      .acc-back:hover { color: var(--white); }
+
+      .acc-eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+      .acc-title { font-size: clamp(28px, 5vw, 46px); line-height: 1.0; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 28px; text-transform: uppercase; }
+      .acc-title span { color: var(--red); }
+
+      .acc-card { background: var(--panel); border: 1px solid var(--line-soft); border-radius: 16px; padding: clamp(18px, 3vw, 28px); }
+      .acc-card + .acc-card { margin-top: 18px; }
+
+      .acc-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px; }
+
+      .acc-input {
+        width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px;
+        color: var(--white); font-size: 15px; padding: 14px; outline: none; font-family: inherit; transition: border-color 0.18s;
+      }
+      .acc-input:focus { border-color: var(--red); }
+      .acc-field { margin-bottom: 14px; }
+      .acc-hint { font-size: 12px; color: var(--gray); margin-top: 8px; line-height: 1.5; }
+
+      .acc-otp-box { margin: 4px 0 14px; padding: 14px; border-radius: 9px; background: rgba(254,44,31,0.08); border: 1px dashed rgba(254,44,31,0.5); font-size: 13.5px; }
+      .acc-otp-box b { color: var(--red); font-size: 22px; letter-spacing: 0.3em; font-variant-numeric: tabular-nums; }
+
+      .acc-btn {
+        display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+        background: var(--red); color: #fff; border: none; cursor: pointer; font-family: inherit;
+        font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+        padding: 16px 24px; border-radius: 10px; transition: opacity 0.2s, transform 0.1s;
+      }
+      .acc-btn:hover { opacity: 0.92; }
+      .acc-btn:active { transform: scale(0.99); }
+      .acc-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+      .acc-btn-ghost { background: transparent; border: 1px solid var(--line); color: rgba(255,255,255,0.8); }
+      .acc-err { color: #ff6b5e; font-size: 12.5px; margin-top: 10px; }
+      .acc-link { color: var(--gray); font-size: 12.5px; cursor: pointer; }
+      .acc-link:hover { color: var(--white); }
+
+      /* Profile header */
+      .acc-profile { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+      .acc-name { font-size: 22px; font-weight: 800; }
+      .acc-phone { color: var(--gray); font-size: 13.5px; margin-top: 2px; }
+      .acc-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 99px; background: rgba(254,44,31,0.12); border: 1px solid var(--red); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+      .acc-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+
+      /* Stats */
+      .acc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+      @media (max-width: 560px) { .acc-stats { grid-template-columns: 1fr; } }
+      .acc-stat { background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 16px; }
+      .acc-stat-val { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+      .acc-stat-val.red { color: var(--red); }
+      .acc-stat-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-top: 4px; }
+
+      /* Progress to next tier */
+      .acc-progress { margin-top: 18px; }
+      .acc-progress-track { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.1); overflow: hidden; margin-top: 8px; }
+      .acc-progress-fill { height: 100%; background: var(--red); border-radius: 99px; transition: width 0.4s ease; }
+      .acc-progress-txt { font-size: 12.5px; color: rgba(255,255,255,0.75); }
+      .acc-progress-txt b { color: var(--red); }
+
+      /* Orders */
+      .acc-section-title { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin: 0 0 14px; }
+      .acc-order { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+      .acc-order:last-child { border-bottom: none; }
+      .acc-order-type { font-size: 14.5px; font-weight: 600; }
+      .acc-order-meta { font-size: 12px; color: var(--gray); margin-top: 3px; }
+      .acc-order-price { text-align: right; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 13.5px; }
+      .acc-order-status { display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-top: 4px; }
+      .acc-empty { color: var(--gray); font-size: 13.5px; text-align: center; padding: 22px 0; }
+      .acc-empty a { color: var(--red); }
+    </style>
+    <link rel="stylesheet" href="/site-skin.css" />
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/account/main.tsx"></script>
+  </body>
+</html>

@@ -1,17 +1,53 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
     { "source": "/photo", "destination": "/photo.html" },
     { "source": "/portfolio", "destination": "/portfolio.html" },
+    { "source": "/portfolio/reels", "destination": "/portfolio-reels.html" },
+    { "source": "/portfolio/events", "destination": "/portfolio-events.html" },
+    { "source": "/portfolio/concerts", "destination": "/portfolio-concerts.html" },
+    { "source": "/portfolio/photo", "destination": "/portfolio-photo.html" },
+    { "source": "/portfolio/editing", "destination": "/portfolio-editing.html" },
     { "source": "/portfolio/:path*", "destination": "/project.html" },
     { "source": "/project", "destination": "/project.html" },
+    { "source": "/content-day", "destination": "/content-day.html" },
     { "source": "/reels", "destination": "/reels.html" },
     { "source": "/reklamnye-roliki", "destination": "/reklamnye-roliki.html" },
     { "source": "/event-video", "destination": "/event-video.html" },
     { "source": "/video-dlya-marketpleysov", "destination": "/video-dlya-marketpleysov.html" },
     { "source": "/ceny", "destination": "/ceny.html" },
+    { "source": "/calculator", "destination": "/calculator.html" },
+    { "source": "/account", "destination": "/account.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/g/:token", "destination": "/gallery.html" },
+    { "source": "/cases", "destination": "/cases.html" },
+    { "source": "/journal", "destination": "/journal.html" },
+    { "source": "/journal/:slug", "destination": "/journal.html" },
     { "source": "/blog", "destination": "/blog/index.html" },
     { "source": "/blog/:slug", "destination": "/blog/:slug.html" }
   ]

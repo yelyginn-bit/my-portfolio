@@ -27,8 +27,23 @@ import {
   Zap,
   Sun,
   Moon,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Calculator as CalculatorIcon
 } from "lucide-react";
+import { getStore } from "./lib/store";
+import { notify } from "./lib/notify";
+import { grantAnalyticsConsent, trackAnalyticsEvent } from "./lib/analytics";
+import {
+  ContentDayPage,
+  PortfolioCategoryPageView,
+  PortfolioDirectoryPage,
+} from "./portfolio/PortfolioPages";
+import {
+  HOME_PORTFOLIO_DATA,
+  PORTFOLIO_CATEGORY_PAGES,
+  portfolioItems,
+  type PortfolioCategory,
+} from "./portfolio/portfolioData";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -36,18 +51,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const getKinescopePreviewUrl = (embedId: string) => {
-  const params = new URLSearchParams({
-    autoplay: "1",
-    muted: "1",
-    loop: "1",
-    playsinline: "1",
-    preload: "auto",
-    background: "1",
-  });
-
-  return `https://kinescope.io/embed/${embedId}?${params.toString()}`;
-};
+const getKinescopePosterUrl = (embedId: string, size: "sm" | "md" | "lg" = "md") =>
+  `https://kinescope.io/${embedId}/poster/${size}.webp`;
 
 // --- Data ---
 
@@ -65,62 +70,41 @@ const CLIENTS = [
   "Баня FEST"
 ];
 
-const TESTIMONIALS = [
-  {
-    quote: "Нам нужен был ролик для рекламы, который понятно расскажет о продукте. Юрий быстро вник в задачу и сделал видео, которое мы сразу пустили в работу.",
-    author: "Александр Р.",
-    role: "Руководитель проекта",
-    company: "TechVision"
-  },
-  {
-    quote: "С Юрием было легко: без лишней суеты, с понятными сроками и нормальной коммуникацией. В итоге получили сильное видео для запуска и соцсетей.",
-    author: "Иван Д.",
-    role: "Маркетолог",
-    company: "CyberCorp"
-  },
-  {
-    quote: "Для нас было важно красиво показать пространство и детали. Юрий снял всё аккуратно и собрал ролик так, что он сразу выглядел уверенно и дорого.",
-    author: "Дмитрий К.",
-    role: "Менеджер проектов",
-    company: "Сбербанк"
-  },
-  {
-    quote: "Мы заказывали и видео, и фотографии для бренда. Всё получилось в одном стиле, спокойно по процессу и без ощущения, что нужно всё контролировать самим.",
-    author: "Елена В.",
-    role: "Маркетинг-директор",
-    company: "Global Retail"
-  },
-  {
-    quote: "Видео получилось живым и не затянутым. Юрий хорошо чувствует ритм, поэтому ролик хочется досмотреть до конца.",
-    author: "Сергей М.",
-    role: "Продюсер",
-    company: "MediaFlow"
-  },
-  {
-    quote: "Снимали большое мероприятие. Всё прошло чётко: Юрий сам ориентировался на площадке, ничего не тормозил и потом быстро отдал готовый материал.",
-    author: "Андрей С.",
-    role: "Организатор",
-    company: "CityBuild"
-  },
-  {
-    quote: "Нужен был человек, который сам понимает, как лучше снять и что оставить в кадре. Юрий именно такой: предлагает по делу и делает красиво.",
-    author: "Наталья О.",
-    role: "Бренд-менеджер",
-    company: "Aurora Luxury"
-  },
-  {
-    quote: "Мы переживали за сроки, но всё сделали вовремя. Получили понятный, чистый ролик, который хорошо смотрится и на сайте, и в reels.",
-    author: "Виктор П.",
-    role: "Руководитель команды",
-    company: "CinemaTech"
-  },
-  {
-    quote: "Видео для презентации получилось сильным и понятным. Оно хорошо объясняет, кто мы и чем занимаемся, а это для нас было главным.",
-    author: "Михаил Л.",
-    role: "Директор по развитию",
-    company: "Caprigo"
-  },
+type TestimonialItem = {
+  quote: string;
+  author: string;
+  role: string;
+  company: string;
+};
+
+// Публично показываем только отзывы, добавленные и опубликованные в админке.
+// Это исключает попадание тестовых имён и компаний в production.
+const TESTIMONIALS: TestimonialItem[] = [];
+
+const CONTACT_SERVICES = [
+  "Съёмка Reels / Shorts",
+  "Монтаж Reels / Shorts",
+  "Монтаж YouTube-видео",
+  "Видеосъёмка мероприятия",
+  "Репортажная фотосъёмка",
+  "Студийная фотосъёмка",
+  "Контент-день для бизнеса",
+  "Рекламный ролик",
+  "Другая задача",
 ];
+
+const isValidContact = (value: string) => {
+  const contact = value.trim();
+  if (!contact) return false;
+
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(contact);
+  const isTelegram = /^@[a-zA-Z0-9_]{5,32}$/u.test(contact)
+    || /^https?:\/\/t\.me\/[a-zA-Z0-9_]{5,32}\/?$/u.test(contact);
+  const phoneDigits = contact.replace(/\D/gu, "");
+  const isPhone = phoneDigits.length >= 10 && phoneDigits.length <= 15;
+
+  return isEmail || isTelegram || isPhone;
+};
 
 const MOSCOW_TIME_FORMATTER = new Intl.DateTimeFormat('ru-RU', {
   timeZone: 'Europe/Moscow',
@@ -132,115 +116,16 @@ const MOSCOW_TIME_FORMATTER = new Intl.DateTimeFormat('ru-RU', {
 
 const getMoscowTime = () => MOSCOW_TIME_FORMATTER.format(new Date());
 
-const PORTFOLIO_DATA = [
-  {
-    category: "Избранные кейсы",
-    projects: [
-      { title: "Метро Горьковская", embedId: "deV36JQbK25yhFKf2zHs3G", size: "2x2", ratio: "56.25%" },
-      { title: "Университет Сбера", embedId: "wrf4URJ9Q7P7g5B1SZ5A7W", size: "2x1", ratio: "56.25%" },
-      { title: "Caprigo Презентация", embedId: "6kMP6pfn8UtNRXS8eYfjPc", size: "1x1", ratio: "56.25%" },
-      { title: "Корона", embedId: "hyQindossxyWZfRxLuDacu", size: "1x1", ratio: "56.25%" },
-      { title: "Хоккей СК РФ", embedId: "txm4qz7vRPifxz3MPbzu1V", size: "2x1", ratio: "56.25%" },
-      { title: "Женщины СИБУРа", embedId: "51pL5GtYFvJB1f9Nf52HHN", size: "1x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Event и концерты",
-    projects: [
-      { title: "Метро Горьковская", embedId: "deV36JQbK25yhFKf2zHs3G", size: "2x2", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Интервью и подкасты",
-    projects: [
-      { title: "Сбер. Архитектура", embedId: "wrf4URJ9Q7P7g5B1SZ5A7W", size: "2x1", ratio: "56.25%" },
-      { title: "Женщины СИБУРа", embedId: "51pL5GtYFvJB1f9Nf52HHN", size: "2x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Рекламные тизеры",
-    projects: [
-      { title: "Тизер клипа «хорошо»", embedId: "6j8wPfXv6Keka6JTCoiwUC", size: "1x2", ratio: "177.78%" },
-      { title: "Женщины СИБУРа", embedId: "fvxndmGGHqWtuCcK5TnB4j", size: "2x1", ratio: "56.25%" },
-      { title: "Сбер. Архитектура", embedId: "0u1FpHDHxFSsWdWJX3HcXn", size: "1x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Обучающие видео",
-    projects: [
-      { title: "Caprigo", embedId: "66ZCTTLVXKieRDjSn2vAYp", size: "2x1", ratio: "56.25%" },
-      { title: "BARYER", embedId: "oVqtn1J5sip4R8aNBMY1mi", size: "1x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Архитектура и интерьеры",
-    projects: [
-      { title: "Архитектура 1", embedId: "ibJsptvZeqt8fe3BBdXvQm", size: "2x1", ratio: "56.25%" },
-      { title: "Архитектура 2", embedId: "7UV55F6RMQseCjQ1fyRTtd", size: "1x1", ratio: "56.25%" },
-      { title: "Архитектура 3", embedId: "kXnZpxvucX5VKdytAgUAW8", size: "1x1", ratio: "56.25%" },
-      { title: "Архитектура 4", embedId: "o8r8qjE3fzudh7MGUruDFv", size: "2x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Reels для бизнеса",
-    projects: [
-      { title: "Подкаст 1", embedId: "2GgtwiWuq6XaS3yeXbWhRq", size: "1x2", ratio: "177.78%" },
-      { title: "Подкаст 2", embedId: "pskL2K5zWzBGMuUH8ZaG6P", size: "1x2", ratio: "177.78%" },
-      { title: "Подкаст 3", embedId: "eartRu9igpoxXbUHgATyyt", size: "1x2", ratio: "177.78%" },
-      { title: "Подкаст 4", embedId: "8uVYyar3L9cBPV1DmiWcau", size: "1x2", ratio: "177.78%" },
-      { title: "Подкаст 5", embedId: "d89ft31rBLhd7XMdSFrAFz", size: "1x2", ratio: "177.78%" },
-      { title: "Метро 1", embedId: "wMPCVrj945ds61B4xJK6y2", size: "1x2", ratio: "177.78%" },
-      { title: "Метро 2", embedId: "g6XBdsRfBr9QK7B31jH3zG", size: "1x2", ratio: "177.78%" },
-      { title: "YANGO", embedId: "0e6mxyEoYRosiGzuBzBdwb", size: "1x2", ratio: "177.78%" },
-      { title: "Йога 1", embedId: "4r4pXusToooZ4BT8a9935e", size: "1x2", ratio: "177.78%" },
-      { title: "Йога 2", embedId: "fhCvj9nTWMH7puFcUWpai6", size: "1x2", ratio: "177.78%" },
-      { title: "Хоккей 1", embedId: "th8PWjmJNUatY2cjGUdkcc", size: "1x2", ratio: "177.78%" },
-      { title: "Хоккей 2", embedId: "wEH2Y96QsApXLDDAkzrRZQ", size: "1x2", ratio: "177.78%" },
-      { title: "Хоккей 3", embedId: "kpP6XYJnC5wDt5vNMAJU3J", size: "1x2", ratio: "177.78%" },
-      { title: "СММ", embedId: "kHKEqxTtZ19gB3S7vNRCsT", size: "1x2", ratio: "177.78%" }
-    ]
-  },
-  {
-    category: "Съёмка товаров",
-    projects: [
-      { title: "HOFF 1", embedId: "vFFSNV1fcvUEAPjk5gGMV7", size: "2x1", ratio: "56.25%" },
-      { title: "HOFF 2", embedId: "arCgJWNsD245SvtkZ4FVAL", size: "1x1", ratio: "56.25%" },
-      { title: "Caprigo 1", embedId: "6cL2AVoFUHmKCTZSbXsNWR", size: "1x1", ratio: "56.25%" },
-      { title: "Caprigo 2", embedId: "ebBJHKSLagRdp7HoKkZ6E8", size: "2x1", ratio: "56.25%" },
-      { title: "Cartier 1", embedId: "bcowrcjUyKEj4dUjVzHpMZ", size: "1x1", ratio: "56.25%" },
-      { title: "Cartier 2", embedId: "7Wp7zYWRmNBA35cMfwwUEv", size: "1x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Event-отчёты",
-    projects: [
-      { title: "Тренировка Основа", embedId: "9sZonV2HK653PfPqxqdGbH", size: "2x1", ratio: "56.25%" },
-      { title: "Йога", embedId: "o1R5MSC6VZDRYGdvkejSkN", size: "1x1", ratio: "56.25%" },
-      { title: "Форум Малая Родина", embedId: "7cXtKnBp5idm5iTAgDFKEN", size: "2x1", ratio: "56.25%" },
-      { title: "Хоккей СК РФ", embedId: "txm4qz7vRPifxz3MPbzu1V", size: "1x1", ratio: "56.25%" },
-      { title: "Баня FEST", embedId: "cA7pGxKbCP8XFNYUjNSbpr", size: "2x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Презентационные видео",
-    projects: [
-      { title: "YANGO", embedId: "mLGNoFi4cj3vAdBrqrsdtP", size: "2x1", ratio: "56.25%" },
-      { title: "THERAFLEX", embedId: "7MmmoQkeKtLJFA3aqZGToF", size: "1x1", ratio: "56.25%" },
-      { title: "Caprigo", embedId: "6kMP6pfn8UtNRXS8eYfjPc", size: "2x1", ratio: "56.25%" }
-    ]
-  },
-  {
-    category: "Промышленная видеосъёмка",
-    projects: [
-      { title: "KORONA", embedId: "hyQindossxyWZfRxLuDacu", size: "2x2", ratio: "56.25%" }
-    ]
-  }
-];
+const PORTFOLIO_DATA = HOME_PORTFOLIO_DATA;
 
 type ProjectMeta = {
   title: string;
   description: string;
   task: string;
+  format: string;
+  contribution: string;
+  approach: string;
+  result: string;
 };
 
 const PROJECT_TEXT_OVERRIDES: Record<string, Partial<ProjectMeta>> = {
@@ -479,6 +364,72 @@ const SERVICES = [
   }
 ];
 
+const PUBLIC_SITE_GROUPS = [
+  {
+    title: "Портфолио",
+    links: [
+      { label: "Все работы", href: "/portfolio", note: "Общий каталог проектов" },
+      { label: "Reels / Shorts", href: "/portfolio/reels", note: "Вертикальные ролики" },
+      { label: "Мероприятия", href: "/portfolio/events", note: "Event и репортаж" },
+      { label: "Концерты", href: "/portfolio/concerts", note: "Live-выступления" },
+      { label: "Фото", href: "/portfolio/photo", note: "Фото для бизнеса" },
+      { label: "Монтаж", href: "/portfolio/editing", note: "Постпродакшн" },
+    ],
+  },
+  {
+    title: "Услуги",
+    links: [
+      { label: "Контент-день", href: "/content-day", note: "Фото и видео за одну съёмку" },
+      { label: "Reels для бизнеса", href: "/reels", note: "Съёмка и монтаж" },
+      { label: "Рекламные ролики", href: "/reklamnye-roliki", note: "Видео для брендов" },
+      { label: "Event-видео", href: "/event-video", note: "Съёмка мероприятий" },
+      { label: "Маркетплейсы", href: "/video-dlya-marketpleysov", note: "Видео для карточек товара" },
+      { label: "Фотосъёмка", href: "/photo", note: "Портрет, репортаж, контент" },
+    ],
+  },
+  {
+    title: "Информация и инструменты",
+    links: [
+      { label: "Цены", href: "/ceny", note: "Прайс по направлениям" },
+      { label: "Калькулятор", href: "/calculator", note: "Собрать ориентир сметы" },
+      { label: "Кейсы", href: "/cases", note: "Задачи и решения" },
+      { label: "Журнал", href: "/journal", note: "Заметки о продакшне" },
+      { label: "Статьи", href: "/blog", note: "Гайды для бизнеса" },
+      { label: "Кабинет", href: "/account", note: "Заказы и скидка клиента" },
+      { label: "Политика", href: "/privacy-policy", note: "Обработка данных" },
+    ],
+  },
+];
+
+const SiteDirectory = () => (
+  <section id="all-sections" className="site-directory site-section">
+    <div className="site-shell max-w-[1720px] mx-auto">
+      <div className="site-directory-heading">
+        <span>Навигация по сайту</span>
+        <h2>Все разделы</h2>
+        <p>Выберите нужную услугу, подборку работ или клиентский инструмент.</p>
+      </div>
+      <div className="site-directory-groups">
+        {PUBLIC_SITE_GROUPS.map((group, groupIndex) => (
+          <section key={group.title} aria-labelledby={`directory-group-${groupIndex}`}>
+            <h3 id={`directory-group-${groupIndex}`}>{group.title}</h3>
+            <div>
+              {group.links.map((link, index) => (
+                <a key={link.href} href={link.href}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{link.label}</strong>
+                  <small>{link.note}</small>
+                  <ArrowUpRight size={17} aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const CATEGORY_DESCRIPTION_TEMPLATES: Record<string, string[]> = {
   "Лучшие кейсы": [
     "Флагманский ролик с акцентом на бренд и уверенную подачу",
@@ -550,11 +501,36 @@ const getProjectDescription = (category: string, title: string, index: number) =
 
 const getProjectMeta = (category: string, project: { embedId: string; title: string }, index: number): ProjectMeta => {
   const override = PROJECT_TEXT_OVERRIDES[project.embedId] || {};
-  const title = override.title || project.title;
-  const description = override.description || getProjectDescription(category, title, index);
-  const task = override.task || "Монтаж";
+  const normalized = portfolioItems.find((item) => item.id === project.embedId);
+  const title = override.title || normalized?.title || project.title;
+  const description =
+    override.description
+    || normalized?.description
+    || getProjectDescription(category, title, index);
+  const contribution = override.task || normalized?.services.join(", ") || "Монтаж и финальная подготовка";
+  const format = normalized?.vertical
+    ? "Вертикальное видео 9:16 для социальных сетей"
+    : category.includes("Интервью")
+      ? "Интервью / образовательное видео"
+      : category.includes("Event") || category.includes("концерт")
+        ? "Event-видео / aftermovie"
+        : "Коммерческий видеоролик";
+  const approach = normalized?.services.length
+    ? `${normalized.services.join(", ")}. Подача и темп собраны под задачу проекта без лишних визуальных приёмов.`
+    : "Материал собран в цельную историю с аккуратной работой над ритмом, цветом и звуком.";
+  const result = normalized?.vertical
+    ? "Готовый вертикальный ролик для публикации в Reels, Shorts и других мобильных форматах."
+    : "Готовый мастер-файл для публикации на сайте, видеоплатформах и в коммуникациях бренда.";
 
-  return { title, description, task };
+  return {
+    title,
+    description,
+    task: description,
+    format,
+    contribution,
+    approach,
+    result,
+  };
 };
 
 const getReelsGroupName = (title: string) => title.replace(/\s+\d+$/u, "").trim();
@@ -589,7 +565,7 @@ const slugifyProjectTitle = (input: string) =>
 const SPRING_CONFIG = { mass: 1, tension: 120, friction: 14 };
 const NOTHING_EASE = [0.16, 1, 0.3, 1];
 const COOKIE_CONSENT_KEY = "cookie_consent_v1";
-const DEFAULT_DEV_API_URL = "http://localhost:3001";
+const DEFAULT_DEV_API_URL = "/api";
 const DEFAULT_PROD_API_URL = "/api";
 const LEGAL_OPERATOR = {
   name: "Елыгин Юрий Сергеевич",
@@ -807,10 +783,25 @@ const Marquee = ({ compact = false }: { compact?: boolean }) => {
 
 const Testimonials = () => {
   const [showAll, setShowAll] = useState(false);
-  const displayedTestimonials = showAll ? TESTIMONIALS : TESTIMONIALS.slice(0, 6);
+  const [dbItems, setDbItems] = useState<TestimonialItem[]>([]);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    getStore()
+      .listReviews({ publishedOnly: true })
+      .then((rs) =>
+        setDbItems(rs.map((r) => ({ quote: r.text, author: r.authorName || "Клиент", role: "Клиент", company: "" }))),
+      )
+      .catch(() => {})
+      .finally(() => setIsReady(true));
+  }, []);
+  const ALL_TESTIMONIALS = [...dbItems, ...TESTIMONIALS];
+  const displayedTestimonials = showAll ? ALL_TESTIMONIALS : ALL_TESTIMONIALS.slice(0, 6);
+
+  if (!isReady || ALL_TESTIMONIALS.length === 0) return null;
 
   return (
-    <section id="testimonials" className="py-20 md:py-32 bg-nothing-black text-nothing-white overflow-hidden relative is-hidden">
+    <section id="testimonials" className="py-20 md:py-32 bg-nothing-black text-nothing-white overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full dot-grid opacity-10 pointer-events-none" />
       
       <div className="px-6 md:px-12 max-w-[1600px] mx-auto relative z-10">
@@ -864,7 +855,7 @@ const Testimonials = () => {
                   <div>
                     <h4 className="text-lg font-bold uppercase tracking-tight">{testimonial.author}</h4>
                     <p className="font-mono text-[10px] uppercase tracking-widest opacity-80">
-                      {testimonial.role} @ {testimonial.company}
+                      {testimonial.role}{testimonial.company ? ` @ ${testimonial.company}` : ""}
                     </p>
                   </div>
                 </div>
@@ -873,15 +864,15 @@ const Testimonials = () => {
           </AnimatePresence>
         </div>
 
-        {!showAll && TESTIMONIALS.length > 6 && (
+        {!showAll && ALL_TESTIMONIALS.length > 6 && (
           <div className="mt-20 flex justify-center">
-            <button 
+            <button
               onClick={() => setShowAll(true)}
               className="group relative px-12 py-6 overflow-hidden border border-nothing-white/20 hover:border-nothing-red transition-colors"
             >
               <div className="absolute inset-0 bg-nothing-red translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               <span className="relative z-10 font-mono text-xs uppercase tracking-widest">
-                Показать все отзывы ({TESTIMONIALS.length})
+                Показать все отзывы ({ALL_TESTIMONIALS.length})
               </span>
             </button>
           </div>
@@ -999,8 +990,8 @@ const LegacyPrivacyContent = () => (
       <br />
       Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона
       от 27.07.2006. №152-ФЗ «О персональных данных» (далее - Закон о персональных данных) и определяет порядок
-      обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые Ильинский
-      Антон Игоревич (далее – Оператор).
+      обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые Елыгин
+      Юрий Сергеевич (далее – Оператор).
     </p>
     <p>
       1.1. Оператор ставит своей важнейшей целью и условием осуществления своей деятельности соблюдение прав и свобод
@@ -1009,7 +1000,7 @@ const LegacyPrivacyContent = () => (
     </p>
     <p>
       1.2. Настоящая политика Оператора в отношении обработки персональных данных (далее – Политика) применяется ко всей
-      информации, которую Оператор может получить о посетителях веб-сайта https://birdhouse.team.
+      информации, которую Оператор может получить о посетителях веб-сайта https://yelyginn.ru.
     </p>
 
     <p>2. Основные понятия, используемые в Политике</p>
@@ -1023,7 +1014,7 @@ const LegacyPrivacyContent = () => (
     </p>
     <p>
       2.3. Веб-сайт – совокупность графических и информационных материалов, а также программ для ЭВМ и баз данных,
-      обеспечивающих их доступность в сети интернет по сетевому адресу https://birdhouse.team.
+      обеспечивающих их доступность в сети интернет по сетевому адресу https://yelyginn.ru.
     </p>
     <p>
       2.4. Информационная система персональных данных — совокупность содержащихся в базах данных персональных данных, и
@@ -1049,7 +1040,7 @@ const LegacyPrivacyContent = () => (
     </p>
     <p>
       2.8. Персональные данные – любая информация, относящаяся прямо или косвенно к определенному или определяемому
-      Пользователю веб-сайта https://birdhouse.team.
+      Пользователю веб-сайта https://yelyginn.ru.
     </p>
     <p>
       2.9. Персональные данные, разрешенные субъектом персональных данных для распространения, - персональные данные,
@@ -1058,7 +1049,7 @@ const LegacyPrivacyContent = () => (
       предусмотренном Законом о персональных данных (далее - персональные данные, разрешенные для распространения).
     </p>
     <p>
-      2.10. Пользователь – любой посетитель веб-сайта https://birdhouse.team.
+      2.10. Пользователь – любой посетитель веб-сайта https://yelyginn.ru.
     </p>
     <p>
       2.11. Предоставление персональных данных – действия, направленные на раскрытие персональных данных определенному
@@ -1224,11 +1215,11 @@ const LegacyPrivacyContent = () => (
 
     <p>7. Цели обработки персональных данных</p>
     <p>7.1. Цель обработки персональных данных Пользователя:</p>
-    <p>– предоставление доступа Пользователю к сервисам, информации и/или материалам, содержащимся на веб-сайте https://birdhouse.team.</p>
+    <p>– предоставление доступа Пользователю к сервисам, информации и/или материалам, содержащимся на веб-сайте https://yelyginn.ru.</p>
     <p>
       7.2. Также Оператор имеет право направлять Пользователю уведомления о новых продуктах и услугах, специальных
       предложениях и различных событиях. Пользователь всегда может отказаться от получения информационных сообщений,
-      направив Оператору письмо на адрес электронной почты anton.i@birdhousestudio.ru с пометкой «Отказ от уведомлений о
+      направив Оператору письмо на адрес электронной почты y.elyginn@gmail.com с пометкой «Отказ от уведомлений о
       новых продуктах и услугах и специальных предложениях».
     </p>
     <p>
@@ -1243,7 +1234,7 @@ const LegacyPrivacyContent = () => (
     <p>– согласия Пользователей на обработку их персональных данных, на обработку персональных данных, разрешенных для распространения.</p>
     <p>
       8.2. Оператор обрабатывает персональные данные Пользователя только в случае их заполнения и/или отправки Пользователем
-      самостоятельно через специальные формы, расположенные на сайте https://birdhouse.team или направленные Оператору
+      самостоятельно через специальные формы, расположенные на сайте https://yelyginn.ru или направленные Оператору
       посредством электронной почты. Заполняя соответствующие формы и/или отправляя свои персональные данные Оператору,
       Пользователь выражает свое согласие с данной Политикой.
     </p>
@@ -1301,14 +1292,14 @@ const LegacyPrivacyContent = () => (
     </p>
     <p>
       10.3. В случае выявления неточностей в персональных данных, Пользователь может актуализировать их самостоятельно,
-      путем направления Оператору уведомление на адрес электронной почты Оператора anton.i@birdhousestudio.ru с пометкой
+      путем направления Оператору уведомление на адрес электронной почты Оператора y.elyginn@gmail.com с пометкой
       «Актуализация персональных данных».
     </p>
     <p>
       10.4. Срок обработки персональных данных определяется достижением целей, для которых были собраны персональные данные,
       если иной срок не предусмотрен договором или действующим законодательством. Пользователь может в любой момент отозвать
       свое согласие на обработку персональных данных, направив Оператору уведомление посредством электронной почты на
-      электронный адрес Оператора anton.i@birdhousestudio.ru с пометкой «Отзыв согласия на обработку персональных данных».
+      электронный адрес Оператора y.elyginn@gmail.com с пометкой «Отзыв согласия на обработку персональных данных».
     </p>
     <p>
       10.5. Вся информация, которая собирается сторонними сервисами, в том числе платежными системами, средствами связи и
@@ -1369,13 +1360,13 @@ const LegacyPrivacyContent = () => (
     <p>14. Заключительные положения</p>
     <p>
       14.1. Пользователь может получить любые разъяснения по интересующим вопросам, касающимся обработки его персональных
-      данных, обратившись к Оператору с помощью электронной почты anton.i@birdhousestudio.ru.
+      данных, обратившись к Оператору с помощью электронной почты y.elyginn@gmail.com.
     </p>
     <p>
       14.2. В данном документе будут отражены любые изменения политики обработки персональных данных Оператора. Политика
       действует бессрочно до замены ее новой версией.
     </p>
-    <p>14.3. Актуальная версия Политики в свободном доступе расположена в сети Интернет по адресу https://birdhouse.team/privacy.</p>
+    <p>14.3. Актуальная версия Политики в свободном доступе расположена в сети Интернет по адресу https://yelyginn.ru/privacy-policy.</p>
   </div>
   </div>
 );
@@ -1508,15 +1499,15 @@ const CookieBanner = () => {
   });
 
   const acceptCookies = () => {
-    window.localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    grantAnalyticsConsent();
     setVisible(false);
   };
 
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-[210] rounded-2xl border border-nothing-black/12 bg-white/95 px-4 py-3 shadow-[0_16px_40px_-24px_rgba(10,10,10,0.35)] sm:left-6 sm:right-6 md:left-auto md:max-w-xl">
-      <p className="text-xs sm:text-sm leading-relaxed text-nothing-black/85">
+    <div className="cookie-banner fixed bottom-4 left-4 right-4 z-[210] rounded-2xl border px-4 py-3 sm:left-6 sm:right-6 md:left-auto md:max-w-xl">
+      <p className="text-xs sm:text-sm leading-relaxed">
         Сайт использует cookie и localStorage для корректной работы. Продолжая использование сайта, вы соглашаетесь с{" "}
         <a href="/privacy-policy.html" className="underline underline-offset-4 hover:text-nothing-red transition-colors">
           политикой обработки персональных данных
@@ -1527,7 +1518,7 @@ const CookieBanner = () => {
         <button
           type="button"
           onClick={acceptCookies}
-          className="rounded-full bg-nothing-black px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white hover:bg-nothing-red transition-colors"
+          className="rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] transition-colors"
         >
           Принять
         </button>
@@ -1536,51 +1527,85 @@ const CookieBanner = () => {
   );
 };
 
-const ProjectCard = ({ project, index, onClick }: { project: any, index: number, onClick: () => void, key?: string | number }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const previewSrc = getKinescopePreviewUrl(project.embedId);
+const LazyKinescopePreview = ({ embedId, title }: { embedId: string; title: string }) => {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    if (!("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldLoad(true);
+        observer.disconnect();
+      },
+      { rootMargin: "480px 0px" },
+    );
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.div
+    <div ref={hostRef} className="absolute inset-0 overflow-hidden bg-nothing-black">
+      {shouldLoad && (
+        <img
+          src={getKinescopePosterUrl(embedId)}
+          srcSet={`${getKinescopePosterUrl(embedId, "sm")} 640w, ${getKinescopePosterUrl(embedId, "md")} 1280w`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
+          alt={`Кадр из проекта «${title}»`}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+    </div>
+  );
+};
+
+const ProjectCard = ({ project, index, onClick }: { project: any, index: number, onClick: () => void, key?: string | number }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.article
       variants={STAGGER_ITEM}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
-      className="relative group cursor-pointer overflow-hidden hardware-border rounded-[1.5rem] sm:rounded-[2.5rem] bg-nothing-black/5 w-full aspect-video"
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      role="link"
+      tabIndex={0}
+      className="portfolio-card group cursor-pointer"
     >
-      {/* Video Background */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <iframe
-          key={project.embedId}
-          src={previewSrc}
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-          loading="eager"
-          className="absolute inset-0 w-full h-full border-0 object-cover scale-110 group-hover:scale-100 transition-transform duration-700 pointer-events-none"
-          title={project.title}
-        />
-      </div>
-
-      {/* Overlay */}
-      <div className="absolute inset-0 z-20 p-4 sm:p-8 flex flex-col justify-end bg-gradient-to-t from-nothing-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <motion.div
-          animate={{ y: isHovered ? 0 : 20 }}
-          transition={{ duration: 0.5, ease: NOTHING_EASE }}
-        >
-          <span className="ndot text-[8px] sm:text-[10px] text-nothing-white/60 mb-1 sm:mb-2 block uppercase tracking-widest">Project {index + 1}</span>
-          <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-nothing-white uppercase tracking-tighter leading-none">
-            {project.title}
-          </h3>
-        </motion.div>
-      </div>
-
-      {/* Play Icon */}
-      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full liquid-glass flex items-center justify-center">
-          <Play className="w-4 h-4 sm:w-5 h-5 text-nothing-black fill-current" />
+      <div className="portfolio-card-media">
+        <LazyKinescopePreview embedId={project.embedId} title={project.title} />
+        <div className="portfolio-card-shade" />
+        <div className="portfolio-card-play" aria-hidden="true">
+          <Play className="h-4 w-4 fill-current" />
         </div>
       </div>
-    </motion.div>
+
+      <div className="portfolio-card-copy">
+        <div className="min-w-0">
+          <span className="portfolio-card-index">Проект {String(index + 1).padStart(2, "0")}</span>
+          <h3>{project.title}</h3>
+          {project.description && <p>{project.description}</p>}
+        </div>
+        <motion.span animate={{ x: isHovered ? 3 : 0, y: isHovered ? -3 : 0 }} aria-hidden="true">
+          <ArrowUpRight className="h-5 w-5" />
+        </motion.span>
+      </div>
+    </motion.article>
   );
 };
 
@@ -1716,7 +1741,7 @@ const PortfolioGrid = () => {
   });
 
   return (
-    <section id="projects" className="portfolio-section pt-[clamp(2.6rem,9vw,5rem)] pb-[clamp(3.2rem,10vw,6.5rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
+    <section id="projects" className="portfolio-section site-section pt-[clamp(2.6rem,9vw,5rem)] pb-[clamp(3.2rem,10vw,6.5rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 sm:gap-10 mb-[clamp(1.8rem,7vw,5.5rem)]">
         <div className="max-w-2xl">
           <motion.span 
@@ -1805,17 +1830,175 @@ const PortfolioGrid = () => {
   );
 };
 
+// --- Доверие / Процесс / FAQ (Фаза 5) ---
+
+const TRUST_STATS = [
+  { num: "Видео", label: "съёмка и режиссура" },
+  { num: "Фото", label: "портрет и репортаж" },
+  { num: "Монтаж", label: "цвет, звук и графика" },
+  { num: "РФ", label: "удалённая работа" },
+];
+
+const TrustStats = () => (
+  <section className="trust-section px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 py-[clamp(1.6rem,5vw,3rem)] bg-nothing-white">
+    <motion.div
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={STAGGER_CONTAINER}
+      className="site-shell max-w-[1720px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-px bg-nothing-black/10 border border-nothing-black/10 rounded-[1.35rem] sm:rounded-[2rem] overflow-hidden"
+    >
+      {TRUST_STATS.map((s) => (
+        <motion.div key={s.label} variants={STAGGER_ITEM} className="bg-nothing-white p-5 sm:p-8">
+          <div className="text-[clamp(2rem,6vw,3.4rem)] font-bold tracking-tighter leading-none">{s.num}</div>
+          <div className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.18em] opacity-60 mt-2">{s.label}</div>
+        </motion.div>
+      ))}
+    </motion.div>
+  </section>
+);
+
+const PROCESS_STEPS = [
+  { n: "01", t: "Бриф и идея", d: "Обсуждаем задачу в Telegram: что снимаем, для кого и какой результат нужен. Предлагаю концепцию и формат под вашу цель." },
+  { n: "02", t: "Смета и план", d: "Собираем точную смету (можно сразу в калькуляторе) и план съёмки. Фиксируем сроки и состав — без сюрпризов по цене." },
+  { n: "03", t: "Съёмка", d: "Работаю с профессиональным светом и техникой. Снимаю быстро и собранно — вы видите результат прямо на площадке." },
+  { n: "04", t: "Монтаж и сдача", d: "Монтаж, цветокоррекция и звук. Сроки, формат согласования и количество раундов правок фиксируем в смете." },
+];
+
+const ProcessSteps = () => (
+  <section className="process-section site-section px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 pt-[clamp(2.8rem,9vw,5rem)] pb-[clamp(2.5rem,8vw,5rem)] bg-nothing-white">
+    <div className="site-shell max-w-[1720px] mx-auto">
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={STAGGER_CONTAINER}
+        className="mb-[clamp(1.8rem,6vw,4rem)]"
+      >
+        <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">03</motion.span>
+        <div className="text-mask">
+          <motion.h2 variants={TEXT_REVEAL} className="text-[clamp(1.72rem,8.1vw,4.8rem)] font-bold tracking-tighter uppercase leading-[0.92]">Как я работаю</motion.h2>
+        </div>
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={STAGGER_CONTAINER}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
+      >
+        {PROCESS_STEPS.map((s) => (
+          <motion.div key={s.n} variants={STAGGER_ITEM} className="p-5 sm:p-7 hardware-border rounded-[1.35rem] sm:rounded-[2rem] bg-nothing-white">
+            <div className="font-mono text-xs text-nothing-red tracking-[0.3em] mb-4">{s.n}</div>
+            <h3 className="text-[clamp(1.1rem,4.5vw,1.5rem)] font-display font-bold uppercase mb-3 tracking-tighter leading-[0.98]">{s.t}</h3>
+            <p className="text-[clamp(0.86rem,3.2vw,0.95rem)] font-medium opacity-70 leading-relaxed">{s.d}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  </section>
+);
+
+const HOME_FAQ = [
+  { q: "Сколько стоит съёмка?", a: "Зависит от формата, числа смен и состава. Соберите ориентир в калькуляторе на сайте за минуту, а точную смету я зафиксирую после короткого брифа." },
+  { q: "Вы работаете только в Нижнем Новгороде?", a: "База — Нижний Новгород, но выезжаю по области и в другие города России по согласованию." },
+  { q: "Есть ли скидки постоянным клиентам?", a: "Да. После каждого заказа растёт ваш уровень и скидка — до −15%. Скидка видна в личном кабинете и применяется автоматически." },
+  { q: "Снимаете и фото, и видео?", a: "Да, в одном продакшене. При заказе фото и видео в одну смену — скидка −15% на проект и единый визуальный стиль." },
+  { q: "Как быстро будет готов результат?", a: "Первые материалы — в течение 48 часов. Финальный монтаж — в оговорённый срок, с включёнными раундами правок." },
+];
+
+const FaqItem = ({ q, a }: { q: string; a: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t border-nothing-black/10 last:border-b">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-4 py-5 sm:py-6 text-left"
+      >
+        <span className="text-[clamp(0.98rem,4vw,1.2rem)] font-semibold leading-snug">{q}</span>
+        <span className={cn("shrink-0 transition-transform duration-300", open && "rotate-45")}>
+          <ChevronRight className="w-5 h-5 rotate-90 text-nothing-red" />
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: NOTHING_EASE }}
+            className="overflow-hidden"
+          >
+            <p className="pb-5 sm:pb-6 text-[clamp(0.88rem,3.4vw,1rem)] opacity-70 leading-relaxed max-w-[70ch]">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const HomeFaq = () => (
+  <section className="faq-section site-section px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 pt-[clamp(2.5rem,8vw,4.5rem)] pb-[clamp(2.8rem,9vw,5.5rem)] bg-nothing-gray/30">
+    <div className="site-shell max-w-[1720px] mx-auto">
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={STAGGER_CONTAINER}
+        className="mb-[clamp(1.4rem,5vw,3rem)]"
+      >
+        <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">04</motion.span>
+        <div className="text-mask">
+          <motion.h2 variants={TEXT_REVEAL} className="text-[clamp(1.72rem,8.1vw,4.8rem)] font-bold tracking-tighter uppercase leading-[0.92]">Частые вопросы</motion.h2>
+        </div>
+      </motion.div>
+      <div className="max-w-[980px]">
+        {HOME_FAQ.map((f) => (
+          <React.Fragment key={f.q}>
+            <FaqItem q={f.q} a={f.a} />
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="mt-8 sm:mt-12 flex flex-wrap gap-3">
+        <a href="/calculator" className="inline-flex items-center gap-2.5 rounded-full bg-nothing-red px-6 py-4 text-nothing-white transition-all duration-500 hover:bg-nothing-black">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Рассчитать стоимость</span>
+        </a>
+        <a href="#contact" className="inline-flex items-center gap-2.5 rounded-full border border-nothing-black/15 px-6 py-4 transition-all duration-500 hover:border-nothing-black/50">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Оставить заявку</span>
+        </a>
+      </div>
+    </div>
+  </section>
+);
+
+// Реквизиты студии из настроек админки (Этап H) — в футере, если заданы.
+const StudioContacts = () => {
+  const [studio, setStudio] = useState<{ name?: string; telegram?: string; city?: string } | null>(null);
+  useEffect(() => {
+    getStore().getSetting<{ name?: string; telegram?: string; city?: string }>("studio").then(setStudio).catch(() => {});
+  }, []);
+  if (!studio || (!studio.name && !studio.telegram && !studio.city)) return null;
+  return (
+    <p className="mt-1 text-[11px] sm:text-xs text-nothing-black/55">
+      {[studio.name, studio.city, studio.telegram].filter(Boolean).join(" · ")}
+    </p>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moscowTime, setMoscowTime] = useState(getMoscowTime);
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches,
+  );
   const [heroViewport, setHeroViewport] = useState({ width: 1440, height: 900 });
-  const isDarkMode = false; // Switch to light mode for better readability as requested
+  const isDarkMode = false;
 
   useEffect(() => {
-    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.toggle('dark', isDarkMode);
   }, []);
 
   useEffect(() => {
@@ -1867,10 +2050,7 @@ export default function App() {
   }, []);
 
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll();
 
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
@@ -1919,27 +2099,50 @@ export default function App() {
   const [personalDataAccepted, setPersonalDataAccepted] = useState(false);
   const [formName, setFormName] = useState("");
   const [formContact, setFormContact] = useState("");
+  const [formService, setFormService] = useState(CONTACT_SERVICES[0]);
   const [formMessage, setFormMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error" | "fallback">("idle");
   const [submitError, setSubmitError] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [leadDeliveryConfigured, setLeadDeliveryConfigured] = useState<boolean | null>(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const isContactValid = formContact.includes("@");
+  const isContactValid = isValidContact(formContact);
   const showContactError = (formContact.trim().length > 0 || submitAttempted) && !isContactValid;
+  const telegramBriefUrl = `https://t.me/YuriElygin?text=${encodeURIComponent(
+    `Здравствуйте, Юрий!\nУслуга: ${formService}\nИмя: ${formName.trim() || "не указано"}\nЗадача: ${formMessage.trim() || "хочу обсудить проект"}`,
+  )}`;
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const isPrivacyPolicyPage = pathname === "/privacy-policy" || pathname === "/privacy-policy.html";
   const isPortfolioPage = pathname === "/portfolio" || pathname === "/portfolio.html";
-  const isPortfolioSlugPage = pathname.startsWith("/portfolio/");
+  const portfolioPathSegment = pathname.startsWith("/portfolio/")
+    ? pathname.replace(/^\/portfolio\//u, "").replace(/\/+$/u, "")
+    : "";
+  const portfolioCategory = Object.prototype.hasOwnProperty.call(
+    PORTFOLIO_CATEGORY_PAGES,
+    portfolioPathSegment,
+  )
+    ? portfolioPathSegment as PortfolioCategory
+    : null;
+  const isPortfolioCategoryPage = Boolean(portfolioCategory);
+  const isPortfolioSlugPage = pathname.startsWith("/portfolio/") && !isPortfolioCategoryPage;
+  const isContentDayPage = pathname === "/content-day" || pathname === "/content-day.html";
   const isProjectPage = pathname === "/project" || pathname === "/project.html" || isPortfolioSlugPage;
   const projectSearchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const legacyProjectId = projectSearchParams?.get("id") || "";
-  const slugFromPath = isPortfolioSlugPage ? pathname.replace(/^\/portfolio\//u, "").replace(/\/+$/u, "") : "";
+  const slugFromPath = isPortfolioSlugPage ? portfolioPathSegment : "";
   const slugFromQuery = projectSearchParams?.get("slug") || "";
   const projectSlug = slugFromPath || slugFromQuery;
 
   const openPrivacy = useCallback(() => setPrivacyOpen(true), []);
   const closePrivacy = useCallback(() => setPrivacyOpen(false), []);
+
+  useEffect(() => {
+    fetch("/api/send-form")
+      .then((response) => response.json())
+      .then((data) => setLeadDeliveryConfigured(Boolean(data?.configured)))
+      .catch(() => setLeadDeliveryConfigured(false));
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle('modal-open', privacyOpen);
@@ -1964,9 +2167,19 @@ export default function App() {
   const projectTitle = matchedProjectMeta?.title || "Проект";
   const projectDescription = matchedProjectMeta?.description || "Описание проекта";
   const projectTask = matchedProjectMeta?.task || "Задача проекта";
+  const projectFormat = matchedProjectMeta?.format || "Коммерческий видеоролик";
+  const projectContribution = matchedProjectMeta?.contribution || "Монтаж и финальная подготовка";
+  const projectApproach = matchedProjectMeta?.approach || "Работа с ритмом, цветом и звуком.";
+  const projectResult = matchedProjectMeta?.result || "Готовый мастер-файл для публикации.";
   const projectRatio = matchedProject?.project.ratio || "56.25%";
   const numericRatio = Number.parseFloat(projectRatio);
   const isVerticalProject = Number.isFinite(numericRatio) ? numericRatio > 100 : false;
+  const currentProjectIndex = matchedProjectEntry ? PROJECT_ROUTE_ENTRIES.indexOf(matchedProjectEntry) : -1;
+  const previousProject = currentProjectIndex > 0 ? PROJECT_ROUTE_ENTRIES[currentProjectIndex - 1] : null;
+  const nextProject =
+    currentProjectIndex >= 0 && currentProjectIndex < PROJECT_ROUTE_ENTRIES.length - 1
+      ? PROJECT_ROUTE_ENTRIES[currentProjectIndex + 1]
+      : null;
 
   useEffect(() => {
     if (!isProjectPage || typeof document === "undefined") return;
@@ -1978,7 +2191,35 @@ export default function App() {
         `${projectDescription}. ${projectTask}. Видео для брендов и бизнеса в Нижнем Новгороде.`
       );
     }
+    const canonicalUrl = projectSlug
+      ? `https://yelyginn.ru/portfolio/${encodeURIComponent(projectSlug)}`
+      : `https://yelyginn.ru/project?id=${encodeURIComponent(projectId || "")}`;
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
+
+    const upsertMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
+      let node = document.querySelector<HTMLMetaElement>(selector);
+      if (!node) {
+        node = document.createElement("meta");
+        node.setAttribute(attribute, key);
+        document.head.appendChild(node);
+      }
+      node.content = content;
+    };
+    upsertMeta('meta[property="og:title"]', "property", "og:title", `${projectTitle} | Yelyginn`);
+    upsertMeta('meta[property="og:description"]', "property", "og:description", projectDescription);
+    upsertMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
   }, [isProjectPage, projectDescription, projectTask, projectTitle]);
+
+  useEffect(() => {
+    if (!pathname.startsWith("/portfolio")) return;
+    trackAnalyticsEvent("portfolio_view", { page: pathname });
+  }, [pathname]);
 
   useEffect(() => {
     if (!isPortfolioPage || typeof document === "undefined") return;
@@ -1992,6 +2233,67 @@ export default function App() {
     }
   }, [isPortfolioPage]);
 
+  useEffect(() => {
+    if (!portfolioCategory || typeof document === "undefined") return;
+    const page = PORTFOLIO_CATEGORY_PAGES[portfolioCategory];
+    const title = `${page.title} — Юрий Елыгин`;
+    const canonicalUrl = `https://yelyginn.ru/portfolio/${portfolioCategory}`;
+    document.title = title;
+
+    const upsertMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
+      let node = document.querySelector<HTMLMetaElement>(selector);
+      if (!node) {
+        node = document.createElement("meta");
+        node.setAttribute(attribute, key);
+        document.head.appendChild(node);
+      }
+      node.content = content;
+    };
+    upsertMeta('meta[name="description"]', "name", "description", page.subtitle);
+    upsertMeta('meta[property="og:title"]', "property", "og:title", title);
+    upsertMeta('meta[property="og:description"]', "property", "og:description", page.subtitle);
+    upsertMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
+
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
+  }, [portfolioCategory]);
+
+  useEffect(() => {
+    if (!isContentDayPage || typeof document === "undefined") return;
+    const title = "Контент-день для бизнеса — фото и видео за одну съёмку";
+    const description =
+      "Фото, Reels, короткие ролики, монтаж, цвет и звук для бизнеса, соцсетей, сайта и рекламы.";
+    const canonicalUrl = "https://yelyginn.ru/content-day";
+    document.title = title;
+
+    const upsertMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
+      let node = document.querySelector<HTMLMetaElement>(selector);
+      if (!node) {
+        node = document.createElement("meta");
+        node.setAttribute(attribute, key);
+        document.head.appendChild(node);
+      }
+      node.content = content;
+    };
+    upsertMeta('meta[name="description"]', "name", "description", description);
+    upsertMeta('meta[property="og:title"]', "property", "og:title", title);
+    upsertMeta('meta[property="og:description"]', "property", "og:description", description);
+    upsertMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
+
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
+  }, [isContentDayPage]);
+
   const handleFormSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitAttempted(true);
@@ -2000,14 +2302,21 @@ export default function App() {
     const name = formName.trim();
     const contact = formContact.trim();
     const message = formMessage.trim();
-    if (!contact.includes("@")) {
+    if (!isValidContact(contact)) {
       setSubmitStatus("error");
-      setSubmitError("Введите Telegram (@username) или email");
+      setSubmitError("Введите Telegram, email или номер телефона.");
       return;
     }
     if (!name || !contact || !message) {
       setSubmitStatus("error");
       setSubmitError("Заполните все поля формы.");
+      return;
+    }
+    if (leadDeliveryConfigured === false) {
+      setSubmitStatus("fallback");
+      setSubmitError("");
+      trackAnalyticsEvent("telegram_click", { service: formService, source: "lead_fallback" });
+      window.open(telegramBriefUrl, "_blank", "noopener,noreferrer");
       return;
     }
 
@@ -2021,14 +2330,14 @@ export default function App() {
     setSubmitError("");
 
     try {
-      const payload = { name, contact, message };
-      console.log("[form] request", {
-        endpoint,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: payload
-      });
-
+      const payload = {
+        name,
+        contact,
+        service: formService,
+        message,
+        website: "",
+        source: window.location.pathname,
+      };
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -2036,33 +2345,49 @@ export default function App() {
       });
 
       const result = await response.json().catch(() => ({}));
-      console.log("[form] response", {
-        status: response.status,
-        ok: response.ok,
-        body: result
-      });
-
       if (!response.ok || !result?.ok) {
         throw new Error(result?.error || "Ошибка отправки");
       }
 
+      // Сохраняем заявку в систему (видна в /admin → Заявки). Не критично для UX.
+      try {
+        const lead = await getStore().createLead({
+          name,
+          contact,
+          message: `${formService}: ${message}`,
+          source: "homepage",
+        });
+        // Журналируем событие. Telegram уже ушёл через /api/send-form — не дублируем доставку.
+        notify("lead.new", { entityType: "lead", entityId: lead?.id, deliver: false, payload: { name, contact, source: "homepage" } });
+      } catch { /* хранилище недоступно — заявка уже ушла в Telegram */ }
+
       setSubmitStatus("success");
+      trackAnalyticsEvent("lead_submit", { service: formService, source: "homepage" });
       setFormName("");
       setFormContact("");
+      setFormService(CONTACT_SERVICES[0]);
       setFormMessage("");
       setSubmitAttempted(false);
       setPrivacyAccepted(false);
       setPersonalDataAccepted(false);
     } catch (error) {
       console.error("[form] error", error);
-      const message = error instanceof Error ? error.message : "";
-      const isNetworkError = /failed to fetch|load failed|networkerror/iu.test(message);
-      setSubmitStatus("error");
-      setSubmitError(isNetworkError ? "Ошибка отправки" : "Ошибка отправки");
+      setSubmitStatus("fallback");
+      setSubmitError("");
     } finally {
       setIsSubmitting(false);
     }
-  }, [formName, formContact, formMessage, isSubmitting, personalDataAccepted, privacyAccepted]);
+  }, [
+    formName,
+    formContact,
+    formMessage,
+    formService,
+    isSubmitting,
+    leadDeliveryConfigured,
+    personalDataAccepted,
+    privacyAccepted,
+    telegramBriefUrl,
+  ]);
 
   const handleNavAnchorClick = useCallback((event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     if (typeof window === "undefined") return;
@@ -2079,10 +2404,27 @@ export default function App() {
     if (isMenuOpen) setIsMenuOpen(false);
   }, [isMenuOpen, pathname]);
 
+  useEffect(() => {
+    if (pathname !== "/" && pathname !== "/index.html") return;
+    const targetId = window.location.hash.replace(/^#/u, "");
+    if (!targetId) return;
+
+    const timer = window.setTimeout(() => {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      const navHeight = window.innerWidth >= 640 ? 86 : 74;
+      const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top: Math.max(0, y), behavior: "auto" });
+    }, 80);
+
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
+
   const renderNav = (className: string) => (
     <nav className={className}>
       <div className="flex items-center gap-3 sm:gap-6">
-        <motion.div 
+        <motion.a
+          href="/"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: NOTHING_EASE }}
@@ -2095,7 +2437,7 @@ export default function App() {
           <span className="opacity-90 hidden xs:inline">ELYGIN.OS</span>
           <span className="w-[1px] h-3 bg-nothing-black/10 hidden xs:inline" />
           <span>V.2026</span>
-        </motion.div>
+        </motion.a>
 
       </div>
       
@@ -2104,22 +2446,45 @@ export default function App() {
           initial="hidden"
           animate="show"
           variants={STAGGER_CONTAINER}
-          className="hidden md:flex gap-8 font-mono text-[9px] uppercase tracking-[0.2em] text-nothing-black font-medium"
+          className="site-nav-links hidden md:flex items-center gap-5 lg:gap-7 font-mono text-[9px] uppercase tracking-[0.16em] text-nothing-black font-medium"
         >
-          <motion.a variants={STAGGER_ITEM} href="#projects" onClick={(event) => handleNavAnchorClick(event, "projects")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
-            <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">01</span> Кейсы
+          <motion.div variants={STAGGER_ITEM} className="site-nav-portfolio">
+            <a href="/portfolio" className="hover:text-nothing-red transition-colors">
+              Портфолио
+            </a>
+            <div className="site-nav-dropdown">
+              <a href="/portfolio">Все работы</a>
+              <a href="/portfolio/reels">Reels</a>
+              <a href="/portfolio/events">Мероприятия</a>
+              <a href="/portfolio/concerts">Концерты</a>
+              <a href="/portfolio/photo">Фото</a>
+              <a href="/portfolio/editing">Монтаж</a>
+            </div>
+          </motion.div>
+          <motion.a variants={STAGGER_ITEM} href="/#services" onClick={(event) => handleNavAnchorClick(event, "services")} className="hover:text-nothing-red transition-colors">
+            Услуги
           </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="#services" onClick={(event) => handleNavAnchorClick(event, "services")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
-            <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">02</span> Услуги
+          <motion.a variants={STAGGER_ITEM} href="/content-day" className="hover:text-nothing-red transition-colors">
+            Контент-день
           </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="#contact" onClick={(event) => handleNavAnchorClick(event, "contact")} className="group flex items-center gap-2 hover:text-nothing-red transition-all">
-            <span className="text-nothing-red opacity-0 group-hover:opacity-100 transition-opacity">04</span> Контакты
+          <motion.a variants={STAGGER_ITEM} href="/#all-sections" onClick={(event) => handleNavAnchorClick(event, "all-sections")} className="hover:text-nothing-red transition-colors">
+            Разделы
+          </motion.a>
+          <motion.a variants={STAGGER_ITEM} href="/calculator" className="hover:text-nothing-red transition-colors">
+            Калькулятор
+          </motion.a>
+          <motion.a variants={STAGGER_ITEM} href="/#contact" onClick={(event) => handleNavAnchorClick(event, "contact")} className="hover:text-nothing-red transition-colors">
+            Контакты
+          </motion.a>
+          <motion.a variants={STAGGER_ITEM} href="/account" className="hover:text-nothing-red transition-colors">
+            Кабинет
           </motion.a>
         </motion.div>
 
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden p-1.5 sm:p-2 text-nothing-black"
+          aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
         >
           {isMenuOpen ? <X className="w-4 h-4 sm:w-5 h-5" /> : <Menu className="w-4 h-4 sm:w-5 h-5" />}
         </button>
@@ -2127,14 +2492,89 @@ export default function App() {
     </nav>
   );
 
+  const renderMobileMenu = () => (
+    <AnimatePresence>
+      {isMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+          animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
+          exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+          className="mobile-site-menu fixed inset-0 z-[100] bg-nothing-white/95 md:hidden"
+        >
+          <motion.button
+            onClick={() => setIsMenuOpen(false)}
+            className="mobile-site-menu-close glass border-nothing-black/15 text-nothing-black"
+            whileHover={{ rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Закрыть меню"
+          >
+            <X className="w-5 h-5" />
+          </motion.button>
+
+          <motion.div
+            variants={STAGGER_CONTAINER}
+            initial="hidden"
+            animate="show"
+            className="mobile-site-menu-main"
+          >
+            <motion.a variants={STAGGER_ITEM} href="/portfolio" onClick={() => setIsMenuOpen(false)}>
+              Портфолио
+            </motion.a>
+            <motion.div variants={STAGGER_ITEM} className="mobile-site-menu-directions">
+              {[
+                ["Reels", "/portfolio/reels"],
+                ["Мероприятия", "/portfolio/events"],
+                ["Концерты", "/portfolio/concerts"],
+                ["Фото", "/portfolio/photo"],
+                ["Монтаж", "/portfolio/editing"],
+              ].map(([label, href]) => (
+                <a key={href} href={href} onClick={() => setIsMenuOpen(false)}>{label}</a>
+              ))}
+            </motion.div>
+            {[
+              { label: "Контент-день", href: "/content-day", targetId: null },
+              { label: "Все разделы", href: "/#all-sections", targetId: "all-sections" },
+              { label: "Услуги", href: "/#services", targetId: "services" },
+              { label: "Калькулятор", href: "/calculator", targetId: null },
+              { label: "Контакты", href: "/#contact", targetId: "contact" },
+              { label: "Кабинет", href: "/account", targetId: null },
+            ].map((link) => (
+              <motion.a
+                key={link.label}
+                variants={STAGGER_ITEM}
+                href={link.href}
+                onClick={(event) => {
+                  if (link.targetId) handleNavAnchorClick(event, link.targetId);
+                  setIsMenuOpen(false);
+                }}
+              >
+                {link.label}
+              </motion.a>
+            ))}
+          </motion.div>
+
+          <div className="mobile-site-menu-contacts">
+            <a href="mailto:y.elyginn@gmail.com">Email</a>
+            <a href="https://t.me/YuriElygin">Telegram</a>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   if (isPrivacyPolicyPage) {
     return (
       <div ref={containerRef} className="min-h-screen bg-nothing-white px-4 sm:px-6 md:px-10 xl:px-12 py-8 sm:py-10 md:py-12">
         <main className="max-w-[1100px] mx-auto">
-          <a href="/" className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/70 hover:text-nothing-red transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            На главную
-          </a>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="/" className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/70 hover:text-nothing-red transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              На главную
+            </a>
+            <a href="/#all-sections" className="font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/70 hover:text-nothing-red transition-colors">
+              Все разделы
+            </a>
+          </div>
           <div className="mt-6 rounded-[2rem] border border-nothing-black/10 bg-white/90 p-6 sm:p-8 md:p-10">
             <PrivacyContent />
           </div>
@@ -2149,19 +2589,44 @@ export default function App() {
       <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
         <NoiseOverlay />
         <DotGrid />
-        {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
-        <main className="relative z-10 pt-[clamp(5.5rem,13vw,8.5rem)] pb-[clamp(2.8rem,7vw,5rem)]">
-          <section className="px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto mb-[clamp(1.8rem,6vw,4rem)]">
-            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.28em] text-nothing-black/65">Портфолио</span>
-            <h1 className="mt-2 text-[clamp(2.1rem,9.8vw,5.6rem)] font-display font-bold tracking-[-0.045em] uppercase leading-[0.9] text-nothing-black">
-              Архив кейсов
-            </h1>
-            <p className="mt-4 max-w-3xl text-[clamp(0.98rem,3.3vw,1.24rem)] leading-[1.4] text-nothing-black/78 font-medium">
-              Подборка рекламных роликов, Reels, интервью и event-видео. Нажмите на кейс, чтобы открыть отдельную страницу проекта.
-            </p>
-          </section>
-          <PortfolioGrid />
-        </main>
+        <PortfolioDirectoryPage
+          header={<>
+            {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
+            {renderMobileMenu()}
+          </>}
+        />
+        <CookieBanner />
+      </div>
+    );
+  }
+
+  if (portfolioCategory) {
+    return (
+      <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
+        <NoiseOverlay />
+        <DotGrid />
+        <PortfolioCategoryPageView
+          category={portfolioCategory}
+          header={<>
+            {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
+            {renderMobileMenu()}
+          </>}
+        />
+        <CookieBanner />
+      </div>
+    );
+  }
+
+  if (isContentDayPage) {
+    return (
+      <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
+        <NoiseOverlay />
+        <ContentDayPage
+          header={<>
+            {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
+            {renderMobileMenu()}
+          </>}
+        />
         <CookieBanner />
       </div>
     );
@@ -2189,25 +2654,27 @@ export default function App() {
     }
 
     return (
-      <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
+      <div ref={containerRef} className="project-page relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
         <NoiseOverlay />
         <DotGrid />
-        <main className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 md:px-8 pb-20 pt-6 sm:pt-8">
-          <a
-            href="/#projects"
-            className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-nothing-black/75 hover:text-nothing-red transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            К портфолио
-          </a>
+        {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
+        {renderMobileMenu()}
+        <main className="project-shell site-shell relative z-10 pb-20 pt-[clamp(6.5rem,12vw,9rem)]">
+          <div className="project-breadcrumb">
+            <a href="/portfolio">
+              <ArrowLeft className="w-4 h-4" />
+              Все проекты
+            </a>
+            <span>{matchedProject.category}</span>
+          </div>
 
-          <section className="mt-5 sm:mt-8">
+          <section className="project-media">
             <div
               className={cn(
-                "w-full mx-auto overflow-hidden bg-nothing-black hardware-border",
+                "w-full mx-auto overflow-hidden bg-nothing-black",
                 isVerticalProject
-                  ? "max-w-[420px] rounded-[1.35rem] sm:rounded-[1.75rem]"
-                  : "rounded-[1.35rem] sm:rounded-[2rem]"
+                  ? "max-w-[430px]"
+                  : ""
               )}
             >
               <div
@@ -2225,22 +2692,63 @@ export default function App() {
             </div>
           </section>
 
-          <section className="mt-8 sm:mt-12 space-y-4 sm:space-y-5">
-            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 block mb-2">Проект</span>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-nothing-black leading-tight">
+          <section className="project-details">
+            <article className="project-heading">
+              <span>Проект</span>
+              <h1>
                 {projectTitle}
               </h1>
+              <p>{matchedProject.category}</p>
             </article>
-            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
-              <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 mb-2">Описание</h2>
-              <p className="text-lg sm:text-xl font-semibold leading-relaxed text-nothing-black">{projectDescription}</p>
-            </article>
-            <article className="rounded-[1.25rem] sm:rounded-[1.6rem] border border-nothing-black/10 bg-white/75 p-5 sm:p-6">
-              <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-75 mb-2">Задача</h2>
-              <p className="text-base sm:text-lg leading-relaxed text-nothing-black/90">{projectTask}</p>
-            </article>
+
+            <div className="project-copy">
+              <article>
+                <h2>Задача клиента</h2>
+                <p>{projectTask}</p>
+              </article>
+              <article>
+                <h2>Формат проекта</h2>
+                <p>{projectFormat}</p>
+              </article>
+              <article>
+                <h2>Что сделал Юрий</h2>
+                <p>{projectContribution}</p>
+              </article>
+              <article>
+                <h2>Техника и подход</h2>
+                <p>{projectApproach}</p>
+              </article>
+              <article>
+                <h2>Готовый результат</h2>
+                <p>{projectResult}</p>
+              </article>
+              <a className="project-cta" href="/#contact">
+                Обсудить похожий проект
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
           </section>
+
+          <nav className="project-pagination" aria-label="Другие проекты">
+            {previousProject ? (
+              <a href={`/portfolio/${previousProject.slug}`} className="project-pagination-link">
+                <ArrowLeft className="h-4 w-4" />
+                <span>
+                  <small>Предыдущий проект</small>
+                  {previousProject.meta.title}
+                </span>
+              </a>
+            ) : <span />}
+            {nextProject && (
+              <a href={`/portfolio/${nextProject.slug}`} className="project-pagination-link project-pagination-link--next">
+                <span>
+                  <small>Следующий проект</small>
+                  {nextProject.meta.title}
+                </span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            )}
+          </nav>
         </main>
         <CookieBanner />
       </div>
@@ -2248,7 +2756,7 @@ export default function App() {
   }
 
   return (
-    <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
+    <div ref={containerRef} className="site-home relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
       <NoiseOverlay />
       <DotGrid />
       
@@ -2262,63 +2770,7 @@ export default function App() {
       {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20 lg:hidden")}
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            className="fixed inset-0 z-[100] bg-nothing-white/95 flex flex-col items-center justify-center md:hidden"
-          >
-            <motion.button 
-              onClick={() => setIsMenuOpen(false)}
-              className="absolute top-8 right-8 p-4 rounded-full glass border-white/20 text-nothing-black"
-              whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <X className="w-6 h-6" />
-            </motion.button>
-
-            <motion.div 
-              variants={STAGGER_CONTAINER}
-              initial="hidden"
-              animate="show"
-              className="flex flex-col items-center gap-8"
-            >
-                {[
-                { label: "Кейсы", href: "#projects", targetId: "projects" },
-                { label: "Услуги", href: "#services", targetId: "services" },
-                { label: "Контакты", href: "#contact", targetId: "contact" }
-              ].map((link, i) => (
-                <motion.a
-                  key={link.label}
-                  variants={STAGGER_ITEM}
-                  href={link.href}
-                  onClick={(event) => {
-                    handleNavAnchorClick(event, link.targetId);
-                    setIsMenuOpen(false);
-                  }}
-                  className="text-4xl sm:text-6xl font-bold uppercase tracking-tighter hover:text-nothing-red transition-colors text-nothing-black"
-                >
-                  <span className="font-mono text-xs opacity-80 mr-4">0{i + 1}</span>
-                  {link.label}
-                </motion.a>
-              ))}
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute bottom-12 flex gap-8"
-            >
-              <a href="#" className="font-mono text-xs uppercase tracking-widest opacity-80 text-nothing-black">Instagram</a>
-              <a href="#" className="font-mono text-xs uppercase tracking-widest opacity-80 text-nothing-black">Telegram</a>
-              <a href="#" className="font-mono text-xs uppercase tracking-widest opacity-80 text-nothing-black">Vimeo</a>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {renderMobileMenu()}
 
       {/* Main Content */}
       <AnimatePresence mode="wait">
@@ -2333,124 +2785,126 @@ export default function App() {
             <section className="hero-section relative overflow-hidden">
               <div className="absolute inset-0 dot-grid -z-10" />
 
-              <div
-                className="relative h-[100svh] min-h-[620px] md:min-h-[680px] overflow-hidden bg-nothing-black"
-                style={isMobileViewport ? { height: `${heroViewport.height}px` } : undefined}
-              >
+              <div className="hero-stage relative overflow-hidden bg-nothing-black">
                 <motion.div
                   style={{ y: 0 }}
                   className="absolute inset-0 z-0 overflow-hidden"
                 >
-                  <iframe
-                    src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=auto"
-                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
-                    frameBorder="0"
-                    allowFullScreen
-                    title="Hero background video"
-                    loading="eager"
+                  <img
+                    src={getKinescopePosterUrl("hCJmSvmN6S7P8uAnexguQ5", "lg")}
+                    alt=""
                     aria-hidden="true"
-                    tabIndex={-1}
-                    className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[130vw] lg:w-[118vw] xl:w-[112vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
-                    style={heroVideoFrameStyle}
+                    fetchPriority="high"
+                    className="absolute inset-0 h-full w-full object-cover"
                   />
+                  {!isMobileViewport && (
+                    <iframe
+                      src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=metadata"
+                      allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
+                      frameBorder="0"
+                      allowFullScreen
+                      title="Фоновое видео портфолио"
+                      loading="eager"
+                      aria-hidden="true"
+                      tabIndex={-1}
+                      className="absolute top-[52%] md:top-[51%] left-1/2 h-[122%] w-[198vw] sm:w-[172vw] md:w-[130vw] lg:w-[118vw] xl:w-[112vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none transform-gpu will-change-transform"
+                      style={heroVideoFrameStyle}
+                    />
+                  )}
                 </motion.div>
 
                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-nothing-black/72 via-nothing-black/35 to-nothing-black/15" />
                 <div className="absolute inset-0 z-10 bg-gradient-to-r from-nothing-black/60 via-transparent to-nothing-black/20" />
                 <div className="absolute inset-0 z-10 noise-overlay opacity-25 pointer-events-none" />
 
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.25, ease: NOTHING_EASE }}
-                  className="hero-rail hidden lg:grid lg:grid-cols-[minmax(130px,160px)_minmax(0,1fr)_minmax(130px,160px)] items-center gap-6 px-[clamp(32px,5vw,96px)] pt-8 relative z-20"
-                >
-                  <div className="hero-rail-note flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">
-                    <span>Видеопродакшн / Фото</span>
-                    <span>Нижний Новгород</span>
-                  </div>
-                  {renderNav("site-nav site-nav-inline relative left-auto top-auto translate-x-0 z-20 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center glass rounded-full w-full max-w-none border-white/20 text-white")}
-                  <div className="hero-rail-note flex flex-col items-end gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85 text-right">
-                    <span>На связи</span>
-                    <span>Свободные даты</span>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  style={{ opacity: heroOpacity }}
-                  initial="hidden"
-                  animate="show"
-                  variants={STAGGER_CONTAINER}
-                  className="absolute inset-0 z-20 flex flex-col justify-end gap-[clamp(8px,1vw,14px)] px-[clamp(14px,4.2vw,26px)] sm:px-8 md:px-10 lg:px-[clamp(32px,5vw,96px)] pb-[max(12px,env(safe-area-inset-bottom))] sm:pb-[max(18px,env(safe-area-inset-bottom))] md:pb-[clamp(44px,4.2vw,72px)] pt-[max(18px,env(safe-area-inset-top))] sm:pt-[clamp(24px,3.2vw,44px)]"
-                >
-                  <div className="hero-copy-wrap max-w-[1240px] relative z-10">
-                    <motion.div variants={STAGGER_ITEM} className="flex items-start gap-2.5 sm:gap-4 mb-2.5 sm:mb-6">
-                      <div className="w-6 sm:w-12 h-[1px] mt-1 bg-nothing-red" />
-                      <h2 className="font-mono text-[9px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.38em] text-white/88 leading-relaxed">
-                        Рекламные ролики, Reels и видео для бизнеса
-                      </h2>
-                    </motion.div>
-
-                    <h1 className="hero-headline text-[clamp(1.85rem,12.2vw,3.8rem)] sm:text-[clamp(2.35rem,9.1vw,5rem)] lg:text-[clamp(3.95rem,5.7vw,7.1rem)] xl:text-[clamp(4.45rem,5.3vw,8rem)] font-display font-bold leading-[0.88] tracking-[-0.052em] uppercase text-white max-w-[11ch] sm:max-w-[12ch]">
-                      <div className="text-mask">
-                        <motion.span variants={TEXT_REVEAL} className="block">Снимаю рекламные</motion.span>
-                      </div>
-                      <div className="text-mask">
-                        <motion.span variants={TEXT_REVEAL} className="block">ролики и</motion.span>
-                      </div>
-                      <div className="text-mask text-nothing-red">
-                        <motion.span variants={TEXT_REVEAL} className="block">Reels контент</motion.span>
-                      </div>
-                    </h1>
-
-                    <motion.div
-                      variants={STAGGER_ITEM}
-                    className="hero-cta-wrap mt-2.5 sm:mt-4 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-start gap-2 sm:gap-3 w-full sm:w-auto max-w-[min(94vw,620px)]"
-                    >
-                      <a
-                        href="#contact"
-                        className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-nothing-black/85 px-4 sm:px-6 py-3 sm:py-4 text-nothing-white transition-all duration-500 hover:bg-nothing-red"
-                      >
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.28em] sm:tracking-[0.35em]">Обсудить проект</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </a>
-                      <a
-                        href="#projects"
-                        className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full border border-white/30 bg-white/8 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 text-white transition-all duration-500 hover:border-white/70 hover:bg-white/12"
-                      >
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.28em] sm:tracking-[0.35em]">Посмотреть кейсы</span>
-                        <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                      </a>
-                    </motion.div>
-                  </div>
+                <div className="hero-frame site-shell relative z-20">
                   <motion.div
-                    variants={STAGGER_ITEM}
-                    className="mt-[clamp(8px,1vw,14px)] sm:mt-[clamp(12px,1.4vw,20px)] pt-[clamp(8px,0.95vw,12px)] sm:pt-[clamp(12px,1.25vw,18px)] border-t border-white/20 max-w-[860px] lg:max-w-[980px] relative z-10"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.25, ease: NOTHING_EASE }}
+                    className="hero-rail hidden lg:grid"
                   >
-                    <p className="max-w-[38rem] text-[clamp(0.95rem,4.2vw,1.12rem)] sm:text-[clamp(1rem,2.3vw,1.25rem)] xl:text-[1.3rem] font-semibold leading-[1.3] sm:leading-[1.38] text-white/92">
-                      Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
-                      Делаю визуальный контент, который хочется досмотреть до конца. При необходимости дополняю
-                      проект фотосъёмкой.
-                    </p>
-
-                    <div className="hero-features mt-2.5 sm:mt-4.5 hidden md:flex flex-col items-start gap-y-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 xl:gap-x-8 sm:gap-y-3.5">
-                      <div className="flex items-center gap-3">
-                        <Camera className="w-4 h-4 text-nothing-red" />
-                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Рекламные ролики и Reels</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Video className="w-4 h-4 text-nothing-red" />
-                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Съёмка событий и интервью</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <ImageIcon className="w-4 h-4 text-nothing-red" />
-                        <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-widest text-white/90">Фотосъёмка для бренда</span>
-                      </div>
+                    <div className="hero-rail-note hero-rail-note--start flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">
+                      <span>Видеопродакшн / Фото</span>
+                      <span>Нижний Новгород</span>
+                    </div>
+                    {renderNav("site-nav site-nav-inline relative left-auto top-auto translate-x-0 z-20 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center glass rounded-full w-full max-w-none border-white/20 text-white")}
+                    <div className="hero-rail-note hero-rail-note--end flex flex-col items-end gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/85 text-right">
+                      <span>На связи</span>
+                      <span>Свободные даты</span>
                     </div>
                   </motion.div>
 
-                  <div className="absolute z-0 inset-x-0 bottom-0 h-10 sm:h-16 md:h-20 lg:h-28 bg-gradient-to-b from-transparent via-nothing-black/10 to-nothing-white pointer-events-none transform-gpu" />
-                </motion.div>
+                  <motion.div
+                    style={{ opacity: heroOpacity }}
+                    initial="hidden"
+                    animate="show"
+                    variants={STAGGER_CONTAINER}
+                    className="hero-layout-grid pointer-events-none"
+                  >
+                    <div className="hero-primary relative z-10 pointer-events-auto">
+                      <motion.div variants={STAGGER_ITEM} className="hero-eyebrow flex items-start gap-3">
+                        <div className="w-8 sm:w-12 h-px mt-1.5 bg-nothing-red" />
+                        <h2 className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-white/88 leading-relaxed">
+                          Рекламные ролики, Reels и видео для бизнеса
+                        </h2>
+                      </motion.div>
+
+                      <h1 className="hero-headline font-display font-bold uppercase text-white">
+                        <div className="text-mask">
+                          <motion.span variants={TEXT_REVEAL} className="block">Снимаю</motion.span>
+                        </div>
+                        <div className="text-mask">
+                          <motion.span variants={TEXT_REVEAL} className="block">рекламные ролики</motion.span>
+                        </div>
+                        <div className="text-mask text-nothing-red">
+                          <motion.span variants={TEXT_REVEAL} className="block">и Reels контент</motion.span>
+                        </div>
+                      </h1>
+
+                      <motion.div variants={STAGGER_ITEM} className="hero-cta-wrap">
+                        <a href="#contact" className="hero-action hero-action--dark">
+                          <span>Обсудить проект</span>
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
+                        <a href="/calculator" className="hero-action hero-action--primary">
+                          <span>Рассчитать стоимость</span>
+                          <CalculatorIcon className="w-4 h-4" />
+                        </a>
+                        <a href="#projects" className="hero-action hero-action--ghost">
+                          <span>Посмотреть кейсы</span>
+                          <Play className="w-4 h-4 fill-current" />
+                        </a>
+                      </motion.div>
+                    </div>
+
+                    <motion.aside variants={STAGGER_ITEM} className="hero-summary relative z-10 pointer-events-auto">
+                      <span className="hero-summary-label">Видеопродакшн полного цикла</span>
+                      <p>
+                        Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
+                        Делаю визуальный контент, который хочется досмотреть до конца. При необходимости дополняю
+                        проект фотосъёмкой.
+                      </p>
+
+                      <div className="hero-features">
+                        <div>
+                          <Camera className="w-4 h-4 text-nothing-red" />
+                          <span>Рекламные ролики и Reels</span>
+                        </div>
+                        <div>
+                          <Video className="w-4 h-4 text-nothing-red" />
+                          <span>События и интервью</span>
+                        </div>
+                        <div>
+                          <ImageIcon className="w-4 h-4 text-nothing-red" />
+                          <span>Фотосъёмка для бренда</span>
+                        </div>
+                      </div>
+                    </motion.aside>
+                  </motion.div>
+                </div>
+
+                <div className="hero-stage-fade absolute z-10 inset-x-0 bottom-0 pointer-events-none" />
               </div>
 
               <div className="relative z-20">
@@ -2458,12 +2912,15 @@ export default function App() {
               </div>
             </section>
 
+      {/* Trust numbers (Фаза 5) */}
+      <TrustStats />
+
       {/* Portfolio Section */}
       <PortfolioGrid />
 
       {/* Services Section */}
-      <section id="services" className="services-section pt-[clamp(2.8rem,9vw,5rem)] pb-[clamp(3.5rem,10vw,7rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 bg-nothing-gray/30 relative overflow-hidden">
-        <div className="max-w-[1720px] mx-auto relative z-10">
+      <section id="services" className="services-section site-section pt-[clamp(2.8rem,9vw,5rem)] pb-[clamp(3.5rem,10vw,7rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 bg-nothing-gray/30 relative overflow-hidden">
+        <div className="site-shell max-w-[1720px] mx-auto relative z-10">
           <motion.div 
             initial="hidden"
             whileInView="show"
@@ -2530,17 +2987,40 @@ export default function App() {
               </ul>
             </motion.div>
           </motion.div>
+
+          <motion.a
+            href="/content-day"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            className="content-day-service-link"
+          >
+            <div>
+              <span>Комплексная услуга</span>
+              <h3>Контент-день для бизнеса</h3>
+              <p>Фото и видео за одну съёмку: Reels, короткие ролики, монтаж, цвет, звук и готовые материалы для публикации.</p>
+            </div>
+            <ArrowUpRight className="h-6 w-6" />
+          </motion.a>
         </div>
         <div className="absolute bottom-0 right-0 text-[20vw] font-display font-bold uppercase tracking-tighter text-nothing-black/[0.02] leading-none select-none -z-0">
           КОНТЕНТ
         </div>
       </section>
 
+      <SiteDirectory />
+
       {/* Testimonials Section */}
+      {/* Как я работаю (Фаза 5) */}
+      <ProcessSteps />
+
       <Testimonials />
 
+      {/* FAQ (Фаза 5) */}
+      <HomeFaq />
+
       {/* Contact Section */}
-      <section id="contact" className="contact-section py-[clamp(3rem,10vw,7rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
+      <section id="contact" className="contact-section site-section py-[clamp(3rem,10vw,7rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 max-w-[1720px] mx-auto">
         <div className="contact-grid grid grid-cols-1 xl:grid-cols-12 xl:items-stretch gap-8 sm:gap-10 lg:gap-14 xl:gap-16">
           <motion.div
             initial="hidden"
@@ -2550,7 +3030,7 @@ export default function App() {
             className="contact-copy xl:col-span-6 xl:h-full"
           >
             <div className="mb-[clamp(1.6rem,7vw,5.5rem)]">
-              <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">03</motion.span>
+              <motion.span variants={STAGGER_ITEM} className="font-mono text-xs opacity-90">05</motion.span>
               <div className="text-mask">
                 <motion.h2 variants={TEXT_REVEAL} className="text-[clamp(2rem,9.2vw,4.7rem)] font-display font-bold tracking-tighter uppercase leading-[0.92]">Обсудим видеопроект</motion.h2>
               </div>
@@ -2636,10 +3116,26 @@ export default function App() {
                   />
                   {showContactError && (
                     <p className="text-[12px] text-[#ff2b2b] leading-relaxed">
-                      Введите Telegram (@username) или email
+                      Введите Telegram, email или номер телефона
                     </p>
                   )}
                 </div>
+                </div>
+                <div className="contact-field contact-field-full space-y-2">
+                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]" htmlFor="contact-service">
+                    Тип услуги
+                  </label>
+                  <select
+                    id="contact-service"
+                    name="service"
+                    value={formService}
+                    onChange={(event) => setFormService(event.target.value)}
+                    className="w-full appearance-none bg-transparent border-b border-nothing-black/18 py-2.5 pr-8 outline-none transition-colors focus:border-nothing-red font-semibold text-[15px] sm:text-base text-nothing-black"
+                  >
+                    {CONTACT_SERVICES.map((service) => (
+                      <option key={service} value={service}>{service}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="contact-field contact-field-full space-y-2">
                   <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Какой проект планируем</label>
@@ -2705,11 +3201,15 @@ export default function App() {
                   disabled={!privacyAccepted || !personalDataAccepted || !isContactValid || isSubmitting}
                   className="w-full py-4 sm:py-4.5 bg-nothing-black text-nothing-white rounded-full font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.34em] hover:bg-nothing-red transition-all duration-500 mt-2.5 sm:mt-3 nothing-shadow disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-nothing-black"
                 >
-                  {isSubmitting ? "ОТПРАВКА..." : "Обсудить проект"}
+                  {isSubmitting
+                    ? "ОТПРАВКА..."
+                    : leadDeliveryConfigured === false
+                      ? "Продолжить в Telegram"
+                      : "Обсудить проект"}
                 </motion.button>
                 {submitStatus === "success" && (
                   <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-green-700 leading-relaxed">
-                    Заявка отправлена
+                    Заявка отправлена. Я получил задачу и свяжусь с вами по указанному контакту.
                   </p>
                 )}
                 {submitStatus === "error" && (
@@ -2717,12 +3217,27 @@ export default function App() {
                     {submitError || "Ошибка отправки"}
                   </p>
                 )}
+                {submitStatus === "fallback" && (
+                  <div className="rounded-xl border border-nothing-red/25 bg-nothing-red/5 p-3">
+                    <p className="text-[12px] leading-relaxed text-nothing-black/75">
+                      Отправка через сайт пока не подключена. Откройте Telegram: основные данные заявки уже подставлены в сообщение.
+                    </p>
+                    <a
+                      href={telegramBriefUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-nothing-red"
+                    >
+                      Открыть Telegram
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                )}
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] opacity-55 leading-relaxed">
-                  После отправки заявки свяжусь с вами в Telegram или по email.
+                  Точная стоимость рассчитывается после короткого брифа.
                 </p>
               </form>
             </div>
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-nothing-red/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
           </motion.div>
         </div>
       </section>
@@ -2772,7 +3287,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="site-footer py-[clamp(2.9rem,9vw,6.5rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 border-t border-nothing-black/10 bg-nothing-white transition-colors">
-        <div className="max-w-[1720px] mx-auto">
+        <div className="site-shell max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-8 sm:gap-10 md:gap-12 mb-12 sm:mb-20">
             <div className="col-span-1 md:col-span-2 lg:col-span-3">
               <span className="font-display font-bold text-[clamp(2rem,8.5vw,2.9rem)] uppercase tracking-tighter mb-5 sm:mb-8 block text-nothing-black">ELYGIN</span>
@@ -2785,9 +3300,12 @@ export default function App() {
             <div>
               <span className="font-mono text-xs uppercase tracking-widest opacity-90 mb-8 block text-nothing-black">Навигация</span>
               <ul className="space-y-4 text-sm font-bold text-nothing-black">
-                <li><a href="#projects" className="hover:text-nothing-red transition-colors">Кейсы</a></li>
-                <li><a href="#services" className="hover:text-nothing-red transition-colors">Услуги</a></li>
-                <li><a href="#contact" className="hover:text-nothing-red transition-colors">Контакты</a></li>
+                <li><a href="/portfolio" className="hover:text-nothing-red transition-colors">Портфолио</a></li>
+                <li><a href="/portfolio/reels" className="hover:text-nothing-red transition-colors">Reels</a></li>
+                <li><a href="/portfolio/events" className="hover:text-nothing-red transition-colors">Мероприятия</a></li>
+                <li><a href="/content-day" className="hover:text-nothing-red transition-colors">Контент-день</a></li>
+                <li><a href="/calculator" className="hover:text-nothing-red transition-colors">Калькулятор</a></li>
+                <li><a href="/journal" className="hover:text-nothing-red transition-colors">Журнал</a></li>
                 <li><a href="/privacy-policy.html" className="hover:text-nothing-red transition-colors">Политика конфиденциальности</a></li>
               </ul>
             </div>
@@ -2796,8 +3314,8 @@ export default function App() {
               <span className="font-mono text-xs uppercase tracking-widest opacity-90 mb-8 block text-nothing-black">Сообщества</span>
               <ul className="space-y-4 text-sm font-bold text-nothing-black">
                 <li><a href="https://t.me/YuriElygin" className="hover:text-nothing-red transition-colors">Telegram</a></li>
-                <li><a href="#" className="hover:text-nothing-red transition-colors">Instagram</a></li>
-                <li><a href="#" className="hover:text-nothing-red transition-colors">Vimeo</a></li>
+                <li><a href="mailto:y.elyginn@gmail.com" className="hover:text-nothing-red transition-colors">Email</a></li>
+                <li><a href="/portfolio" className="hover:text-nothing-red transition-colors">Портфолио</a></li>
               </ul>
             </div>
 
@@ -2820,6 +3338,7 @@ export default function App() {
               <p className="mt-2 text-[11px] sm:text-xs text-nothing-black/60">
                 Оператор: {LEGAL_OPERATOR.name}. Плательщик налога на профессиональный доход (самозанятый). ИНН: {LEGAL_OPERATOR.inn}.
               </p>
+              <StudioContacts />
             </div>
           </div>
         </div>

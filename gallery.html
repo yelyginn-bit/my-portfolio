@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Галерея | Yelyginn</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+      :root {
+        --red: #fe2c1f; --black: #0a0a0a; --panel: #121212; --panel-2: #181818;
+        --white: #f5f5f4; --gray: #8e8e8c; --line: rgba(255,255,255,0.1); --line-soft: rgba(255,255,255,0.06);
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; background: #060606; }
+      body { color: var(--white); font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+      a { color: inherit; text-decoration: none; }
+
+      .g-top { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(14px, 4vw, 40px); background: rgba(6,6,6,0.72); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line-soft); }
+      .g-title { font-size: clamp(15px, 2.4vw, 22px); font-weight: 700; letter-spacing: -0.01em; }
+      .g-sub { font-size: 11.5px; color: var(--gray); margin-top: 2px; letter-spacing: 0.02em; }
+      .g-logo { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray); }
+      .g-logo span { color: var(--red); }
+
+      .g-wrap { padding: clamp(14px, 4vw, 40px); }
+
+      /* Masonry через CSS-колонки */
+      .g-masonry { column-gap: 10px; columns: 4 260px; }
+      @media (max-width: 900px) { .g-masonry { columns: 3 200px; } }
+      @media (max-width: 560px) { .g-masonry { columns: 2 140px; } }
+      .g-cell { break-inside: avoid; margin-bottom: 10px; position: relative; border-radius: 10px; overflow: hidden; background: var(--panel-2); cursor: zoom-in; }
+      .g-cell img { width: 100%; display: block; transition: opacity 0.4s ease, filter 0.4s ease; }
+      .g-cell img.loading { filter: blur(14px); opacity: 0.7; transform: scale(1.02); }
+      .g-cell-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 6px; padding: 8px; opacity: 0; transition: opacity 0.18s; background: linear-gradient(to top, rgba(0,0,0,0.65), transparent); }
+      .g-cell:hover .g-cell-bar { opacity: 1; }
+      .g-mark { width: 30px; height: 30px; border-radius: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.22); display: grid; place-items: center; cursor: pointer; font-size: 13px; transition: background 0.15s, border-color 0.15s; }
+      .g-mark:hover { border-color: var(--white); }
+      .g-mark[data-on="true"] { background: var(--red); border-color: var(--red); }
+
+      /* Лайтбокс */
+      .g-lb { position: fixed; inset: 0; z-index: 50; background: rgba(4,4,4,0.96); display: flex; align-items: center; justify-content: center; }
+      .g-lb img { max-width: 94vw; max-height: 86vh; object-fit: contain; cursor: zoom-in; transition: transform 0.25s ease; user-select: none; }
+      .g-lb img.zoom { transform: scale(2); cursor: zoom-out; }
+      .g-lb-close { position: absolute; top: 18px; right: 20px; font-size: 26px; color: #fff; cursor: pointer; opacity: 0.8; }
+      .g-lb-close:hover { opacity: 1; }
+      .g-lb-nav { position: absolute; top: 50%; transform: translateY(-50%); font-size: 40px; color: #fff; cursor: pointer; opacity: 0.6; padding: 16px; user-select: none; }
+      .g-lb-nav:hover { opacity: 1; }
+      .g-lb-prev { left: 8px; } .g-lb-next { right: 8px; }
+      .g-lb-bar { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+      .g-lb-btn { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.08); border: 1px solid var(--line); color: #fff; border-radius: 99px; padding: 9px 16px; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+      .g-lb-btn[data-on="true"] { background: var(--red); border-color: var(--red); }
+      .g-lb-btn:hover { border-color: var(--white); }
+
+      /* Парольный гейт / статусы */
+      .g-center { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; gap: 14px; }
+      .g-center h2 { font-size: 22px; margin: 0; }
+      .g-center p { color: var(--gray); margin: 0; font-size: 14px; }
+      .g-input { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; color: #fff; font-size: 15px; padding: 13px 15px; outline: none; width: min(320px, 80vw); font-family: inherit; }
+      .g-input:focus { border-color: var(--red); }
+      .g-btn { background: var(--red); color: #fff; border: none; border-radius: 10px; padding: 13px 26px; font-weight: 700; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+      .g-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11.5px; color: var(--gray); }
+      .g-legend b { color: var(--white); font-weight: 600; }
+      .g-toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--panel); border: 1px solid var(--line); border-radius: 99px; padding: 10px 18px; font-size: 12.5px; z-index: 60; }
+    </style>
+    <link rel="stylesheet" href="/site-skin.css" />
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/gallery/main.tsx"></script>
+  </body>
+</html>

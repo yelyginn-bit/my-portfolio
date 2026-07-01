@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Журнал — заметки о видео и фото | Yelyginn</title>
+    <meta name="description" content="Журнал Yelyginn: заметки о видеопродакшне, съёмке, монтаже и работе с брендами." />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://yelyginn.ru/journal" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yelyginn.ru/journal" />
+    <meta property="og:title" content="Журнал — Yelyginn" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <style>
+      :root { --red:#fe2c1f; --black:#0a0a0a; --panel:#121212; --panel-2:#181818; --white:#f5f5f4; --gray:#8e8e8c; --line:rgba(255,255,255,0.1); --line-soft:rgba(255,255,255,0.06); color-scheme:dark; }
+      *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+      body{background:var(--black);color:var(--white);font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+      a{color:inherit;text-decoration:none;}
+      .j-wrap{width:min(820px,calc(100% - 32px));margin:0 auto;padding:40px 0 80px;}
+      .j-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:30px;}
+      .j-logo{font-size:14px;font-weight:800;} .j-logo span{color:var(--red);}
+      .j-nav{display:flex;gap:18px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gray);}
+      .j-nav a:hover{color:var(--white);}
+      .j-eyebrow{font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+      .j-title{font-size:clamp(30px,5.5vw,52px);line-height:1.0;letter-spacing:-0.03em;font-weight:800;text-transform:uppercase;margin:0 0 32px;}
+      .j-title span{color:var(--red);}
+      .j-card{display:block;background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:22px 24px;margin-bottom:14px;transition:border-color 0.18s;}
+      .j-card:hover{border-color:var(--line);}
+      .j-card h2{margin:0 0 6px;font-size:20px;letter-spacing:-0.01em;}
+      .j-meta{font-size:11.5px;color:var(--gray);letter-spacing:0.04em;margin-bottom:10px;}
+      .j-card p{margin:0;color:rgba(255,255,255,0.72);font-size:14px;}
+      .j-tags{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+      .j-tag{font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);border:1px solid var(--line);border-radius:99px;padding:4px 10px;}
+      .j-empty{color:var(--gray);text-align:center;padding:60px 0;}
+      .j-back{font-size:12px;color:var(--gray);letter-spacing:0.1em;text-transform:uppercase;display:inline-block;margin-bottom:22px;}
+      .j-back:hover{color:var(--white);}
+      .j-article h1{font-size:clamp(28px,5vw,44px);line-height:1.05;letter-spacing:-0.03em;margin:0 0 10px;}
+      .j-article h2{font-size:22px;margin:30px 0 10px;letter-spacing:-0.02em;}
+      .j-article h3{font-size:17px;margin:24px 0 8px;color:rgba(255,255,255,0.92);}
+      .j-article p{color:rgba(255,255,255,0.82);margin:0 0 16px;}
+      .j-article li{color:rgba(255,255,255,0.82);margin:0 0 6px;}
+      .j-article b{color:var(--white);}
+      .j-cta{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;}
+      .j-btn{background:var(--red);color:#fff;border-radius:10px;padding:13px 22px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
+      .j-btn.ghost{background:transparent;border:1px solid var(--line);color:rgba(255,255,255,0.8);}
+    </style>
+    <link rel="stylesheet" href="/site-skin.css" />
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/journal/main.tsx"></script>
+  </body>
+</html>

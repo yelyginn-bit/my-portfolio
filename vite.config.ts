@@ -28,6 +28,14 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
         },
         injectTo: 'body',
       });
+      tags.push({
+        tag: 'script',
+        attrs: {
+          src: '/site-shell.js',
+          defer: true,
+        },
+        injectTo: 'body',
+      });
     }
     return {
       html,

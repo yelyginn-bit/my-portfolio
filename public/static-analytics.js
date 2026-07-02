@@ -52,6 +52,7 @@
     if (localStorage.getItem(consentKey) === "accepted") return;
     const banner = document.createElement("aside");
     banner.setAttribute("aria-label", "Настройки cookie");
+    banner.className = "static-cookie-banner";
     banner.innerHTML = '<p>Сайт использует cookie для аналитики. Подробнее — в <a href="/privacy-policy">политике обработки данных</a>.</p><button type="button">Принять</button>';
     Object.assign(banner.style, {
       position: "fixed", right: "16px", bottom: "16px", zIndex: "1000",

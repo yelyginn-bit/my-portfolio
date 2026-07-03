@@ -47,6 +47,9 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
+    // Vercel's Supabase integration provisions browser-safe values with the
+    // NEXT_PUBLIC_ prefix. Keep server-only SUPABASE_* values out of the bundle.
+    envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
     plugins: [
       react(),
       tailwindcss(),

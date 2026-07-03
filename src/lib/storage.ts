@@ -1,8 +1,10 @@
 // Storage Layer — абстракция хранения бинарных файлов (фото/видео).
 // Метаданные ассетов лежат в DataStore; сами файлы — здесь.
 //  • LocalStorageProvider — IndexedDB (dev, работает без облака);
+//  • SupabaseStorageProvider — приватный Supabase Storage (free tier);
 //  • R2Provider — Cloudflare R2 через presigned-эндпоинты (прод).
-// Выбор: VITE_STORAGE_PROVIDER ("local" по умолчанию, "r2" когда настроен R2).
+// Выбор: VITE_STORAGE_PROVIDER ("local" | "supabase" | "r2").
+import { getSupabase } from "./supabaseClient";
 
 export interface StorageProvider {
   readonly name: string;
@@ -119,7 +121,7 @@ class R2Provider implements StorageProvider {
   async upload(key: string, file: Blob, onProgress?: (pct: number) => void): Promise<void> {
     const r = await fetch("/api/upload-url", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify({ key, contentType: file.type || "application/octet-stream" }),
     });
     if (!r.ok) throw new Error("Не удалось получить ссылку для загрузки");
@@ -160,19 +162,65 @@ class R2Provider implements StorageProvider {
 
 const env: Record<string, string | undefined> =
   (import.meta as { env?: Record<string, string | undefined> }).env ?? {};
+const SUPABASE_BUCKET = env.VITE_SUPABASE_STORAGE_BUCKET || "media";
+
+class SupabaseStorageProvider implements StorageProvider {
+  readonly name = "supabase";
+
+  private async bucket() {
+    const sb = await getSupabase();
+    if (!sb) throw new Error("Supabase не настроен");
+    return sb.storage.from(SUPABASE_BUCKET);
+  }
+
+  async upload(key: string, file: Blob, onProgress?: (pct: number) => void): Promise<void> {
+    const bucket = await this.bucket();
+    const { error } = await bucket.upload(key, file, {
+      upsert: true,
+      contentType: file.type || "application/octet-stream",
+    });
+    if (error) throw error;
+    onProgress?.(100);
+  }
+
+  async url(key: string): Promise<string> {
+    const r = await fetch(withShare(`/api/file-url?key=${encodeURIComponent(key)}`), {
+      headers: authHeaders(),
+    });
+    if (!r.ok) return "";
+    const data = await r.json();
+    return data.url || "";
+  }
+
+  async blob(key: string): Promise<Blob | null> {
+    const u = await this.url(key);
+    if (!u) return null;
+    const r = await fetch(u);
+    return r.ok ? await r.blob() : null;
+  }
+
+  async remove(key: string): Promise<void> {
+    await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    }).catch(() => {});
+  }
+}
 
 let _storage: StorageProvider | null = null;
 export function getStorage(): StorageProvider {
   if (!_storage) {
-    _storage = env.VITE_STORAGE_PROVIDER === "r2" ? new R2Provider() : new LocalStorageProvider();
+    if (env.VITE_STORAGE_PROVIDER === "r2") _storage = new R2Provider();
+    else if (env.VITE_STORAGE_PROVIDER === "supabase") _storage = new SupabaseStorageProvider();
+    else _storage = new LocalStorageProvider();
   }
   return _storage;
 }
 
-/** Удалённое хранилище (R2) — оригиналы доступны через серверный /api/download.
+/** Удалённое хранилище — оригиналы доступны через серверный /api/download.
  *  В local-режиме serverless нет, скачивание идёт целиком на клиенте. */
 export function isRemoteStorage(): boolean {
-  return env.VITE_STORAGE_PROVIDER === "r2";
+  return env.VITE_STORAGE_PROVIDER === "r2" || env.VITE_STORAGE_PROVIDER === "supabase";
 }
 
 // ─── Генерация превью на канвасе (без зависимостей) ───────────────────────────

@@ -14,6 +14,7 @@ import streamUploadUrl from "../server/api/stream-upload-url.js";
 import telegramSetWebhook from "../server/api/telegram-set-webhook.js";
 import telegramWebhook from "../server/api/telegram-webhook.js";
 import uploadUrl from "../server/api/upload-url.js";
+import yandexDisk from "../server/api/yandex-disk.js";
 
 const handlers = {
   "admin-login": adminLogin,
@@ -32,6 +33,7 @@ const handlers = {
   "telegram-set-webhook": telegramSetWebhook,
   "telegram-webhook": telegramWebhook,
   "upload-url": uploadUrl,
+  "yandex-disk": yandexDisk,
 };
 
 export default async function handler(req, res) {

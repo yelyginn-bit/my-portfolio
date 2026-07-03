@@ -164,6 +164,20 @@ const env: Record<string, string | undefined> =
   (import.meta as { env?: Record<string, string | undefined> }).env ?? {};
 const SUPABASE_BUCKET = env.VITE_SUPABASE_STORAGE_BUCKET || "media";
 
+export function yandexStorageKey(publicKey: string, path: string): string {
+  return `ydisk:${encodeURIComponent(publicKey)}:${encodeURIComponent(path)}`;
+}
+
+function yandexStorageParts(key: string): { publicKey: string; path: string } | null {
+  if (!key.startsWith("ydisk:")) return null;
+  const separator = key.indexOf(":", 6);
+  if (separator === -1) return null;
+  return {
+    publicKey: decodeURIComponent(key.slice(6, separator)),
+    path: decodeURIComponent(key.slice(separator + 1)),
+  };
+}
+
 class SupabaseStorageProvider implements StorageProvider {
   readonly name = "supabase";
 
@@ -184,6 +198,18 @@ class SupabaseStorageProvider implements StorageProvider {
   }
 
   async url(key: string): Promise<string> {
+    const yandex = yandexStorageParts(key);
+    if (yandex) {
+      const params = new URLSearchParams({
+        action: "url",
+        publicKey: yandex.publicKey,
+        path: yandex.path,
+      });
+      const response = await fetch(`/api/yandex-disk?${params}`);
+      if (!response.ok) return "";
+      const data = await response.json();
+      return data.url || "";
+    }
     const r = await fetch(withShare(`/api/file-url?key=${encodeURIComponent(key)}`), {
       headers: authHeaders(),
     });
@@ -200,6 +226,7 @@ class SupabaseStorageProvider implements StorageProvider {
   }
 
   async remove(key: string): Promise<void> {
+    if (yandexStorageParts(key)) return;
     await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
       method: "DELETE",
       headers: authHeaders(),

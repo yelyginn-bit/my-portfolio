@@ -52,7 +52,7 @@
       .price-button--primary { color: #fff; border-color: #fe2c1f; background: #fe2c1f; }
       footer { padding: 30px 0 44px; border-top: 1px solid rgba(10,10,10,.14); color: rgba(10,10,10,.58); font: 600 10px/1.5 "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
       @media (max-width: 900px) {
-        .price-nav a:nth-child(n+4) { display: none; }
+        .price-nav { overflow-x: auto; scrollbar-width: none; }
         .price-hero { grid-template-columns: 1fr; padding-top: 80px; }
         .price-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .price-terms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -61,9 +61,9 @@
       }
       @media (max-width: 600px) {
         .price-shell { width: min(100% - 28px, 1380px); }
-        .price-header { border-radius: 8px; }
+        .price-header { align-items: flex-start; flex-direction: column; border-radius: 8px; }
+        .price-nav { width: 100%; }
         .price-nav { gap: 14px; }
-        .price-nav a:nth-child(n+3) { display: none; }
         .price-hero { padding: 68px 0 46px; }
         h1 { font-size: clamp(3rem, 18vw, 5rem); }
         .price-section { padding: 52px 0; }

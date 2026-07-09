@@ -3,7 +3,7 @@
 // Layer (IndexedDB в dev / R2 в проде), метаданные — через DataStore.
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { getStore } from "../lib/store";
-import { getStorage, makeThumbnail } from "../lib/storage";
+import { getStorage, makeThumbnail, yandexStorageKey } from "../lib/storage";
 import { uploadVideo, videoPoster } from "../lib/video";
 import { exportSelectionsZip } from "../lib/export";
 import { getAI } from "../lib/ai";
@@ -38,6 +38,9 @@ export default function Galleries() {
   const [comments, setComments] = useState<PhotoComment[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [albumFilter, setAlbumFilter] = useState<string | null>(null);
+  const [yandexUrl, setYandexUrl] = useState("");
+  const [yandexBusy, setYandexBusy] = useState(false);
+  const [yandexMessage, setYandexMessage] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const loadGalleries = async () => setGalleries(await store.listGalleries());
@@ -52,6 +55,7 @@ export default function Galleries() {
     store.listSelections(g.id).then((s) => setSelCount(s.length));
     store.listComments(g.id).then(setComments).catch(() => setComments([]));
     store.listAlbums(g.id).then(setAlbums).catch(() => setAlbums([]));
+    store.getSetting<string>(`gallery_yandex_${g.id}`).then((value) => setYandexUrl(value || "")).catch(() => setYandexUrl(""));
     // Разрешаем URL для показа: inline thumb (dev) либо из хранилища.
     const map: Record<string, string> = {};
     await Promise.all(
@@ -60,6 +64,45 @@ export default function Galleries() {
       }),
     );
     setUrls(map);
+  };
+
+  const syncYandex = async () => {
+    if (!selected || !yandexUrl.trim() || yandexBusy) return;
+    setYandexBusy(true);
+    setYandexMessage("");
+    try {
+      const publicKey = yandexUrl.trim();
+      const response = await fetch(`/api/yandex-disk?${new URLSearchParams({ publicKey })}`);
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || "Папка недоступна");
+
+      await store.setSetting(`gallery_yandex_${selected.id}`, publicKey);
+      const existing = new Set(assets.map((asset) => asset.storageKey));
+      let added = 0;
+      for (const item of data.items || []) {
+        if (item.type !== "file" || !String(item.mimeType).startsWith("image/")) continue;
+        const key = yandexStorageKey(publicKey, item.path);
+        if (existing.has(key)) continue;
+        const asset = await store.addAsset({
+          galleryId: selected.id,
+          type: "photo",
+          storageProvider: "yandex",
+          storageKey: key,
+          filename: item.name,
+          mime: item.mimeType,
+          sizeBytes: item.size || undefined,
+        });
+        existing.add(key);
+        added += 1;
+        setAssets((list) => [...list, asset]);
+        storage.url(key).then((url) => setUrls((map) => ({ ...map, [asset.id]: url })));
+      }
+      setYandexMessage(added ? `Добавлено фото: ${added}` : "Новых фотографий нет");
+    } catch (error) {
+      setYandexMessage(error instanceof Error ? error.message : "Не удалось синхронизировать");
+    } finally {
+      setYandexBusy(false);
+    }
   };
 
   const createGallery = async () => {
@@ -468,6 +511,20 @@ export default function Galleries() {
                 <button className="gal-chip" style={{ position: "static", background: "transparent", border: "1px dashed rgba(255,255,255,0.3)" }} onClick={addAlbum}>
                   + альбом
                 </button>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) auto", gap: 8, marginBottom: 14 }}>
+                <input
+                  className="adm-input"
+                  value={yandexUrl}
+                  onChange={(event) => setYandexUrl(event.target.value)}
+                  placeholder="Публичная ссылка на папку Яндекс Диска"
+                  aria-label="Публичная ссылка на папку Яндекс Диска"
+                />
+                <button className="gal-mini-btn ghost" onClick={syncYandex} disabled={yandexBusy || !yandexUrl.trim()}>
+                  {yandexBusy ? "Синхронизация…" : "Синхронизировать Диск"}
+                </button>
+                {yandexMessage && <span className="adm-note" style={{ gridColumn: "1 / -1", margin: 0 }}>{yandexMessage}</span>}
               </div>
 
               <div

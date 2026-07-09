@@ -5,8 +5,10 @@ import type { SupabaseClient } from "@supabase/supabase-js"; // type-only, ст�
 
 // Guard на случай не-Vite окружения (тесты в node): import.meta.env там нет.
 const env: Record<string, string | undefined> = (import.meta as { env?: Record<string, string | undefined> }).env ?? {};
-const url = env.VITE_SUPABASE_URL;
-const anon = env.VITE_SUPABASE_ANON_KEY;
+const url = env.VITE_SUPABASE_URL ?? env.NEXT_PUBLIC_SUPABASE_URL;
+const anon = env.VITE_SUPABASE_ANON_KEY
+  ?? env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ?? env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 /** true, когда заданы ключи Supabase. Дешёвая проверка без загрузки SDK. */
 export const isSupabaseConfigured = Boolean(url && anon);

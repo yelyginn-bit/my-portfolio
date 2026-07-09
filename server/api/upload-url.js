@@ -1,11 +1,21 @@
 // POST /api/upload-url  { key, contentType }
 // Возвращает presigned PUT-URL для прямой загрузки файла в R2 с клиента.
 import { presign, r2Config } from "./_lib/r2.js";
+import { verifySupabaseJwt } from "./_lib/jwt.js";
 import { readJsonBody } from "./_lib/util.js";
+
+function isAdmin(req) {
+  const secret = process.env.SUPABASE_JWT_SECRET;
+  const header = req.headers?.authorization || req.headers?.Authorization || "";
+  const match = /^Bearer\s+(.+)$/i.exec(String(header));
+  const payload = secret && match ? verifySupabaseJwt(match[1].trim(), secret) : null;
+  return Boolean(payload && payload.app_role === "admin");
+}
 
 export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).json({ ok: true });
   if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
+  if (!isAdmin(req)) return res.status(403).json({ ok: false, error: "forbidden" });
 
   const cfg = r2Config();
   if (!cfg) return res.status(501).json({ ok: false, error: "R2 не настроен (см. .env.example)" });

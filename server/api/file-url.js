@@ -51,7 +51,11 @@ async function shareGrantsKey(admin, shareToken, key) {
 
 export default async function handler(req, res) {
   const cfg = r2Config();
-  if (!cfg) return res.status(501).json({ ok: false, error: "R2 не настроен" });
+  const storageAdmin = getAdmin();
+  const supabaseBucket = process.env.SUPABASE_STORAGE_BUCKET || "media";
+  if (!cfg && !storageAdmin) {
+    return res.status(501).json({ ok: false, error: "Облачное хранилище не настроено" });
+  }
 
   const key = req.query?.key;
   if (!key) return res.status(400).json({ ok: false, error: "no key" });
@@ -62,8 +66,13 @@ export default async function handler(req, res) {
     if (req.method === "DELETE") {
       // Удаление — только админ.
       if (!admin) return res.status(403).json({ ok: false, error: "forbidden" });
-      const url = await presign(cfg, "DELETE", key, 120);
-      await fetch(url, { method: "DELETE" });
+      if (cfg) {
+        const url = await presign(cfg, "DELETE", key, 120);
+        await fetch(url, { method: "DELETE" });
+      } else {
+        const { error } = await storageAdmin.storage.from(supabaseBucket).remove([key]);
+        if (error) throw error;
+      }
       return res.status(200).json({ ok: true });
     }
 
@@ -71,16 +80,24 @@ export default async function handler(req, res) {
     if (!admin) {
       const share = req.query?.share;
       if (!share) return res.status(401).json({ ok: false, error: "auth required" });
-      const ok = await shareGrantsKey(getAdmin(), share, key);
+      const ok = await shareGrantsKey(storageAdmin, share, key);
       if (!ok) return res.status(403).json({ ok: false, error: "forbidden" });
     }
 
-    // Публичный домен (если задан) либо подписанная ссылка.
-    if (cfg.publicBase) {
+    // R2: публичный домен (если задан) либо подписанная ссылка.
+    if (cfg?.publicBase) {
       return res.status(200).json({ ok: true, url: `${cfg.publicBase.replace(/\/+$/, "")}/${key}` });
     }
-    const url = await presign(cfg, "GET", key, 3600);
-    return res.status(200).json({ ok: true, url });
+    if (cfg) {
+      const url = await presign(cfg, "GET", key, 3600);
+      return res.status(200).json({ ok: true, url });
+    }
+
+    const { data, error } = await storageAdmin.storage
+      .from(supabaseBucket)
+      .createSignedUrl(key, 3600);
+    if (error || !data?.signedUrl) throw error || new Error("signed url missing");
+    return res.status(200).json({ ok: true, url: data.signedUrl });
   } catch (e) {
     return res.status(500).json({ ok: false, error: "presign failed" });
   }

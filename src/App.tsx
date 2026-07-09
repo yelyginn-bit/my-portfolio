@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValue } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { 
   Play, 
   ArrowUpRight, 
@@ -27,8 +27,7 @@ import {
   Zap,
   Sun,
   Moon,
-  Image as ImageIcon,
-  Calculator as CalculatorIcon
+  Image as ImageIcon
 } from "lucide-react";
 import { getStore } from "./lib/store";
 import { notify } from "./lib/notify";
@@ -562,7 +561,6 @@ const slugifyProjectTitle = (input: string) =>
 
 // --- Constants ---
 
-const SPRING_CONFIG = { mass: 1, tension: 120, friction: 14 };
 const NOTHING_EASE = [0.16, 1, 0.3, 1];
 const COOKIE_CONSENT_KEY = "cookie_consent_v1";
 const DEFAULT_DEV_API_URL = "/api";
@@ -609,138 +607,6 @@ const TEXT_REVEAL = {
 };
 
 // --- Components ---
-
-const MagneticButton = ({ children, className, distance = 60, strength = 0.3 }: { children: React.ReactNode, className?: string, distance?: number, strength?: number }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springConfig = { damping: 20, stiffness: 150 };
-  const xSpring = useSpring(x, springConfig);
-  const ySpring = useSpring(y, springConfig);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    
-    const deltaX = clientX - centerX;
-    const deltaY = clientY - centerY;
-    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-    if (dist < distance) {
-      x.set(deltaX * strength);
-      y.set(deltaY * strength);
-    } else {
-      x.set(0);
-      y.set(0);
-    }
-  }, [distance, strength, x, y]);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
-
-  return (
-    <motion.div
-      ref={ref}
-      className={cn("relative inline-block", className)}
-      style={{ x: xSpring, y: ySpring }}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-const NoiseOverlay = () => (
-  <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] noise-overlay" />
-);
-
-const DotGrid = () => (
-  <div className="fixed inset-0 pointer-events-none z-0">
-    <div className="absolute inset-0 dot-grid" />
-  </div>
-);
-
-const MagneticCursor = () => {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  const cursorSize = useMotionValue(32);
-  const springConfig = { damping: 30, stiffness: 300 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-  const cursorSizeSpring = useSpring(cursorSize, springConfig);
-
-  useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      
-      const target = e.target as HTMLElement;
-      if (target.closest('a, button, .group')) {
-        cursorSize.set(64);
-      } else {
-        cursorSize.set(32);
-      }
-    };
-    window.addEventListener("mousemove", moveCursor);
-    return () => window.removeEventListener("mousemove", moveCursor);
-  }, [cursorX, cursorY, cursorSize]);
-
-  return (
-    <motion.div
-      className="fixed top-0 left-0 rounded-full border border-nothing-black z-[10000] pointer-events-none mix-blend-difference hidden md:flex items-center justify-center"
-      style={{
-        x: cursorXSpring,
-        y: cursorYSpring,
-        width: cursorSizeSpring,
-        height: cursorSizeSpring,
-        translateX: "-50%",
-        translateY: "-50%",
-      }}
-    >
-      <motion.div 
-        className="w-1 h-1 bg-nothing-black rounded-full"
-        animate={{ scale: [1, 1.5, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
-    </motion.div>
-  );
-};
-
-const RotatingText = ({ words, className }: { words: string[], className?: string }) => {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [words]);
-
-  return (
-    <span className={cn("relative h-[1.2em] overflow-hidden inline-flex align-bottom", className)}>
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: "0%", opacity: 1 }}
-          exit={{ y: "-100%", opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="whitespace-nowrap"
-        >
-          {words[index]}
-        </motion.span>
-      </AnimatePresence>
-      {/* Hidden placeholder to maintain width based on current word */}
-      <span className="invisible pointer-events-none whitespace-nowrap select-none">
-        {words[index]}
-      </span>
-    </span>
-  );
-};
 
 const Marquee = ({ compact = false }: { compact?: boolean }) => {
   return (
@@ -2052,12 +1918,7 @@ export default function App() {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll();
 
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-  
-  const bgY = useTransform(scrollYProgress, [0, 0.5], [0, 200]);
-  const bg2Y = useTransform(scrollYProgress, [0, 0.5], [0, -150]);
 
   const heroVideoFrameStyle = React.useMemo(() => {
     const sourceWidth = 16;
@@ -2429,6 +2290,7 @@ export default function App() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: NOTHING_EASE }}
           className="font-mono text-[9px] sm:text-[10px] font-bold tracking-tighter uppercase flex items-center gap-2 sm:gap-3 text-nothing-black"
+          aria-label="Yelyginn — на главную"
         >
           <div className="relative flex items-center justify-center">
             <span className="absolute w-2.5 h-2.5 sm:w-3 h-3 bg-nothing-red/20 rounded-full animate-ping" />
@@ -2448,8 +2310,20 @@ export default function App() {
           variants={STAGGER_CONTAINER}
           className="site-nav-links hidden md:flex items-center gap-5 lg:gap-7 font-mono text-[9px] uppercase tracking-[0.16em] text-nothing-black font-medium"
         >
+          <motion.a
+            variants={STAGGER_ITEM}
+            href="/"
+            aria-current={pathname === "/" || pathname === "/index.html" ? "page" : undefined}
+            className="hover:text-nothing-red transition-colors"
+          >
+            Главная
+          </motion.a>
           <motion.div variants={STAGGER_ITEM} className="site-nav-portfolio">
-            <a href="/portfolio" className="hover:text-nothing-red transition-colors">
+            <a
+              href="/portfolio"
+              aria-current={pathname.startsWith("/portfolio") ? "page" : undefined}
+              className="hover:text-nothing-red transition-colors"
+            >
               Портфолио
             </a>
             <div className="site-nav-dropdown">
@@ -2457,27 +2331,22 @@ export default function App() {
               <a href="/portfolio/reels">Reels</a>
               <a href="/portfolio/events">Мероприятия</a>
               <a href="/portfolio/concerts">Концерты</a>
-              <a href="/portfolio/photo">Фото</a>
               <a href="/portfolio/editing">Монтаж</a>
             </div>
           </motion.div>
           <motion.a variants={STAGGER_ITEM} href="/#services" onClick={(event) => handleNavAnchorClick(event, "services")} className="hover:text-nothing-red transition-colors">
             Услуги
           </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="/content-day" className="hover:text-nothing-red transition-colors">
-            Контент-день
-          </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="/#all-sections" onClick={(event) => handleNavAnchorClick(event, "all-sections")} className="hover:text-nothing-red transition-colors">
-            Разделы
-          </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="/calculator" className="hover:text-nothing-red transition-colors">
-            Калькулятор
+          <motion.a
+            variants={STAGGER_ITEM}
+            href="/ceny"
+            aria-current={pathname === "/ceny" || pathname === "/prices" || pathname === "/calculator" ? "page" : undefined}
+            className="hover:text-nothing-red transition-colors"
+          >
+            Цены
           </motion.a>
           <motion.a variants={STAGGER_ITEM} href="/#contact" onClick={(event) => handleNavAnchorClick(event, "contact")} className="hover:text-nothing-red transition-colors">
             Контакты
-          </motion.a>
-          <motion.a variants={STAGGER_ITEM} href="/account" className="hover:text-nothing-red transition-colors">
-            Кабинет
           </motion.a>
         </motion.div>
 
@@ -2517,6 +2386,9 @@ export default function App() {
             animate="show"
             className="mobile-site-menu-main"
           >
+            <motion.a variants={STAGGER_ITEM} href="/" onClick={() => setIsMenuOpen(false)}>
+              Главная
+            </motion.a>
             <motion.a variants={STAGGER_ITEM} href="/portfolio" onClick={() => setIsMenuOpen(false)}>
               Портфолио
             </motion.a>
@@ -2525,19 +2397,15 @@ export default function App() {
                 ["Reels", "/portfolio/reels"],
                 ["Мероприятия", "/portfolio/events"],
                 ["Концерты", "/portfolio/concerts"],
-                ["Фото", "/portfolio/photo"],
                 ["Монтаж", "/portfolio/editing"],
               ].map(([label, href]) => (
                 <a key={href} href={href} onClick={() => setIsMenuOpen(false)}>{label}</a>
               ))}
             </motion.div>
             {[
-              { label: "Контент-день", href: "/content-day", targetId: null },
-              { label: "Все разделы", href: "/#all-sections", targetId: "all-sections" },
               { label: "Услуги", href: "/#services", targetId: "services" },
-              { label: "Калькулятор", href: "/calculator", targetId: null },
+              { label: "Цены", href: "/ceny", targetId: null },
               { label: "Контакты", href: "/#contact", targetId: "contact" },
-              { label: "Кабинет", href: "/account", targetId: null },
             ].map((link) => (
               <motion.a
                 key={link.label}
@@ -2587,8 +2455,6 @@ export default function App() {
   if (isPortfolioPage) {
     return (
       <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
-        <NoiseOverlay />
-        <DotGrid />
         <PortfolioDirectoryPage
           header={<>
             {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
@@ -2603,8 +2469,6 @@ export default function App() {
   if (portfolioCategory) {
     return (
       <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
-        <NoiseOverlay />
-        <DotGrid />
         <PortfolioCategoryPageView
           category={portfolioCategory}
           header={<>
@@ -2620,7 +2484,6 @@ export default function App() {
   if (isContentDayPage) {
     return (
       <div ref={containerRef} className="relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
-        <NoiseOverlay />
         <ContentDayPage
           header={<>
             {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
@@ -2655,8 +2518,6 @@ export default function App() {
 
     return (
       <div ref={containerRef} className="project-page relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
-        <NoiseOverlay />
-        <DotGrid />
         {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20")}
         {renderMobileMenu()}
         <main className="project-shell site-shell relative z-10 pb-20 pt-[clamp(6.5rem,12vw,9rem)]">
@@ -2685,6 +2546,8 @@ export default function App() {
                   allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
                   frameBorder="0"
                   allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   title={projectTitle}
                   className="absolute inset-0 w-full h-full"
                 />
@@ -2757,15 +2620,6 @@ export default function App() {
 
   return (
     <div ref={containerRef} className="site-home relative min-h-screen bg-nothing-white selection:bg-nothing-red selection:text-nothing-white overflow-x-hidden">
-      <NoiseOverlay />
-      <DotGrid />
-      
-      {/* Progress Bar */}
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-1 bg-nothing-red z-[100] origin-left"
-        style={{ scaleX: smoothProgress }}
-      />
-
       {/* Navigation */}
       {renderNav("site-nav fixed top-[max(10px,env(safe-area-inset-top))] sm:top-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-6 lg:px-8 py-1.5 sm:py-3 flex justify-between items-center glass rounded-full w-[calc(100%-0.75rem)] sm:w-[95%] max-w-[1720px] border-white/20 lg:hidden")}
 
@@ -2783,8 +2637,6 @@ export default function App() {
         >
             {/* Hero Section */}
             <section className="hero-section relative overflow-hidden">
-              <div className="absolute inset-0 dot-grid -z-10" />
-
               <div className="hero-stage relative overflow-hidden bg-nothing-black">
                 <motion.div
                   style={{ y: 0 }}
@@ -2812,10 +2664,6 @@ export default function App() {
                     />
                   )}
                 </motion.div>
-
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-nothing-black/72 via-nothing-black/35 to-nothing-black/15" />
-                <div className="absolute inset-0 z-10 bg-gradient-to-r from-nothing-black/60 via-transparent to-nothing-black/20" />
-                <div className="absolute inset-0 z-10 noise-overlay opacity-25 pointer-events-none" />
 
                 <div className="hero-frame site-shell relative z-20">
                   <motion.div
@@ -2846,58 +2694,57 @@ export default function App() {
                       <motion.div variants={STAGGER_ITEM} className="hero-eyebrow flex items-start gap-3">
                         <div className="w-8 sm:w-12 h-px mt-1.5 bg-nothing-red" />
                         <h2 className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-white/88 leading-relaxed">
-                          Рекламные ролики, Reels и видео для бизнеса
+                          Видеосъёмка и постпродакшн для бизнеса
                         </h2>
                       </motion.div>
 
                       <h1 className="hero-headline font-display font-bold uppercase text-white">
                         <div className="text-mask">
-                          <motion.span variants={TEXT_REVEAL} className="block">Снимаю</motion.span>
-                        </div>
-                        <div className="text-mask">
-                          <motion.span variants={TEXT_REVEAL} className="block">рекламные ролики</motion.span>
+                          <motion.span variants={TEXT_REVEAL} className="block">Видео и контент</motion.span>
                         </div>
                         <div className="text-mask text-nothing-red">
-                          <motion.span variants={TEXT_REVEAL} className="block">и Reels контент</motion.span>
+                          <motion.span variants={TEXT_REVEAL} className="block">для бизнеса</motion.span>
+                        </div>
+                        <div className="text-mask">
+                          <motion.span variants={TEXT_REVEAL} className="block">в Нижнем Новгороде</motion.span>
                         </div>
                       </h1>
 
                       <motion.div variants={STAGGER_ITEM} className="hero-cta-wrap">
-                        <a href="#contact" className="hero-action hero-action--dark">
+                        <a
+                          href="#contact"
+                          className="hero-action hero-action--dark"
+                          onClick={() => trackAnalyticsEvent("discuss_project_click", { source: "hero" })}
+                        >
                           <span>Обсудить проект</span>
                           <ArrowUpRight className="w-4 h-4" />
                         </a>
-                        <a href="/calculator" className="hero-action hero-action--primary">
-                          <span>Рассчитать стоимость</span>
-                          <CalculatorIcon className="w-4 h-4" />
-                        </a>
-                        <a href="#projects" className="hero-action hero-action--ghost">
-                          <span>Посмотреть кейсы</span>
+                        <a href="/portfolio" className="hero-action hero-action--ghost">
+                          <span>Смотреть портфолио</span>
                           <Play className="w-4 h-4 fill-current" />
                         </a>
                       </motion.div>
                     </div>
 
                     <motion.aside variants={STAGGER_ITEM} className="hero-summary relative z-10 pointer-events-auto">
-                      <span className="hero-summary-label">Видеопродакшн полного цикла</span>
+                      <span className="hero-summary-label">От идеи до готового материала</span>
                       <p>
-                        Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
-                        Делаю визуальный контент, который хочется досмотреть до конца. При необходимости дополняю
-                        проект фотосъёмкой.
+                        Снимаю и монтирую рекламные ролики, Reels, event-видео и контент для брендов.
+                        Помогаю с идеей, подготовкой и адаптацией под нужные площадки.
                       </p>
 
                       <div className="hero-features">
                         <div>
                           <Camera className="w-4 h-4 text-nothing-red" />
-                          <span>Рекламные ролики и Reels</span>
+                          <span>Съёмка под ключ</span>
                         </div>
                         <div>
                           <Video className="w-4 h-4 text-nothing-red" />
-                          <span>События и интервью</span>
+                          <span>Монтаж, цвет и звук</span>
                         </div>
                         <div>
                           <ImageIcon className="w-4 h-4 text-nothing-red" />
-                          <span>Фотосъёмка для бренда</span>
+                          <span>Версии для рекламы и соцсетей</span>
                         </div>
                       </div>
                     </motion.aside>
@@ -3083,8 +2930,9 @@ export default function App() {
               <form className="space-y-3.5 sm:space-y-4" onSubmit={handleFormSubmit}>
                 <div className="contact-form-fields grid gap-3.5 sm:gap-4 xl:grid-cols-2">
                 <div className="contact-field contact-field-name space-y-2">
-                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Как вас зовут</label>
+                  <label htmlFor="contact-name" className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Как вас зовут</label>
                   <input 
+                    id="contact-name"
                     type="text" 
                     name="name"
                     value={formName}
@@ -3094,8 +2942,9 @@ export default function App() {
                   />
                 </div>
                 <div className="contact-field contact-field-contact space-y-2">
-                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Как с вами связаться</label>
+                  <label htmlFor="contact-value" className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Как с вами связаться</label>
                   <input 
+                    id="contact-value"
                     type="text" 
                     name="contact"
                     value={formContact}
@@ -3138,8 +2987,9 @@ export default function App() {
                   </select>
                 </div>
                 <div className="contact-field contact-field-full space-y-2">
-                  <label className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Какой проект планируем</label>
+                  <label htmlFor="contact-message" className="font-mono text-[10px] uppercase opacity-90 tracking-[0.3em]">Какой проект планируем</label>
                   <textarea 
+                    id="contact-message"
                     rows={2}
                     name="message"
                     value={formMessage}
@@ -3208,17 +3058,17 @@ export default function App() {
                       : "Обсудить проект"}
                 </motion.button>
                 {submitStatus === "success" && (
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-green-700 leading-relaxed">
+                  <p role="status" className="font-mono text-[10px] uppercase tracking-[0.16em] text-green-700 leading-relaxed">
                     Заявка отправлена. Я получил задачу и свяжусь с вами по указанному контакту.
                   </p>
                 )}
                 {submitStatus === "error" && (
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nothing-red leading-relaxed">
+                  <p role="alert" className="font-mono text-[10px] uppercase tracking-[0.16em] text-nothing-red leading-relaxed">
                     {submitError || "Ошибка отправки"}
                   </p>
                 )}
                 {submitStatus === "fallback" && (
-                  <div className="rounded-xl border border-nothing-red/25 bg-nothing-red/5 p-3">
+                  <div role="alert" className="rounded-xl border border-nothing-red/25 bg-nothing-red/5 p-3">
                     <p className="text-[12px] leading-relaxed text-nothing-black/75">
                       Отправка через сайт пока не подключена. Откройте Telegram: основные данные заявки уже подставлены в сообщение.
                     </p>

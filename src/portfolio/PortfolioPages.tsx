@@ -20,6 +20,7 @@ import {
 } from "./portfolioData";
 
 const TELEGRAM_URL = "https://t.me/YuriElygin";
+const NAV_PORTFOLIO_CATEGORIES = PORTFOLIO_CATEGORIES.filter((category) => category.slug !== "photo");
 
 const posterUrl = (id: string, size: "sm" | "md" | "lg" = "md") =>
   `https://kinescope.io/${id}/poster/${size}.webp`;
@@ -108,7 +109,7 @@ function DirectionLinks({ active }: { active?: PortfolioCategory }) {
       <a href="/portfolio" data-active={!active}>
         Все работы
       </a>
-      {PORTFOLIO_CATEGORIES.map((category) => (
+      {NAV_PORTFOLIO_CATEGORIES.map((category) => (
         <a
           key={category.slug}
           href={`/portfolio/${category.slug}`}
@@ -129,8 +130,10 @@ function PortfolioFooter() {
         <p>Фото, видео, Reels и монтаж для бизнеса в Нижнем Новгороде.</p>
       </div>
       <div className="direction-footer-links">
+        <a href="/">Главная</a>
         <a href="/portfolio">Портфолио</a>
         <a href="/content-day">Контент-день</a>
+        <a href="/ceny">Цены</a>
         <a href="/calculator">Калькулятор</a>
         <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Telegram</a>
       </div>
@@ -281,7 +284,7 @@ export function PortfolioCategoryPageView({
         <section className="direction-work-section direction-shell">
           <div className="direction-section-heading">
             <span>{items.length ? `${items.length} работ` : "Материалы"}</span>
-            <h2>{items.length ? "Выбранные проекты" : "Фотопортфолио готовится к публикации"}</h2>
+            <h2>{items.length ? "Выбранные проекты" : "Фотоподборка под вашу задачу"}</h2>
           </div>
 
           {items.length > 0 ? (
@@ -294,10 +297,10 @@ export function PortfolioCategoryPageView({
             <div className="direction-empty-state">
               <Camera size={28} />
               <div>
-                <h3>Покажу подходящую серию под вашу задачу</h3>
+                <h3>Отправлю подходящие серии лично</h3>
                 <p>
-                  В текущей версии проекта нет опубликованных фотографий. Напишите, что планируете
-                  снимать, и я отправлю релевантную подборку без выдуманных кейсов.
+                  Опишите формат, площадку и задачу съёмки. Я соберу релевантную подборку:
+                  бизнес-портрет, репортаж, контент для соцсетей или фото с мероприятия.
                 </p>
               </div>
               <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="direction-button direction-button--primary">

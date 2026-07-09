@@ -12,6 +12,8 @@
 - Ветка: `main`
 - HTTPS: Let's Encrypt через nginx/certbot
 - Формы: `/api/send-form` на VPS проксируется в Vercel relay, потому что Telegram API с VPS недоступен по сети.
+- Firewall: `ufw` включен, открыты только SSH/HTTP/HTTPS.
+- SSL renewal: активен `certbot.timer`.
 
 ## 1. Что выбрать в REG.RU
 
@@ -106,6 +108,22 @@ systemctl reload nginx
 
 ```bash
 certbot --nginx -d yelyginn.ru -d www.yelyginn.ru
+```
+
+Проверить автопродление:
+
+```bash
+systemctl list-timers --all | grep certbot
+certbot certificates
+```
+
+## 8.1 Firewall
+
+```bash
+ufw allow OpenSSH
+ufw allow "Nginx Full"
+ufw --force enable
+ufw status verbose
 ```
 
 ## 9. Проверка

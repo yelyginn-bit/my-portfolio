@@ -2,6 +2,17 @@
 
 Цель: запуск `yelyginn.ru` на российском VPS вместо Vercel, чтобы сайт нормально открывался из РФ без VPN.
 
+## Текущий production
+
+- Домен: `https://yelyginn.ru`
+- VPS: REG.RU / Рег.облако
+- IP: `195.19.20.29`
+- Путь проекта на сервере: `/var/www/yelyginn`
+- Node-процесс: `pm2` app `yelyginn-site`
+- Ветка: `main`
+- HTTPS: Let's Encrypt через nginx/certbot
+- Формы: `/api/send-form` на VPS проксируется в Vercel relay, потому что Telegram API с VPS недоступен по сети.
+
 ## 1. Что выбрать в REG.RU
 
 - Тип: VPS / облачный сервер, не обычный shared-хостинг.
@@ -37,7 +48,7 @@ mkdir -p /var/www
 cd /var/www
 git clone https://github.com/yelyginn-bit/my-portfolio.git yelyginn
 cd yelyginn
-git checkout design-audit-polish
+git checkout main
 npm ci
 npm run build
 ```
@@ -62,6 +73,8 @@ SUPABASE_JWT_SECRET="..."
 VITE_STORAGE_PROVIDER="supabase"
 VITE_SUPABASE_STORAGE_BUCKET="media"
 ```
+
+Если Supabase ещё не подключен, клиентская галерея автоматически использует локальное IndexedDB-хранилище браузера. Это рабочий fallback для тестов, но не полноценное облачное хранение между устройствами.
 
 Если env менялись после сборки и это `VITE_*`, выполните заново:
 
@@ -114,8 +127,19 @@ curl -s "https://yelyginn.ru/api/yandex-disk?publicKey=https%3A%2F%2Fdisk.yandex
 
 ```bash
 cd /var/www/yelyginn
-git pull
+git fetch origin --prune
+git switch main
+git reset --hard origin/main
 npm ci
 npm run build
-pm2 reload yelyginn-site
+pm2 restart yelyginn-site --update-env
+pm2 save --force
+nginx -t
 ```
+
+## 11. Что ещё требует внешних ключей
+
+- Supabase: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`.
+- ЮKassa: `YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET`.
+- Cloudflare Stream: `VITE_CF_STREAM_CUSTOMER`, `CF_STREAM_ACCOUNT_ID`, `CF_STREAM_TOKEN`.
+- Cloudflare R2 не используется, потому что аккаунт не удалось активировать без карты.

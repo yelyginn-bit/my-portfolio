@@ -4,7 +4,7 @@
 //  • SupabaseStorageProvider — приватный Supabase Storage (free tier);
 //  • R2Provider — Cloudflare R2 через presigned-эндпоинты (прод).
 // Выбор: VITE_STORAGE_PROVIDER ("local" | "supabase" | "r2").
-import { getSupabase } from "./supabaseClient";
+import { getSupabase, isSupabaseConfigured } from "./supabaseClient";
 
 export interface StorageProvider {
   readonly name: string;
@@ -238,7 +238,7 @@ let _storage: StorageProvider | null = null;
 export function getStorage(): StorageProvider {
   if (!_storage) {
     if (env.VITE_STORAGE_PROVIDER === "r2") _storage = new R2Provider();
-    else if (env.VITE_STORAGE_PROVIDER === "supabase") _storage = new SupabaseStorageProvider();
+    else if (env.VITE_STORAGE_PROVIDER === "supabase" && isSupabaseConfigured) _storage = new SupabaseStorageProvider();
     else _storage = new LocalStorageProvider();
   }
   return _storage;
@@ -247,7 +247,7 @@ export function getStorage(): StorageProvider {
 /** Удалённое хранилище — оригиналы доступны через серверный /api/download.
  *  В local-режиме serverless нет, скачивание идёт целиком на клиенте. */
 export function isRemoteStorage(): boolean {
-  return env.VITE_STORAGE_PROVIDER === "r2" || env.VITE_STORAGE_PROVIDER === "supabase";
+  return env.VITE_STORAGE_PROVIDER === "r2" || (env.VITE_STORAGE_PROVIDER === "supabase" && isSupabaseConfigured);
 }
 
 // ─── Генерация превью на канвасе (без зависимостей) ───────────────────────────

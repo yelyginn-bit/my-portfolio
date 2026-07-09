@@ -62,10 +62,13 @@ app.get("/prices", (_req, res) => {
 app.use(
   express.static(distDir, {
     index: false,
+    redirect: false,
     setHeaders(res, filePath) {
       if (filePath.includes(`${path.sep}assets${path.sep}`)) {
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
       } else if (filePath.endsWith("sitemap.xml")) {
+        res.setHeader("Cache-Control", "public, max-age=3600");
+      } else if (filePath.endsWith("robots.txt") || filePath.endsWith("site.webmanifest")) {
         res.setHeader("Cache-Control", "public, max-age=3600");
       }
     },

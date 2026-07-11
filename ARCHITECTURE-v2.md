@@ -147,23 +147,23 @@ seed/fallback). `calc.ts`/калькулятор читают активные �
 | Сущность | anon | client (JWT sub) | admin (JWT app_role) | service_role |
 |---|---|---|---|---|
 | galleries/albums/assets | read public | read свои | full | full |
-| share_links/download_tokens | — (через RPC) | — | full | full |
-| selections/photo_comments | insert по share-доступу | свои | read all | full |
-| orders/order_items | insert (воронка) | read свои | full | full |
+| share_links/download_tokens | — (через API) | — | full | full |
+| selections/photo_comments | через API по share-токену | свои | read all | full |
+| orders/order_items | — (через API) | read свои | full | full |
 | payments | — | read свои | read | insert/update (webhook) |
-| clients | insert(upsert) | read/upd свой | full | full |
-| leads | insert | — | read | full |
+| clients | — (через API) | read/upd свой | full | full |
+| leads | — (через API) | — | read | full |
 | reviews | read published | insert свой | moderate | full |
 | cases/blog_posts | read published | — | full | full |
 | price_rules/discount_tiers/settings/services | read | read | full | full |
 | notifications/admin_actions | — | — | read | insert |
 
-Hardening-замечание: anon-insert в воронку (orders/clients/selections) оставлен для
-работы без регистрации; для строгой модели — перенести на serverless (service_role).
+Анонимная запись в CRM, заказы, платежи, OTP, комментарии и выбор фотографий запрещена.
+Публичные сценарии проходят через валидирующие server endpoints с service_role.
 
 ## 5. Токены доступа (явно)
 - **AccessToken = `share_links.token`** — доступ к ПРОСМОТРУ галереи. Несёт `password_hash?`,
-  `can_download`, `expires_at`. Резолв гостем — только через `gallery_view(token,password)` RPC.
+  `can_download`, `expires_at`. Резолв гостем — только через `/api/gallery-access`.
 - **DownloadToken** — отдельное право на СКАЧИВАНИЕ (качество/срок/лимит/конкретный asset|вся
   галерея). Скачивание идёт через `api/download?token=…` → валидация → подписанный URL из Storage
   → инкремент `used_count` → запись в `downloads` (лог). Разводит «смотреть» и «скачать».
@@ -195,7 +195,7 @@ Hardening-замечание: anon-insert в воронку (orders/clients/sele
 - RLS включён на всех таблицах (`db/policies.sql`), `is_admin()` по claim `app_role`,
   `current_client_id()` по `auth.uid()`. Платежи/notifications/admin_actions — пишет только
   service_role. Новые таблицы (albums/comments/download_tokens/price_rules) получают политики
-  по матрице §4. Гостевой просмотр/скачивание — только через security-definer RPC/endpoint.
+  по матрице §4. Гостевой просмотр/скачивание — только через проверяющий endpoint.
 - **Audit обязателен:** админские записи идут через `api/admin-action`-обёртку (или серверные
   эндпоинты), которая пишет `admin_actions` атомарно с операцией. Клиентский admin-DataStore
   на переходный период логирует через endpoint; целевое — мутации на serverless.

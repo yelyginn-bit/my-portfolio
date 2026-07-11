@@ -39,11 +39,16 @@
         <a href="/#services">Услуги</a>
         <a href="/ceny">Цены</a>
         <a href="/calculator">Калькулятор</a>
-        <a href="/privacy-policy.html">Политика</a>
+        <a href="/privacy-policy">Политика</a>
+        <a href="/personal-data-consent">Согласие</a>
+        <a href="/cookie-policy">Cookies</a>
+        <a href="/terms">Условия</a>
+        <button type="button" data-cookie-settings>Настройки cookie</button>
       </nav>
       <div class="site-static-footer__contacts">
         <a href="https://t.me/YuriElygin" target="_blank" rel="noreferrer">Telegram</a>
         <a href="mailto:y.elyginn@gmail.com">Email</a>
+        <span>Елыгин Юрий Сергеевич · плательщик НПД, самозанятый · ИНН 526219298988</span>
       </div>
     `;
   }

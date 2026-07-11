@@ -13,7 +13,14 @@ const port = Number(process.env.PORT || 3000);
 
 const pageMap = new Map([
   ["/", "index.html"],
-  ["/privacy-policy", "privacy-policy.html"],
+  ["/privacy-policy", "legal.html"],
+  ["/personal-data-consent", "legal.html"],
+  ["/cookie-policy", "legal.html"],
+  ["/terms", "legal.html"],
+  ["/payment-terms", "legal.html"],
+  ["/cancellation-refund", "legal.html"],
+  ["/gallery-terms", "legal.html"],
+  ["/data-request", "legal.html"],
   ["/photo", "photo.html"],
   ["/portfolio", "portfolio.html"],
   ["/portfolio/reels", "portfolio-reels.html"],
@@ -44,11 +51,12 @@ app.use((req, res, next) => {
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https://kinescope.io https://*.kinescope.io; frame-src https://kinescope.io https://*.kinescope.io; connect-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google-analytics.com https://*.supabase.co https://kinescope.io https://*.kinescope.io; font-src 'self' data:");
   next();
 });
 
-app.use("/api", express.json({ limit: "6mb" }));
-app.use("/api", express.urlencoded({ extended: false, limit: "6mb" }));
+app.use("/api", express.json({ limit: "1mb", strict: true }));
+app.use("/api", express.urlencoded({ extended: false, limit: "256kb", parameterLimit: 50 }));
 
 app.all("/api/:endpoint", (req, res) => {
   req.query = { ...req.query, endpoint: req.params.endpoint };
@@ -57,6 +65,10 @@ app.all("/api/:endpoint", (req, res) => {
 
 app.get("/prices", (_req, res) => {
   res.redirect(301, "/ceny");
+});
+
+app.get("/privacy-policy.html", (_req, res) => {
+  res.redirect(301, "/privacy-policy");
 });
 
 app.use(

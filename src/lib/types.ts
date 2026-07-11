@@ -255,6 +255,14 @@ export interface Order {
   contactName?: string;
   contact?: string;
   comment?: string;
+  paymentConfirmedAt?: string;
+  receiptStatus?: "not_required" | "pending" | "issued" | "cancelled";
+  receiptIssuedAt?: string;
+  receiptNumber?: string;
+  receiptUrl?: string;
+  receiptDeliveryMethod?: "Telegram" | "email" | "другое";
+  receiptSentAt?: string;
+  receiptAdminComment?: string;
 }
 
 // ─── Портфолио-кейсы / Блог (Этап H) ─────────────────────────────────────
@@ -272,6 +280,15 @@ export interface PortfolioCase {
   published: boolean;
   sortOrder: number;
   createdAt: string;
+  rightsStatus?: string;
+  clientPermissionStatus?: string;
+  peopleConsentStatus?: string;
+  musicLicenseStatus?: string;
+  brandUsageStatus?: string;
+  projectRole?: string;
+  productionTeam?: string;
+  rightsNote?: string;
+  publishAllowed?: boolean;
 }
 
 export interface BlogPost {
@@ -343,6 +360,10 @@ export interface ShopOrder {
   paymentProvider?: string;
   paymentId?: string;
   paidAt?: string;
+  paymentConfirmedAt?: string;
+  receiptStatus?: "not_required" | "pending" | "issued" | "cancelled";
+  receiptIssuedAt?: string;
+  receiptSentAt?: string;
 }
 
 /** Заявка из формы (не обязательно привязана к расчёту калькулятора). */

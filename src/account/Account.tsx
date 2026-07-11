@@ -17,6 +17,7 @@ import { getStore } from "../lib/store";
 import { hydrateTiers, nextTier, resolveTier } from "../lib/discounts";
 import { formatRub } from "../lib/calc";
 import type { Client, Order, OrderStatus } from "../lib/types";
+import { isSupabaseConfigured } from "../lib/supabaseClient";
 
 const store = getStore();
 
@@ -26,6 +27,14 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   in_progress: "В работе",
   done: "Завершён",
   cancelled: "Отменён",
+};
+
+const receiptLabel = (order: Order): string => {
+  if (order.status === "cancelled" || order.receiptStatus === "cancelled") return "Оплата отменена или возвращена";
+  if (!order.paymentConfirmedAt) return "Оплата ожидается";
+  if (order.receiptStatus === "issued") return "Чек отправлен";
+  if (order.receiptStatus === "pending") return "Чек формируется исполнителем";
+  return "Оплата подтверждена";
 };
 
 function fmtDate(iso: string): string {
@@ -93,7 +102,7 @@ function Login({ onDone }: { onDone: () => void }) {
     if (!res.ok) { setError(res.error || "Ошибка"); return; }
     setReq(res);
     setStep("code");
-    if (res.token && (res.linked || res.deepLink)) startPolling(res.token);
+    if (res.token) startPolling(res.token);
   };
 
   const verify = async () => {
@@ -163,6 +172,7 @@ function Login({ onDone }: { onDone: () => void }) {
             Войдите, чтобы видеть историю заказов и накопленную скидку. Код входа
             пришлёт Telegram-бот.
           </p>
+          <p className="acc-hint">Для подтверждения используется Telegram. Номер и сведения привязки обрабатываются для безопасного доступа к кабинету. Подробнее: <a href="/privacy-policy" target="_blank" rel="noreferrer">политика</a> и <a href="/terms" target="_blank" rel="noreferrer">условия кабинета</a>.</p>
           {error && <div className="acc-err">{error}</div>}
         </>
       ) : (
@@ -189,23 +199,18 @@ function Login({ onDone }: { onDone: () => void }) {
               {req?.devCode && (
                 <div className="acc-otp-box">Код локальной разработки: <b>{req.devCode}</b></div>
               )}
-              {req?.mode === "tg" && req?.linked && (
-                <p className="acc-hint" style={{ marginTop: 0 }}>
-                  Бот отправил код. Введите его или нажмите «✅ Подтвердить вход» прямо в Telegram.
-                </p>
-              )}
               <div className="acc-field">
                 <input
                   className="acc-input"
-                  placeholder="4-значный код"
+                  placeholder="6-значный код"
                   inputMode="numeric"
-                  maxLength={4}
+                  maxLength={6}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                   onKeyDown={(e) => e.key === "Enter" && verify()}
                 />
               </div>
-              <button className="acc-btn" onClick={verify} disabled={loading || code.length < 4}>
+              <button className="acc-btn" onClick={verify} disabled={loading || code.length !== 6}>
                 {loading ? "Проверяю…" : "Войти"}
               </button>
             </>
@@ -228,6 +233,13 @@ function Dashboard({ session, onSignOut }: { session: Session; onSignOut: () => 
   useEffect(() => {
     let active = true;
     (async () => {
+      if (isSupabaseConfigured) {
+        const response = await fetch("/api/account-data", { credentials: "same-origin" });
+        const data = await response.json().catch(() => ({}));
+        if (active && response.ok && data.ok) { setClient(data.client); setOrders(data.orders || []); }
+        else if (active && response.status === 401) onSignOut();
+        return;
+      }
       const [c, o] = await Promise.all([
         store.getClientByPhone(session.phone),
         store.listOrdersByPhone(session.phone),
@@ -306,6 +318,7 @@ function Dashboard({ session, onSignOut }: { session: Session; onSignOut: () => 
               <div className="acc-order-price">
                 {formatRub(o.breakdown.totalMin)} – {formatRub(o.breakdown.totalMax)}
                 <div className="acc-order-status">{STATUS_LABEL[o.status]}</div>
+                <div className="acc-order-status">{receiptLabel(o)}</div>
               </div>
             </div>
           ))

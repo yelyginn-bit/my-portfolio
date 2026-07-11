@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   // Проверка секрета вебхука (устанавливается при setWebhook).
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (secret && req.headers["x-telegram-bot-api-secret-token"] !== secret) {
+  if (!secret || req.headers["x-telegram-bot-api-secret-token"] !== secret) {
     return res.status(401).json({ ok: false });
   }
 
@@ -22,10 +22,10 @@ export default async function handler(req, res) {
     if (update.message?.text && update.message.text.startsWith("/start")) {
       const chatId = update.message.chat.id;
       const param = update.message.text.split(" ")[1] || "";
-      if (admin && param.startsWith("link_")) {
+      if (admin && param.startsWith("link_") && param.length <= 220) {
         const token = param.slice(5);
         // Запомним, какой чат начал привязку — пригодится при получении контакта.
-        await admin.from("auth_otp").update({ chat_id: chatId }).eq("token", token);
+        await admin.from("auth_otp").update({ chat_id: chatId }).eq("token", token).eq("status", "pending").gt("expires_at", new Date().toISOString());
       }
       await askContact(chatId);
       return res.status(200).json({ ok: true });
@@ -60,11 +60,12 @@ export default async function handler(req, res) {
           .select("id")
           .eq("chat_id", chatId)
           .eq("status", "pending")
+          .gt("expires_at", new Date().toISOString())
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle();
         if (pending) {
-          await admin.from("auth_otp").update({ status: "confirmed", phone }).eq("id", pending.id);
+          await admin.from("auth_otp").update({ status: "confirmed", phone, used_at: new Date().toISOString() }).eq("id", pending.id);
         }
       }
       await tg("sendMessage", {
@@ -80,14 +81,14 @@ export default async function handler(req, res) {
       const cq = update.callback_query;
       const data = cq.data || "";
       const chatId = cq.message?.chat?.id;
-      if (admin && data.startsWith("confirm_")) {
+      if (admin && data.startsWith("confirm_") && data.length <= 220) {
         const token = data.slice(8);
-        const { data: row } = await admin.from("auth_otp").select("id, chat_id").eq("token", token).maybeSingle();
+        const { data: row } = await admin.from("auth_otp").select("id, chat_id").eq("token", token).eq("status", "pending").gt("expires_at", new Date().toISOString()).maybeSingle();
         if (row && (!row.chat_id || row.chat_id === chatId)) {
-          await admin.from("auth_otp").update({ status: "confirmed" }).eq("id", row.id);
+          await admin.from("auth_otp").update({ status: "confirmed", used_at: new Date().toISOString() }).eq("id", row.id);
         }
       }
-      await tg("answerCallbackQuery", { callback_query_id: cq.id, text: "Вход подтверждён ✅" });
+      await tg("answerCallbackQuery", { callback_query_id: cq.id, text: "Запрос обработан" });
       return res.status(200).json({ ok: true });
     }
 

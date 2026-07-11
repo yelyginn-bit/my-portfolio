@@ -11,7 +11,10 @@ import { hydrateTiers, resolveTier } from "../lib/discounts";
 import { getStore, isValidPhone, normalizePhone } from "../lib/store";
 import { getSession } from "../lib/auth";
 import { trackAnalyticsEvent } from "../lib/analytics";
+import { secureFetch } from "../lib/api";
+import { LEGAL } from "../config/legal";
 import type { OrderSelection, PriceItem } from "../lib/types";
+import { isSupabaseConfigured } from "../lib/supabaseClient";
 
 const store = getStore();
 const session = getSession();
@@ -65,6 +68,7 @@ export default function Calculator() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const [consentAccepted, setConsentAccepted] = useState(false);
 
   // Скидки и прайс могут быть отредактированы в админке/БД — подтягиваем их.
   const [tiersReady, setTiersReady] = useState(0);
@@ -83,12 +87,17 @@ export default function Calculator() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!isValidPhone(phone)) {
+      if (!session || !isValidPhone(session.phone)) {
         setDiscountPercent(0);
         setTierLabel("");
         return;
       }
-      const completed = await store.completedOrderCount(phone);
+      const completed = isSupabaseConfigured
+        ? await fetch("/api/account-data", { credentials: "same-origin" }).then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          return response.ok && data.ok ? Number(data.client?.completedOrders || 0) : 0;
+        })
+        : await store.completedOrderCount(session.phone);
       const tier = resolveTier(completed);
       if (!cancelled) {
         setDiscountPercent(tier.percent);
@@ -96,7 +105,7 @@ export default function Calculator() {
       }
     })();
     return () => { cancelled = true; };
-  }, [phone, tiersReady]);
+  }, [session, tiersReady]);
 
   const selection: OrderSelection = useMemo(
     () => ({
@@ -125,6 +134,7 @@ export default function Calculator() {
     if (!name.trim()) { setError("Укажите, как к вам обращаться."); return; }
     if (!isValidPhone(phone)) { setError("Введите корректный номер телефона."); return; }
     if (breakdown.subtotalMax === 0) { setError("Выберите хотя бы одну позицию сметы."); return; }
+    if (!consentAccepted) { setError("Подтвердите согласие на обработку персональных данных."); return; }
 
     trackAnalyticsEvent("calculator_use", {
       service: shootType,
@@ -134,18 +144,7 @@ export default function Calculator() {
 
     setSubmitting(true);
     try {
-      // 1) Источник правды — сохраняем клиента и заказ локально (всегда работает).
-      await store.upsertClient({ phone, name: name.trim() });
-      const order = await store.createOrder({
-        clientPhone: normalizePhone(phone),
-        selection,
-        breakdown,
-        contactName: name.trim(),
-        contact: normalizePhone(phone),
-        comment: comment.trim() || undefined,
-      });
-
-      // 2) Best-effort: уведомление в Telegram через тот же serverless, что и форма.
+      // Заявка и событие согласия создаются только сервером после валидации.
       const endpoint = "/api/send-form";
       const opts = selection.optionItems.length
         ? `\nДоп-услуги: ${selection.optionItems.join(", ")}`
@@ -161,17 +160,23 @@ export default function Calculator() {
         opts +
         discLine +
         `\nИТОГ: ${formatRub(breakdown.totalMin)} – ${formatRub(breakdown.totalMax)}` +
-        `\nЗаказ #${order.id}` +
         (comment.trim() ? `\nКомментарий: ${comment.trim()}` : "");
 
       try {
-        const response = await fetch(endpoint, {
+        const response = await secureFetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: name.trim(),
             contact: `тел. +${normalizePhone(phone)}`,
             message,
+            service: shootType,
+            source: "calculator",
+            consentAccepted: true,
+            consentVersion: LEGAL.consentVersion,
+            policyVersion: LEGAL.policyVersion,
+            formId: "calculator-lead",
+            pageUrl: window.location.pathname,
           }),
         });
         if (!response.ok && !import.meta.env.DEV) {
@@ -419,7 +424,12 @@ export default function Calculator() {
                   />
                 </div>
 
-                <button className="calc-cta" onClick={handleSubmit} disabled={submitting}>
+                <label className="calc-hint" style={{ display: "flex", gap: 10, alignItems: "flex-start", margin: "14px 0" }}>
+                  <input type="checkbox" checked={consentAccepted} onChange={(event) => setConsentAccepted(event.target.checked)} />
+                  <span>Даю согласие Елыгину Юрию Сергеевичу на обработку персональных данных для обработки заявки, связи со мной и подготовки предложения в соответствии с <a href="/personal-data-consent" target="_blank" rel="noreferrer">условиями согласия</a>. С <a href="/privacy-policy" target="_blank" rel="noreferrer">политикой обработки данных</a> ознакомлен.</span>
+                </label>
+
+                <button className="calc-cta" onClick={handleSubmit} disabled={submitting || !consentAccepted}>
                   {submitting ? "Отправляю…" : "Отправить заявку"}
                 </button>
                 {error && <div className="calc-err">{error}</div>}

@@ -1,5 +1,6 @@
 // Распознавание лиц (Этап I): группировка кадров по «людям». Сейчас детерминированный
-// mock; архитектура готова к реальному сервису (AWS Rekognition / InsightFace-воркер +
+// feature flag по умолчанию выключен. Production не отправляет изображения во
+// внешние сервисы и не создаёт биометрические embeddings.
 // pgvector-эмбеддинги в таблицах face_groups/face_instances). Замени MockFaceService.
 import type { Asset } from "./types";
 
@@ -24,8 +25,14 @@ class MockFaceService implements FaceService {
   }
 }
 
+class DisabledFaceService implements FaceService {
+  readonly name = "disabled";
+  async groupFaces(): Promise<Record<string, string>> { return {}; }
+}
+
 let _face: FaceService | null = null;
 export function getFace(): FaceService {
-  if (!_face) _face = new MockFaceService();
+  const enabled = import.meta.env.DEV && import.meta.env.VITE_ENABLE_FACE_GROUPING === "true";
+  if (!_face) _face = enabled ? new MockFaceService() : new DisabledFaceService();
   return _face;
 }

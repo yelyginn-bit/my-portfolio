@@ -1,4 +1,5 @@
 // Общие утилиты для serverless-эндпоинтов (Node, ESM).
+import crypto from "node:crypto";
 
 /** Нормализация телефона РФ к 7XXXXXXXXXX (только цифры). */
 export function normalizePhone(raw) {
@@ -12,18 +13,42 @@ export function isValidPhone(raw) {
   return /^7\d{10}$/.test(normalizePhone(raw));
 }
 
-/** 4-значный код. */
+/** 6-значный одноразовый код из криптографически стойкого ГСЧ. */
 export function genCode() {
-  return String(Math.floor(1000 + Math.random() * 9000));
+  return String(crypto.randomInt(100000, 1000000));
 }
 
 /** Случайный токен для deep-link / опроса статуса. */
 export function genToken() {
-  return (
-    Math.random().toString(36).slice(2) +
-    Math.random().toString(36).slice(2) +
-    Date.now().toString(36)
-  );
+  return crypto.randomBytes(32).toString("base64url");
+}
+
+export function sha256(value) {
+  return crypto.createHash("sha256").update(String(value)).digest("hex");
+}
+
+export function hashPassword(value) {
+  const salt = crypto.randomBytes(16);
+  const derived = crypto.scryptSync(String(value), salt, 32);
+  return `scrypt$${salt.toString("base64url")}$${derived.toString("base64url")}`;
+}
+
+export function verifyPassword(value, encoded) {
+  const [algorithm, saltValue, hashValue] = String(encoded || "").split("$");
+  if (algorithm !== "scrypt" || !saltValue || !hashValue) return safeEqual(String(encoded || ""), String(value || ""));
+  try {
+    const expected = Buffer.from(hashValue, "base64url");
+    const actual = crypto.scryptSync(String(value || ""), Buffer.from(saltValue, "base64url"), expected.length);
+    return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+  } catch {
+    return false;
+  }
+}
+
+export function safeEqual(a, b) {
+  const left = Buffer.from(String(a || ""));
+  const right = Buffer.from(String(b || ""));
+  return left.length === right.length && crypto.timingSafeEqual(left, right);
 }
 
 export function readJsonBody(req) {

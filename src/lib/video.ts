@@ -5,6 +5,8 @@
 // Загрузка в Stream идёт напрямую с клиента по одноразовой ссылке (direct_upload),
 // секреты остаются на сервере (api/stream-upload-url).
 import { getStorage } from "./storage";
+import { secureToken } from "./secureRandom";
+import { secureFetch } from "./api";
 
 const storage = getStorage();
 const env: Record<string, string | undefined> =
@@ -26,7 +28,7 @@ export interface VideoUploadResult {
 
 function ridExt(name: string) {
   const m = /\.([a-z0-9]+)$/i.exec(name);
-  return { id: Math.random().toString(36).slice(2) + Date.now().toString(36), ext: m ? m[1].toLowerCase() : "mp4" };
+  return { id: secureToken(16), ext: m ? m[1].toLowerCase() : "mp4" };
 }
 
 /** Кадр-постер и длительность/размеры из видеофайла (канвас, без зависимостей). */
@@ -72,10 +74,10 @@ export async function uploadVideo(
   }));
 
   if (useStream) {
-    const r = await fetch("/api/stream-upload-url", {
+    const r = await secureFetch("/api/stream-upload-url", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: file.name }),
+      body: JSON.stringify({ name: file.name, contentType: file.type, size: file.size }),
     });
     if (!r.ok) throw new Error("Stream не настроен или недоступен");
     const { uploadURL, uid } = await r.json();
@@ -98,7 +100,7 @@ export async function uploadVideo(
   const key = `galleries/${galleryId}/video/${id}.${ext}`;
   await storage.upload(key, file, onProgress);
   return {
-    provider: "local",
+    provider: storage.name,
     storageKey: key,
     posterDataUrl: meta.posterDataUrl,
     durationSec: meta.durationSec,

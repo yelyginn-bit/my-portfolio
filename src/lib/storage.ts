@@ -91,38 +91,27 @@ class LocalStorageProvider implements StorageProvider {
 
 // ─── Контекст доступа для presigned-эндпоинтов ────────────────────────────────
 // /api/file-url теперь требует авторизацию: админ (Bearer JWT) или гость галереи
-// (?share=<token>). Вьювер /g ставит share-токен через setShareContext перед
-// загрузкой; админский/клиентский JWT берём из localStorage (см. supabaseClient).
-let _shareToken: string | null = null;
-/** Задать share-токен текущей галереи (вьювер /g). null — сбросить. */
-export function setShareContext(token: string | null): void {
-  _shareToken = token || null;
+// (X-Gallery-Access). Вьювер /g ставит короткоживущий ticket после проверки
+// загрузкой; административная сессия передаётся защищённой HttpOnly cookie.
+import { secureFetch } from "./api";
+let _galleryTicket: string | null = null;
+/** Задать короткоживущий ticket текущей галереи. null — сбросить. */
+export function setShareContext(ticket: string | null): void {
+  _galleryTicket = ticket || null;
 }
 
-const SB_TOKEN_KEY = "yel_sb_token"; // совпадает с supabaseClient TOKEN_KEY
-function authHeaders(): Record<string, string> {
-  if (typeof window === "undefined") return {};
-  try {
-    const t = window.localStorage.getItem(SB_TOKEN_KEY);
-    return t ? { Authorization: `Bearer ${t}` } : {};
-  } catch {
-    return {};
-  }
-}
-/** Дописать ?share=… к URL file-url, если задан контекст галереи. */
-function withShare(url: string): string {
-  if (!_shareToken) return url;
-  return `${url}&share=${encodeURIComponent(_shareToken)}`;
+function galleryHeaders(): HeadersInit | undefined {
+  return _galleryTicket ? { "X-Gallery-Access": _galleryTicket } : undefined;
 }
 
 // ─── Cloudflare R2 (через presigned-эндпоинты) ────────────────────────────────
 class R2Provider implements StorageProvider {
   readonly name = "r2";
   async upload(key: string, file: Blob, onProgress?: (pct: number) => void): Promise<void> {
-    const r = await fetch("/api/upload-url", {
+    const r = await secureFetch("/api/upload-url", {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...authHeaders() },
-      body: JSON.stringify({ key, contentType: file.type || "application/octet-stream" }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key, contentType: file.type || "application/octet-stream", size: file.size }),
     });
     if (!r.ok) throw new Error("Не удалось получить ссылку для загрузки");
     const { url } = await r.json();
@@ -138,9 +127,7 @@ class R2Provider implements StorageProvider {
     });
   }
   async url(key: string): Promise<string> {
-    const r = await fetch(withShare(`/api/file-url?key=${encodeURIComponent(key)}`), {
-      headers: authHeaders(),
-    });
+    const r = await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, { headers: galleryHeaders(), credentials: "same-origin" });
     if (!r.ok) return "";
     const { url } = await r.json();
     return url;
@@ -152,10 +139,8 @@ class R2Provider implements StorageProvider {
     return r.ok ? await r.blob() : null;
   }
   async remove(key: string): Promise<void> {
-    // Удаление — только админ; Bearer JWT берётся из localStorage.
-    await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
+    await secureFetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
       method: "DELETE",
-      headers: authHeaders(),
     }).catch(() => {});
   }
 }
@@ -188,11 +173,11 @@ class SupabaseStorageProvider implements StorageProvider {
   }
 
   async upload(key: string, file: Blob, onProgress?: (pct: number) => void): Promise<void> {
+    const authorization = await secureFetch("/api/upload-url", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key, contentType: file.type || "application/octet-stream", size: file.size }) });
+    const signed = await authorization.json().catch(() => ({}));
+    if (!authorization.ok || signed.provider !== "supabase" || !signed.token) throw new Error("Не удалось подготовить загрузку");
     const bucket = await this.bucket();
-    const { error } = await bucket.upload(key, file, {
-      upsert: true,
-      contentType: file.type || "application/octet-stream",
-    });
+    const { error } = await bucket.uploadToSignedUrl(key, signed.token, file, { contentType: file.type || "application/octet-stream" });
     if (error) throw error;
     onProgress?.(100);
   }
@@ -210,9 +195,7 @@ class SupabaseStorageProvider implements StorageProvider {
       const data = await response.json();
       return data.url || "";
     }
-    const r = await fetch(withShare(`/api/file-url?key=${encodeURIComponent(key)}`), {
-      headers: authHeaders(),
-    });
+    const r = await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, { headers: galleryHeaders(), credentials: "same-origin" });
     if (!r.ok) return "";
     const data = await r.json();
     return data.url || "";
@@ -227,9 +210,8 @@ class SupabaseStorageProvider implements StorageProvider {
 
   async remove(key: string): Promise<void> {
     if (yandexStorageParts(key)) return;
-    await fetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
+    await secureFetch(`/api/file-url?key=${encodeURIComponent(key)}`, {
       method: "DELETE",
-      headers: authHeaders(),
     }).catch(() => {});
   }
 }

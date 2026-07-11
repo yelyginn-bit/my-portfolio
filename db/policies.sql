@@ -2,22 +2,18 @@
 -- RLS-политики (Этап A2). Применять ПОСЛЕ schema.sql.
 --
 -- МОДЕЛЬ ДОСТУПА
---  • anon (без входа) — публичное чтение опубликованного контента + вставка в
---    «воронку» (leads/orders/clients/shop/selections), т.к. так работает сайт без
---    регистрации (калькулятор, заявки, отбор в галерее по ссылке).
+--  • anon (без входа) — только публичное чтение опубликованного контента.
 --  • клиент (JWT, sub = clients.user_id, role='authenticated') — видит/меняет своё.
 --  • админ (JWT role='admin', выдаётся /api/admin-login) — полный доступ.
 --  • service_role (serverless: вебхуки/джобы) — обходит RLS всегда.
---  • гость галереи — через security-definer RPC по share-токену (внизу).
+--  • гость галереи — через серверный endpoint с проверкой share-токена.
 --
 -- JWT-мост (см. SUPABASE_AUTH.md): вход у нас через Telegram-OTP/админ-пароль,
 -- поэтому сессию Supabase подделывать не нужно — сервер подписывает JWT секретом
 -- проекта (SUPABASE_JWT_SECRET) с нужными claim'ами, клиент шлёт его в PostgREST.
 --
--- HARDENING (для строгой мультиарендности позже): перенести запись
--- clients/orders/shop_orders на serverless (service_role) и убрать anon-insert,
--- проверять selections по валидности share-токена. Сейчас — модель под одного
--- фотографа с публичной воронкой.
+-- Все записи CRM, OTP, заявок, заказов и гостевых действий галереи выполняются
+-- серверными endpoint с service_role после валидации и проверки доступа.
 -- ============================================================================
 
 -- helper: текущий клиент по auth.uid()
@@ -34,7 +30,6 @@ alter table clients enable row level security;
 drop policy if exists clients_read on clients;
 create policy clients_read   on clients for select using (user_id = auth.uid() or is_admin());
 drop policy if exists clients_insert on clients;
-create policy clients_insert on clients for insert with check (true);            -- регистрация по телефону
 drop policy if exists clients_update on clients;
 create policy clients_update on clients for update using (user_id = auth.uid() or is_admin());
 
@@ -43,7 +38,6 @@ alter table orders enable row level security;
 drop policy if exists orders_read on orders;
 create policy orders_read   on orders for select using (client_id = current_client_id() or is_admin());
 drop policy if exists orders_insert on orders;
-create policy orders_insert on orders for insert with check (true);             -- калькулятор/магазин (в т.ч. аноним)
 drop policy if exists orders_update on orders;
 create policy orders_update on orders for update using (is_admin());
 
@@ -52,7 +46,6 @@ drop policy if exists order_items_read on order_items;
 create policy order_items_read on order_items for select
   using (exists (select 1 from orders o where o.id = order_id and (o.client_id = current_client_id() or is_admin())));
 drop policy if exists order_items_insert on order_items;
-create policy order_items_insert on order_items for insert with check (true);
 
 alter table payments enable row level security;
 drop policy if exists payments_read on payments;
@@ -79,18 +72,19 @@ create policy assets_write on assets for all using (is_admin()) with check (is_a
 alter table share_links enable row level security;
 drop policy if exists share_links_admin on share_links;
 create policy share_links_admin on share_links for all using (is_admin()) with check (is_admin());
--- Чтение по токену гостем — через RPC gallery_view (security definer), не напрямую.
+-- Чтение по токену гостем выполняет server/api/gallery-access.js.
 
 -- ── selections (отбор фото; гость отмечает по share-ссылке) ──────────────────
 alter table selections enable row level security;
 drop policy if exists selections_all on selections;
-create policy selections_all on selections for all using (true) with check (true);
--- HARDENING: ограничить вставку проверкой валидного share-токена для viewer_key.
+drop policy if exists selections_client_read on selections;
+create policy selections_client_read on selections for select using (client_id = current_client_id() or is_admin());
+drop policy if exists selections_admin_write on selections;
+create policy selections_admin_write on selections for all using (is_admin()) with check (is_admin());
 
 -- ── leads / reviews ──────────────────────────────────────────────────────────
 alter table leads enable row level security;
 drop policy if exists leads_insert on leads;
-create policy leads_insert on leads for insert with check (true);              -- заявки с форм
 drop policy if exists leads_admin on leads;
 create policy leads_admin  on leads for select using (is_admin());
 
@@ -107,7 +101,7 @@ create policy reviews_admin_delete on reviews for delete using (is_admin());
 -- ── контент: портфолио-кейсы / блог — публичное чтение, запись только админ ───
 alter table portfolio_cases enable row level security;
 drop policy if exists cases_read on portfolio_cases;
-create policy cases_read  on portfolio_cases for select using (published or is_admin());
+create policy cases_read  on portfolio_cases for select using ((published and publish_allowed) or is_admin());
 drop policy if exists cases_write on portfolio_cases;
 create policy cases_write on portfolio_cases for all using (is_admin()) with check (is_admin());
 
@@ -126,7 +120,7 @@ create policy cats_write on blog_categories for all using (is_admin()) with chec
 -- ── настройки / Telegram / OTP / AI-лица — только админ / service_role ────────
 alter table settings enable row level security;
 drop policy if exists settings_read on settings;
-create policy settings_read  on settings for select using (true);             -- публичные (скидки/реквизиты)
+create policy settings_read on settings for select using (key in ('studio','discount_tiers') or is_admin());
 drop policy if exists settings_write on settings;
 create policy settings_write on settings for all using (is_admin()) with check (is_admin());
 
@@ -180,9 +174,10 @@ begin
   return result;
 end $$;
 
--- Дать анону/гостю право вызывать RPC.
-grant execute on function gallery_by_token(text, text) to anon, authenticated;
-grant execute on function gallery_view(text, text) to anon, authenticated;
+-- Прямой вызов устаревших RPC из браузера запрещён. Проверка пароля, токена,
+-- срока и принадлежности ассетов выполняется серверным endpoint.
+revoke execute on function gallery_by_token(text, text) from anon, authenticated;
+revoke execute on function gallery_view(text, text) from anon, authenticated;
 
 -- ============================================================================
 -- RLS для сущностей v2 (ARCHITECTURE-v2.md §4)
@@ -197,12 +192,10 @@ create policy albums_write on albums for all using (is_admin()) with check (is_a
 
 alter table photo_comments enable row level security;
 drop policy if exists comments_insert on photo_comments;
-create policy comments_insert on photo_comments for insert with check (true);   -- гость/клиент по доступу к галерее
+drop policy if exists comments_client_read on photo_comments;
+create policy comments_client_read on photo_comments for select using (client_id = current_client_id() or is_admin());
 drop policy if exists comments_read on photo_comments;
-create policy comments_read on photo_comments for select using (
-  is_admin() or client_id = current_client_id()
-  or exists (select 1 from galleries g where g.id = gallery_id and g.client_id = current_client_id()));
--- HARDENING: ограничить insert проверкой валидного share-токена для viewer_key.
+create policy comments_read on photo_comments for select using (is_admin() or client_id = current_client_id());
 
 alter table download_tokens enable row level security;
 drop policy if exists dltok_admin on download_tokens;
@@ -224,3 +217,7 @@ drop policy if exists price_read on price_rules;
 create policy price_read  on price_rules for select using (true);              -- прайс публичен (калькулятор)
 drop policy if exists price_write on price_rules;
 create policy price_write on price_rules for all using (is_admin()) with check (is_admin());
+
+-- CRM и служебные журналы изменяются только сервером с service_role.
+revoke insert, update, delete on clients, orders, order_items, payments, leads, auth_otp, telegram_links, admin_actions, notifications from anon, authenticated;
+revoke insert, update, delete on selections, photo_comments from anon;

@@ -1,6 +1,7 @@
 // Read-only bridge for public Yandex Disk folders. No OAuth token is required:
 // the server only lists public resources and requests temporary download URLs.
 const API = "https://cloud-api.yandex.net/v1/disk/public/resources";
+import { rateLimit, requestIp } from "./_lib/security.js";
 
 function validPublicKey(value) {
   try {
@@ -21,6 +22,7 @@ async function yandex(path, params) {
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).json({ ok: false, error: "Method not allowed" });
+  if (!rateLimit(`yandex-disk:${requestIp(req)}`, { limit: 60, windowMs: 10 * 60 * 1000 })) return res.status(429).json({ ok: false, error: "Слишком много запросов" });
 
   const publicKey = req.query?.publicKey;
   const resourcePath = req.query?.path || "";

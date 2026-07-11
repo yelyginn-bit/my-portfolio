@@ -13,6 +13,7 @@ import type {
 } from "./types";
 import { type DataStore, normalizePhone } from "./store";
 import { getSupabase } from "./supabaseClient";
+import { secureToken } from "./secureRandom";
 
 function mid(a: number, b: number): number {
   return Math.round((a + b) / 2);
@@ -30,6 +31,14 @@ interface OrderRow {
   breakdown_json: PriceBreakdown | null;
   created_at: string;
   clients?: { phone: string; name: string | null } | null;
+  payment_confirmed_at?: string | null;
+  receipt_status?: Order["receiptStatus"];
+  receipt_issued_at?: string | null;
+  receipt_number?: string | null;
+  receipt_url?: string | null;
+  receipt_delivery_method?: Order["receiptDeliveryMethod"] | null;
+  receipt_sent_at?: string | null;
+  receipt_admin_comment?: string | null;
 }
 
 export class SupabaseDataStore implements DataStore {
@@ -58,6 +67,14 @@ export class SupabaseDataStore implements DataStore {
       contactName: r.clients?.name ?? undefined,
       contact: r.clients?.phone,
       comment: r.comment ?? undefined,
+      paymentConfirmedAt: r.payment_confirmed_at ?? undefined,
+      receiptStatus: r.receipt_status ?? "not_required",
+      receiptIssuedAt: r.receipt_issued_at ?? undefined,
+      receiptNumber: r.receipt_number ?? undefined,
+      receiptUrl: r.receipt_url ?? undefined,
+      receiptDeliveryMethod: r.receipt_delivery_method ?? undefined,
+      receiptSentAt: r.receipt_sent_at ?? undefined,
+      receiptAdminComment: r.receipt_admin_comment ?? undefined,
     };
   }
 
@@ -375,7 +392,7 @@ export class SupabaseDataStore implements DataStore {
     galleryId: string,
     opts?: { password?: string; canDownload?: boolean; expiresAt?: string },
   ): Promise<ShareLink> {
-    const token = (Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+    const token = secureToken(32);
     const { data, error } = await (await this.sb())
       .from("share_links")
       .insert({
@@ -491,6 +508,10 @@ export class SupabaseDataStore implements DataStore {
       paymentProvider: payment?.provider ?? undefined,
       paymentId: payment?.provider_payment_id ?? undefined,
       paidAt: payment?.paid_at ?? undefined,
+      paymentConfirmedAt: o.payment_confirmed_at ?? payment?.paid_at ?? undefined,
+      receiptStatus: o.receipt_status ?? "not_required",
+      receiptIssuedAt: o.receipt_issued_at ?? undefined,
+      receiptSentAt: o.receipt_sent_at ?? undefined,
     };
   }
 
@@ -653,6 +674,11 @@ export class SupabaseDataStore implements DataStore {
       task: c.task ?? undefined, solution: c.solution ?? undefined, result: c.result ?? undefined,
       coverAssetId: c.cover_asset_id ?? undefined, galleryId: c.gallery_id ?? undefined,
       published: c.published, sortOrder: c.sort_order ?? 0, createdAt: c.created_at,
+      rightsStatus: c.rights_status ?? undefined, clientPermissionStatus: c.client_permission_status ?? undefined,
+      peopleConsentStatus: c.people_consent_status ?? undefined, musicLicenseStatus: c.music_license_status ?? undefined,
+      brandUsageStatus: c.brand_usage_status ?? undefined, projectRole: c.project_role ?? undefined,
+      productionTeam: c.production_team ?? undefined, rightsNote: c.rights_note ?? undefined,
+      publishAllowed: c.publish_allowed ?? false,
     };
   }
 
@@ -666,6 +692,11 @@ export class SupabaseDataStore implements DataStore {
         task: input.task ?? null, solution: input.solution ?? null, result: input.result ?? null,
         cover_asset_id: input.coverAssetId ?? null, gallery_id: input.galleryId ?? null,
         published: input.published, sort_order: input.sortOrder ?? 0,
+        rights_status: input.rightsStatus ?? null, client_permission_status: input.clientPermissionStatus ?? null,
+        people_consent_status: input.peopleConsentStatus ?? null, music_license_status: input.musicLicenseStatus ?? null,
+        brand_usage_status: input.brandUsageStatus ?? null, project_role: input.projectRole ?? null,
+        production_team: input.productionTeam ?? null, rights_note: input.rightsNote ?? null,
+        publish_allowed: input.publishAllowed ?? false,
       })
       .select().single();
     if (error) throw error;
@@ -674,7 +705,7 @@ export class SupabaseDataStore implements DataStore {
 
   async listCases(opts?: { publishedOnly?: boolean }): Promise<PortfolioCase[]> {
     let q = (await this.sb()).from("portfolio_cases").select("*").order("sort_order", { ascending: true });
-    if (opts?.publishedOnly) q = q.eq("published", true);
+    if (opts?.publishedOnly) q = q.eq("published", true).eq("publish_allowed", true);
     const { data } = await q;
     return (data ?? []).map((c) => this.rowToCase(c));
   }
@@ -696,6 +727,15 @@ export class SupabaseDataStore implements DataStore {
     if (patch.coverAssetId !== undefined) row.cover_asset_id = patch.coverAssetId;
     if (patch.galleryId !== undefined) row.gallery_id = patch.galleryId;
     if (patch.published !== undefined) row.published = patch.published;
+    if (patch.rightsStatus !== undefined) row.rights_status = patch.rightsStatus;
+    if (patch.clientPermissionStatus !== undefined) row.client_permission_status = patch.clientPermissionStatus;
+    if (patch.peopleConsentStatus !== undefined) row.people_consent_status = patch.peopleConsentStatus;
+    if (patch.musicLicenseStatus !== undefined) row.music_license_status = patch.musicLicenseStatus;
+    if (patch.brandUsageStatus !== undefined) row.brand_usage_status = patch.brandUsageStatus;
+    if (patch.projectRole !== undefined) row.project_role = patch.projectRole;
+    if (patch.productionTeam !== undefined) row.production_team = patch.productionTeam;
+    if (patch.rightsNote !== undefined) row.rights_note = patch.rightsNote;
+    if (patch.publishAllowed !== undefined) row.publish_allowed = patch.publishAllowed;
     if (patch.sortOrder !== undefined) row.sort_order = patch.sortOrder;
     const { data, error } = await (await this.sb()).from("portfolio_cases").update(row).eq("id", id).select().single();
     if (error) throw error;
@@ -818,7 +858,7 @@ export class SupabaseDataStore implements DataStore {
     return { id: t.id, token: t.token, galleryId: t.gallery_id, assetId: t.asset_id ?? undefined, quality: t.quality, expiresAt: t.expires_at ?? undefined, maxUses: t.max_uses ?? undefined, usedCount: t.used_count ?? 0, createdAt: t.created_at };
   }
   async createDownloadToken(input: Omit<DownloadToken, "id" | "createdAt" | "usedCount" | "token"> & { token?: string }): Promise<DownloadToken> {
-    const token = input.token || (Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+    const token = input.token || secureToken(32);
     const { data, error } = await (await this.sb()).from("download_tokens")
       .insert({ token, gallery_id: input.galleryId, asset_id: input.assetId ?? null, quality: input.quality, expires_at: input.expiresAt ?? null, max_uses: input.maxUses ?? null })
       .select().single();

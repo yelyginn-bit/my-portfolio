@@ -2,10 +2,11 @@
 // Создаёт заказ и инициирует оплату ЮKassa; имитация доступна только в dev.
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
-import { getStore, isValidPhone, normalizePhone } from "../lib/store";
+import { getStore } from "../lib/store";
 import { PRODUCTS } from "../lib/products";
 import { formatRub } from "../lib/calc";
 import type { OrderItem } from "../lib/types";
+import { secureFetch } from "../lib/api";
 
 const store = getStore();
 type PayMethod = "card" | "sbp";
@@ -37,8 +38,6 @@ export default function Checkout({
     }
     return q;
   });
-  const [name, setName] = useState(defaultName ?? "");
-  const [phone, setPhone] = useState(defaultPhone ? `+${defaultPhone}` : "");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -59,7 +58,7 @@ export default function Checkout({
   const startPolling = (orderId: string, paymentId: string) => {
     if (pollRef.current) clearInterval(pollRef.current);
     pollRef.current = setInterval(async () => {
-      const s = await fetch(`/api/payment-status?paymentId=${encodeURIComponent(paymentId)}&orderId=${encodeURIComponent(orderId)}`)
+      const s = await secureFetch("/api/payment-status", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paymentId, orderId }) })
         .then((x) => x.json()).catch(() => ({}));
       if (s.status === "succeeded") {
         if (pollRef.current) clearInterval(pollRef.current);
@@ -95,25 +94,22 @@ export default function Checkout({
   const pay = async () => {
     setError("");
     if (total === 0) { setError("Выберите хотя бы одну услугу."); return; }
-    if (!name.trim()) { setError("Укажите имя."); return; }
-    if (!isValidPhone(phone)) { setError("Введите корректный номер телефона."); return; }
+    if (!defaultPhone) { setError("Войдите в личный кабинет перед оформлением заказа."); return; }
     setBusy(true);
     try {
-      const order = await store.createShopOrder({
-        galleryId,
-        clientPhone: normalizePhone(phone),
-        contactName: name.trim(),
-        contact: `+${normalizePhone(phone)}`,
-        items,
+      const orderResponse = await secureFetch("/api/order-create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ galleryId, items: items.map(({ productId, qty }) => ({ productId, qty })) }),
       });
-      const response = await fetch("/api/payment-create", {
+      const orderResult = await orderResponse.json().catch(() => ({}));
+      if (!orderResponse.ok || !orderResult.ok) throw new Error(orderResult.error || "order unavailable");
+      const orderId = orderResult.orderId;
+      const response = await secureFetch("/api/payment-create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          orderId: order.id,
-          amount: total,
-          description: `Заказ из галереи (${items.length} поз.)`,
-          returnUrl: location.href,
+          orderId,
           method,
         }),
       });
@@ -128,7 +124,7 @@ export default function Checkout({
       // СБП (прод): рисуем QR из confirmation_data и опрашиваем статус.
       if (r?.qr) {
         setQr(await QRCode.toDataURL(r.qr, { width: 240, margin: 1 }));
-        startPolling(order.id, r.paymentId);
+        startPolling(orderId, r.paymentId);
         return;
       }
 
@@ -138,11 +134,11 @@ export default function Checkout({
       }
       if (method === "sbp") {
         // Показываем локальный QR и кнопку подтверждения.
-        setQr(await QRCode.toDataURL(`local-sbp:${order.id}`, { width: 240, margin: 1 }));
-        setMockOrderId(order.id);
+        setQr(await QRCode.toDataURL(`local-sbp:${orderId}`, { width: 240, margin: 1 }));
+        setMockOrderId(orderId);
         return;
       }
-      await store.markShopOrderPaid(order.id, { provider: "dev", paymentId: "mock" });
+      await store.markShopOrderPaid(orderId, { provider: "dev", paymentId: "mock" });
       setDone(true);
       onPaid();
     } catch {
@@ -166,7 +162,7 @@ export default function Checkout({
             <div style={{ fontSize: 40 }}>✅</div>
             <h3 style={{ margin: "10px 0" }}>Заказ оформлен</h3>
             <p style={{ color: "#8e8e8c", fontSize: 13.5 }}>
-              Спасибо! Я свяжусь по деталям. Заказ виден в вашем кабинете.
+              Оплата подтверждена. Исполнитель вручную сформирует чек в приложении «Мой налог» и направит его по указанному вами контакту.
             </p>
             <button className="g-btn" style={{ marginTop: 14 }} onClick={onClose}>Закрыть</button>
           </div>
@@ -230,8 +226,9 @@ export default function Checkout({
               ))}
             </div>
 
-            <input className="g-input" style={{ width: "100%", marginBottom: 10 }} placeholder="Ваше имя" value={name} onChange={(e) => setName(e.target.value)} />
-            <input className="g-input" style={{ width: "100%", marginBottom: 14 }} placeholder="Телефон" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <p style={{ color: "#8e8e8c", fontSize: 12.5, margin: "0 0 14px" }}>
+              Заказ оформляется на подтверждённый профиль{defaultName ? `: ${defaultName}` : ""}. Данные используются для исполнения заказа в соответствии с <a href="/privacy-policy" target="_blank" rel="noreferrer">политикой</a>.
+            </p>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, fontSize: 18, fontWeight: 800 }}>
               <span style={{ fontSize: 13, fontWeight: 400, color: "#8e8e8c" }}>Итого</span>

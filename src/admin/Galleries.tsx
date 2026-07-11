@@ -11,12 +11,15 @@ import { getFace } from "../lib/face";
 import { logAudit } from "../lib/audit";
 import { notify } from "../lib/notify";
 import type { Album, Asset, DownloadPolicy, Gallery, GalleryVisibility, PhotoComment } from "../lib/types";
+import { secureToken } from "../lib/secureRandom";
+import { isSupabaseConfigured } from "../lib/supabaseClient";
+import { secureFetch } from "../lib/api";
 
 const store = getStore();
 const storage = getStorage();
 
 function rid() {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+  return secureToken(16);
 }
 function ext(name: string) {
   const m = /\.([a-z0-9]+)$/i.exec(name);
@@ -79,8 +82,9 @@ export default function Galleries() {
       await store.setSetting(`gallery_yandex_${selected.id}`, publicKey);
       const existing = new Set(assets.map((asset) => asset.storageKey));
       let added = 0;
+      const allowedYandexImages = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
       for (const item of data.items || []) {
-        if (item.type !== "file" || !String(item.mimeType).startsWith("image/")) continue;
+        if (item.type !== "file" || !allowedYandexImages.has(String(item.mimeType))) continue;
         const key = yandexStorageKey(publicKey, item.path);
         if (existing.has(key)) continue;
         const asset = await store.addAsset({
@@ -299,7 +303,13 @@ export default function Galleries() {
   const share = async () => {
     if (!selected) return;
     const password = prompt("Пароль для галереи (необязательно — оставьте пустым):") || undefined;
-    const link = await store.createShareLink(selected.id, { password, canDownload: selected.downloadPolicy !== "none" });
+    const link = isSupabaseConfigured
+      ? await secureFetch("/api/admin-share-link", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ galleryId: selected.id, password, canDownload: selected.downloadPolicy !== "none" }) }).then(async (response) => {
+        const data = await response.json();
+        if (!response.ok || !data.link) throw new Error(data.error || "Не удалось создать ссылку");
+        return data.link;
+      })
+      : await store.createShareLink(selected.id, { password, canDownload: selected.downloadPolicy !== "none" });
     logAudit("access.create", { entityType: "gallery", entityId: selected.id, after: { token: link.token, password: !!password, canDownload: link.canDownload } });
     // В dev rewrite /g/:token не работает — даём ссылку через ?token=; в проде — красивый /g/<token>.
     const url = import.meta.env.DEV

@@ -6,6 +6,7 @@
 import type { AdminAction, Album, Asset, BlogPost, Client, DownloadToken, Gallery, Lead, Notification, NotificationStatus, Order, OrderItem, PhotoComment, PortfolioCase, PriceRule, Review, Selection, SelectionKind, ShareLink, ShareResolution, ShopOrder } from "./types";
 import { isSupabaseConfigured } from "./supabaseClient";
 import { SupabaseDataStore } from "./supabaseStore";
+import { secureToken } from "./secureRandom";
 
 export interface DataStore {
   // Клиенты
@@ -134,8 +135,7 @@ export function isValidPhone(raw: string): boolean {
 }
 
 function genId(prefix: string): string {
-  const rnd = Math.floor(Math.random() * 1e9).toString(36);
-  return `${prefix}_${Date.now().toString(36)}${rnd}`;
+  return `${prefix}_${secureToken(12)}`;
 }
 
 // ─── LocalStorage реализация ─────────────────────────────────────────────────

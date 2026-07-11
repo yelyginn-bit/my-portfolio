@@ -169,6 +169,19 @@ create table if not exists orders (
 );
 create index if not exists idx_orders_client on orders(client_id, created_at desc);
 
+-- Ручной учёт чеков НПД. Сайт не формирует и не регистрирует чек автоматически.
+do $$ begin
+  create type receipt_status as enum ('not_required','pending','issued','cancelled');
+exception when duplicate_object then null; end $$;
+alter table orders add column if not exists payment_confirmed_at timestamptz;
+alter table orders add column if not exists receipt_status receipt_status not null default 'not_required';
+alter table orders add column if not exists receipt_issued_at timestamptz;
+alter table orders add column if not exists receipt_number text;
+alter table orders add column if not exists receipt_url text;
+alter table orders add column if not exists receipt_delivery_method text;
+alter table orders add column if not exists receipt_sent_at timestamptz;
+alter table orders add column if not exists receipt_admin_comment text;
+
 create table if not exists order_items (
   id          uuid primary key default gen_random_uuid(),
   order_id    uuid not null references orders(id) on delete cascade,
@@ -211,6 +224,17 @@ create table if not exists portfolio_cases (
   sort_order   integer not null default 0,
   created_at   timestamptz not null default now()
 );
+
+-- Административные поля проверки прав; публичные запросы их не выводят.
+alter table portfolio_cases add column if not exists rights_status text;
+alter table portfolio_cases add column if not exists client_permission_status text;
+alter table portfolio_cases add column if not exists people_consent_status text;
+alter table portfolio_cases add column if not exists music_license_status text;
+alter table portfolio_cases add column if not exists brand_usage_status text;
+alter table portfolio_cases add column if not exists project_role text;
+alter table portfolio_cases add column if not exists production_team text;
+alter table portfolio_cases add column if not exists rights_note text;
+alter table portfolio_cases add column if not exists publish_allowed boolean not null default false;
 
 create table if not exists blog_categories (
   id     uuid primary key default gen_random_uuid(),
@@ -309,7 +333,8 @@ create index if not exists idx_tg_links_chat on telegram_links(chat_id);
 create table if not exists auth_otp (
   id          uuid primary key default gen_random_uuid(),
   phone       text not null,
-  code        text,                                    -- 4 цифры (для способа 'code')
+  code        text,                                    -- legacy, не использовать для новых OTP
+  code_hash   text,                                    -- SHA-256 шестизначного OTP
   token       text unique not null,                    -- для deep-link и polling статуса
   method      text not null default 'code',            -- 'code' | 'link' | 'confirm'
   status      text not null default 'pending',         -- 'pending' | 'confirmed' | 'expired'
@@ -319,6 +344,10 @@ create table if not exists auth_otp (
 );
 create index if not exists idx_auth_otp_phone on auth_otp(phone, created_at desc);
 create index if not exists idx_auth_otp_token on auth_otp(token);
+alter table auth_otp add column if not exists attempts integer not null default 0;
+alter table auth_otp add column if not exists used_at timestamptz;
+alter table auth_otp add column if not exists session_issued_at timestamptz;
+alter table auth_otp add column if not exists request_ip inet;
 
 -- ─── Настройки / KV ────────────────────────────────────────────────────────────
 create table if not exists settings (

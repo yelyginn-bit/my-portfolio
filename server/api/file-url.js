@@ -7,13 +7,14 @@
 // поэтому ограничить доступ только префиксом thumbs/ нельзя — выбран контроль по
 // субъекту, как в /api/download:
 //   • Админ: заголовок Authorization: Bearer <jwt c app_role=admin>  → любой ключ.
-//   • Гость галереи: ?share=<share_token> — ключ должен принадлежать ассету той
-//     галереи, на которую выдан валидный (непросроченный) share-link.
+//   • Гость галереи: X-Gallery-Access — короткоживущий ticket после успешной
+//     проверки share-link и, если задан, пароля.
 // Скачивание ОРИГИНАЛОВ по-прежнему идёт через /api/download (can_download +
 // download_policy / download_tokens). Этот эндпоинт только отдаёт URL для показа.
 import { presign, r2Config } from "./_lib/r2.js";
 import { getAdmin } from "./_lib/db.js";
 import { verifySupabaseJwt } from "./_lib/jwt.js";
+import { parseCookies, verifyCsrf } from "./_lib/security.js";
 
 /** Bearer-токен из заголовка Authorization, либо null. */
 function bearer(req) {
@@ -26,18 +27,16 @@ function bearer(req) {
 function isAdmin(req) {
   const secret = process.env.SUPABASE_JWT_SECRET;
   if (!secret) return false;
-  const payload = verifySupabaseJwt(bearer(req), secret);
+  const payload = verifySupabaseJwt(bearer(req) || parseCookies(req).yel_admin_session, secret);
   return Boolean(payload && payload.app_role === "admin");
 }
 
-/** Проверяет, что ключ принадлежит ассету галереи валидного share-link. */
-async function shareGrantsKey(admin, shareToken, key) {
-  if (!admin || !shareToken) return false;
-  const { data: link } = await admin
-    .from("share_links")
-    .select("gallery_id, expires_at")
-    .eq("token", shareToken)
-    .maybeSingle();
+/** Проверяет короткоживущий ticket и принадлежность ключа его галерее. */
+async function ticketGrantsKey(admin, ticket, key) {
+  if (!admin || !ticket) return false;
+  const claims = verifySupabaseJwt(ticket, process.env.SUPABASE_JWT_SECRET);
+  if (!claims?.gallery_access || !claims.gallery_id || !claims.share_id) return false;
+  const { data: link } = await admin.from("share_links").select("id,gallery_id,expires_at").eq("id", claims.share_id).eq("gallery_id", claims.gallery_id).maybeSingle();
   if (!link) return false;
   if (link.expires_at && new Date(link.expires_at).getTime() < Date.now()) return false;
   const { data: asset } = await admin
@@ -59,11 +58,13 @@ export default async function handler(req, res) {
 
   const key = req.query?.key;
   if (!key) return res.status(400).json({ ok: false, error: "no key" });
+  if (typeof key !== "string" || key.length > 500 || key.includes("..") || key.startsWith("/")) return res.status(400).json({ ok: false, error: "invalid key" });
 
   const admin = isAdmin(req);
 
   try {
     if (req.method === "DELETE") {
+      if (!verifyCsrf(req)) return res.status(403).json({ ok: false, error: "forbidden" });
       // Удаление — только админ.
       if (!admin) return res.status(403).json({ ok: false, error: "forbidden" });
       if (cfg) {
@@ -78,9 +79,9 @@ export default async function handler(req, res) {
 
     // GET: нужен либо админ, либо валидный share-link, покрывающий этот ключ.
     if (!admin) {
-      const share = req.query?.share;
-      if (!share) return res.status(401).json({ ok: false, error: "auth required" });
-      const ok = await shareGrantsKey(storageAdmin, share, key);
+      const ticket = req.headers?.["x-gallery-access"];
+      if (!ticket) return res.status(401).json({ ok: false, error: "auth required" });
+      const ok = await ticketGrantsKey(storageAdmin, ticket, key);
       if (!ok) return res.status(403).json({ ok: false, error: "forbidden" });
     }
 

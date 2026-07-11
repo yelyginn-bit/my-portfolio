@@ -1,7 +1,7 @@
 // Audit trail (v2): логирование мутаций админа в admin_actions.
 // Best-effort: никогда не бросает (не мешает основной операции).
-// ⚠️ Клиентская реализация — для UX/обзора. Tamper-proof целевой вариант —
-// серверная обёртка (service_role) с атомарной записью; см. ARCHITECTURE-v2 §8 (TODO).
+// Критичные операции журналируются серверными endpoint; контентные правки
+// защищены административной RLS-сессией.
 import { getStore } from "./store";
 
 export async function logAudit(

@@ -1,5 +1,34 @@
 import type { EstimateData } from "./types";
 
+export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Полный продакшн";
+
+export type PublicPriceItem = {
+  id: string;
+  category: PublicPriceCategory;
+  title: string;
+  price: string;
+  description: string;
+  includes: string[];
+  limitations: string;
+  timeline: string;
+  href: string;
+  portfolioHref: string;
+  featured?: boolean;
+};
+
+export const PUBLIC_PRICES: PublicPriceItem[] = [
+  { id: "editing-reels", category: "Монтаж", title: "Монтаж Reels / Shorts", price: "от 4 000 ₽", description: "Один вертикальный ролик с собранной структурой и ритмом.", includes: ["Монтаж", "Базовый цвет", "Звук"], limitations: "Субтитры и сложная графика считаются по задаче.", timeline: "Обычно 3–5 рабочих дней", href: "/calculator", portfolioHref: "/portfolio/editing" },
+  { id: "editing-youtube", category: "Монтаж", title: "Монтаж YouTube", price: "от 12 000 ₽", description: "Выпуск до 15 минут из подготовленного материала.", includes: ["Сборка", "Цвет", "Чистка звука"], limitations: "Мультикамера и графика рассчитываются отдельно.", timeline: "По объёму исходников", href: "/calculator", portfolioHref: "/portfolio/editing" },
+  { id: "reels-block", category: "Съёмка", title: "Съёмочный блок Reels", price: "от 18 000 ₽", description: "До трёх часов организованной съёмки по готовому плану.", includes: ["Камера", "Базовый свет", "Запись звука"], limitations: "Монтаж роликов не входит.", timeline: "Одна съёмочная дата", href: "/reels", portfolioHref: "/portfolio/reels" },
+  { id: "reels-package", category: "Съёмка + монтаж", title: "Пакет Reels", price: "от 24 000 ₽", description: "Подготовка, съёмка до двух часов и три готовых ролика.", includes: ["Подготовка", "Съёмка", "3 ролика"], limitations: "Дополнительные сценарии и локации — отдельно.", timeline: "Срок фиксируется после брифа", href: "/reels", portfolioHref: "/portfolio/reels", featured: true },
+  { id: "event", category: "Съёмка", title: "Видеосъёмка мероприятия", price: "от 18 000 ₽", description: "Работа видеографа на событии, минимум три часа.", includes: ["Репортажная съёмка", "Камера", "Базовый звук"], limitations: "Aftermovie и экспресс-монтаж считаются отдельно.", timeline: "От одной даты", href: "/event-video", portfolioHref: "/portfolio/events" },
+  { id: "photo", category: "Фото", title: "Репортажная фотосъёмка", price: "от 6 000 ₽/час", description: "События, команды и рабочие процессы для бизнеса.", includes: ["Съёмка", "Отбор", "Базовая обработка"], limitations: "Минимальный заказ — два часа.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
+  { id: "content-day", category: "Регулярный контент", title: "Контент-день", price: "от 48 000 ₽", description: "Фото и серия коротких роликов за одну подготовленную съёмку.", includes: ["Подготовка", "3–4 часа съёмки", "7 Reels и фото"], limitations: "Точный объём фиксируется в смете.", timeline: "Контент на несколько недель", href: "/content-day", portfolioHref: "/portfolio/reels", featured: true },
+  { id: "advertising", category: "Полный продакшн", title: "Рекламный ролик", price: "от 45 000 ₽", description: "Проект от концепции и подготовки до финального мастера.", includes: ["Препродакшн", "Съёмка", "Постпродакшн"], limitations: "Команда, площадка и техника зависят от задачи.", timeline: "После брифа и плана производства", href: "/reklamnye-roliki", portfolioHref: "/portfolio", featured: true },
+];
+
+export const PUBLIC_PRICE_BY_ID = Object.fromEntries(PUBLIC_PRICES.map((item) => [item.id, item])) as Record<string, PublicPriceItem>;
+
 /**
  * Публичная ценовая модель 2026.
  * Это ориентиры для первичной сметы, а не оферта: состав команды, техника,

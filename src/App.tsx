@@ -33,6 +33,7 @@ import { getStore } from "./lib/store";
 import { trackAnalyticsEvent } from "./lib/analytics";
 import { secureFetch } from "./lib/api";
 import { LEGAL } from "./config/legal";
+import { SERVICE_SUMMARIES, SITE } from "./config/site";
 import {
   ContentDayPage,
   PortfolioCategoryPageView,
@@ -1235,6 +1236,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between gap-4 py-5 sm:py-6 text-left"
+        aria-expanded={open}
       >
         <span className="text-[clamp(0.98rem,4vw,1.2rem)] font-semibold leading-snug">{q}</span>
         <span className={cn("shrink-0 transition-transform duration-300", open && "rotate-45")}>
@@ -1498,7 +1500,7 @@ export default function App() {
 
   useEffect(() => {
     if (!isProjectPage || typeof document === "undefined") return;
-    document.title = `${projectTitle} | ELYGIN PROJECT`;
+    document.title = `${projectTitle} | YELYGINN`;
     const descriptionMeta = document.querySelector('meta[name="description"]');
     if (descriptionMeta) {
       descriptionMeta.setAttribute(
@@ -1743,9 +1745,7 @@ export default function App() {
             <span className="absolute w-2.5 h-2.5 sm:w-3 h-3 bg-nothing-red/20 rounded-full animate-ping" />
             <span className="relative w-1 h-1 sm:w-1.5 h-1.5 bg-nothing-red rounded-full" />
           </div>
-          <span className="opacity-90 hidden xs:inline">ELYGIN.OS</span>
-          <span className="w-[1px] h-3 bg-nothing-black/10 hidden xs:inline" />
-          <span>V.2026</span>
+          <span className="site-brand-wordmark">{SITE.brand}</span>
         </motion.a>
 
       </div>
@@ -1801,6 +1801,8 @@ export default function App() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden p-1.5 sm:p-2 text-nothing-black"
           aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-site-menu"
         >
           {isMenuOpen ? <X className="w-4 h-4 sm:w-5 h-5" /> : <Menu className="w-4 h-4 sm:w-5 h-5" />}
         </button>
@@ -1815,6 +1817,7 @@ export default function App() {
           initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
           animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+          id="mobile-site-menu"
           className="mobile-site-menu fixed inset-0 z-[100] bg-nothing-white/95 md:hidden"
         >
           <motion.button
@@ -2147,13 +2150,13 @@ export default function App() {
 
                       <h1 className="hero-headline font-display font-bold uppercase text-white">
                         <div className="text-mask">
-                          <motion.span variants={TEXT_REVEAL} className="block">Видео и контент</motion.span>
+                          <motion.span variants={TEXT_REVEAL} className="block">Создаю видео</motion.span>
                         </div>
                         <div className="text-mask text-nothing-red">
-                          <motion.span variants={TEXT_REVEAL} className="block">для бизнеса</motion.span>
+                          <motion.span variants={TEXT_REVEAL} className="block">и фотографии,</motion.span>
                         </div>
                         <div className="text-mask">
-                          <motion.span variants={TEXT_REVEAL} className="block">в Нижнем Новгороде</motion.span>
+                          <motion.span variants={TEXT_REVEAL} className="block">которые усиливают бренды</motion.span>
                         </div>
                       </h1>
 
@@ -2174,10 +2177,10 @@ export default function App() {
                     </div>
 
                     <motion.aside variants={STAGGER_ITEM} className="hero-summary relative z-10 pointer-events-auto">
-                      <span className="hero-summary-label">От идеи до готового материала</span>
+                      <span className="hero-summary-label">Видео, фото и монтаж · Нижний Новгород / Россия</span>
                       <p>
-                        Снимаю и монтирую рекламные ролики, Reels, event-видео и контент для брендов.
-                        Помогаю с идеей, подготовкой и адаптацией под нужные площадки.
+                        Видеограф в Нижнем Новгороде: рекламные ролики, Reels, event-видео и фото для бизнеса.
+                        Веду проект от задачи и подготовки до готовых версий для площадок.
                       </p>
 
                       <div className="hero-features">
@@ -2215,7 +2218,7 @@ export default function App() {
       {/* Services Section */}
       <section id="services" className="services-section site-section pt-[clamp(2.8rem,9vw,5rem)] pb-[clamp(3.5rem,10vw,7rem)] px-[clamp(14px,4vw,22px)] sm:px-6 md:px-10 xl:px-12 bg-nothing-gray/30 relative overflow-hidden">
         <div className="site-shell max-w-[1720px] mx-auto relative z-10">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
@@ -2233,72 +2236,32 @@ export default function App() {
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
             variants={STAGGER_CONTAINER}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+            className="editorial-services"
           >
-            <motion.div variants={STAGGER_ITEM} className="p-5 sm:p-7 md:p-10 hardware-border hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 group rounded-[1.35rem] sm:rounded-[2rem] bg-nothing-white">
-              <div className="mb-5 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
-                <Camera className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
-              </div>
-              <h3 className="text-[clamp(1.2rem,5.5vw,1.95rem)] font-display font-bold uppercase mb-3 sm:mb-5 tracking-tighter leading-[0.98]">Видеосъёмка для бизнеса</h3>
-              <p className="text-[clamp(0.86rem,3.2vw,0.98rem)] font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-5 sm:mb-8">
-                Снимаю рекламные ролики, интервью, Reels и event-видео для брендов и бизнеса в Нижнем Новгороде.
-                Помогаю выстроить идею, подготовить съёмку и довести проект до готового результата.
-              </p>
-              <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Рекламные ролики</li>
-                <li>• Интервью и event-видео</li>
-                <li>• Reels и Shorts для бизнеса</li>
-              </ul>
-            </motion.div>
-            <motion.div variants={STAGGER_ITEM} className="p-5 sm:p-7 md:p-10 hardware-border hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 group rounded-[1.35rem] sm:rounded-[2rem] bg-nothing-white">
-              <div className="mb-5 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
-                <Video className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
-              </div>
-              <h3 className="text-[clamp(1.2rem,5.5vw,1.95rem)] font-display font-bold uppercase mb-3 sm:mb-5 tracking-tighter leading-[0.98]">Монтаж и постпродакшн</h3>
-              <p className="text-[clamp(0.86rem,3.2vw,0.98rem)] font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-5 sm:mb-8">
-                Монтирую рекламные ролики, Reels, интервью и коммерческие видео с акцентом на ритм,
-                структуру и современную визуальную подачу.
-              </p>
-              <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Динамичный монтаж</li>
-                <li>• Цветокоррекция и звук</li>
-                <li>• Версии для соцсетей и рекламы</li>
-              </ul>
-            </motion.div>
-            <motion.div variants={STAGGER_ITEM} className="p-5 sm:p-7 md:p-10 hardware-border hover:bg-nothing-black hover:text-nothing-white transition-all duration-500 group rounded-[1.35rem] sm:rounded-[2rem] bg-nothing-white">
-              <div className="mb-5 sm:mb-8 p-3 sm:p-4 w-fit rounded-xl sm:rounded-2xl bg-nothing-black/5 group-hover:bg-nothing-white/10 transition-colors">
-                <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform" />
-              </div>
-              <h3 className="text-[clamp(1.2rem,5.5vw,1.95rem)] font-display font-bold uppercase mb-3 sm:mb-5 tracking-tighter leading-[0.98]">Фотосъёмка для брендов</h3>
-              <p className="text-[clamp(0.86rem,3.2vw,0.98rem)] font-medium opacity-90 group-hover:opacity-100 leading-relaxed mb-5 sm:mb-8">
-                Дополняю видеопроекты фотосъёмкой для брендов, соцсетей и бизнеса.
-                Снимаю портреты, репортаж и визуальный контент в едином стиле с видео.
-              </p>
-              <ul className="space-y-2 sm:space-y-3 font-mono text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-widest opacity-80 group-hover:opacity-90">
-                <li>• Портретная фотосъёмка</li>
-                <li>• Репортажная съёмка</li>
-                <li>• Контент для бренда и соцсетей</li>
-              </ul>
-            </motion.div>
+            {SERVICE_SUMMARIES.map((service, index) => (
+              <motion.a
+                key={service.id}
+                variants={STAGGER_ITEM}
+                href={service.href}
+                className={`editorial-service editorial-service--${index % 5}${service.featured ? " editorial-service--featured" : ""}`}
+              >
+                <div className="editorial-service-media">
+                  <img
+                    src={getKinescopePosterUrl(service.mediaId, "md")}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="editorial-service-copy">
+                  <span>{String(index + 1).padStart(2, "0")} / {service.price}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <ArrowUpRight aria-hidden="true" />
+                </div>
+              </motion.a>
+            ))}
           </motion.div>
-
-          <motion.a
-            href="/content-day"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            className="content-day-service-link"
-          >
-            <div>
-              <span>Комплексная услуга</span>
-              <h3>Контент-день для бизнеса</h3>
-              <p>Фото и видео за одну съёмку: Reels, короткие ролики, монтаж, цвет, звук и готовые материалы для публикации.</p>
-            </div>
-            <ArrowUpRight className="h-6 w-6" />
-          </motion.a>
-        </div>
-        <div className="absolute bottom-0 right-0 text-[20vw] font-display font-bold uppercase tracking-tighter text-nothing-black/[0.02] leading-none select-none -z-0">
-          КОНТЕНТ
         </div>
       </section>
 
@@ -2588,7 +2551,7 @@ export default function App() {
         <div className="site-shell max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-8 sm:gap-10 md:gap-12 mb-12 sm:mb-20">
             <div className="col-span-1 md:col-span-2 lg:col-span-3">
-              <span className="font-display font-bold text-[clamp(2rem,8.5vw,2.9rem)] uppercase tracking-tighter mb-5 sm:mb-8 block text-nothing-black">ELYGIN</span>
+              <span className="font-display font-bold text-[clamp(2rem,8.5vw,2.9rem)] uppercase tracking-tighter mb-5 sm:mb-8 block text-nothing-black">{SITE.brand}</span>
               <p className="text-sm font-medium opacity-100 max-w-xs leading-relaxed text-nothing-black">
                 Создаю рекламные ролики, Reels, интервью и event-видео для бизнеса в Нижнем Новгороде.
                 При необходимости дополняю проект фотосъёмкой.
@@ -2637,7 +2600,7 @@ export default function App() {
           <div className="flex justify-center items-center pt-8 sm:pt-12 border-t border-nothing-black/10">
             <div className="text-center">
               <div className="font-mono text-sm md:text-base uppercase tracking-[0.14em] opacity-90 text-nothing-black">
-                © 2026 ELYGIN VIDEO & PHOTO / ВИДЕОПРОДАКШН В НИЖНЕМ НОВГОРОДЕ
+                © {new Date().getFullYear()} {SITE.brand} / ВИДЕОПРОДАКШН В НИЖНЕМ НОВГОРОДЕ
               </div>
               <p className="mt-2 text-[11px] sm:text-xs text-nothing-black/60">
                 {LEGAL.operator}. {LEGAL.status}. ИНН: {LEGAL.taxId}.

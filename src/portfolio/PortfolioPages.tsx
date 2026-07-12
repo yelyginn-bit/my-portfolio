@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
@@ -18,9 +18,23 @@ import {
   type PortfolioCategory,
   type PortfolioItem,
 } from "./portfolioData";
+import { SiteFooter } from "../components/site/Layout";
 
 const TELEGRAM_URL = "https://t.me/YuriElygin";
 const NAV_PORTFOLIO_CATEGORIES = PORTFOLIO_CATEGORIES.filter((category) => category.slug !== "photo");
+
+type PortfolioFilter = "all" | "advertising" | "reels" | "events" | "youtube" | "editing" | "photo" | "marketplace";
+
+const PORTFOLIO_FILTERS: Array<{ id: PortfolioFilter; label: string }> = [
+  { id: "all", label: "Все" },
+  { id: "advertising", label: "Реклама" },
+  { id: "reels", label: "Reels" },
+  { id: "events", label: "Event" },
+  { id: "youtube", label: "YouTube" },
+  { id: "editing", label: "Монтаж" },
+  { id: "photo", label: "Фото" },
+  { id: "marketplace", label: "Маркетплейсы" },
+];
 
 const posterUrl = (id: string, size: "sm" | "md" | "lg" = "md") =>
   `https://kinescope.io/${id}/poster/${size}.webp`;
@@ -75,7 +89,7 @@ function DirectionCard({
   return (
     <motion.a
       href={item.projectUrl}
-      className={`direction-card${item.vertical ? " direction-card--vertical" : ""}`}
+      className={`direction-card direction-card--layout-${index % 6}${item.vertical ? " direction-card--vertical" : ""}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -96,7 +110,7 @@ function DirectionCard({
         <p>{item.description}</p>
         <div className="direction-card-meta">
           <span>{item.client}</span>
-          <span>{item.services.slice(0, 3).join(" · ")}</span>
+          <span>{[item.category, item.year, item.services.slice(0, 2).join(" · ")].filter(Boolean).join(" / ")}</span>
         </div>
       </div>
     </motion.a>
@@ -119,25 +133,6 @@ function DirectionLinks({ active }: { active?: PortfolioCategory }) {
         </a>
       ))}
     </nav>
-  );
-}
-
-function PortfolioFooter() {
-  return (
-    <footer className="direction-footer">
-      <div>
-        <a href="/" className="direction-footer-brand">ELYGIN</a>
-        <p>Фото, видео, Reels и монтаж для бизнеса в Нижнем Новгороде.</p>
-      </div>
-      <div className="direction-footer-links">
-        <a href="/">Главная</a>
-        <a href="/portfolio">Портфолио</a>
-        <a href="/content-day">Контент-день</a>
-        <a href="/ceny">Цены</a>
-        <a href="/calculator">Калькулятор</a>
-        <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Telegram</a>
-      </div>
-    </footer>
   );
 }
 
@@ -171,10 +166,18 @@ function DirectionCta({
 }
 
 export function PortfolioDirectoryPage({ header }: { header: ReactNode }) {
+  const [filter, setFilter] = useState<PortfolioFilter>("all");
   const categoryCounts = PORTFOLIO_CATEGORIES.reduce<Record<string, number>>((acc, category) => {
     acc[category.slug] = getPortfolioItems(category.slug).length;
     return acc;
   }, {});
+  const filteredItems = useMemo(() => {
+    if (filter === "all") return featuredPortfolioItems;
+    if (filter === "youtube") {
+      return featuredPortfolioItems.filter((item) => item.tags.includes("editing") && !item.vertical);
+    }
+    return featuredPortfolioItems.filter((item) => item.category === filter || item.tags.includes(filter as PortfolioItem["tags"][number]));
+  }, [filter]);
 
   return (
     <div className="direction-page">
@@ -231,11 +234,23 @@ export function PortfolioDirectoryPage({ header }: { header: ReactNode }) {
 
         <section className="direction-work-section direction-shell">
           <div className="direction-section-heading">
-            <span>Избранное</span>
-            <h2>Работы, с которых можно начать</h2>
+            <span>{filteredItems.length} проектов</span>
+            <h2>Выбранные работы</h2>
+          </div>
+          <div className="direction-filter" role="group" aria-label="Фильтр портфолио">
+            {PORTFOLIO_FILTERS.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={filter === option.id}
+                onClick={() => setFilter(option.id)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
           <div className="direction-grid">
-            {featuredPortfolioItems.slice(0, 9).map((item, index) => (
+            {filteredItems.map((item, index) => (
               <DirectionCard key={item.id} item={item} index={index} />
             ))}
           </div>
@@ -243,7 +258,7 @@ export function PortfolioDirectoryPage({ header }: { header: ReactNode }) {
 
         <DirectionCta title="Есть задача для фото, видео или монтажа?" button="Обсудить проект" />
       </main>
-      <PortfolioFooter />
+      <SiteFooter />
     </div>
   );
 }
@@ -321,7 +336,7 @@ export function PortfolioCategoryPageView({
 
         <DirectionCta title={page.subtitle} button={page.ctaLabel} />
       </main>
-      <PortfolioFooter />
+      <SiteFooter />
     </div>
   );
 }
@@ -472,7 +487,7 @@ export function ContentDayPage({ header }: { header: ReactNode }) {
           secondaryLabel="Портфолио Reels"
         />
       </main>
-      <PortfolioFooter />
+      <SiteFooter />
     </div>
   );
 }

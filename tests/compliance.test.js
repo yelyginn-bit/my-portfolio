@@ -31,8 +31,18 @@ test("cookie center supports reject, settings and withdrawal cleanup", () => {
 
 test("analytics can be enabled after an earlier rejection", () => {
   const source = read("src/lib/analytics.ts");
-  assert.match(source, /addEventListener\(CONSENT_EVENT, startAnalytics\)/u);
-  assert.doesNotMatch(source, /addEventListener\(CONSENT_EVENT, startAnalytics, \{ once: true \}\)/u);
+  assert.match(source, /addEventListener\(CONSENT_EVENT/u);
+  assert.match(source, /if \(analytics\) startAnalytics\(\)/u);
+  assert.match(source, /else stopAnalytics\(\)/u);
+});
+
+test("analytics accepts only approved goals and sanitized parameters", () => {
+  const source = read("src/lib/analytics.ts");
+  assert.match(source, /ALLOWED_EVENTS/u);
+  assert.match(source, /ALLOWED_PARAMS/u);
+  assert.match(source, /page_location/u);
+  assert.match(source, /allow_ad_personalization_signals:\s*false/u);
+  assert.match(source, /"redacted"/u);
 });
 
 test("OTP and access tokens use cryptographic generators", () => {
@@ -189,4 +199,20 @@ test("lead endpoint records policy and consent versions", () => {
   assert.match(source, /p_policy_version/u);
   assert.match(source, /p_consent_version/u);
   assert.match(source, /record_lead_with_consent/u);
+});
+
+test("production health endpoint is routed without exposing secrets", () => {
+  const router = read("api/[endpoint].js");
+  const health = read("server/api/health.js");
+  assert.match(router, /health/u);
+  assert.match(health, /database/u);
+  assert.match(health, /telegram/u);
+  assert.doesNotMatch(health, /SERVICE_ROLE_KEY[^)]*json|BOT_TOKEN[^)]*json/u);
+});
+
+test("public prices use the reviewed 2026 market entry points", () => {
+  const prices = read("src/lib/pricing.data.ts");
+  for (const value of ["от 5 000 ₽", "от 15 000 ₽", "от 22 000 ₽", "от 35 000 ₽", "от 25 000 ₽", "от 8 000 ₽/час", "от 18 000 ₽", "от 60 000 ₽", "от 70 000 ₽"]) {
+    assert.match(prices, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&"), "u"));
+  }
 });

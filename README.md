@@ -1,43 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# YELYGINN portfolio
 
-# Run and deploy your AI Studio app
+Production portfolio and client workspace for video, photography and content
+production. The application uses React, TypeScript, Vite, Express and
+Supabase. Production is hosted on a REG.RU VPS behind nginx and PM2.
 
-This contains everything you need to run your app locally.
+## Local development
 
-View your app in AI Studio: https://ai.studio/apps/57070eb7-8d1f-4fcc-9752-85e3a715c2c1
+```bash
+npm ci
+cp .env.example .env
+npm run dev
+```
 
-## Run Locally
+The Vite server runs on `http://localhost:3000`. API requests are proxied to
+`http://localhost:3001`; run the Express server separately when testing forms
+and authenticated workflows.
 
-**Prerequisites:**  Node.js
+## Verification
 
+```bash
+npm run check
+```
 
-1. Install dependencies:
-   `npm install`
+This command runs TypeScript, unit tests, integration tests and the production
+build. A read-only production route check is available as:
 
-2. Create `.env.local` file and set your variables:
-   ```
-   GEMINI_API_KEY="your_gemini_api_key"
-   TELEGRAM_BOT_TOKEN="your_bot_token"
-   TELEGRAM_CHAT_ID="your_chat_id"
-   ```
+```bash
+npm run smoke:production
+```
 
-3. Run the app:
-   `npm run dev`
+## Production
 
-## Deploy to Netlify
+The supported deployment target is the Russian REG.RU VPS. See:
 
-1. Push to GitHub/GitLab/Bitbucket
-2. Connect your repo to Netlify
-3. Set environment variables in Netlify dashboard:
-   - `TELEGRAM_BOT_TOKEN`
-   - `TELEGRAM_CHAT_ID`
-4. Deploy! The `netlify.toml` will handle everything
+- `deploy/README.md`
+- `deploy/nginx-yelyginn.ru.conf`
+- `ecosystem.config.cjs`
 
-## Features
-
-- ✅ Telegram notifications for form submissions
-- ✅ Netlify Functions for serverless form handling
-- ✅ Full type safety with TypeScript
-- ✅ Responsive design with Motion animations
+Netlify is not part of the current production architecture.

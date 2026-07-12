@@ -362,9 +362,9 @@ const CONTENT_INCLUDES = [
 ];
 
 const CONTENT_PACKAGES = [
-  { name: "Mini", price: "от 24 000 ₽", description: "Подготовка, съёмка до 2 часов и 3 готовых Reels." },
-  { name: "Content Day", price: "от 48 000 ₽", description: "Съёмка 3–4 часа, 7 Reels и набор обработанных фото." },
-  { name: "Business Video + Content", price: "от 75 000 ₽", description: "Рекламный ролик, серия вертикальных видео и фото-контент." },
+  { name: "Mini", price: "от 35 000 ₽", description: "Подготовка, съёмка до 2 часов и 3 готовых Reels." },
+  { name: "Content Day", price: "от 60 000 ₽", description: "Съёмка 3–4 часа, 7 Reels и набор обработанных фото." },
+  { name: "Business Video + Content", price: "от 110 000 ₽", description: "Рекламный ролик, серия вертикальных видео и фото-контент." },
 ];
 
 const CONTENT_PROCESS = [

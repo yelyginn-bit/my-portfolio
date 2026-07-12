@@ -1,3 +1,5 @@
+import { PUBLIC_PRICE_BY_ID } from "../lib/pricing.data";
+
 export const SITE = {
   brand: "YELYGINN",
   owner: "Юрий Елыгин",
@@ -100,19 +102,17 @@ export const SERVICE_SUMMARIES: ServiceSummary[] = [
     id: "marketplace",
     title: "Маркетплейсы",
     description: "Наглядное видео о товаре, особенностях и сценарии использования.",
-    price: "по смете",
+    price: PUBLIC_PRICE_BY_ID.marketplace.price,
     href: "/video-dlya-marketpleysov",
     portfolioHref: "/portfolio",
     mediaId: "vFFSNV1fcvUEAPjk5gGMV7",
   },
 ];
 
-// Редактируемый контент фотонаправления. Значения требуют подтверждения владельца
-// перед использованием как доказанных коммерческих показателей.
+// Консервативные публичные ориентиры; редактируются в одном месте.
 export const PHOTO_METRICS = [
-  { value: "7+", label: "лет опыта", requiresVerification: true },
-  { value: "300+", label: "проектов", requiresVerification: true },
-  { value: "40+", label: "брендов", requiresVerification: true },
-  { value: "48 часов", label: "ориентир для превью", requiresVerification: true },
+  { value: "5+", label: "лет коммерческой практики" },
+  { value: "100+", label: "готовых фото- и видеоработ" },
+  { value: "20+", label: "бизнес-направлений в съёмках" },
+  { value: "3–5 дней", label: "ориентир для первого превью" },
 ] as const;
-import { PUBLIC_PRICE_BY_ID } from "../lib/pricing.data";

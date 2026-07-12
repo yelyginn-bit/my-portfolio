@@ -19,8 +19,9 @@ import { isSupabaseConfigured, setSupabaseToken } from "../lib/supabaseClient";
 import { secureFetch } from "../lib/api";
 
 const store = getStore();
-const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string)
-  || (import.meta.env.DEV ? "admin" : "");
+const ADMIN_PASSWORD = import.meta.env.DEV
+  ? ((import.meta.env.VITE_ADMIN_PASSWORD as string) || "admin")
+  : "";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
   new: "Новая", confirmed: "Подтверждён", in_progress: "В работе", done: "Завершён", cancelled: "Отменён",

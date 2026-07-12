@@ -18,6 +18,10 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
       { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true }, injectTo: 'body' },
     ];
+    if (!html.includes('property="og:type"')) tags.push({ tag: 'meta', attrs: { property: 'og:type', content: 'website' }, injectTo: 'head' });
+    if (!html.includes('property="og:site_name"')) tags.push({ tag: 'meta', attrs: { property: 'og:site_name', content: 'YELYGINN' }, injectTo: 'head' });
+    if (!html.includes('property="og:locale"')) tags.push({ tag: 'meta', attrs: { property: 'og:locale', content: 'ru_RU' }, injectTo: 'head' });
+    if (!html.includes('name="twitter:card"')) tags.push({ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' });
     if (!isReactPage) {
       tags.push({
         tag: 'script',
@@ -97,7 +101,7 @@ export default defineConfig(({mode}) => {
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
-      hmr: process.env.DISABLE_HMR !== 'true',      // Proxy for Netlify Functions during local development
+      hmr: process.env.DISABLE_HMR !== 'true',
       // Прокси serverless-функций (api/) на локальный сервер функций в dev.
       proxy: {
         '/api': {

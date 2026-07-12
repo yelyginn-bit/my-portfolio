@@ -2092,13 +2092,19 @@ export default function App() {
                   style={{ y: 0 }}
                   className="absolute inset-0 z-0 overflow-hidden"
                 >
-                  <img
-                    src={getKinescopePosterUrl("hCJmSvmN6S7P8uAnexguQ5", "lg")}
-                    alt=""
-                    aria-hidden="true"
-                    fetchPriority="high"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
+                  <picture>
+                    <source media="(max-width: 767px)" srcSet="/media/hero-poster-sm.webp" />
+                    <source media="(max-width: 1439px)" srcSet={getKinescopePosterUrl("hCJmSvmN6S7P8uAnexguQ5", "md")} />
+                    <img
+                      src={getKinescopePosterUrl("hCJmSvmN6S7P8uAnexguQ5", "lg")}
+                      width={1920}
+                      height={1080}
+                      alt=""
+                      aria-hidden="true"
+                      fetchPriority="high"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </picture>
                   {!isMobileViewport && (
                     <iframe
                       src="https://kinescope.io/embed/hCJmSvmN6S7P8uAnexguQ5?autoplay=1&muted=1&loop=1&playsinline=1&background=1&controls=0&title=0&byline=0&preload=metadata"

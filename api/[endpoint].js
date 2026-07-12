@@ -23,6 +23,7 @@ import galleryAccess from "../server/api/gallery-access.js";
 import adminConsentWithdraw from "../server/api/admin-consent-withdraw.js";
 import adminShareLink from "../server/api/admin-share-link.js";
 import accountData from "../server/api/account-data.js";
+import health from "../server/api/health.js";
 
 const handlers = {
   "admin-login": adminLogin,
@@ -50,6 +51,7 @@ const handlers = {
   "admin-consent-withdraw": adminConsentWithdraw,
   "admin-share-link": adminShareLink,
   "account-data": accountData,
+  health,
 };
 
 export default async function handler(req, res) {

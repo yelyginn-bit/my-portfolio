@@ -26,7 +26,7 @@ editorial grid.
 ## Content requiring owner confirmation
 
 The following existing photo claims were not changed or invented. They remain in
-`PHOTO_METRICS` with `requiresVerification: true` and should be confirmed before
+`PHOTO_METRICS` contains conservative editable public indicators and should be reviewed before
 being treated as documented commercial facts:
 
 - 7+ years of experience;

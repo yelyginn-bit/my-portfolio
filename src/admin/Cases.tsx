@@ -13,7 +13,7 @@ function slugify(s: string): string {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || `case-${Date.now().toString(36)}`;
 }
 
-const empty = { id: "", slug: "", clientName: "", title: "", task: "", solution: "", result: "", galleryId: "", published: false };
+const empty = { id: "", slug: "", clientName: "", title: "", task: "", solution: "", result: "", galleryId: "", published: false, rightsStatus: "", clientPermissionStatus: "", peopleConsentStatus: "", musicLicenseStatus: "", brandUsageStatus: "", projectRole: "", productionTeam: "", rightsNote: "", publishAllowed: false };
 
 export default function Cases() {
   const [cases, setCases] = useState<PortfolioCase[]>([]);
@@ -42,7 +42,12 @@ export default function Cases() {
         solution: form.solution.trim() || undefined,
         result: form.result.trim() || undefined,
         galleryId: form.galleryId || undefined,
-        published: form.published,
+        published: form.published && form.publishAllowed,
+        rightsStatus: form.rightsStatus || undefined, clientPermissionStatus: form.clientPermissionStatus || undefined,
+        peopleConsentStatus: form.peopleConsentStatus || undefined, musicLicenseStatus: form.musicLicenseStatus || undefined,
+        brandUsageStatus: form.brandUsageStatus || undefined, projectRole: form.projectRole || undefined,
+        productionTeam: form.productionTeam || undefined, rightsNote: form.rightsNote || undefined,
+        publishAllowed: form.publishAllowed,
       };
       if (editing) { await store.updateCase(form.id, payload); logAudit("case.update", { entityType: "case", entityId: form.id, after: { title: payload.title, published: payload.published } }); }
       else { const c = await store.createCase(payload); logAudit("case.create", { entityType: "case", entityId: c.id, after: { title: c.title, published: c.published } }); }
@@ -57,7 +62,11 @@ export default function Cases() {
     setForm({
       id: c.id, slug: c.slug, clientName: c.clientName ?? "", title: c.title,
       task: c.task ?? "", solution: c.solution ?? "", result: c.result ?? "",
-      galleryId: c.galleryId ?? "", published: c.published,
+      galleryId: c.galleryId ?? "", published: c.published, rightsStatus: c.rightsStatus ?? "",
+      clientPermissionStatus: c.clientPermissionStatus ?? "", peopleConsentStatus: c.peopleConsentStatus ?? "",
+      musicLicenseStatus: c.musicLicenseStatus ?? "", brandUsageStatus: c.brandUsageStatus ?? "",
+      projectRole: c.projectRole ?? "", productionTeam: c.productionTeam ?? "", rightsNote: c.rightsNote ?? "",
+      publishAllowed: c.publishAllowed ?? false,
     });
 
   const remove = async (c: PortfolioCase) => {
@@ -96,8 +105,16 @@ export default function Cases() {
         <textarea className="adm-input" style={{ ...fieldStyle, minHeight: 60, resize: "vertical" }} value={form.solution} onChange={(e) => set("solution", e.target.value)} />
         <label style={lbl}>Результат</label>
         <textarea className="adm-input" style={{ ...fieldStyle, minHeight: 60, resize: "vertical" }} value={form.result} onChange={(e) => set("result", e.target.value)} />
+        <div style={{ borderTop: "1px solid rgba(255,255,255,.12)", margin: "14px 0", paddingTop: 14 }}><strong>Административный чек-лист прав</strong></div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          {[['rightsStatus','Статус прав'],['clientPermissionStatus','Разрешение клиента'],['peopleConsentStatus','Согласия людей в кадре'],['musicLicenseStatus','Лицензия музыки'],['brandUsageStatus','Использование бренда']].map(([key,label]) => <div key={key}><label style={lbl}>{label}</label><select className="adm-input" style={fieldStyle} value={(form as any)[key]} onChange={(e) => set(key,e.target.value)}><option value="">Не проверено</option><option value="confirmed">Подтверждено</option><option value="not_required">Не требуется</option><option value="restricted">Есть ограничения</option></select></div>)}
+          <div><label style={lbl}>Моя роль</label><input className="adm-input" style={fieldStyle} value={form.projectRole} onChange={(e) => set("projectRole",e.target.value)} /></div>
+          <div><label style={lbl}>Команда / продакшн</label><input className="adm-input" style={fieldStyle} value={form.productionTeam} onChange={(e) => set("productionTeam",e.target.value)} /></div>
+        </div>
+        <label style={lbl}>Примечание по правам (не публикуется)</label><textarea className="adm-input" style={{ ...fieldStyle, minHeight: 60 }} value={form.rightsNote} onChange={(e) => set("rightsNote",e.target.value)} />
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, margin: "4px 0 10px" }}><input type="checkbox" checked={form.publishAllowed} onChange={(e) => set("publishAllowed",e.target.checked)} /> Права проверены, публикация разрешена</label>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, margin: "4px 0 14px" }}>
-          <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} /> Опубликован
+          <input type="checkbox" checked={form.published} disabled={!form.publishAllowed} onChange={(e) => set("published", e.target.checked)} /> Опубликован
         </label>
         <div style={{ display: "flex", gap: 8 }}>
           <button className="adm-btn" onClick={save} disabled={saving || !form.title.trim()}>{saving ? "Сохраняю…" : editing ? "Сохранить" : "Создать"}</button>

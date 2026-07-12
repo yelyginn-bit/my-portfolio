@@ -1,16 +1,24 @@
-// GET /api/payment-status?paymentId=...&orderId=...
+// POST /api/payment-status { paymentId, orderId }. Идентификаторы не пишутся в URL.
 // Опрос статуса платежа (для СБП — пока плательщик сканирует QR и платит).
 // При succeeded помечает заказ оплаченным (на случай, если вебхук задержался).
 import { getAdmin } from "./_lib/db.js";
+import { verifySupabaseJwt } from "./_lib/jwt.js";
+import { readJsonBody } from "./_lib/util.js";
+import { parseCookies, verifyCsrf } from "./_lib/security.js";
 
 export default async function handler(req, res) {
-  if (req.method !== "GET") return res.status(405).json({ ok: false });
+  if (req.method !== "POST") return res.status(405).json({ ok: false });
+  if (!verifyCsrf(req)) return res.status(403).json({ ok: false, error: "Обновите страницу" });
   const shopId = process.env.YOOKASSA_SHOP_ID;
   const secret = process.env.YOOKASSA_SECRET;
-  const paymentId = req.query?.paymentId;
-  const orderId = req.query?.orderId;
+  const { paymentId, orderId } = readJsonBody(req);
+  const admin = getAdmin();
+  const claims = verifySupabaseJwt(parseCookies(req).yel_session, process.env.SUPABASE_JWT_SECRET);
+  if (!claims?.sub || !admin) return res.status(401).json({ ok: false, error: "Требуется вход" });
   if (!shopId || !secret) return res.status(200).json({ ok: true, status: "unknown" });
-  if (!paymentId) return res.status(400).json({ ok: false, error: "paymentId required" });
+  if (!paymentId || !orderId) return res.status(400).json({ ok: false, error: "Некорректный запрос" });
+  const { data: attempt } = await admin.from("payment_attempts").select("*,orders!inner(client_id,total,clients!inner(user_id))").eq("provider_payment_id", paymentId).eq("order_id", orderId).maybeSingle();
+  if (!attempt || attempt.orders?.clients?.user_id !== claims.sub) return res.status(404).json({ ok: false, error: "Платёж не найден" });
 
   try {
     const auth = Buffer.from(`${shopId}:${secret}`).toString("base64");
@@ -20,23 +28,11 @@ export default async function handler(req, res) {
     const d = await r.json();
     const status = d.status; // pending | waiting_for_capture | succeeded | canceled
 
-    if (status === "succeeded" && orderId) {
-      const admin = getAdmin();
-      if (admin) {
-        const { data: existing } = await admin
-          .from("payments").select("id").eq("provider_payment_id", paymentId).maybeSingle();
-        if (!existing) {
-          const { data: order } = await admin.from("orders").select("total").eq("id", orderId).maybeSingle();
-          await admin.from("payments").insert({
-            order_id: orderId, provider: "yookassa", provider_payment_id: paymentId,
-            amount: order?.total ?? 0, currency: "RUB", status: "succeeded", paid_at: new Date().toISOString(),
-          });
-          await admin.from("orders").update({ status: "confirmed" }).eq("id", orderId);
-        }
-      }
+    if (status === "succeeded" && Number(d.amount?.value) === Number(attempt.amount) && d.amount?.currency === "RUB") {
+      await admin.rpc("finalize_verified_payment", { p_provider: "yookassa", p_provider_payment_id: paymentId, p_order_id: orderId, p_amount: Number(attempt.amount), p_currency: "RUB" });
     }
     return res.status(200).json({ ok: true, status });
-  } catch (e) {
-    return res.status(500).json({ ok: false, error: "status check failed" });
+  } catch {
+    return res.status(500).json({ ok: false, error: "Не удалось проверить платёж" });
   }
 }

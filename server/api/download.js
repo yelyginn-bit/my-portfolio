@@ -1,11 +1,9 @@
-// GET /api/download — безопасная выдача ОРИГИНАЛА (без водяного знака). Два режима авторизации:
-//   A) ?token=<download_token>[&asset=<id>]  — отдельное право «скачать» (admin-issued, лимит/срок).
-//   B) ?share=<share_token>&asset=<id>        — потребитель из галереи /g: валидный share-link
-//                                               с can_download=true и downloadPolicy='original'.
-// Оба пути идут через service role (RLS admin-only), endpoint сам всё валидирует и presign'ит.
+// GET /api/download — выдача оригинала по отдельному admin-issued DownloadToken.
+// Обычный просмотр галереи использует короткоживущий X-Gallery-Access ticket.
 // Это заменяет открытый /api/file-url для оригиналов: доступ контролируется и логируется.
 import { getAdmin } from "./_lib/db.js";
 import { r2Config, presign } from "./_lib/r2.js";
+import { rateLimit, requestIp } from "./_lib/security.js";
 
 /** Выдать presigned-ссылку на оригинал и сделать 302. */
 async function deliver(res, cfg, storageKey) {
@@ -30,39 +28,17 @@ async function fetchAsset(admin, assetId, galleryId) {
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).json({ ok: false });
+  if (!rateLimit(`download:${requestIp(req)}`, { limit: 120, windowMs: 10 * 60 * 1000 })) return res.status(429).json({ ok: false, error: "Слишком много запросов" });
 
-  const { token, share, asset: assetId } = req.query || {};
-  if (!token && !share) return res.status(400).json({ ok: false, error: "no token/share" });
+  const { token, asset: assetId } = req.query || {};
+  if (!token || String(token).length > 240) return res.status(400).json({ ok: false, error: "Некорректная ссылка" });
 
   const admin = getAdmin();
   const cfg = r2Config();
   if (!admin) return res.status(501).json({ ok: false, error: "storage backend не настроен" });
 
   try {
-    // ─── Режим B: share-link из галереи ──────────────────────────────────────
-    if (share) {
-      if (!assetId) return res.status(400).json({ ok: false, error: "укажите ?asset=<id>" });
-      const { data: link } = await admin
-        .from("share_links")
-        .select("id, gallery_id, can_download, expires_at")
-        .eq("token", share)
-        .maybeSingle();
-      if (!link) return res.status(404).json({ ok: false, error: "ссылка не найдена" });
-      if (link.expires_at && new Date(link.expires_at).getTime() < Date.now()) {
-        return res.status(410).json({ ok: false, error: "срок действия истёк" });
-      }
-      if (!link.can_download) return res.status(403).json({ ok: false, error: "скачивание не разрешено" });
-      // Оригиналы — только если политика галереи это допускает.
-      const { data: gal } = await admin.from("galleries").select("download_policy").eq("id", link.gallery_id).maybeSingle();
-      if (gal?.download_policy !== "original") {
-        return res.status(403).json({ ok: false, error: "оригиналы недоступны для этой галереи" });
-      }
-      const asset = await fetchAsset(admin, assetId, link.gallery_id);
-      if (!asset) return res.status(404).json({ ok: false, error: "ассет не принадлежит галерее" });
-      return deliver(res, cfg, asset.storage_key);
-    }
-
-    // ─── Режим A: download_token ─────────────────────────────────────────────
+    // ─── DownloadToken ───────────────────────────────────────────────────────
     const { data: tk } = await admin
       .from("download_tokens")
       .select("id, gallery_id, asset_id, quality, expires_at, max_uses, used_count")
@@ -85,7 +61,7 @@ export default async function handler(req, res) {
     // used_count += 1 (best-effort, не блокируем выдачу).
     await admin.from("download_tokens").update({ used_count: (tk.used_count ?? 0) + 1 }).eq("id", tk.id);
     return deliver(res, cfg, asset.storage_key);
-  } catch (e) {
-    return res.status(500).json({ ok: false, error: e instanceof Error ? e.message : "download failed" });
+  } catch {
+    return res.status(500).json({ ok: false, error: "Не удалось подготовить файл" });
   }
 }

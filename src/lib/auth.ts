@@ -3,10 +3,12 @@
 //  • 'tg'         — код/кнопка через Telegram-бота (прод, есть бот + Supabase);
 //  • 'dev_server' — код на экране, проверка серверная (Supabase есть, бота нет);
 //  • 'local'      — полностью локальный dev-OTP (нет сервера) — код на экране.
-// Сессия клиента хранится в localStorage (sync getSession), её ставит finalizeSession.
+// HttpOnly cookie является источником серверной сессии; в sessionStorage хранится
+// только минимальное отображаемое состояние без JWT.
 import type { Client } from "./types";
 import { getStore, isValidPhone, normalizePhone } from "./store";
-import { setSupabaseToken } from "./supabaseClient";
+import { isSupabaseConfigured, setSupabaseToken } from "./supabaseClient";
+import { secureFetch } from "./api";
 
 /**
  * Мост к Supabase RLS: по подтверждённому OTP получает у сервера JWT (sub=user_id)
@@ -15,7 +17,7 @@ import { setSupabaseToken } from "./supabaseClient";
 export async function bridgeSupabaseSession(phone: string, token?: string): Promise<void> {
   if (!token) return;
   try {
-    const r = await fetch("/api/auth-session", {
+    const r = await secureFetch("/api/auth-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone, token }),
@@ -42,7 +44,6 @@ export interface Session {
 export interface RequestResult {
   ok: boolean;
   mode: AuthMode;
-  linked?: boolean;       // tg: привязан ли уже телефон к боту
   token?: string;         // для verify и опроса статуса
   deepLink?: string | null; // tg + не привязан: ссылка «открыть бота»
   devCode?: string;       // dev_server/local: код на экране
@@ -53,7 +54,7 @@ export interface RequestResult {
 export function getSession(): Session | null {
   if (typeof window === "undefined") return null;
   try {
-    return JSON.parse(window.localStorage.getItem(SESSION_KEY) || "null");
+    return JSON.parse(window.sessionStorage.getItem(SESSION_KEY) || "null");
   } catch {
     return null;
   }
@@ -61,33 +62,39 @@ export function getSession(): Session | null {
 
 export function finalizeSession(phone: string, name?: string | null): Session {
   const s: Session = { phone: normalizePhone(phone), name: name || undefined, loggedInAt: new Date().toISOString() };
-  window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
-  // Гарантируем наличие клиента в хранилище (для истории заказов/скидок).
-  getStore().upsertClient({ phone: s.phone, name: s.name }).catch(() => {});
+  window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  // Production-профиль создаётся сервером после OTP; браузер пишет клиента
+  // напрямую только в локальном fallback-режиме разработки.
+  if (!isSupabaseConfigured) getStore().upsertClient({ phone: s.phone, name: s.name }).catch(() => {});
   return s;
 }
 
 export function signOut(): void {
-  if (typeof window !== "undefined") window.localStorage.removeItem(SESSION_KEY);
+  if (typeof window !== "undefined") {
+    window.sessionStorage.removeItem(SESSION_KEY);
+    secureFetch("/api/session-logout", { method: "POST" }).catch(() => {});
+  }
   setSupabaseToken(null);
 }
 
 // ─── Локальный dev-OTP (фолбэк, когда сервера нет) ────────────────────────────
 function genCode(): string {
-  return String(Math.floor(1000 + Math.random() * 9000));
+  const values = new Uint32Array(1);
+  window.crypto.getRandomValues(values);
+  return String(100000 + (values[0] % 900000));
 }
 
 function localRequest(phone: string): RequestResult {
   const code = genCode();
   const rec = { phone: normalizePhone(phone), code, expiresAt: Date.now() + OTP_TTL_MS };
-  window.localStorage.setItem(OTP_KEY, JSON.stringify(rec));
+  window.sessionStorage.setItem(OTP_KEY, JSON.stringify(rec));
   return { ok: true, mode: "local", devCode: code };
 }
 
 function localVerify(phone: string, code: string): { ok: boolean; error?: string } {
   let rec: { phone: string; code: string; expiresAt: number } | null = null;
   try {
-    rec = JSON.parse(window.localStorage.getItem(OTP_KEY) || "null");
+    rec = JSON.parse(window.sessionStorage.getItem(OTP_KEY) || "null");
   } catch {
     rec = null;
   }
@@ -95,7 +102,7 @@ function localVerify(phone: string, code: string): { ok: boolean; error?: string
   if (!rec || rec.phone !== p) return { ok: false, error: "Запросите код заново" };
   if (Date.now() > rec.expiresAt) return { ok: false, error: "Код истёк — запросите новый" };
   if (rec.code !== String(code).trim()) return { ok: false, error: "Неверный код" };
-  window.localStorage.removeItem(OTP_KEY);
+  window.sessionStorage.removeItem(OTP_KEY);
   return { ok: true };
 }
 
@@ -103,7 +110,7 @@ function localVerify(phone: string, code: string): { ok: boolean; error?: string
 export async function requestOtp(phone: string): Promise<RequestResult> {
   if (!isValidPhone(phone)) return { ok: false, mode: "local", error: "Некорректный номер телефона" };
   try {
-    const r = await fetch("/api/auth-request", {
+    const r = await secureFetch("/api/auth-request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone }),
@@ -135,7 +142,7 @@ export async function verifyOtp(args: {
 
   if (mode && mode !== "local") {
     try {
-      const r = await fetch("/api/auth-verify", {
+      const r = await secureFetch("/api/auth-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone, code, token }),
@@ -167,7 +174,7 @@ export async function pollAuthStatus(
   token: string,
 ): Promise<{ status: "pending" | "confirmed" | "expired" | "unknown"; phone?: string; name?: string }> {
   try {
-    const r = await fetch(`/api/auth-status?token=${encodeURIComponent(token)}`);
+    const r = await secureFetch("/api/auth-status", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token }) });
     const d = await r.json();
     return { status: d.status, phone: d.phone, name: d.name };
   } catch {

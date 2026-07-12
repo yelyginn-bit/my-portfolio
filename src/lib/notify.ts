@@ -6,9 +6,10 @@
 // и помечает статус sent/failed. Серверная доставка платежей идёт прямо из webhook
 // (см. api/payment-webhook.js) — тут только клиентские события.
 //
-// TODO(prod hardening): перенести триггеры на серверную сторону (RPC/serverless),
-// чтобы запись/доставку нельзя было обойти в обход UI.
+// Критичные уведомления формируются сервером; этот helper обслуживает
+// административные действия и не принимает неавторизованные публичные записи.
 import { getStore } from "./store";
+import { secureFetch } from "./api";
 
 interface NotifyOptions {
   /** Канал доставки (по умолчанию telegram — админ-чат). */
@@ -42,7 +43,7 @@ export async function notify(type: string, opts: NotifyOptions = {}): Promise<vo
 
     let ok = false;
     try {
-      const res = await fetch("/api/notify", {
+      const res = await secureFetch("/api/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, text: opts.text }),

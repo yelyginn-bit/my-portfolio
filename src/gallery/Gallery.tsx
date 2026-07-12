@@ -4,13 +4,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getStore } from "../lib/store";
 import { getAI } from "../lib/ai";
-import { getStorage, isRemoteStorage, setShareContext } from "../lib/storage";
+import { getStorage, setShareContext } from "../lib/storage";
 import { getSession } from "../lib/auth";
 import { downloadSingle, downloadZip } from "../lib/download";
-import { notify } from "../lib/notify";
 import { fmtDuration, videoPlayback, videoPoster } from "../lib/video";
 import Checkout from "./Checkout";
 import type { Album, Asset, Gallery as GalleryT, PhotoComment, SelectionKind } from "../lib/types";
+import { secureFetch } from "../lib/api";
+import { isSupabaseConfigured } from "../lib/supabaseClient";
 
 const store = getStore();
 const storage = getStorage();
@@ -64,6 +65,7 @@ export default function Gallery() {
   const [comments, setComments] = useState<PhotoComment[]>([]);
   const [commentText, setCommentText] = useState("");
   const [commentBusy, setCommentBusy] = useState(false);
+  const [accessTicket, setAccessTicket] = useState("");
 
   // Доступные группы лиц (Этап I) и отфильтрованный набор для показа.
   const faceGroups = useMemo(
@@ -79,8 +81,34 @@ export default function Gallery() {
 
   const open = useCallback(async (password?: string) => {
     if (!token) { setState("notfound"); return; }
-    // Контекст доступа для /api/file-url: гость авторизуется этим share-токеном.
-    setShareContext(token);
+    if (isSupabaseConfigured) {
+      const response = await secureFetch("/api/gallery-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "open", token, password }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.ok) {
+        setAccessTicket(data.accessTicket || "");
+        setShareContext(data.accessTicket || null);
+        const gal = data.gallery as GalleryT;
+        const list = data.assets as Asset[];
+        setGallery(gal);
+        setAssets(list);
+        setAlbums(data.albums || []);
+        setSel(new Set((data.selections || []).map((s: any) => selKey(s.asset_id, s.kind))));
+        setComments((data.comments || []).map((c: any) => ({ id: c.id, galleryId: c.gallery_id, assetId: c.asset_id, viewerKey: c.viewer_key, authorName: c.author_name, text: c.text, createdAt: c.created_at })));
+        const map: Record<string, string> = {};
+        await Promise.all(list.map(async (a) => { map[a.id] = a.type === "video" ? await videoPoster(a) : a.thumbUrl || (await storage.url(a.storageKey)); }));
+        setUrls(map);
+        setCanDownload(Boolean(data.canDownload) && gal.downloadPolicy !== "none");
+        setState("ok");
+        return;
+      }
+      if (data.reason === "password") { setState("password"); if (password) setPwdErr("Неверный пароль"); }
+      else setState("notfound");
+      return;
+    }
     const res = await store.resolveShareToken(token, password);
     if (res.ok && res.gallery) {
       const gal = res.gallery;
@@ -144,7 +172,9 @@ export default function Gallery() {
       next.has(k) ? next.delete(k) : next.add(k);
       return next;
     });
-    const { on } = await store.toggleSelection({ galleryId: gallery.id, assetId: asset.id, kind, viewerKey });
+    const { on } = isSupabaseConfigured
+      ? await secureFetch("/api/gallery-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "toggle", accessTicket, galleryId: gallery.id, assetId: asset.id, kind }) }).then((response) => response.json())
+      : await store.toggleSelection({ galleryId: gallery.id, assetId: asset.id, kind, viewerKey });
     const label = MARKS.find((m) => m.kind === kind)?.label ?? "";
     setToast(on ? `Отмечено: ${label.toLowerCase()}` : "Отметка снята");
     window.clearTimeout((toggle as any)._t);
@@ -157,21 +187,14 @@ export default function Gallery() {
     if (!gallery || !text || commentBusy) return;
     setCommentBusy(true);
     try {
-      const c = await store.addComment({
-        galleryId: gallery.id,
-        assetId: asset.id,
-        viewerKey,
-        clientPhone: session?.phone,
-        authorName: session?.name,
-        text,
-      });
+      const c = isSupabaseConfigured
+        ? await secureFetch("/api/gallery-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "comment", accessTicket, galleryId: gallery.id, assetId: asset.id, authorName: session?.name, text }) }).then(async (response) => {
+          const data = await response.json(); const row = data.comment;
+          return { id: row.id, galleryId: row.gallery_id, assetId: row.asset_id, viewerKey: row.viewer_key, authorName: row.author_name, text: row.text, createdAt: row.created_at };
+        })
+        : await store.addComment({ galleryId: gallery.id, assetId: asset.id, viewerKey, clientPhone: session?.phone, authorName: session?.name, text });
       setComments((list) => [...list, c]);
       setCommentText("");
-      notify("comment.new", {
-        entityType: "photo_comment", entityId: c.id,
-        text: `Новый комментарий к фото в галерее «${gallery.title}»:\n${session?.name || "Гость"}: ${text}`,
-        payload: { galleryId: gallery.id, assetId: asset.id },
-      });
     } finally {
       setCommentBusy(false);
     }
@@ -179,8 +202,8 @@ export default function Gallery() {
 
   // Удалить можно только свой комментарий (по viewerKey).
   const removeComment = async (c: PhotoComment) => {
-    if (c.viewerKey !== viewerKey) return;
-    await store.deleteComment(c.id);
+    if (isSupabaseConfigured) await secureFetch("/api/gallery-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "delete-comment", accessTicket, galleryId: c.galleryId, assetId: c.assetId, commentId: c.id }) });
+    else { if (c.viewerKey !== viewerKey) return; await store.deleteComment(c.id); }
     setComments((list) => list.filter((x) => x.id !== c.id));
   };
 
@@ -225,18 +248,8 @@ export default function Gallery() {
     }
   };
 
-  // Скачать один файл. Для оригиналов на удалённом хранилище — через серверный
-  // /api/download?share=… (контроль доступа + аудит), иначе целиком на клиенте.
+  // Скачивание использует тот же короткоживущий ticket, что и просмотр файла.
   const downloadOne = (asset: Asset, index: number) => {
-    if (policy === "original" && isRemoteStorage() && token) {
-      const a = document.createElement("a");
-      a.href = `/api/download?share=${encodeURIComponent(token)}&asset=${encodeURIComponent(asset.id)}`;
-      a.rel = "noopener";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return;
-    }
     downloadSingle(asset, policy, index, watermark);
   };
 
@@ -486,6 +499,9 @@ export default function Gallery() {
                   >
                     →
                   </button>
+                </div>
+                <div style={{ fontSize: 10.5, lineHeight: 1.4, color: "#8e8e8c" }}>
+                  Комментарий сохраняется для работы над этой галереей. <a href="/privacy-policy" target="_blank" rel="noreferrer" style={{ color: "inherit" }}>Обработка данных</a> · <a href="/gallery-terms" target="_blank" rel="noreferrer" style={{ color: "inherit" }}>условия галереи</a>
                 </div>
               </div>
             );

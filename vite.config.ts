@@ -16,6 +16,7 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
       { tag: 'meta', attrs: { property: 'og:image:height', content: '630' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Юрий Елыгин — видео, фото и монтаж' }, injectTo: 'head' },
       { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
+      { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true }, injectTo: 'body' },
     ];
     if (!isReactPage) {
       tags.push({
@@ -55,9 +56,6 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID || '', env.VITE_GA_ID || ''),
     ],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -92,6 +90,7 @@ export default defineConfig(({mode}) => {
           blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),
           blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),
           blogEvents: path.resolve(__dirname, 'blog/videosemka-meropriyatiy-nn.html'),
+          legal: path.resolve(__dirname, 'legal.html'),
         },
       },
     },

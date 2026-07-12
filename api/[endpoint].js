@@ -15,6 +15,14 @@ import telegramSetWebhook from "../server/api/telegram-set-webhook.js";
 import telegramWebhook from "../server/api/telegram-webhook.js";
 import uploadUrl from "../server/api/upload-url.js";
 import yandexDisk from "../server/api/yandex-disk.js";
+import csrf from "../server/api/csrf.js";
+import sessionLogout from "../server/api/session-logout.js";
+import adminReceipt from "../server/api/admin-receipt.js";
+import orderCreate from "../server/api/order-create.js";
+import galleryAccess from "../server/api/gallery-access.js";
+import adminConsentWithdraw from "../server/api/admin-consent-withdraw.js";
+import adminShareLink from "../server/api/admin-share-link.js";
+import accountData from "../server/api/account-data.js";
 
 const handlers = {
   "admin-login": adminLogin,
@@ -34,6 +42,14 @@ const handlers = {
   "telegram-webhook": telegramWebhook,
   "upload-url": uploadUrl,
   "yandex-disk": yandexDisk,
+  csrf,
+  "session-logout": sessionLogout,
+  "admin-receipt": adminReceipt,
+  "order-create": orderCreate,
+  "gallery-access": galleryAccess,
+  "admin-consent-withdraw": adminConsentWithdraw,
+  "admin-share-link": adminShareLink,
+  "account-data": accountData,
 };
 
 export default async function handler(req, res) {

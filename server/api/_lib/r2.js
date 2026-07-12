@@ -29,9 +29,9 @@ export function r2Client(cfg) {
 }
 
 /** Presigned URL для метода (PUT/GET/DELETE) и ключа. TTL в секундах. */
-export async function presign(cfg, method, key, ttl = 600) {
+export async function presign(cfg, method, key, ttl = 600, headers = {}) {
   const client = r2Client(cfg);
   const url = `${cfg.endpoint}/${cfg.bucket}/${encodeURIComponent(key).replace(/%2F/g, "/")}?X-Amz-Expires=${ttl}`;
-  const signed = await client.sign(new Request(url, { method }), { aws: { signQuery: true } });
+  const signed = await client.sign(new Request(url, { method, headers }), { aws: { signQuery: true } });
   return signed.url;
 }

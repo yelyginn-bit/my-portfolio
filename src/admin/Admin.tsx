@@ -16,11 +16,11 @@ import AuditLog from "./AuditLog";
 import Notifications from "./Notifications";
 import { hydrateTiers } from "../lib/discounts";
 import { isSupabaseConfigured, setSupabaseToken } from "../lib/supabaseClient";
+import { secureFetch } from "../lib/api";
 
 const store = getStore();
 const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string)
   || (import.meta.env.DEV ? "admin" : "");
-const SESSION_FLAG = "yel_admin_ok";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
   new: "Новая", confirmed: "Подтверждён", in_progress: "В работе", done: "Завершён", cancelled: "Отменён",
@@ -36,20 +36,22 @@ type Tab = "dashboard" | "orders" | "clients" | "leads" | "galleries" | "payment
 
 function Gate({ onOk }: { onOk: () => void }) {
   const [pwd, setPwd] = useState("");
+  const [totp, setTotp] = useState("");
+  const [requiresSecondFactor, setRequiresSecondFactor] = useState(false);
   const [err, setErr] = useState("");
   const submit = async () => {
     setErr("");
     // Серверная проверка + (если Supabase настроен) выдача админского JWT для RLS.
     try {
-      const r = await fetch("/api/admin-login", {
+      const r = await secureFetch("/api/admin-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pwd }),
+        body: JSON.stringify({ password: pwd, totp: totp || undefined }),
       });
       if (r.ok) {
         const d = await r.json();
+        if (d.requiresSecondFactor) { setRequiresSecondFactor(true); setErr("Введите код из приложения-аутентификатора"); return; }
         if (d.access_token) setSupabaseToken(d.access_token);
-        sessionStorage.setItem(SESSION_FLAG, "1");
         onOk();
         return;
       }
@@ -58,13 +60,12 @@ function Gate({ onOk }: { onOk: () => void }) {
     } catch {
       // Клиентский fallback разрешён только для локальной разработки.
       if (import.meta.env.DEV && ADMIN_PASSWORD && pwd === ADMIN_PASSWORD) {
-        sessionStorage.setItem(SESSION_FLAG, "1");
         onOk();
       } else {
         setErr(
           import.meta.env.DEV
             ? "Неверный пароль"
-            : "Админка не настроена: задайте ADMIN_PASSWORD на сервере.",
+            : "Не удалось выполнить вход. Проверьте данные и повторите попытку позже.",
         );
       }
     }
@@ -80,6 +81,7 @@ function Gate({ onOk }: { onOk: () => void }) {
         onKeyDown={(e) => e.key === "Enter" && submit()}
         autoFocus
       />
+      {requiresSecondFactor && <input className="adm-input" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="6-значный код 2FA" value={totp} onChange={(event) => setTotp(event.target.value.replace(/\D/gu, ""))} onKeyDown={(event) => event.key === "Enter" && submit()} />}
       <button className="adm-btn" onClick={submit}>Войти</button>
       {err && <div className="adm-err">{err}</div>}
       <p className="adm-hint">
@@ -92,13 +94,14 @@ function Gate({ onOk }: { onOk: () => void }) {
 }
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_FLAG) === "1");
+  const [authed, setAuthed] = useState(false);
   const [tab, setTab] = useState<Tab>("dashboard");
   const [orders, setOrders] = useState<Order[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [shopOrders, setShopOrders] = useState<ShopOrder[]>([]);
   const [tiersReady, setTiersReady] = useState(0);
+  const [receiptPendingOnly, setReceiptPendingOnly] = useState(false);
 
   useEffect(() => {
     if (!authed) return;
@@ -122,7 +125,24 @@ export default function Admin() {
     [orders],
   );
 
-  const signOut = () => { sessionStorage.removeItem(SESSION_FLAG); setSupabaseToken(null); setAuthed(false); };
+  const signOut = () => { secureFetch("/api/session-logout", { method: "POST" }).catch(() => {}); setSupabaseToken(null); setAuthed(false); };
+  const markReceiptIssued = async (orderId: string) => {
+    const deliveryInput = window.prompt("Как отправлен чек: Telegram, email или другое?", "Telegram") || "другое";
+    const deliveryMethod = ["Telegram", "email", "другое"].includes(deliveryInput) ? deliveryInput : "другое";
+    const receiptNumber = window.prompt("Номер или идентификатор чека (необязательно):", "") || "";
+    const receiptUrl = window.prompt("HTTPS-ссылка на чек (необязательно):", "") || "";
+    const adminComment = window.prompt("Комментарий администратора (не виден клиенту, необязательно):", "") || "";
+    const response = await secureFetch("/api/admin-receipt", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId, deliveryMethod, receiptNumber, receiptUrl, adminComment }) });
+    const data = await response.json().catch(() => ({}));
+    if (response.ok && data.ok) {
+      setOrders((items) => items.map((order) => order.id === orderId ? { ...order, receiptStatus: "issued", receiptIssuedAt: data.receiptIssuedAt, receiptSentAt: data.receiptIssuedAt } : order));
+      setShopOrders((items) => items.map((order) => order.id === orderId ? { ...order, receiptStatus: "issued", receiptIssuedAt: data.receiptIssuedAt, receiptSentAt: data.receiptIssuedAt } : order));
+    }
+  };
+  const withdrawConsent = async (leadId: string) => {
+    const response = await secureFetch("/api/admin-consent-withdraw", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leadId }) });
+    if (response.ok) window.alert("Отзыв согласия зафиксирован");
+  };
 
   return (
     <div className="adm-wrap">
@@ -196,15 +216,16 @@ export default function Admin() {
 
           {tab === "orders" && (
             <div className="adm-card">
+              <label className="adm-hint"><input type="checkbox" checked={receiptPendingOnly} onChange={(event) => setReceiptPendingOnly(event.target.checked)} /> Оплачено, но чек ещё не отмечен как выданный</label>
               {orders.length === 0 ? (
                 <div className="adm-empty">Заказов пока нет. Оформите смету в калькуляторе.</div>
               ) : (
                 <table>
                   <thead>
-                    <tr><th>Дата</th><th>Клиент</th><th>Тип</th><th>Смен</th><th>Скидка</th><th>Сумма</th><th>Статус</th></tr>
+                    <tr><th>Дата</th><th>Клиент</th><th>Тип</th><th>Смен</th><th>Скидка</th><th>Сумма</th><th>Статус</th><th>Чек НПД</th></tr>
                   </thead>
                   <tbody>
-                    {orders.map((o) => (
+                    {orders.filter((o) => !receiptPendingOnly || o.receiptStatus === "pending").map((o) => (
                       <tr key={o.id}>
                         <td className="adm-mono">{fmt(o.createdAt)}</td>
                         <td>{o.contactName || "—"}<br /><span style={{ color: "var(--gray)", fontSize: 11 }}>{o.contact}</span></td>
@@ -213,6 +234,7 @@ export default function Admin() {
                         <td className="adm-mono">{o.breakdown.discountPercent}%</td>
                         <td className="adm-mono">{formatRub(o.breakdown.totalMin)}–{formatRub(o.breakdown.totalMax)}</td>
                         <td><span className="adm-pill">{STATUS_LABEL[o.status]}</span></td>
+                        <td>{o.receiptStatus === "pending" ? <button className="adm-btn" onClick={() => markReceiptIssued(o.id)}>Отметить чек как выданный</button> : <span className="adm-pill">{o.receiptStatus === "issued" ? "Выдан" : o.receiptStatus === "cancelled" ? "Отменён" : "Не требуется"}</span>}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -256,7 +278,7 @@ export default function Admin() {
                 <div className="adm-empty">Заявок из форм пока нет.</div>
               ) : (
                 <table>
-                  <thead><tr><th>Дата</th><th>Имя</th><th>Контакт</th><th>Сообщение</th><th>Источник</th></tr></thead>
+                  <thead><tr><th>Дата</th><th>Имя</th><th>Контакт</th><th>Сообщение</th><th>Источник</th><th>Согласие</th></tr></thead>
                   <tbody>
                     {leads.map((l) => (
                       <tr key={l.id}>
@@ -265,6 +287,7 @@ export default function Admin() {
                         <td>{l.contact}</td>
                         <td style={{ maxWidth: 320 }}>{l.message}</td>
                         <td><span className="adm-pill">{l.source}</span></td>
+                        <td><button className="adm-btn" onClick={() => withdrawConsent(l.id)}>Зафиксировать отзыв</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -277,15 +300,16 @@ export default function Admin() {
 
           {tab === "payments" && (
             <div className="adm-card">
+              <label className="adm-hint"><input type="checkbox" checked={receiptPendingOnly} onChange={(event) => setReceiptPendingOnly(event.target.checked)} /> Оплачено, но чек ещё не отмечен как выданный</label>
               {shopOrders.length === 0 ? (
                 <div className="adm-empty">Заказов из галерей пока нет.</div>
               ) : (
                 <table>
                   <thead>
-                    <tr><th>Дата</th><th>Клиент</th><th>Состав</th><th>Сумма</th><th>Оплата</th><th>Статус</th></tr>
+                    <tr><th>Дата</th><th>Клиент</th><th>Состав</th><th>Сумма</th><th>Оплата</th><th>Статус</th><th>Чек НПД</th></tr>
                   </thead>
                   <tbody>
-                    {shopOrders.map((o) => (
+                    {shopOrders.filter((o) => !receiptPendingOnly || o.receiptStatus === "pending").map((o) => (
                       <tr key={o.id}>
                         <td className="adm-mono">{fmt(o.createdAt)}</td>
                         <td>{o.contactName || "—"}<br /><span style={{ color: "var(--gray)", fontSize: 11 }}>{o.contact}</span></td>
@@ -299,6 +323,7 @@ export default function Admin() {
                             {o.status === "paid" ? "Оплачен" : o.status === "cancelled" ? "Отменён" : "Ожидает"}
                           </span>
                         </td>
+                        <td>{o.receiptStatus === "pending" ? <button className="adm-btn" onClick={() => markReceiptIssued(o.id)}>Отметить чек как выданный</button> : <span className="adm-pill">{o.receiptStatus === "issued" ? "Выдан" : o.receiptStatus === "cancelled" ? "Отменён" : "Не требуется"}</span>}</td>
                       </tr>
                     ))}
                   </tbody>

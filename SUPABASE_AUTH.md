@@ -36,8 +36,7 @@
 - `src/lib/supabaseClient.ts` — `setSupabaseToken()` + Authorization-заголовок.
 - `src/lib/auth.ts` — `bridgeSupabaseSession()` (вызывается после OTP). `signOut()` чистит токен.
 
-## Hardening (для строгой мультиарендности)
-Сейчас `clients/orders/shop/leads/selections` допускают anon-insert (так работает
-публичная воронка без регистрации). Для жёсткой модели — перенести эти записи на
-serverless (service_role) и убрать anon-insert; ограничить `selections` проверкой
-валидности share-токена. См. комментарии в `db/policies.sql`.
+## Запись данных
+`clients/orders/shop/leads/selections/photo_comments` не допускают anon-insert.
+Запись выполняют server endpoints с service_role после проверки согласия,
+авторизации или валидного share-токена. См. `db/policies.sql` и миграцию compliance.

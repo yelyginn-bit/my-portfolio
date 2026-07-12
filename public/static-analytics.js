@@ -1,5 +1,5 @@
 (() => {
-  const consentKey = "cookie_consent_v1";
+  const consentKey = "cookie_consent_v2";
   const currentScript = document.currentScript;
   const metrikaId = Number.parseInt(currentScript?.dataset.metrikaId || "", 10);
   const gaId = currentScript?.dataset.gaId || "";
@@ -13,8 +13,12 @@
     document.head.appendChild(script);
   };
 
+  const privatePath = /^\/(?:account|admin|g)(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
+  const hasConsent = () => {
+    try { return Boolean(JSON.parse(localStorage.getItem(consentKey) || "null")?.analytics); } catch { return false; }
+  };
   const start = () => {
-    if (started || localStorage.getItem(consentKey) !== "accepted") return;
+    if (started || !hasConsent() || privatePath.test(location.pathname)) return;
     started = true;
 
     if (/^G-[A-Z0-9]+$/u.test(gaId)) {
@@ -41,48 +45,11 @@
   };
 
   const track = (name, params = {}) => {
-    if (localStorage.getItem(consentKey) !== "accepted") return;
+    if (!hasConsent() || privatePath.test(location.pathname)) return;
     window.gtag?.("event", name, params);
     if (Number.isFinite(metrikaId) && metrikaId > 0) {
       window.ym?.(metrikaId, "reachGoal", name, params);
     }
-  };
-
-  const mountConsent = () => {
-    if (localStorage.getItem(consentKey) === "accepted") return;
-    const banner = document.createElement("aside");
-    banner.setAttribute("aria-label", "Настройки cookie");
-    banner.className = "static-cookie-banner";
-    banner.innerHTML = '<p>Сайт использует cookie для аналитики. Подробнее — в <a href="/privacy-policy">политике обработки данных</a>.</p><button type="button">Принять</button>';
-    Object.assign(banner.style, {
-      position: "fixed", right: "16px", bottom: "16px", zIndex: "1000",
-      width: "min(420px, calc(100vw - 32px))", padding: "16px",
-      border: "1px solid rgba(10,10,10,.14)", borderRadius: "8px",
-      color: "#0a0a0a", background: "rgba(255,255,255,.96)",
-      boxShadow: "0 18px 50px rgba(10,10,10,.14)",
-      font: "13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    });
-    const paragraph = banner.querySelector("p");
-    if (paragraph) paragraph.style.margin = "0 0 12px";
-    const link = banner.querySelector("a");
-    if (link) {
-      link.style.textDecoration = "underline";
-      link.style.textUnderlineOffset = "3px";
-    }
-    const button = banner.querySelector("button");
-    if (button) {
-      Object.assign(button.style, {
-        minHeight: "40px", padding: "0 16px", border: "0", borderRadius: "999px",
-        color: "#fff", background: "#0a0a0a", cursor: "pointer",
-        font: "600 10px/1 monospace", letterSpacing: ".12em", textTransform: "uppercase",
-      });
-      button.addEventListener("click", () => {
-        localStorage.setItem(consentKey, "accepted");
-        start();
-        banner.remove();
-      });
-    }
-    document.body.appendChild(banner);
   };
 
   document.addEventListener("click", (event) => {
@@ -90,9 +57,9 @@
     if (!link) return;
     const href = link.href;
     const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
-    if (href.includes("t.me/")) track("telegram_click", { label, page: location.pathname });
+    if (href.includes("t.me/")) track("telegram_click", { page: location.pathname });
     if (/\/portfolio(?:\/|$)/u.test(new URL(href, location.href).pathname)) {
-      track("portfolio_view", { label, destination: href });
+      track("portfolio_view", { section: "portfolio" });
     }
     if (/обсудить (?:похожий )?проект/iu.test(label)) {
       track("discuss_project_click", { page: location.pathname });
@@ -100,9 +67,5 @@
   });
 
   start();
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountConsent, { once: true });
-  } else {
-    mountConsent();
-  }
+  window.addEventListener("yelyginn:cookie-consent", start);
 })();

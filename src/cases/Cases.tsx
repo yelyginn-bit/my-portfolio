@@ -43,6 +43,7 @@ export default function Cases() {
             <article className="c-case" key={c.id}>
               <h2>{c.title}</h2>
               {c.clientName && <div className="c-client">{c.clientName}</div>}
+              {c.productionTeam && c.projectRole && <p>Работа над проектом в составе команды {c.productionTeam}. Моя роль: {c.projectRole}.</p>}
               <div className="c-blocks">
                 {c.task && <div className="c-block"><div className="c-block-label">Задача</div><p>{c.task}</p></div>}
                 {c.solution && <div className="c-block"><div className="c-block-label">Решение</div><p>{c.solution}</p></div>}

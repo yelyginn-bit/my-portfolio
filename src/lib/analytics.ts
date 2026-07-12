@@ -1,5 +1,6 @@
-const CONSENT_KEY = "cookie_consent_v1";
-const CONSENT_EVENT = "yelyginn:analytics-consent";
+const CONSENT_KEY = "cookie_consent_v2";
+const CONSENT_EVENT = "yelyginn:cookie-consent";
+const PRIVATE_PATH = /^\/(?:account|admin|g)(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
 
 let initialized = false;
 let clickTrackingBound = false;
@@ -13,7 +14,9 @@ const appendScript = (src: string) => {
 };
 
 const startAnalytics = () => {
-  if (initialized || window.localStorage.getItem(CONSENT_KEY) !== "accepted") return;
+  let consent: { analytics?: boolean } | null = null;
+  try { consent = JSON.parse(window.localStorage.getItem(CONSENT_KEY) || "null"); } catch { consent = null; }
+  if (initialized || !consent?.analytics || PRIVATE_PATH.test(window.location.pathname)) return;
   initialized = true;
 
   const gaId = (import.meta.env.VITE_GA_ID || "").trim();
@@ -47,7 +50,10 @@ export const trackAnalyticsEvent = (
   eventName: string,
   params: Record<string, string | number | boolean> = {},
 ) => {
-  if (typeof window === "undefined" || window.localStorage.getItem(CONSENT_KEY) !== "accepted") return;
+  if (typeof window === "undefined" || PRIVATE_PATH.test(window.location.pathname)) return;
+  let consent: { analytics?: boolean } | null = null;
+  try { consent = JSON.parse(window.localStorage.getItem(CONSENT_KEY) || "null"); } catch { consent = null; }
+  if (!consent?.analytics) return;
 
   window.gtag?.("event", eventName, params);
 
@@ -68,14 +74,13 @@ const bindClickTracking = () => {
     if (!link) return;
 
     const href = link.href;
-    const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
-
     if (href.includes("t.me/")) {
-      trackAnalyticsEvent("telegram_click", { label, page: window.location.pathname });
+      trackAnalyticsEvent("telegram_click", { page: window.location.pathname });
     }
     if (/\/portfolio(?:\/|$)/u.test(new URL(href, window.location.href).pathname)) {
-      trackAnalyticsEvent("portfolio_view", { label, destination: href });
+      trackAnalyticsEvent("portfolio_view", { section: "portfolio" });
     }
+    const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
     if (/обсудить (?:похожий )?проект/iu.test(label)) {
       trackAnalyticsEvent("discuss_project_click", { page: window.location.pathname });
     }
@@ -86,12 +91,12 @@ export const initAnalytics = () => {
   if (typeof window === "undefined") return;
   bindClickTracking();
   startAnalytics();
-  window.addEventListener(CONSENT_EVENT, startAnalytics, { once: true });
+  window.addEventListener(CONSENT_EVENT, startAnalytics);
 };
 
 export const grantAnalyticsConsent = () => {
-  window.localStorage.setItem(CONSENT_KEY, "accepted");
-  window.dispatchEvent(new Event(CONSENT_EVENT));
+  window.localStorage.setItem(CONSENT_KEY, JSON.stringify({ necessary: true, analytics: true, version: "1.0", updatedAt: new Date().toISOString() }));
+  window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: { analytics: true } }));
 };
 
 declare global {

@@ -32,7 +32,14 @@
 | `/cases` | `cases.html` → `src/cases/` | **Кейсы-портфолио** (React, из БД) |
 | `/journal`, `/journal/:slug` | `journal.html` → `src/journal/` | **Журнал/блог** (React, из БД) |
 | `/blog`, `/blog/:slug` | `blog/*.html` | Статьи (статические, 4 шт.) |
-| `/privacy-policy` | `privacy-policy.html` | Политика конфиденциальности |
+| `/privacy-policy` | `legal.html` | Политика обработки персональных данных |
+| `/personal-data-consent` | `legal.html` | Согласие на обработку данных |
+| `/cookie-policy` | `legal.html` | Политика cookies |
+| `/terms` | `legal.html` | Условия оказания услуг |
+| `/payment-terms` | `legal.html` | Оплата и ручной чек НПД |
+| `/cancellation-refund` | `legal.html` | Отмена и возврат |
+| `/gallery-terms` | `legal.html` | Условия клиентских галерей |
+| `/data-request` | `legal.html` | Запросы по данным |
 | `robots.txt`, `sitemap.xml`, `google…/yandex…html` | — | SEO / верификация |
 
 ### Главная `/` (`src/App.tsx`) — секции (якоря)

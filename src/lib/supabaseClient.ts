@@ -15,12 +15,7 @@ export const isSupabaseConfigured = Boolean(url && anon);
 
 let _client: SupabaseClient | null = null;
 
-const TOKEN_KEY = "yel_sb_token";
-
-function storedToken(): string | null {
-  if (typeof window === "undefined") return null;
-  try { return window.localStorage.getItem(TOKEN_KEY); } catch { return null; }
-}
+let inMemoryToken: string | null = null;
 
 /**
  * Установить/снять пользовательский JWT (выдан /api/auth-session или /api/admin-login).
@@ -28,9 +23,7 @@ function storedToken(): string | null {
  * Сбрасываем кэш клиента, чтобы заголовок применился.
  */
 export function setSupabaseToken(token: string | null): void {
-  if (typeof window === "undefined") return;
-  if (token) window.localStorage.setItem(TOKEN_KEY, token);
-  else window.localStorage.removeItem(TOKEN_KEY);
+  inMemoryToken = token;
   _client = null;
 }
 
@@ -39,7 +32,7 @@ export async function getSupabase(): Promise<SupabaseClient | null> {
   if (!isSupabaseConfigured) return null;
   if (!_client) {
     const { createClient } = await import("@supabase/supabase-js");
-    const token = storedToken();
+    const token = inMemoryToken;
     _client = createClient(
       url!,
       anon!,

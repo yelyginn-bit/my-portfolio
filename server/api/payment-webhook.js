@@ -45,8 +45,10 @@ export default async function handler(req, res) {
     if (event !== "payment.succeeded" || !obj.id) return res.status(200).json({ ok: true });
 
     // Перепроверка статуса напрямую у ЮKassa (не доверяем телу запроса).
-    let confirmed = obj.status === "succeeded";
-    let orderId = obj.metadata?.orderId;
+    let confirmed = false;
+    let orderId = null;
+    let providerAmount = null;
+    let providerCurrency = null;
     if (shopId && secret) {
       const auth = Buffer.from(`${shopId}:${secret}`).toString("base64");
       const r = await fetch(`https://api.yookassa.ru/v3/payments/${obj.id}`, {
@@ -54,25 +56,22 @@ export default async function handler(req, res) {
       });
       const d = await r.json();
       confirmed = d.status === "succeeded";
-      orderId = d.metadata?.orderId || orderId;
+      orderId = d.metadata?.orderId || null;
+      providerAmount = Number(d.amount?.value);
+      providerCurrency = d.amount?.currency;
     }
 
     if (confirmed && orderId && admin) {
-      const { data: order } = await admin.from("orders").select("total").eq("id", orderId).maybeSingle();
-      await admin.from("payments").insert({
-        order_id: orderId,
-        provider: "yookassa",
-        provider_payment_id: obj.id,
-        amount: order?.total ?? 0,
-        currency: "RUB",
-        status: "succeeded",
-        paid_at: new Date().toISOString(),
-      });
-      await admin.from("orders").update({ status: "confirmed" }).eq("id", orderId);
-      await notifyPayment(admin, orderId, order?.total ?? 0, obj.id);
+      const { data: attempt } = await admin.from("payment_attempts").select("*").eq("provider_payment_id", obj.id).maybeSingle();
+      const { data: order } = await admin.from("orders").select("total,currency,status").eq("id", orderId).maybeSingle();
+      if (!attempt || attempt.order_id !== orderId || !order || providerCurrency !== "RUB" || Number(providerAmount) !== Number(attempt.amount) || Number(providerAmount) !== Number(order.total)) {
+        return res.status(200).json({ ok: true });
+      }
+      const finalized = await admin.rpc("finalize_verified_payment", { p_provider: "yookassa", p_provider_payment_id: obj.id, p_order_id: orderId, p_amount: Number(order.total), p_currency: "RUB" });
+      if (finalized.data === true) await notifyPayment(admin, orderId, order.total, obj.id);
     }
     return res.status(200).json({ ok: true });
-  } catch (e) {
+  } catch {
     return res.status(200).json({ ok: true }); // не зацикливать ретраи
   }
 }

@@ -3,6 +3,8 @@
   const currentScript = document.currentScript;
   const metrikaId = Number.parseInt(currentScript?.dataset.metrikaId || "", 10);
   const gaId = currentScript?.dataset.gaId || "";
+  const allowedEvents = new Set(["lead_submit", "telegram_click", "calculator_use", "portfolio_view", "discuss_project_click"]);
+  const allowedParams = new Set(["page", "service", "source", "section", "total_min", "total_max"]);
   let started = false;
 
   const appendScript = (src) => {
@@ -17,6 +19,15 @@
   const hasConsent = () => {
     try { return Boolean(JSON.parse(localStorage.getItem(consentKey) || "null")?.analytics); } catch { return false; }
   };
+  const safePath = () => location.pathname.replace(/\/{2,}/gu, "/").slice(0, 160);
+  const sanitize = (params) => Object.fromEntries(Object.entries(params)
+    .filter(([key]) => allowedParams.has(key))
+    .map(([key, value]) => {
+      if (key === "page") return [key, safePath()];
+      if (typeof value === "number") return [key, Number.isFinite(value) ? Math.round(value) : 0];
+      const text = String(value).replace(/[\r\n]/gu, " ").slice(0, 80);
+      return [key, /@|https?:|\+?\d[\d\s()-]{8,}/u.test(text) ? "redacted" : text];
+    }));
   const start = () => {
     if (started || !hasConsent() || privatePath.test(location.pathname)) return;
     started = true;
@@ -25,7 +36,13 @@
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };
       window.gtag("js", new Date());
-      window.gtag("config", gaId, { anonymize_ip: true });
+      window.gtag("config", gaId, {
+        anonymize_ip: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+        page_location: `${location.origin}${safePath()}`,
+        page_path: safePath(),
+      });
       appendScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`);
     }
 
@@ -45,10 +62,11 @@
   };
 
   const track = (name, params = {}) => {
-    if (!hasConsent() || privatePath.test(location.pathname)) return;
-    window.gtag?.("event", name, params);
+    if (!allowedEvents.has(name) || !hasConsent() || privatePath.test(location.pathname)) return;
+    const safeParams = sanitize(params);
+    window.gtag?.("event", name, safeParams);
     if (Number.isFinite(metrikaId) && metrikaId > 0) {
-      window.ym?.(metrikaId, "reachGoal", name, params);
+      window.ym?.(metrikaId, "reachGoal", name, safeParams);
     }
   };
 
@@ -57,7 +75,7 @@
     if (!link) return;
     const href = link.href;
     const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
-    if (href.includes("t.me/")) track("telegram_click", { page: location.pathname });
+    if (href.includes("t.me/")) track("telegram_click", { page: safePath() });
     if (/\/portfolio(?:\/|$)/u.test(new URL(href, location.href).pathname)) {
       track("portfolio_view", { section: "portfolio" });
     }
@@ -67,5 +85,11 @@
   });
 
   start();
-  window.addEventListener("yelyginn:cookie-consent", start);
+  window.addEventListener("yelyginn:cookie-consent", (event) => {
+    if (event.detail?.analytics) start();
+    else {
+      document.querySelectorAll('script[src*="googletagmanager.com"],script[src*="mc.yandex.ru/metrika"]').forEach((script) => script.remove());
+      started = false;
+    }
+  });
 })();

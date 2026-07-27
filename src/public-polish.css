@@ -4,21 +4,22 @@
  */
 
 :root {
-  --ui-bg: #f6f6f3;
-  --ui-surface: #ffffff;
-  --ui-surface-muted: #eeeeea;
-  --ui-text: #101010;
-  --ui-muted: #666662;
-  --ui-border: rgba(16, 16, 16, 0.13);
-  --ui-border-strong: rgba(16, 16, 16, 0.24);
-  --ui-accent: #ef3f32;
+  /* Палитра не задаётся здесь: имена указывают на общие токены. */
+  --ui-bg: var(--ds-bg);
+  --ui-surface: var(--ds-surface);
+  --ui-surface-muted: var(--ds-bg-alt);
+  --ui-text: var(--ds-text);
+  --ui-muted: var(--ds-text-secondary);
+  --ui-border: var(--ds-border);
+  --ui-border-strong: var(--ds-border-strong);
+  --ui-accent: var(--ds-accent);
   --ui-radius-sm: 6px;
   --ui-radius: 8px;
   --ui-shadow: 0 22px 60px -46px rgba(16, 16, 16, 0.32);
   --ui-section: clamp(72px, 8vw, 124px);
-  --ui-container: 1540px;
-  --ui-gutter: clamp(18px, 3.3vw, 52px);
-  --ui-gap: clamp(14px, 1.45vw, 24px);
+  --ui-container: var(--ds-content);
+  --ui-gutter: var(--ds-gutter);
+  --ui-gap: var(--ds-grid-gap);
 }
 
 html {
@@ -504,9 +505,9 @@ body {
 
 @media (max-width: 767px) {
   :root {
-    --ui-gutter: 16px;
+    --ui-gutter: var(--ds-gutter);
     --ui-section: 64px;
-    --ui-gap: 14px;
+    --ui-gap: var(--ds-grid-gap);
   }
 
   .site-home .site-nav,

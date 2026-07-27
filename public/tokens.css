@@ -1,0 +1,58 @@
+/* СГЕНЕРИРОВАНО из src/design-system.css — не редактировать вручную.
+   Единственный источник токенов для всего сайта: React-страницы получают их
+   через бандл, статические HTML — через <link rel="stylesheet" href="/tokens.css">.
+   Совпадение двух копий проверяется тестом «design tokens stay in sync». */
+
+:root {
+  /* ── Тёмная кинематографичная палитра ──────────────────────────────────
+     Направление подтверждено владельцем 27.07.2026 и заменяет светлое
+     издательское из design contract. Логика: сайт оператора и колориста
+     читается как грейдинг-сьют — кадры светятся на почти чёрном, цвет
+     появляется только там, где нужно действие.
+     Все значения проверены на контраст: см. комментарии у токенов. */
+  --ds-bg: #0d0d0c;              /* база */
+  --ds-bg-alt: #151513;          /* чередование секций */
+  --ds-surface: #1b1b19;         /* приподнятые плоскости, карточки */
+  --ds-text: #f2f1ec;            /* 17.19:1 на базе, 15.25:1 на surface */
+  --ds-text-secondary: #a8a8a1;  /* 8.13:1 / 7.21:1 */
+  --ds-text-muted: #85857e;      /* 5.23:1 / 4.64:1 — нижняя допустимая ступень */
+  --ds-border: rgba(242, 241, 236, 0.14);
+  --ds-border-strong: rgba(242, 241, 236, 0.34);
+  --ds-accent: #e93327;          /* заливки и крупный текст */
+  --ds-accent-hover: #ff5c4d;
+  /* Мелкий текст акцентом: #e93327 даёт 4.08:1 на surface — ниже порога AA.
+     Осветлённый вариант держит 5.37:1 на базе и 4.76:1 на surface. */
+  --ds-accent-text: #f2493d;
+  /* Текст поверх красной заливки. Белый даёт 4.23:1 и не проходит,
+     почти чёрный — 4.6:1. */
+  --ds-on-accent: #0d0d0c;
+  --ds-success: #4ade80;
+  --ds-error: #ff6b5e;
+  --ds-radius-sm: 3px;
+  --ds-radius: 6px;
+  --ds-container: 1440px;
+  --ds-content: 1320px;
+  --ds-gutter: clamp(1.125rem, 4vw, 4rem);
+  --ds-grid-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  --ds-section-space: clamp(4rem, 9vw, 10rem);
+  --ds-s1: 0.25rem;
+  --ds-s2: 0.5rem;
+  --ds-s3: 0.75rem;
+  --ds-s4: 1rem;
+  --ds-s5: 1.5rem;
+  --ds-s6: 2rem;
+  --ds-s7: 3rem;
+  --ds-s8: 4rem;
+  --ds-s9: 5rem;
+  --ds-s10: 6rem;
+  --ds-s11: 8rem;
+  --ds-s12: 10rem;
+  --ds-display: clamp(4.5rem, 9vw, 8.5rem);
+  --ds-h1: clamp(3.5rem, 7.5vw, 7rem);
+  --ds-h2: clamp(2.75rem, 5.5vw, 5rem);
+  --ds-h3: clamp(1.5rem, 2.3vw, 2.25rem);
+  --ds-lead: clamp(1.125rem, 1.65vw, 1.5rem);
+  --ds-body-lg: clamp(1.0625rem, 1.2vw, 1.25rem);
+  --ds-body: clamp(1rem, 1vw, 1.125rem);
+  color-scheme: dark;
+}

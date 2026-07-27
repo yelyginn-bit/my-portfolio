@@ -50,3 +50,23 @@ test("private application pages are noindex", () => {
     assert.match(read(file), /name="robots" content="noindex,nofollow"/u, file);
   }
 });
+
+test("design tokens stay in sync between bundle and static pages", () => {
+  // public/tokens.css сгенерирован из src/design-system.css. Если они разъедутся,
+  // статические страницы и React-страницы получат разные палитры — ровно та
+  // болезнь, из-за которой сайт выглядел несогласованным.
+  const rootOf = (css) => css.match(/:root \{[\s\S]*?\n\}/u)?.[0];
+  const bundle = rootOf(read("src/design-system.css"));
+  const statics = rootOf(read("public/tokens.css"));
+  assert.ok(bundle, "не найден :root в src/design-system.css");
+  assert.equal(statics, bundle, "public/tokens.css устарел: пересобрать из src/design-system.css");
+});
+
+test("static pages load the shared token file before the skin", () => {
+  const pages = ["reels.html", "photo.html", "ceny.html", "event-video.html", "reklamnye-roliki.html"];
+  for (const page of pages) {
+    const html = read(page);
+    assert.ok(html.includes('href="/tokens.css"'), `${page}: нет /tokens.css`);
+    assert.ok(html.indexOf('/tokens.css') < html.indexOf('/site-skin.css'), `${page}: tokens.css должен идти до site-skin.css`);
+  }
+});

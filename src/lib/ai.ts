@@ -1,5 +1,5 @@
 // AI-сервис (Этап I): теги и поиск по изображениям. Сейчас детерминированный mock,
-// архитектура готова к подключению vision-API (Anthropic/OpenAI) — замени MockAIService
+// архитектура готова к подключению стороннего vision API — замени MockAIService
 // на реализацию, дёргающую serverless-эндпоинт, и переключи getAI() по env.
 import type { Asset } from "./types";
 

@@ -9,6 +9,11 @@
   --ds-border-strong: rgba(23, 23, 21, 0.34);
   --ds-accent: #e93327;
   --ds-accent-hover: #c9241b;
+  /* Акцент для мелкого текста на светлом фоне. #e93327 даёт 3.94:1 — ниже
+     порога WCAG AA 4.5:1 для текста меньше 18.66px, поэтому надзаголовки и
+     подписи берут затемнённый вариант (5.22:1). Крупные заголовки и заливки
+     продолжают использовать --ds-accent: там достаточно 3:1. */
+  --ds-accent-text: #c9241b;
   --ds-success: #16784a;
   --ds-error: #b42318;
   --ds-radius-sm: 3px;
@@ -48,6 +53,17 @@ body { background: var(--ds-bg); color: var(--ds-text); }
   margin-inline: auto;
 }
 
+/* Видимый фокус для всей оболочки дизайн-системы.
+   Глобальное правило в public-polish.css ограничено классами .site-home,
+   .direction-page и .project-page, поэтому шапка, подвал и страницы на
+   ds-сетке оставались без индикатора фокуса — это нарушение WCAG 2.4.7.
+   Здесь правило привязано к самим ds-компонентам, а не к странице. */
+:is(.ds-header, .ds-footer, .ds-section, .price-page) :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--ds-accent);
+  outline-offset: 3px;
+  border-radius: var(--ds-radius-sm);
+}
+
 .ds-section { padding-block: var(--ds-section-space); }
 .ds-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
 .ds-grid-item { min-width: 0; }
@@ -56,7 +72,7 @@ body { background: var(--ds-bg); color: var(--ds-text); }
 .ds-stack { display: flex; flex-direction: column; gap: var(--ds-s5); }
 .ds-cluster { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ds-s4); }
 .ds-divider { width: 100%; margin: 0; border: 0; border-top: 1px solid var(--ds-border); }
-.ds-eyebrow { margin: 0; color: var(--ds-accent); font-size: 0.75rem; font-weight: 700; line-height: 1.3; text-transform: uppercase; }
+.ds-eyebrow { margin: 0; color: var(--ds-accent-text); font-size: 0.75rem; font-weight: 700; line-height: 1.3; text-transform: uppercase; }
 .ds-section-header { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); align-items: end; margin-bottom: clamp(2rem, 4.5vw, 3.5rem); }
 .ds-section-header .ds-eyebrow { grid-column: 1 / span 2; }
 .ds-section-header h2 { grid-column: 3 / span 7; margin: 0; font-size: var(--ds-h2); line-height: 0.94; letter-spacing: 0; text-wrap: balance; }
@@ -92,7 +108,7 @@ body { background: var(--ds-bg); color: var(--ds-text); }
 .price-page-hero { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: var(--ds-grid-gap); align-items: end; padding-block: clamp(6rem,11vw,11rem) clamp(4rem,7vw,7rem); border-bottom: 1px solid var(--ds-border); }
 .price-page-hero > div:first-child { grid-column: 1 / span 8; }
 .price-page-hero > div:last-child { grid-column: 9 / -1; }
-.price-page-hero > div:first-child > p, .price-page-catalog > header > p { margin: 0 0 1.5rem; color: var(--ds-accent); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
+.price-page-hero > div:first-child > p, .price-page-catalog > header > p { margin: 0 0 1.5rem; color: var(--ds-accent-text); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
 .price-page-hero h1 { max-width: 10ch; margin: 0; font-size: var(--ds-h1); line-height: .9; text-wrap: balance; }
 .price-page-hero > div:last-child > p { margin: 0; font-size: var(--ds-lead); line-height: 1.45; }
 .price-page-hero small { display: block; margin-top: 1.5rem; color: var(--ds-text-secondary); font-size: .9rem; line-height: 1.55; }
@@ -104,7 +120,7 @@ body { background: var(--ds-bg); color: var(--ds-text); }
 .price-page-list article { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: var(--ds-grid-gap); align-items: start; padding-block: clamp(1.5rem,3vw,2.5rem); border-bottom: 1px solid var(--ds-border); }
 .price-page-index { grid-column: 1; color: var(--ds-text-muted); font-size: .75rem; }
 .price-page-name { grid-column: 2 / span 3; }
-.price-page-name span { color: var(--ds-accent); font-size: .72rem; font-weight: 700; text-transform: uppercase; }
+.price-page-name span { color: var(--ds-accent-text); font-size: .72rem; font-weight: 700; text-transform: uppercase; }
 .price-page-name h3 { margin: .5rem 0; font-size: clamp(1.25rem,2vw,2rem); line-height: 1; }
 .price-page-name p, .price-page-details p, .price-page-details small { color: var(--ds-text-secondary); line-height: 1.5; }
 .price-page-list article > strong { grid-column: 5 / span 2; color: var(--ds-accent); font-size: clamp(1.45rem,2.4vw,2.5rem); line-height: 1; }
@@ -331,4 +347,86 @@ body { background: var(--ds-bg); color: var(--ds-text); }
   .direction-hero > div:first-child, .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { grid-column: 1 / -1; }
   .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { margin-top: 1.5rem; }
   .direction-category-copy, .direction-card-body { padding-top: .875rem; }
+}
+
+/* ── Цветокоррекция: страница /cvetokorrekciya и слайдер «до/после» ───────── */
+
+.color-hero { padding-block: clamp(4.5rem, 9vw, 9rem) clamp(3rem, 5vw, 5rem); border-bottom: 1px solid var(--ds-border); }
+.color-hero h1 { max-width: 13ch; margin: 0; font-size: var(--ds-h1); line-height: .9; text-wrap: balance; }
+.color-hero-lead { max-width: 54ch; margin: clamp(1.5rem, 3vw, 2.25rem) 0 0; color: var(--ds-text-secondary); font-size: var(--ds-lead); line-height: 1.5; }
+.color-hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: clamp(2rem, 4vw, 3rem); }
+
+.color-btn { display: inline-flex; min-height: 48px; align-items: center; gap: .4rem; padding: 0 1.5rem; color: #fafaf8; background: var(--ds-text); border: 1px solid var(--ds-text); border-radius: var(--ds-radius-sm); font-size: .875rem; font-weight: 700; }
+.color-btn:hover { background: var(--ds-accent); border-color: var(--ds-accent); }
+.color-btn--ghost { color: var(--ds-text); background: transparent; border-color: var(--ds-border-strong); }
+.color-btn--ghost:hover { color: var(--ds-text); background: transparent; border-color: var(--ds-text); }
+.color-btn:focus-visible, .color-compare-handle:focus-visible { outline: 2px solid var(--ds-accent); outline-offset: 3px; }
+
+.color-proof { border-bottom: 1px solid var(--ds-border); }
+.color-proof-list { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
+
+.color-tiers { border-bottom: 1px solid var(--ds-border); }
+.color-tier-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); border-top: 1px solid var(--ds-border); }
+.color-tier { padding: clamp(1.5rem, 2.5vw, 2.25rem) 0 0; border-top: 2px solid var(--ds-text); }
+.color-tier h3 { margin: 0 0 .75rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.15; }
+.color-tier strong { display: block; color: var(--ds-accent); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; }
+.color-tier span { display: block; margin-top: .3rem; color: var(--ds-text-secondary); font-size: .78rem; }
+.color-tier p { margin: 1rem 0 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
+.color-note { max-width: 60ch; margin: clamp(2rem, 3.5vw, 3rem) 0 0; color: var(--ds-text-secondary); font-size: .875rem; line-height: 1.55; }
+
+.color-process { border-bottom: 1px solid var(--ds-border); }
+.color-process-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin: 0; padding: 0; list-style: none; }
+.color-process-list li { padding-top: 1.25rem; border-top: 1px solid var(--ds-border); }
+.color-process-list li > span { display: block; margin-bottom: .75rem; color: var(--ds-accent-text); font-size: .75rem; font-weight: 700; }
+.color-process-list h3 { margin: 0 0 .6rem; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.2; }
+.color-process-list p { margin: 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
+
+.color-requirements { border-bottom: 1px solid var(--ds-border); }
+.color-req-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 3rem); }
+.color-req-list h3 { margin: 0 0 .6rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.2; }
+.color-req-list p { margin: 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.55; }
+
+.color-cta { color: #f3f2ee; background: #1b1b19; }
+.color-cta h2 { max-width: 22ch; margin: 0; font-size: var(--ds-h2); line-height: .96; text-wrap: balance; }
+.color-cta > .ds-container > div { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: clamp(2rem, 4vw, 3rem); }
+.color-cta .color-btn { color: #1b1b19; background: #f3f2ee; border-color: #f3f2ee; }
+.color-cta .color-btn:hover { color: #fafaf8; background: var(--ds-accent); border-color: var(--ds-accent); }
+.color-cta .color-btn--ghost { color: #f3f2ee; background: transparent; border-color: rgba(243, 242, 238, .32); }
+.color-cta .color-btn--ghost:hover { color: #f3f2ee; background: transparent; border-color: #f3f2ee; }
+
+/* Слайдер сравнения. Кадры лежат друг на друге и обрезаются clip-path,
+   поэтому геометрия совпадает пиксель в пиксель при любом положении ручки. */
+.color-compare { margin: 0; }
+.color-compare-frame { position: relative; overflow: hidden; border-radius: var(--ds-radius); background: var(--ds-bg-alt); touch-action: none; cursor: ew-resize; user-select: none; }
+.color-compare-frame[data-dragging] { cursor: grabbing; }
+.color-compare-img { display: block; width: 100%; height: auto; }
+.color-compare-img--before { position: absolute; inset: 0; height: 100%; object-fit: cover; }
+.color-compare-tag { position: absolute; top: .75rem; padding: .25rem .6rem; border-radius: var(--ds-radius-sm); background: rgba(23, 23, 21, .72); color: #fafaf8; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.color-compare-tag--before { left: .75rem; }
+.color-compare-tag--after { right: .75rem; }
+.color-compare-handle { position: absolute; top: 0; bottom: 0; width: 44px; margin-left: -22px; display: grid; place-items: center; background: transparent; border: 0; cursor: ew-resize; }
+.color-compare-handle::before { content: ""; position: absolute; top: 0; bottom: 0; width: 2px; background: #fafaf8; box-shadow: 0 0 0 1px rgba(23, 23, 21, .28); }
+.color-compare-grip { position: relative; width: 40px; height: 40px; border-radius: 50%; background: #fafaf8; box-shadow: 0 2px 10px rgba(23, 23, 21, .3); }
+.color-compare-grip::before, .color-compare-grip::after { content: ""; position: absolute; top: 50%; width: 0; height: 0; border-block: 5px solid transparent; transform: translateY(-50%); }
+.color-compare-grip::before { left: 9px; border-right: 6px solid var(--ds-text); }
+.color-compare-grip::after { right: 9px; border-left: 6px solid var(--ds-text); }
+.color-compare-caption { display: flex; flex-direction: column; gap: .3rem; margin-top: 1rem; }
+.color-compare-caption strong { font-size: 1rem; }
+.color-compare-caption span { color: var(--ds-text-secondary); font-size: .9rem; line-height: 1.5; }
+
+@media (max-width: 1023px) {
+  .color-tier-list, .color-process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.75rem, 3vw, 2.5rem) var(--ds-grid-gap); }
+  .color-req-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .color-tier-list, .color-process-list, .color-req-list { grid-template-columns: minmax(0, 1fr); }
+  .color-hero-actions .color-btn, .color-cta > .ds-container > div .color-btn { flex: 1 1 100%; justify-content: center; }
+  .color-compare-tag { font-size: .62rem; }
+}
+
+/* Перетаскивание — жест пользователя, а не анимация, поэтому слайдер остаётся
+   рабочим; убираем только декоративные переходы. */
+@media (prefers-reduced-motion: reduce) {
+  .color-btn, .color-compare-frame { transition: none !important; }
 }

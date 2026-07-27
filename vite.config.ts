@@ -86,6 +86,7 @@ export default defineConfig(({mode}) => {
           journal: path.resolve(__dirname, 'journal.html'),
           prices: path.resolve(__dirname, 'ceny.html'),
           eventVideo: path.resolve(__dirname, 'event-video.html'),
+          colorGrading: path.resolve(__dirname, 'cvetokorrekciya.html'),
           reels: path.resolve(__dirname, 'reels.html'),
           advertising: path.resolve(__dirname, 'reklamnye-roliki.html'),
           marketplace: path.resolve(__dirname, 'video-dlya-marketpleysov.html'),

@@ -3,7 +3,7 @@
   if (privateRoute) return;
 
   const path = window.location.pathname.replace(/\.html$/u, "") || "/";
-  const servicePaths = ["/reels", "/reklamnye-roliki", "/event-video", "/video-dlya-marketpleysov", "/photo", "/content-day"];
+  const servicePaths = ["/reels", "/reklamnye-roliki", "/event-video", "/cvetokorrekciya", "/video-dlya-marketpleysov", "/photo", "/content-day"];
   const current = (href) => {
     if (href === "/") return path === "/";
     if (href === "/portfolio") return path.startsWith("/portfolio");
@@ -28,6 +28,7 @@
               <a href="/reklamnye-roliki">Рекламные ролики</a>
               <a href="/reels">Reels</a>
               <a href="/event-video">Event-видео</a>
+              <a href="/cvetokorrekciya">Цветокоррекция</a>
               <a href="/video-dlya-marketpleysov">Маркетплейсы</a>
               <a href="/photo">Фото</a>
               <a href="/content-day">Контент-день</a>
@@ -49,6 +50,7 @@
           <a href="/reklamnye-roliki">Рекламные ролики</a>
           <a href="/reels">Reels</a>
           <a href="/event-video">Event-видео</a>
+          <a href="/cvetokorrekciya">Цветокоррекция</a>
           <a href="/video-dlya-marketpleysov">Маркетплейсы</a>
           <a href="/photo">Фото</a>
           <a href="/content-day">Контент-день</a>

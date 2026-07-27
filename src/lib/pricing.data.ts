@@ -1,6 +1,6 @@
 import type { EstimateData } from "./types";
 
-export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн";
+export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн" | "Цвет";
 
 export type PublicPriceItem = {
   id: string;
@@ -27,6 +27,7 @@ export const PUBLIC_PRICES: PublicPriceItem[] = [
   { id: "content-day", category: "Регулярный контент", title: "Контент-день", price: "от 60 000 ₽", description: "Фото и серия коротких роликов за одну подготовленную съёмку.", includes: ["Подготовка", "3–4 часа съёмки", "7 Reels и фото"], limitations: "Точный объём фиксируется в смете.", timeline: "Контент на несколько недель", href: "/content-day", portfolioHref: "/portfolio/reels", featured: true },
   { id: "marketplace", category: "Маркетплейсы", title: "Видео для маркетплейса", price: "от 35 000 ₽", description: "Съёмка и монтаж одного товара с демонстрацией особенностей.", includes: ["Подготовка", "Предметная съёмка", "Монтаж"], limitations: "Модель, реквизит, локация и сложная графика — отдельно.", timeline: "После согласования сценария", href: "/video-dlya-marketpleysov", portfolioHref: "/portfolio" },
   { id: "field-video", category: "Съёмка", title: "Оператор + техника", price: "от 35 000 ₽", description: "Выездная смена с комплектом камеры, света и звука.", includes: ["Оператор", "Камера", "Базовый свет и звук"], limitations: "Логистика и дополнительная техника считаются отдельно.", timeline: "Одна съёмочная дата", href: "/calculator", portfolioHref: "/portfolio" },
+  { id: "color-grading", category: "Цвет", title: "Цветокоррекция в DaVinci Resolve", price: "от 10 000 ₽", description: "Отдельная удалённая услуга: присылаете исходники — возвращаю грейд.", includes: ["Разбор материала", "Первичная коррекция", "Финальный грейд"], limitations: "Реставрация брака съёмки и пересъёмка не входят.", timeline: "Обычно 3–7 рабочих дней", href: "/cvetokorrekciya", portfolioHref: "/portfolio/editing", featured: true },
   { id: "advertising", category: "Полный продакшн", title: "Рекламный ролик", price: "от 70 000 ₽", description: "Проект от концепции и подготовки до финального мастера.", includes: ["Препродакшн", "Съёмка", "Постпродакшн"], limitations: "Команда, площадка и техника зависят от задачи.", timeline: "После брифа и плана производства", href: "/reklamnye-roliki", portfolioHref: "/portfolio", featured: true },
 ];
 

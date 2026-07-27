@@ -33,6 +33,7 @@ const pageMap = new Map([
   ["/reels", "reels.html"],
   ["/reklamnye-roliki", "reklamnye-roliki.html"],
   ["/event-video", "event-video.html"],
+  ["/cvetokorrekciya", "cvetokorrekciya.html"],
   ["/video-dlya-marketpleysov", "video-dlya-marketpleysov.html"],
   ["/ceny", "ceny.html"],
   ["/calculator", "calculator.html"],

@@ -220,19 +220,7 @@ const RESOLVE_CHAPTERS: ReadonlyArray<{ id: string; label: string; stages: Resol
 
 function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number]; key?: string }) {
   const [stageIndex, setStageIndex] = useState(0);
-  const markerRefs = useRef<Array<HTMLDivElement | null>>([]);
   const active = chapter.stages[stageIndex];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const current = entries.find((entry) => entry.isIntersecting);
-      if (!current) return;
-      const index = Number((current.target as HTMLElement).dataset.stageIndex);
-      if (Number.isFinite(index)) setStageIndex(index);
-    }, { rootMargin: "-46% 0px -46% 0px", threshold: 0 });
-    markerRefs.current.forEach((marker) => marker && observer.observe(marker));
-    return () => observer.disconnect();
-  }, [chapter.id]);
 
   useEffect(() => {
     [stageIndex - 1, stageIndex + 1].forEach((index) => {
@@ -247,27 +235,44 @@ function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number
 
   return (
     <section className="v32-resolve-chapter" aria-label={`${chapter.label}: восемь этапов цветокоррекции`}>
-      <div className="v32-resolve-chapter__sticky">
-        <header>
-          <div><span>ПОСТ // DAVINCI RESOLVE</span><b>{chapter.label}</b></div>
-          <p>{String(stageIndex + 1).padStart(2, "0")} // ЭТАП <span>{active.timestamp}</span></p>
-        </header>
-        <div className="v32-resolve-chapter__media">
-          <figure><img key={`${active.id}-clean`} src={active.clean} width="1600" height="900" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: чистый кадр`} /><figcaption>ЧИСТЫЙ КАДР</figcaption></figure>
-          <figure><img key={`${active.id}-resolve`} src={active.resolve} width="1800" height="1171" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: настоящее рабочее окно DaVinci Resolve`} /><figcaption>DAVINCI RESOLVE // NODE GRAPH</figcaption></figure>
-        </div>
-        <div className="v32-resolve-chapter__rail" aria-label={`Текущий этап: ${stageIndex + 1} из 8`}>
-          {chapter.stages.map((stage, index) => <span key={stage.id} className={index === stageIndex ? "is-active" : index < stageIndex ? "is-past" : ""} aria-hidden="true"><b>{String(index + 1).padStart(2, "0")}</b></span>)}
-        </div>
+      <header>
+        <div><span>ПОСТ // DAVINCI RESOLVE</span><b>{chapter.label}</b></div>
+        <p>{String(stageIndex + 1).padStart(2, "0")} // ЭТАП <span>{active.timestamp}</span></p>
+      </header>
+      <div className="v32-resolve-chapter__media">
+        <figure><img key={`${active.id}-clean`} src={active.clean} width="1600" height="900" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: чистый кадр`} /><figcaption>ЧИСТЫЙ КАДР</figcaption></figure>
+        <figure><img key={`${active.id}-resolve`} src={active.resolve} width="1800" height="1171" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: настоящее рабочее окно DaVinci Resolve`} /><figcaption>DAVINCI RESOLVE // NODE GRAPH</figcaption></figure>
       </div>
-      <div className="v32-resolve-chapter__markers" aria-hidden="true">
-        {chapter.stages.map((stage, index) => <div key={stage.id} data-stage-index={index} ref={(node) => { markerRefs.current[index] = node; }} />)}
+      <div className="v32-resolve-chapter__scrubber">
+        <input
+          aria-label={`${chapter.label}: выбрать этап цветокоррекции`}
+          aria-valuetext={`Этап ${stageIndex + 1} из 8, ${active.timestamp}`}
+          type="range"
+          min="0"
+          max="7"
+          step="1"
+          value={stageIndex}
+          onChange={(event) => setStageIndex(Number(event.currentTarget.value))}
+        />
+        <div className="v32-resolve-chapter__markers" role="group" aria-label={`${chapter.label}: этапы`}>
+          {chapter.stages.map((stage, index) => (
+            <button
+              key={stage.id}
+              type="button"
+              className={index === stageIndex ? "is-active" : ""}
+              aria-pressed={index === stageIndex}
+              onClick={() => setStageIndex(index)}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-function ResolveScrollBreakdown() {
+function ResolveBreakdown() {
   return <article id="davinci-breakdown" className="v32-resolve-breakdown">{RESOLVE_CHAPTERS.map((chapter) => <ResolveChapter key={chapter.id} chapter={chapter} />)}</article>;
 }
 
@@ -278,7 +283,7 @@ function ProductionProof() {
         <header className="v32-proof__head"><p className="v3-kicker">ПРОЦЕСС // ИЗНУТРИ</p><h2>КАК ЭТО<br /><i>СДЕЛАНО.</i></h2><p>Исходники, цвет, монтаж и BTS из реальных проектов.</p></header>
         <div className="v32-proof__grid">
           <MultiAngleColorComparison />
-          <ResolveScrollBreakdown />
+          <ResolveBreakdown />
           <figure className="v32-proof__operator"><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Юрий Елыгин за камерой на съёмочной площадке" /><figcaption><span>СЪЁМКА // BTS</span><b>ОПЕРАТОР НА ПЛОЩАДКЕ</b></figcaption></figure>
           <figure className="v32-proof__vertical"><img src="/v3-assets/vertical-podcast.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Вертикальный монтаж подкаста в формате 9 на 16" /><figcaption><span>ВЕРТИКАЛЬНЫЙ ФОРМАТ // 9:16</span><b>РАБОЧИЙ КАДР</b></figcaption></figure>
           <figure className="v32-proof__live"><img src="/v3-assets/bts-broadcast-camera.webp" width="720" height="1565" loading="lazy" decoding="async" alt="Камеры на площадке прямого эфира" /><figcaption><span>ЭФИР // МУЛЬТИКАМ</span><b>РАБОТА В КОМАНДЕ</b></figcaption></figure>

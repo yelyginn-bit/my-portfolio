@@ -10,11 +10,11 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
     const tags: HtmlTagDescriptor[] = [
       { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }, injectTo: 'head' },
       { tag: 'link', attrs: { rel: 'manifest', href: '/site.webmanifest' }, injectTo: 'head' },
-      { tag: 'meta', attrs: { name: 'theme-color', content: '#f7f7f5' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { name: 'theme-color', content: '#f4f4ef' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image:height', content: '630' }, injectTo: 'head' },
-      { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Юрий Елыгин — видео, фото и монтаж' }, injectTo: 'head' },
+      { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Юрий Елыгин — оператор, монтаж, цвет и live production' }, injectTo: 'head' },
       { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true }, injectTo: 'body' },
     ];
@@ -90,6 +90,7 @@ export default defineConfig(({mode}) => {
           reels: path.resolve(__dirname, 'reels.html'),
           advertising: path.resolve(__dirname, 'reklamnye-roliki.html'),
           marketplace: path.resolve(__dirname, 'video-dlya-marketpleysov.html'),
+          broadcast: path.resolve(__dirname, 'pryamye-translyacii.html'),
           blog: path.resolve(__dirname, 'blog/index.html'),
           blogReels: path.resolve(__dirname, 'blog/kak-snimat-reels-dlya-biznesa.html'),
           blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),

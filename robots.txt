@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /gallery
+Disallow: /g/
+Disallow: /journal
+Disallow: /photo
+Disallow: /portfolio/photo
 
 Sitemap: https://yelyginn.ru/sitemap.xml

@@ -35,13 +35,15 @@ const pageMap = new Map([
   ["/event-video", "event-video.html"],
   ["/cvetokorrekciya", "cvetokorrekciya.html"],
   ["/video-dlya-marketpleysov", "video-dlya-marketpleysov.html"],
+  ["/pryamye-translyacii", "pryamye-translyacii.html"],
   ["/ceny", "ceny.html"],
   ["/calculator", "calculator.html"],
   ["/account", "account.html"],
   ["/admin", "admin.html"],
-  ["/cases", "cases.html"],
   ["/journal", "journal.html"],
-  ["/blog", "blog/index.html"],
+  ["/blog", "index.html"],
+  ["/about", "index.html"],
+  ["/contact", "index.html"],
 ]);
 
 app.disable("x-powered-by");
@@ -53,6 +55,9 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   res.setHeader("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https://kinescope.io https://*.kinescope.io; frame-src https://kinescope.io https://*.kinescope.io; connect-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google-analytics.com https://*.supabase.co https://kinescope.io https://*.kinescope.io; font-src 'self' data:");
+  if (/^\/(?:account|admin|gallery|g|journal|photo)(?:\/|$)/u.test(req.path) || req.path === "/portfolio/photo") {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
   next();
 });
 
@@ -72,12 +77,28 @@ app.get("/privacy-policy.html", (_req, res) => {
   res.redirect(301, "/privacy-policy");
 });
 
+app.get("/cases", (_req, res) => {
+  res.redirect(301, "/portfolio");
+});
+
+app.get("/portfolio/editing", (_req, res) => {
+  res.redirect(301, "/portfolio/post");
+});
+
+app.get("/portfolio/metro-gorkovskaya", (_req, res) => {
+  res.redirect(301, "/portfolio/metro-gorkovskaya-concerts");
+});
+
+app.get("/portfolio/sber-architecture-course", (_req, res) => {
+  res.redirect(301, "/portfolio/sber-arhitektura");
+});
+
 app.use(
   express.static(distDir, {
     index: false,
     redirect: false,
     setHeaders(res, filePath) {
-      if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+      if (filePath.includes(`${path.sep}assets${path.sep}`) || filePath.includes(`${path.sep}v3-assets${path.sep}`)) {
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
       } else if (filePath.endsWith("sitemap.xml")) {
         res.setHeader("Cache-Control", "public, max-age=3600");

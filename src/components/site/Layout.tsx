@@ -87,9 +87,9 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
   return createPortal(
     <div id="ds-mobile-menu" className="ds-mobile-menu">
       <nav aria-label="Мобильная навигация">
-        <a href="/" onClick={onClose}>Главная</a><a href="/portfolio" onClick={onClose}>Работы</a>
-        <a href="/#services" onClick={onClose}>Услуги</a><a href="/ceny" onClick={onClose}>Цены</a>
-        <a href="/#process" onClick={onClose}>Процесс</a><a href="/#contact" onClick={onClose}>Контакты</a>
+        <a href="/portfolio" onClick={onClose}>Работы</a><a href="/portfolio/camera" onClick={onClose}>Съёмка</a>
+        <a href="/portfolio/post" onClick={onClose}>Пост</a>
+        <a href="/blog" onClick={onClose}>Блог</a><a href="/about" onClick={onClose}>Обо мне</a><a href="/contact" onClick={onClose}>Обсудить проект</a>
       </nav>
       <div><a href={SITE.telegramUrl}>Telegram</a><a href={`mailto:${SITE.email}`}>Email</a></div>
     </div>,
@@ -97,20 +97,21 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
   );
 }
 
-export function SiteHeader({ active }: { active?: "work" | "services" | "prices" | "process" | "contacts" }) {
+export function SiteHeader({ active }: { active?: "work" | "camera" | "post" | "cases" | "blog" | "about" }) {
   const [open, setOpen] = useState(false);
   return (
     <header className="ds-header">
       <PageContainer className="ds-header-inner">
-        <a className="ds-brand" href="/" aria-label="Yelyginn — на главную">{SITE.brand}</a>
+        <a className="ds-brand" href="/" aria-label="YELYGINN — на главную">Y</a>
         <nav className="ds-nav" aria-label="Основная навигация">
           <a href="/portfolio" aria-current={active === "work" ? "page" : undefined}>Работы</a>
-          <a href="/#services" aria-current={active === "services" ? "page" : undefined}>Услуги</a>
-          <a href="/ceny" aria-current={active === "prices" ? "page" : undefined}>Цены</a>
-          <a href="/#process" aria-current={active === "process" ? "page" : undefined}>Процесс</a>
-          <a href="/#contact" aria-current={active === "contacts" ? "page" : undefined}>Контакты</a>
+          <a href="/portfolio/camera" aria-current={active === "camera" ? "page" : undefined}>Съёмка</a>
+          <a href="/portfolio/post" aria-current={active === "post" ? "page" : undefined}>Пост</a>
+          <a href="/blog" aria-current={active === "blog" ? "page" : undefined}>Блог</a>
+          <a href="/about" aria-current={active === "about" ? "page" : undefined}>Обо мне</a>
         </nav>
-        <a className="ds-header-cta" href="/#contact">Обсудить проект</a>
+        <span className="ds-header-status">CORE // READY</span>
+        <a className="ds-header-cta" href="/contact">Обсудить проект</a>
         <button type="button" className="ds-menu-button" aria-label={open ? "Закрыть меню" : "Открыть меню"} aria-expanded={open} aria-controls="ds-mobile-menu" onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
       </PageContainer>
       <MobileMenu open={open} onClose={() => setOpen(false)} />

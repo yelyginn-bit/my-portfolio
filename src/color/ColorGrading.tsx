@@ -80,7 +80,7 @@ export default function ColorGrading() {
 
   return (
     <>
-      <SiteHeader active="services" />
+      <SiteHeader active="post" />
 
       <main id="main">
         <Section className="color-hero">

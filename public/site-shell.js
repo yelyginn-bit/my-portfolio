@@ -3,11 +3,13 @@
   if (privateRoute) return;
 
   const path = window.location.pathname.replace(/\.html$/u, "") || "/";
-  const servicePaths = ["/reels", "/reklamnye-roliki", "/event-video", "/cvetokorrekciya", "/video-dlya-marketpleysov", "/photo", "/content-day"];
   const current = (href) => {
     if (href === "/") return path === "/";
     if (href === "/portfolio") return path.startsWith("/portfolio");
-    if (href === "/ceny") return ["/ceny", "/prices", "/calculator"].includes(path);
+    if (href === "/portfolio/camera") return path === "/portfolio/camera";
+    if (href === "/portfolio/post") return ["/portfolio/post", "/portfolio/editing"].includes(path);
+    if (href === "/blog") return path === "/blog" || path.startsWith("/blog/");
+    if (href === "/about") return path === "/about";
     return false;
   };
   const currentAttr = (href) => current(href) ? ' aria-current="page"' : "";
@@ -19,26 +21,16 @@
     header.className = "site-static-header";
     header.innerHTML = `
       <div class="site-static-header__inner">
-        <a class="site-static-brand" href="/" aria-label="Yelyginn — на главную">YELYGINN</a>
+        <a class="site-static-brand" href="/" aria-label="Yelyginn — на главную">Y</a>
         <nav class="site-static-nav" aria-label="Основная навигация">
           <a href="/portfolio"${currentAttr("/portfolio")}>Работы</a>
-          <div class="site-static-services">
-            <button type="button" aria-expanded="false" aria-controls="site-service-menu"${servicePaths.includes(path) ? ' data-active="true"' : ""}>Услуги</button>
-            <div id="site-service-menu" class="site-static-services__menu">
-              <a href="/reklamnye-roliki">Рекламные ролики</a>
-              <a href="/reels">Reels</a>
-              <a href="/event-video">Event-видео</a>
-              <a href="/cvetokorrekciya">Цветокоррекция</a>
-              <a href="/video-dlya-marketpleysov">Маркетплейсы</a>
-              <a href="/photo">Фото</a>
-              <a href="/content-day">Контент-день</a>
-            </div>
-          </div>
-          <a href="/ceny"${currentAttr("/ceny")}>Цены</a>
-          <a href="/#process">Процесс</a>
-          <a href="/#contact">Контакты</a>
+          <a href="/portfolio/camera"${currentAttr("/portfolio/camera")}>Съёмка</a>
+          <a href="/portfolio/post"${currentAttr("/portfolio/post")}>Пост</a>
+          <a href="/blog"${currentAttr("/blog")}>Блог</a>
+          <a href="/about"${currentAttr("/about")}>Обо мне</a>
         </nav>
-        <a class="site-static-header__cta" href="/#contact">Обсудить проект</a>
+        <span class="site-static-status">CORE // READY</span>
+        <a class="site-static-header__cta" href="/contact">Обсудить проект</a>
         <button class="site-static-menu-button" type="button" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Открыть меню">
           <span></span><span></span>
         </button>
@@ -47,28 +39,15 @@
         <nav aria-label="Мобильная навигация">
           <a href="/">Главная</a>
           <a href="/portfolio">Работы</a>
-          <a href="/reklamnye-roliki">Рекламные ролики</a>
-          <a href="/reels">Reels</a>
-          <a href="/event-video">Event-видео</a>
-          <a href="/cvetokorrekciya">Цветокоррекция</a>
-          <a href="/video-dlya-marketpleysov">Маркетплейсы</a>
-          <a href="/photo">Фото</a>
-          <a href="/content-day">Контент-день</a>
-          <a href="/ceny">Цены</a>
-          <a href="/calculator">Калькулятор</a>
-          <a href="/#contact">Контакты</a>
+          <a href="/portfolio/camera">Съёмка</a>
+          <a href="/portfolio/post">Пост</a>
+          <a href="/blog">Блог</a>
+          <a href="/about">Обо мне</a>
+          <a href="/contact">Обсудить проект</a>
         </nav>
-        <div><a href="https://t.me/YuriElygin">Telegram</a><a href="mailto:y.elyginn@gmail.com">Email</a></div>
+        <div><a href="/contact">Все контакты</a></div>
       </div>
     `;
-
-    const servicesButton = header.querySelector(".site-static-services > button");
-    const servicesMenu = header.querySelector(".site-static-services__menu");
-    servicesButton?.addEventListener("click", () => {
-      const open = servicesButton.getAttribute("aria-expanded") === "true";
-      servicesButton.setAttribute("aria-expanded", String(!open));
-      servicesMenu?.classList.toggle("is-open", !open);
-    });
 
     const menuButton = header.querySelector(".site-static-menu-button");
     const mobileMenu = header.querySelector(".site-static-mobile-menu");
@@ -83,8 +62,6 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
-      servicesButton?.setAttribute("aria-expanded", "false");
-      servicesMenu?.classList.remove("is-open");
       menuButton?.setAttribute("aria-expanded", "false");
       if (mobileMenu instanceof HTMLElement) mobileMenu.hidden = true;
       document.body.classList.remove("site-menu-open");
@@ -98,15 +75,14 @@
       <div class="site-static-footer">
         <div class="site-static-footer__brand">
           <a href="/">YELYGINN</a>
-          <p>Видео, фото и монтаж для бизнеса в Нижнем Новгороде и по России.</p>
+          <p>Операторская работа, монтаж, цвет и live production.</p>
         </div>
         <nav aria-label="Навигация в подвале">
-          <a href="/portfolio">Работы</a><a href="/#services">Услуги</a><a href="/ceny">Цены</a>
-          <a href="/calculator">Калькулятор</a><a href="/#contact">Контакты</a>
+          <a href="/portfolio">Работы</a><a href="/portfolio/camera">Съёмка</a><a href="/portfolio/post">Пост</a>
+          <a href="/blog">Блог</a><a href="/about">Обо мне</a>
         </nav>
         <div class="site-static-footer__contacts">
-          <a href="https://t.me/YuriElygin" target="_blank" rel="noreferrer">Telegram ↗</a>
-          <a href="mailto:y.elyginn@gmail.com">y.elyginn@gmail.com</a>
+          <a href="/contact">Все контакты ↗</a>
           <span>Елыгин Юрий Сергеевич</span>
           <span>Плательщик НПД, самозанятый · ИНН 526219298988</span>
         </div>

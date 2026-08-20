@@ -18,14 +18,17 @@ export default function Cases() {
   return (
     <div className="c-wrap">
       <div className="c-top">
-        <a className="c-logo" href="/">YELYG<span>I</span>NN</a>
+        <a className="c-logo" href="/" aria-label="YELYGINN — главная">Y</a>
         <nav className="c-nav">
-          <a href="/">Главная</a>
-          <a href="/#all-sections">Все разделы</a>
-          <a href="/portfolio">Портфолио</a>
-          <a href="/journal">Журнал</a>
-          <a href="/calculator">Калькулятор</a>
+          <a href="/portfolio">Работы</a>
+          <a href="/portfolio/camera">Съёмка</a>
+          <a href="/portfolio/post">Пост</a>
+          <a href="/cases" aria-current="page">Кейсы</a>
+          <a href="/blog">Блог</a>
+          <a href="/#about">Обо мне</a>
         </nav>
+        <span className="c-status">CORE // READY</span>
+        <a className="c-contact" href="/#contact">Обсудить проект ↗</a>
       </div>
 
       <p className="c-eyebrow">Кейсы</p>

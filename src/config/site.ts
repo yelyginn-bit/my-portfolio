@@ -4,7 +4,7 @@ export const SITE = {
   brand: "YELYGINN",
   owner: "Юрий Елыгин",
   location: "Нижний Новгород",
-  regionLabel: "Нижний Новгород / Россия",
+  regionLabel: "Нижний Новгород // Россия",
   email: "y.elyginn@gmail.com",
   telegram: "@YuriElygin",
   telegramUrl: "https://t.me/YuriElygin",

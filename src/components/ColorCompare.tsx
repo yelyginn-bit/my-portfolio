@@ -20,6 +20,8 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
   const [dragging, setDragging] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => setPosition(50), [pair.id]);
+
   const setFromClientX = useCallback((clientX: number) => {
     const frame = frameRef.current;
     if (!frame) return;

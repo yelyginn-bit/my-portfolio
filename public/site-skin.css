@@ -1186,3 +1186,142 @@ main > .articles {
     padding: 20px !important;
   }
 }
+
+/* Финальный слой для статических посадочных страниц.
+   Ранние версии skin-файла содержали светлую тему для общих header/nav
+   селекторов. Она всё ещё могла перебить тёмную оболочку конкретной услуги.
+   Ограничиваем исправление только .site-static, чтобы кабинет и админка не
+   получили побочных визуальных изменений. */
+body.site-static {
+  background: var(--site-bg) !important;
+  color: var(--site-text) !important;
+}
+
+body.site-static header {
+  color: var(--site-text);
+  background: rgba(246, 246, 243, 0.92) !important;
+  border-bottom-color: var(--site-border) !important;
+}
+
+body.site-static :is(.logo, .site-static-brand) {
+  color: var(--site-text) !important;
+}
+
+body.site-static header nav a {
+  color: var(--site-muted) !important;
+}
+
+body.site-static header nav a:hover,
+body.site-static header nav a[aria-current="page"] {
+  color: var(--site-text) !important;
+}
+
+body.site-static .cta-ghost {
+  color: var(--site-text) !important;
+  background: transparent !important;
+  border-color: var(--site-border-strong) !important;
+}
+
+body.site-static .cta-ghost:hover {
+  border-color: var(--site-text) !important;
+}
+
+/* V3 segmented shell shared by static SEO pages. */
+body.site-static .site-static-header {
+  top: max(10px, env(safe-area-inset-top));
+  width: min(calc(100% - clamp(12px, 3vw, 48px)), 1720px);
+  margin-inline: auto;
+  padding: 5px !important;
+  border: 1px solid rgba(16,16,16,.22) !important;
+  border-radius: 19px;
+  background: rgba(244,244,239,.88) !important;
+  box-shadow: 0 16px 52px rgba(20,20,18,.1);
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+body.site-static .site-static-header__inner { min-height: 50px; grid-template-columns: 56px 1fr minmax(190px,auto); gap: 5px; }
+body.site-static .site-static-brand { height: 50px; display: grid; place-items: center; color: var(--ds-bg) !important; background: var(--site-text); border-radius: 13px; font: 900 1rem/1 Arial,sans-serif; }
+body.site-static .site-static-nav { height: 50px; gap: 0 !important; justify-content: stretch; }
+body.site-static .site-static-nav > a,
+body.site-static .site-static-services > button { height: 50px; flex: 1; justify-content: center; padding-inline: clamp(.55rem,1vw,1rem); border-right: 1px solid rgba(16,16,16,.13); color: var(--site-text) !important; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing: .06em !important; text-transform: uppercase; }
+body.site-static .site-static-header__cta { height: 50px; justify-content: center; border-radius: 13px; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; }
+body.site-static .site-static-footer-shell { color: #f4f4ef !important; background: #080808 !important; }
+body.site-static .site-static-footer__brand > a { color: transparent !important; -webkit-text-stroke: 1px rgba(255,255,255,.5); font-size: clamp(4rem,10vw,10rem); letter-spacing: -.07em; }
+body.site-static .site-static-footer__brand p,
+body.site-static .site-static-footer__contacts span,
+body.site-static .site-static-footer__legal { color: rgba(244,244,239,.62) !important; }
+
+@media (max-width: 900px) {
+  body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr 48px; }
+  body.site-static .site-static-brand { height: 46px; }
+  body.site-static .site-static-header__cta { display: flex; height: 46px; font-size: .58rem; }
+  body.site-static .site-static-menu-button { display: grid; place-items: center; height: 46px; border-radius: 12px; background: var(--ds-orange); }
+}
+
+/* Phase 1 shared static navbar: one container, six public destinations. */
+body.site-static .site-static-header__inner { grid-template-columns: 56px minmax(0,1fr) max-content max-content; gap: 0; }
+body.site-static .site-static-nav > a { flex: 0 1 auto; }
+body.site-static .site-static-status { display: inline-flex; align-items: center; padding-inline: .85rem; border-left: 1px solid rgba(16,16,16,.13); color: rgba(0,0,0,.58); font: 680 .61rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; white-space: nowrap; }
+body.site-static .site-static-nav > a[aria-current="page"] { position: relative; background: rgba(0,0,0,.045); }
+body.site-static .site-static-nav > a[aria-current="page"]::after { content: ""; position: absolute; right: .7rem; bottom: 8px; left: .7rem; height: 1px; background: currentColor; opacity: .65; }
+@media (max-width: 1180px) { body.site-static .site-static-status { display: none; } }
+@media (max-width: 900px) {
+  body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr max-content 48px; }
+  body.site-static .site-static-header__cta { padding-inline: .75rem; }
+}
+
+/* TP-7 repair layer for static SEO pages: segmented capsule without dead space. */
+body.site-static .site-static-header {
+  box-sizing: border-box;
+  padding: 5px !important;
+  border-color: rgba(10,10,10,.44) !important;
+  border-radius: 22px;
+  background: #f1f0ea !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,.12);
+  backdrop-filter: none;
+}
+body.site-static .site-static-header__inner {
+  width: 100%;
+  min-height: 50px;
+  grid-template-columns: 50px repeat(6,max-content) minmax(118px,1fr) max-content;
+  gap: 4px;
+}
+body.site-static .site-static-nav { display: contents; }
+body.site-static .site-static-brand,
+body.site-static .site-static-nav > a,
+body.site-static .site-static-status,
+body.site-static .site-static-header__cta,
+body.site-static .site-static-menu-button {
+  box-sizing: border-box;
+  min-height: 48px;
+  height: 48px;
+  border: 1px solid rgba(10,10,10,.1);
+  border-radius: 14px;
+  font: 720 .58rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important;
+  letter-spacing: .055em !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+body.site-static .site-static-brand { width: 50px; color: #f4f4ef !important; background: #101010; }
+body.site-static .site-static-nav > a { display: inline-flex; align-items: center; justify-content: center; padding-inline: clamp(.56rem,.75vw,.82rem); border-right: 1px solid rgba(10,10,10,.1); color: #101010 !important; background: rgba(255,255,255,.22); }
+body.site-static .site-static-nav > a[aria-current="page"] { color: #101010 !important; background: var(--ds-orange); border-color: var(--ds-orange); }
+body.site-static .site-static-nav > a[aria-current="page"]::after { display: none; }
+body.site-static .site-static-status { min-width: 0; justify-content: center; padding-inline: 1rem; border: 1px dashed rgba(10,10,10,.5); color: rgba(10,10,10,.58); background: rgba(255,255,255,.16); }
+body.site-static .site-static-header__cta { min-width: 172px; padding-inline: 1rem; color: #fff !important; background: #101010; border-color: #101010; }
+
+@media (max-width: 1080px) and (min-width: 821px) {
+  body.site-static .site-static-header { width: calc(100% - 12px); }
+  body.site-static .site-static-header__inner { grid-template-columns: 48px repeat(6,max-content) minmax(86px,1fr) max-content; gap: 3px; }
+  body.site-static .site-static-brand { width: 48px; }
+  body.site-static .site-static-nav > a { padding-inline: .48rem; font-size: .52rem !important; }
+  body.site-static .site-static-status { display: inline-flex; padding-inline: .55rem; font-size: .5rem !important; }
+  body.site-static .site-static-header__cta { min-width: 145px; padding-inline: .7rem; font-size: .52rem !important; }
+}
+
+@media (max-width: 820px) {
+  body.site-static .site-static-header { width: calc(100% - 12px); }
+  body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr max-content 48px; gap: 3px; }
+  body.site-static .site-static-nav, body.site-static .site-static-status { display: none; }
+  body.site-static .site-static-brand { width: 48px; height: 46px; min-height: 46px; }
+  body.site-static .site-static-header__cta { display: inline-flex; min-width: 0; height: 46px; min-height: 46px; padding-inline: .65rem; font-size: .5rem !important; }
+  body.site-static .site-static-menu-button { width: 48px; height: 46px; min-height: 46px; display: grid; place-items: center; background: rgba(255,255,255,.22); }
+}

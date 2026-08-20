@@ -32,6 +32,7 @@ export type ColorComparePair = {
   beforeAlt: string;
   /** Альт для результата. */
   afterAlt: string;
+  thumbnail?: string;
 };
 
 /**
@@ -47,4 +48,18 @@ export type ColorComparePair = {
  *   afterAlt: "Тот же кадр после цветокоррекции",
  * }
  */
-export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [];
+export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
+  ...Array.from({ length: 6 }, (_, index) => {
+    const number = String(index + 1).padStart(2, "0");
+    return {
+      id: `sibur-interview-${number}`,
+      title: `Женщины СИБУРа / ракурс ${number}`,
+      note: "Один и тот же кадр и кроп: исходник и финальный цвет из рабочего набора проекта.",
+      before: `/v3-assets/color/sibur-${number}-raw.webp`,
+      after: `/v3-assets/color/sibur-${number}-color.webp`,
+      thumbnail: `/v3-assets/color/sibur-${number}-thumb.webp`,
+      beforeAlt: `Ракурс ${number} проекта «Женщины СИБУРа» до цветокоррекции`,
+      afterAlt: `Тот же ракурс ${number} проекта «Женщины СИБУРа» после цветокоррекции`,
+    };
+  }),
+];

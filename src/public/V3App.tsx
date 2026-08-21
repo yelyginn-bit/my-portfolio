@@ -112,7 +112,6 @@ function SiteFooter() {
 
 function HeroShowreel() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const asset = assetById.get(HERO_SHOWREEL_ID)!;
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -120,7 +119,7 @@ function HeroShowreel() {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || window.matchMedia("(max-width: 767px), (prefers-reduced-motion: reduce)").matches) return;
+    if (!video || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     video.play().catch(() => setPlaying(false));
     return () => video.pause();
   }, []);
@@ -147,18 +146,18 @@ function HeroShowreel() {
     >
       <div className={`v32-showreel${videoReady && !videoFailed ? " is-ready" : ""}`}>
         <img
-          src={posterUrl(asset.kinescopeId, "lg")}
-          srcSet={`${posterUrl(asset.kinescopeId, "sm")} 640w, ${posterUrl(asset.kinescopeId, "lg")} 1280w`}
+          src="/v3-assets/hero-showreel-poster.webp"
           sizes="100vw"
           alt=""
-          width="1280"
-          height="720"
+          width="1920"
+          height="1080"
           fetchPriority="high"
           decoding="async"
         />
         {!videoFailed && <video
           ref={videoRef}
-          poster={posterUrl(asset.kinescopeId, "lg")}
+          poster="/v3-assets/hero-showreel-poster.webp"
+          autoPlay
           muted
           loop
           playsInline
@@ -172,7 +171,7 @@ function HeroShowreel() {
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
-        <h1><span>ВИДЕОСЪЁМКА</span><span>И МОНТАЖ</span><span>В НИЖНЕМ НОВГОРОДЕ</span></h1>
+        <h1><span>ВИДЕОСЪЁМКА</span><span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></h1>
         <div className="v32-hero__position"><b>YELYGINN</b><span>НИЖНИЙ НОВГОРОД // РОССИЯ // ВЫЕЗД // УДАЛЁННЫЙ ПОСТ</span></div>
         <p className="v32-hero__lead">Снимаю, собираю мультикам, крашу и работаю камерой в команде прямого эфира. Портфолио — сначала видео, потом слова.</p>
         <div className="v32-hero__actions">
@@ -210,11 +209,11 @@ function MultiAngleColorComparison() {
 type ResolveStage = (typeof RESOLVE_STAGES)[number];
 
 const RESOLVE_CHAPTERS: ReadonlyArray<{ id: string; label: string; stages: ResolveStage[] }> = [
-  { id: "shot-01", label: "SHOT 01", stages: RESOLVE_STAGES.slice(0, 8) },
   {
-    id: "shot-02",
-    label: "SHOT 02",
-    stages: RESOLVE_STAGES.slice(8).filter((stage) => stage.timestamp !== "21:47:44"),
+    id: "grading-session",
+    label: "РЕАЛЬНАЯ СЕССИЯ",
+    // Из полного рабочего таймлайна оставлены только визуально разные этапы.
+    stages: [0, 2, 4, 6, 8, 10, 13, 16].map((index) => RESOLVE_STAGES[index]),
   },
 ];
 
@@ -246,10 +245,10 @@ function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number
       <div className="v32-resolve-chapter__scrubber">
         <input
           aria-label={`${chapter.label}: выбрать этап цветокоррекции`}
-          aria-valuetext={`Этап ${stageIndex + 1} из 8, ${active.timestamp}`}
+          aria-valuetext={`Этап ${stageIndex + 1} из ${chapter.stages.length}, ${active.timestamp}`}
           type="range"
           min="0"
-          max="7"
+          max={chapter.stages.length - 1}
           step="1"
           value={stageIndex}
           onChange={(event) => setStageIndex(Number(event.currentTarget.value))}
@@ -284,8 +283,8 @@ function ProductionProof() {
         <div className="v32-proof__grid">
           <MultiAngleColorComparison />
           <ResolveBreakdown />
-          <figure className="v32-proof__operator"><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Юрий Елыгин за камерой на съёмочной площадке" /><figcaption><span>СЪЁМКА // BTS</span><b>ОПЕРАТОР НА ПЛОЩАДКЕ</b></figcaption></figure>
-          <figure className="v32-proof__vertical"><img src="/v3-assets/vertical-podcast.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Вертикальный монтаж подкаста в формате 9 на 16" /><figcaption><span>ВЕРТИКАЛЬНЫЙ ФОРМАТ // 9:16</span><b>РАБОЧИЙ КАДР</b></figcaption></figure>
+          <figure className="v32-proof__operator"><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Юрий Елыгин за камерой на съёмочной площадке" /><figcaption><span>ЮРИЙ ЕЛЫГИН // BTS</span><b>Я НА СЪЁМКЕ</b></figcaption></figure>
+          <figure className="v32-proof__vertical"><img src="/v3-assets/vertical-podcast-cover.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Вертикальная обложка подкаст-ролика в формате 9 на 16" /><figcaption><span>ВЕРТИКАЛЬНЫЙ ФОРМАТ // 9:16</span><b>ОБЛОЖКА РОЛИКА</b></figcaption></figure>
           <figure className="v32-proof__live"><img src="/v3-assets/bts-broadcast-camera.webp" width="720" height="1565" loading="lazy" decoding="async" alt="Камеры на площадке прямого эфира" /><figcaption><span>ЭФИР // МУЛЬТИКАМ</span><b>РАБОТА В КОМАНДЕ</b></figcaption></figure>
         </div>
       </div>
@@ -337,7 +336,7 @@ function ContactSection() {
     <section id="contact" className="v3-contact v3-contact--unified v3-shell">
       <div className="v3-contact__intro">
         <p className="v3-kicker">КОНТАКТ // КОРОТКИЙ БРИФ</p>
-        <h2>ЕСТЬ ЗАДАЧА?<br /><i>РАССКАЖИТЕ.</i></h2>
+        <h2>ЕСТЬ ЗАДАЧА?<br /><i>РАССКАЖИТЕ</i></h2>
         <p>Напишите, что нужно снять или собрать на посте. Отвечу сам и уточню детали.</p>
         <div className="v3-social-grid" aria-label="Основные способы связи">
           {PRIMARY_SOCIALS.map((social, index) => <a key={social.id} className={`v3-social v3-social--${social.id}`} href={social.href} target={social.id === "email" ? undefined : "_blank"} rel={social.id === "email" ? undefined : "noreferrer"}><span>{String(index + 1).padStart(2, "0")} // {social.label}</span><ArrowUpRight aria-hidden="true" /></a>)}
@@ -368,10 +367,10 @@ function HomePage() {
         <HeroShowreel />
         <section className="v3-marquee" aria-label="Бренды и проекты"><div className="v3-marquee__track">{[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((brand, index) => <span key={`${brand}-${index}`}>{brand}<b>//</b></span>)}</div></section>
         <div className="v32-work-proof">
-          <section className="v3-work"><div className="v3-shell"><header className="v3-section-head"><p className="v3-kicker">ОТОБРАННЫЕ // ПРОЕКТЫ</p><h2>ВЫБРАННЫЕ<br /><i>РАБОТЫ.</i></h2><a href="/portfolio">ВСЕ РАБОТЫ <ArrowUpRight /></a></header><PortfolioSystem projects={selectedWorkProjects} /></div></section>
+          <section className="v3-work"><div className="v3-shell"><header className="v3-section-head"><p className="v3-kicker">ОТОБРАННЫЕ // ПРОЕКТЫ</p><h2>ВЫБРАННЫЕ<br /><i>РАБОТЫ</i></h2><a href="/portfolio">ВСЕ РАБОТЫ <ArrowUpRight /></a></header><PortfolioSystem projects={selectedWorkProjects} /></div></section>
           <ProductionProof />
         </div>
-        <section id="about" className="v3-about v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ.</i></h2><div><p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p><p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p><a href="/about">ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a></div></section>
+        <section id="about" className="v3-about v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2><div><p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p><p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p><a href="/about">ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a></div></section>
         <ContactSection />
       </main>
       <SiteFooter />
@@ -414,13 +413,13 @@ function ProjectPage({ project }: { project: Project }) {
 
 function BlogPage() {
   return (
-    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">БЛОГ // ПРАКТИКА</p><h1>О СЪЁМКЕ<br /><i>И МОНТАЖЕ.</i></h1><p>Короткие разборы подготовки, съёмки и монтажа — без универсальных рецептов.</p></header><section className="v3-blog-grid v3-shell">{BLOG_ENTRIES.map((entry, index) => <a key={entry.href} href={entry.href}><span>{String(index + 1).padStart(2, "0")} // {entry.tag}</span><h2>{entry.title}</h2><p>{entry.description}</p><ArrowUpRight aria-hidden="true" /></a>)}</section></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">БЛОГ // ПРАКТИКА</p><h1>О СЪЁМКЕ<br /><i>И МОНТАЖЕ</i></h1><p>Короткие разборы подготовки, съёмки и монтажа — без универсальных рецептов.</p></header><section className="v3-blog-grid v3-shell">{BLOG_ENTRIES.map((entry, index) => <a key={entry.href} href={entry.href}><span>{String(index + 1).padStart(2, "0")} // {entry.tag}</span><h2>{entry.title}</h2><p>{entry.description}</p><ArrowUpRight aria-hidden="true" /></a>)}</section></main><SiteFooter /></>
   );
 }
 
 function AboutPage() {
   return (
-    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>ЮРИЙ<br /><i>ЕЛЫГИН.</i></h1><p>Оператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="eager" decoding="async" alt="Юрий Елыгин работает с камерой на съёмочной площадке" /><figcaption>СЪЁМОЧНАЯ ПЛОЩАДКА // BTS</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Могу самостоятельно снять небольшой проект или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a></div></section><ContactSection /></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>ЮРИЙ<br /><i>ЕЛЫГИН</i></h1><p>Оператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="eager" decoding="async" alt="Юрий Елыгин работает с камерой на съёмочной площадке" /><figcaption>СЪЁМОЧНАЯ ПЛОЩАДКА // BTS</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Могу самостоятельно снять небольшой проект или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a></div></section><ContactSection /></main><SiteFooter /></>
   );
 }
 

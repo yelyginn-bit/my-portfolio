@@ -479,3 +479,145 @@ body:has(.v3-editorial-page) {
   .v32-showreel-controls { display: none; }
   .v3-social, .v3-blog-grid > a, .v32-resolve-chapter__media img { animation: none !important; transition: none !important; transform: none !important; }
 }
+
+/* QA pass — 2026-08-21: mobile hierarchy, media and a single shape language. */
+:root {
+  --v3-radius-panel: clamp(18px, 2vw, 28px);
+  --v3-radius-card: clamp(14px, 1.5vw, 20px);
+}
+
+/* Project pages live on the dark canvas: never inherit the black-on-black base tokens. */
+.v3-project {
+  --ds-text: #f4f4ef;
+  --ds-text-secondary: rgba(244, 244, 239, .76);
+  --ds-text-muted: rgba(244, 244, 239, .57);
+  --ds-border: rgba(255, 255, 255, .2);
+  --ds-border-strong: rgba(255, 255, 255, .42);
+}
+
+.v3-project__back,
+.v3-project__head dd,
+.v3-project__credits li,
+.v3-project__media-meta a {
+  color: #f4f4ef;
+}
+
+.v3-project__head h1 {
+  color: #f4f4ef;
+  text-wrap: balance;
+}
+
+.v3-project__description,
+.v3-editorial-hero > p:last-child,
+.v32-proof__head > p:last-child,
+.v32-proof__color .color-compare-caption,
+.portfolio-project-info p,
+.portfolio-mosaic__item p,
+.portfolio-posters p {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+/* RAW/COLOR and DaVinci are one family of work surfaces, not two competing systems. */
+.v32-proof__color,
+.v32-resolve-chapter,
+.v32-proof__operator,
+.v32-proof__vertical,
+.v32-proof__live {
+  border-radius: var(--v3-radius-card);
+}
+
+.v32-proof__color,
+.v32-resolve-chapter { overflow: hidden; }
+
+.v32-proof__color .color-compare-frame,
+.v32-project-proof .color-compare-frame {
+  border-radius: calc(var(--v3-radius-card) - 6px);
+}
+
+.v32-resolve-chapter__media figure:first-child {
+  border-radius: var(--v3-radius-card) 0 0 0;
+}
+
+.v32-resolve-chapter__media figure:last-child {
+  border-radius: 0 var(--v3-radius-card) 0 0;
+}
+
+/* The contact area keeps the site's dark/orange hierarchy; violet is no longer a second accent. */
+.v3-contact__intro {
+  background:
+    radial-gradient(circle at 10% 12%, rgba(255, 90, 31, .23), transparent 39%),
+    radial-gradient(circle at 68% 82%, rgba(255, 90, 31, .07), transparent 48%),
+    linear-gradient(135deg, #19100e 0%, #131313 56%, #0e0e0e 100%);
+}
+
+.v3-contact--unified { border-radius: var(--v3-radius-panel); }
+
+.v3-contact--unified .v3-contact__intro h2,
+.v3-editorial-hero h1 { text-wrap: balance; }
+
+@media (max-width: 767px) {
+  /* A deliberately composed mobile hero — not desktop type scaled down. */
+  .v32-hero__copy {
+    top: clamp(7.35rem, 19vw, 8.75rem);
+    right: clamp(1rem, 5vw, 1.5rem);
+    left: clamp(1rem, 5vw, 1.5rem);
+    width: auto;
+  }
+
+  .v32-hero__copy > .v3-kicker {
+    margin: 0 0 .82rem;
+    font-size: .58rem;
+  }
+
+  .v32-hero__copy h1 {
+    max-width: 100%;
+    margin: 0;
+    font-size: clamp(2.95rem, 13.35vw, 3.65rem);
+    line-height: .83;
+    letter-spacing: -.058em;
+  }
+
+  .v32-hero__copy h1 .v32-hero__place {
+    max-width: none;
+    color: var(--ds-orange);
+    font-size: .82em;
+    line-height: .92;
+    letter-spacing: -.055em;
+  }
+
+  .v32-hero__position {
+    width: auto;
+    margin-top: 1.1rem;
+  }
+
+  .v32-hero__lead {
+    max-width: 31ch;
+    margin-top: .95rem;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: .98rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+  }
+
+  .v32-hero__actions { width: 100%; }
+
+  .v3-project__head h1 {
+    max-width: 100%;
+    font-size: clamp(2.9rem, 14.2vw, 4rem);
+    line-height: .84;
+    letter-spacing: -.062em;
+  }
+
+  .v3-project__head dl { color: rgba(244, 244, 239, .88); }
+  .v3-project__description { font-size: 1.05rem; line-height: 1.5; }
+
+  .v3-editorial-hero h1 {
+    max-width: 100%;
+    font-size: clamp(3rem, 15.2vw, 4.35rem);
+    line-height: .84;
+    letter-spacing: -.057em;
+  }
+
+  .v32-resolve-chapter__media figure:first-child,
+  .v32-resolve-chapter__media figure:last-child { border-radius: 0; }
+}

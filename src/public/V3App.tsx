@@ -311,11 +311,13 @@ function ContactSection() {
   const [privacy, setPrivacy] = useState(false);
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const submittingRef = useRef(false);
   const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
 
   const submit = useCallback(async (event: FormEvent) => {
     event.preventDefault();
-    if (!name.trim() || !contact.trim() || !message.trim() || !privacy || !consent) return;
+    if (submittingRef.current || !name.trim() || !contact.trim() || !message.trim() || !privacy || !consent) return;
+    submittingRef.current = true;
     setStatus("sending");
     try {
       const response = await secureFetch("/api/send-form", {
@@ -329,6 +331,8 @@ function ContactSection() {
       setName(""); setContact(""); setMessage(""); setPrivacy(false); setConsent(false);
     } catch {
       setStatus("error");
+    } finally {
+      submittingRef.current = false;
     }
   }, [consent, contact, message, name, privacy, service]);
 

@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     const trimmedName = trimTo(name, 160);
     const trimmedContact = trimTo(contact, 200);
     const trimmedMessage = trimTo(message, 1500);
-    const trimmedService = trimTo(service || 'Не указана', 160);
+    const trimmedService = trimTo(service, 160);
     const trimmedSource = trimTo(source || 'site', 120);
     if (trimmedName.length < 2 || trimmedMessage.length < 5 || !isValidContact(trimmedContact)) {
       return res.status(400).json({ ok: false, error: 'Проверьте имя, контакт и описание задачи' });
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
       const result = await admin.rpc('record_lead_with_consent', {
         p_name: trimmedName,
         p_contact: trimmedContact,
-        p_message: `${trimmedService}: ${trimmedMessage}`,
+        p_message: `${trimmedService ? `${trimmedService}: ` : ''}${trimmedMessage}`,
         p_source: trimmedSource,
         p_contact_hash: sha256(normalizedContact),
         p_contact_masked: contactMasked,
@@ -122,23 +122,16 @@ export default async function handler(req, res) {
 
     if (!botToken || !chatId) return res.status(503).json({ error: 'Сервис заявок временно недоступен', ok: false });
 
-    const now = new Intl.DateTimeFormat('ru-RU', {
-      timeZone: 'Europe/Moscow',
-      dateStyle: 'short',
-      timeStyle: 'medium',
-    }).format(new Date());
-
     const telegramText = [
-      '<b>Новая заявка с сайта yelyginn.ru</b>',
+      '<b>НОВАЯ ЗАЯВКА // YELYGINN</b>',
       '',
-      `<b>Имя:</b> <i>${escapeHtml(trimmedName)}</i>`,
-      `<b>Контакт:</b> <code>${escapeHtml(trimmedContact)}</code>`,
-      `<b>Услуга:</b> ${escapeHtml(trimmedService)}`,
-      `<b>Задача:</b>`,
+      `<b>Имя:</b>\n${escapeHtml(trimmedName)}`,
+      `<b>Контакт:</b>\n${escapeHtml(trimmedContact)}`,
+      ...(trimmedService ? [`<b>Услуга:</b>\n${escapeHtml(trimmedService)}`] : []),
+      '<b>Проект:</b>',
       `<i>${escapeHtml(trimmedMessage)}</i>`,
       '',
-      `<b>Источник:</b> ${escapeHtml(safePage)}`,
-      `<b>Время:</b> ${escapeHtml(now)} (МСК)`,
+      `<b>Источник:</b> yelyginn.ru${escapeHtml(safePage.startsWith('/') ? safePage : `/${safePage}`)}`,
     ].join('\n');
 
     const telegramResponse = await fetch(

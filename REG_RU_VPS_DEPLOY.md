@@ -145,15 +145,13 @@ curl -s "https://yelyginn.ru/api/yandex-disk?publicKey=https%3A%2F%2Fdisk.yandex
 
 ```bash
 cd /var/www/yelyginn
-git fetch origin --prune
-git switch main
-git reset --hard origin/main
-npm ci
-npm run build
-pm2 restart yelyginn-site --update-env
-pm2 save --force
-nginx -t
+./deploy.sh
 ```
+
+Скрипт сам синхронизирует `main`, выполняет `npm ci` и production build, затем проверяет
+свежий pre-render manifest и наличие H1 до рестарта PM2. После рестарта он проверяет H1
+всех public pre-render и статических маршрутов через `127.0.0.1:3000`. При любой ошибке
+скрипт завершится с ненулевым кодом и сообщит, что нужен rollback.
 
 ## 11. Что ещё требует внешних ключей
 

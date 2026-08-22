@@ -17,7 +17,6 @@ import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
 
 const store = getStore();
-const session = getSession();
 
 const Check = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
@@ -43,6 +42,7 @@ function unitLabel(unit: PriceItem["unit"]): string {
 }
 
 export default function Calculator() {
+  const [session, setSession] = useState<ReturnType<typeof getSession>>(null);
   // Прайс берётся из активного набора (БД-override или конфиг); пересчёт по priceReady.
   const TYPES = getActiveShootTypes();
   const DATA = getActiveEstimateData();
@@ -59,8 +59,8 @@ export default function Calculator() {
 
   // Контакты + скидка. Если клиент вошёл — подставляем телефон/имя из сессии,
   // и скидка подтянется автоматически (эффект ниже реагирует на phone).
-  const [phone, setPhone] = useState(session?.phone ? `+${session.phone}` : "");
-  const [name, setName] = useState(session?.name ?? "");
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
   const [tierLabel, setTierLabel] = useState("");
@@ -69,6 +69,15 @@ export default function Calculator() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const [consentAccepted, setConsentAccepted] = useState(false);
+
+  // Сессия доступна только в браузере. Сначала гидратируем тот же HTML,
+  // который был сгенерирован на build, затем подставляем данные клиента.
+  useEffect(() => {
+    const currentSession = getSession();
+    setSession(currentSession);
+    if (currentSession?.phone) setPhone(`+${currentSession.phone}`);
+    if (currentSession?.name) setName(currentSession.name);
+  }, []);
 
   // Скидки и прайс могут быть отредактированы в админке/БД — подтягиваем их.
   const [tiersReady, setTiersReady] = useState(0);

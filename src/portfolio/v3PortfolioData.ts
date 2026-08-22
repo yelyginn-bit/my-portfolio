@@ -44,6 +44,19 @@ export type PortfolioCategory =
   | "broadcast"
   | "product";
 
+export const PORTFOLIO_CATEGORY_ORDER: readonly PortfolioCategory[] = [
+  "camera",
+  "commercial",
+  "events",
+  "reels",
+  "concerts",
+  "interviews",
+  "post",
+  "color",
+  "broadcast",
+  "product",
+];
+
 export interface ProjectEvidence {
   status: EvidenceStatus;
   source: string;

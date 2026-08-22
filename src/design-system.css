@@ -521,7 +521,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-about > div { display: grid; gap: 1.3rem; align-content: end; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-about > div p { margin: 0; }
 .v3-contact { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 7vw, 9rem); padding-block: clamp(6rem, 10vw, 10rem); }
-.v3-contact__intro h2 { margin: 1rem 0; font: 860 clamp(3.3rem, 6.6vw, 7rem)/.84 "Arial Narrow", Arial, sans-serif; letter-spacing: -.065em; }
+.v3-contact__intro :is(h1, h2) { margin: 1rem 0; font: 860 clamp(3.3rem, 6.6vw, 7rem)/.84 "Arial Narrow", Arial, sans-serif; letter-spacing: -.065em; }
 .v3-contact__intro > p:not(.v3-kicker) { max-width: 31rem; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-contact__intro > div { display: grid; gap: .6rem; margin-top: 2rem; font: 650 .72rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .v3-form { padding: clamp(1rem, 2vw, 2rem); border: 1px solid var(--ds-text); background: #fff; }
@@ -950,7 +950,7 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
 .v32-hero__copy > .v3-kicker { color: var(--ds-orange); }
 .v32-hero__copy h1 { max-width: 10.5ch; margin: .7rem 0 1rem; font: 800 clamp(3.6rem, 7.2vw, 8.3rem)/.92 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.035em; text-transform: uppercase; text-shadow: 0 6px 34px rgba(0,0,0,.42); }
 .v32-hero__copy h1 span { display: block; }
-.v32-hero__copy h1 span:nth-child(3) { max-width: 15ch; color: var(--ds-orange); font-size: .56em; letter-spacing: -.02em; }
+.v32-hero__copy h1 span:nth-child(2) { max-width: 15ch; color: var(--ds-orange); font-size: .56em; letter-spacing: -.02em; }
 .v32-hero__position { display: flex; align-items: center; gap: 1rem; width: min(100%, 560px); padding: .55rem .7rem; border-left: 4px solid var(--ds-violet); color: #111; background: rgba(243,243,237,.9); backdrop-filter: blur(12px); font: 650 .58rem/1.25 ui-monospace, SFMono-Regular, Menlo, monospace; text-transform: uppercase; }
 .v32-hero__position b { color: var(--ds-violet); }
 .v32-hero__lead { max-width: 40rem; margin: 1.1rem 0 1.25rem; color: rgba(243,243,237,.78); font-size: clamp(.95rem, 1.15vw, 1.12rem); line-height: 1.48; text-wrap: balance; }

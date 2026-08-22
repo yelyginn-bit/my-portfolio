@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
@@ -8,11 +8,9 @@ import ColorCompare from "../components/ColorCompare";
 import {
   CATEGORY_META,
   HERO_SHOWREEL_ID,
-  assetById,
   assetsForProject,
   posterUrl,
   projectById,
-  projectBySlug,
   projects,
   projectsForCategory,
   type PortfolioCategory,
@@ -22,8 +20,9 @@ import {
 import PortfolioSystem from "./PortfolioSystem";
 import { PRIMARY_SOCIALS, SECONDARY_SOCIALS } from "../config/socials";
 import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES } from "./v3Content";
+import { resolveV3Route } from "./routeManifest";
 
-const categoryOrder: PortfolioCategory[] = ["camera", "commercial", "events", "reels", "concerts", "interviews", "post", "color", "broadcast", "product"];
+const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
   camera: "камера", operator: "оператор", edit: "монтаж", multicam: "мультикам",
   color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE",
@@ -57,8 +56,7 @@ const primaryNav = [
   { href: "/about", label: "ОБО МНЕ", active: "about" },
 ] as const;
 
-function currentNavItem() {
-  const path = window.location.pathname.replace(/\/+$/u, "") || "/";
+function currentNavItem(path: string) {
   if (path === "/portfolio/camera") return "camera";
   if (path === "/portfolio/post" || path === "/portfolio/editing") return "post";
   if (path === "/blog" || path.startsWith("/blog/")) return "blog";
@@ -69,7 +67,7 @@ function currentNavItem() {
 
 function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const active = currentNavItem();
+  const active = currentNavItem(useContext(RoutePathContext));
   useEffect(() => {
     document.body.classList.toggle("v3-menu-open", open);
     return () => document.body.classList.remove("v3-menu-open");
@@ -102,7 +100,7 @@ function SiteFooter() {
     <footer className="v3-footer">
       <div className="v3-footer__wordmark" aria-label="YELYGINN"><span>YELYGINN</span></div>
       <div className="v3-footer__meta">
-        <span>© {new Date().getFullYear()} YELYGINN</span>
+        <span>© 2026 YELYGINN</span>
         <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>
         <span>НИЖНИЙ НОВГОРОД // РОССИЯ</span>
       </div>
@@ -171,7 +169,7 @@ function HeroShowreel() {
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
-        <h1><span>ВИДЕОСЪЁМКА</span><span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></h1>
+        <h1>ВИДЕОСЪЁМКА<span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></h1>
         <div className="v32-hero__position"><b>YELYGINN</b><span>НИЖНИЙ НОВГОРОД // РОССИЯ // ВЫЕЗД // УДАЛЁННЫЙ ПОСТ</span></div>
         <p className="v32-hero__lead">Снимаю, собираю мультикам, крашу и работаю камерой в команде прямого эфира. Портфолио — сначала видео, потом слова.</p>
         <div className="v32-hero__actions">
@@ -303,7 +301,7 @@ function ProjectEvidence({ project }: { project: Project }) {
   );
 }
 
-function ContactSection() {
+function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [service, setService] = useState(contactServices[0]);
@@ -313,6 +311,7 @@ function ContactSection() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const submittingRef = useRef(false);
   const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
+  const Heading = pageHeading ? "h1" : "h2";
 
   const submit = useCallback(async (event: FormEvent) => {
     event.preventDefault();
@@ -340,7 +339,7 @@ function ContactSection() {
     <section id="contact" className="v3-contact v3-contact--unified v3-shell">
       <div className="v3-contact__intro">
         <p className="v3-kicker">КОНТАКТ // КОРОТКИЙ БРИФ</p>
-        <h2>ЕСТЬ ЗАДАЧА?<br /><i>РАССКАЖИТЕ</i></h2>
+        <Heading>ЕСТЬ ЗАДАЧА?<br /><i>РАССКАЖИТЕ</i></Heading>
         <p>Напишите, что нужно снять или собрать на посте. Отвечу сам и уточню детали.</p>
         <div className="v3-social-grid" aria-label="Основные способы связи">
           {PRIMARY_SOCIALS.map((social, index) => <a key={social.id} className={`v3-social v3-social--${social.id}`} href={social.href} target={social.id === "email" ? undefined : "_blank"} rel={social.id === "email" ? undefined : "noreferrer"}><span>{String(index + 1).padStart(2, "0")} // {social.label}</span><ArrowUpRight aria-hidden="true" /></a>)}
@@ -428,7 +427,7 @@ function AboutPage() {
 }
 
 function ContactPage() {
-  return <><SiteHeader /><main className="v3-editorial-page v3-contact-page"><ContactSection /></main><SiteFooter /></>;
+  return <><SiteHeader /><main className="v3-editorial-page v3-contact-page"><ContactSection pageHeading /></main><SiteFooter /></>;
 }
 
 function RedirectToPortfolio() {
@@ -450,35 +449,22 @@ function updateSeo(title: string, description: string, canonicalPath: string) {
   upsert('meta[property="og:url"]', "meta", { property: "og:url", content: `https://yelyginn.ru${canonicalPath}` });
 }
 
-export default function V3App() {
-  const path = window.location.pathname.replace(/\/+$/u, "") || "/";
-  const segment = path.startsWith("/portfolio/") ? decodeURIComponent(path.slice("/portfolio/".length)) : "";
-  const normalizedCategory = segment === "editing" ? "post" : segment;
-  const category = categoryOrder.includes(normalizedCategory as PortfolioCategory) ? normalizedCategory as PortfolioCategory : undefined;
-  const params = new URLSearchParams(window.location.search);
-  const legacyAsset = params.get("id") ? assetById.get(params.get("id")!) : undefined;
-  const legacySlugs: Record<string, string> = { "metro-gorkovskaya": "metro-gorkovskaya-concerts", "sber-architecture-course": "sber-arhitektura" };
-  const project = projectBySlug.get(segment) || projectBySlug.get(legacySlugs[segment]) || (legacyAsset ? projectById.get(legacyAsset.projectId) : undefined);
+export default function V3App({ initialPath, initialSearch }: { initialPath?: string; initialSearch?: string } = {}) {
+  const browserPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const browserSearch = typeof window === "undefined" ? "" : window.location.search;
+  const route = resolveV3Route(initialPath ?? browserPath, initialSearch ?? browserSearch);
+  useEffect(() => updateSeo(route.seo.title, route.seo.description, route.seo.canonical), [route.seo]);
 
-  const view = useMemo(() => {
-    if (path === "/blog") return { title: "Блог о съёмке и постпродакшне | YELYGINN", description: "Практические заметки Юрия Елыгина о подготовке, видеосъёмке, монтаже и постпродакшне.", canonical: "/blog" };
-    if (path === "/about") return { title: "Обо мне — Юрий Елыгин | YELYGINN", description: "Юрий Елыгин — оператор, режиссёр монтажа и колорист из Нижнего Новгорода.", canonical: "/about" };
-    if (path === "/contact") return { title: "Обсудить проект | YELYGINN", description: "Связаться с Юрием Елыгиным: Instagram, Telegram, YouTube, email и короткий бриф проекта.", canonical: "/contact" };
-    if (path === "/pryamye-translyacii" || path === "/pryamye-translyacii.html") return { title: "Оператор прямых трансляций в Нижнем Новгороде | YELYGINN", description: "Оператор камеры на прямую трансляцию, многокамерная съёмка и работа в составе live production crew в Нижнем Новгороде и с выездом.", canonical: "/pryamye-translyacii" };
-    if (path === "/portfolio" || path === "/portfolio.html") return { title: "Портфолио — 89 видеоработ | YELYGINN", description: "89 видеоработ Юрия Елыгина: операторская работа, монтаж, цвет, commercial, events, Reels и live production.", canonical: "/portfolio" };
-    if (category) return { title: `${CATEGORY_META[category].title} | YELYGINN`, description: CATEGORY_META[category].description, canonical: `/portfolio/${category}` };
-    if (project) return { title: `${project.title} | YELYGINN`, description: project.description || `${project.title}: ${project.responsibilities.join(", ")}.`, canonical: `/portfolio/${project.slug}` };
-    return { title: "Юрий Елыгин — оператор, монтаж, цвет и live production", description: "Операторская работа, монтаж, цвет, commercial, event-видео и live production в Нижнем Новгороде и с выездом.", canonical: "/" };
-  }, [category, project, path]);
-  useEffect(() => updateSeo(view.title, view.description, view.canonical), [view]);
+  let page;
+  if (route.kind === "portfolio") page = <PortfolioPage />;
+  else if (route.kind === "blog") page = <BlogPage />;
+  else if (route.kind === "about") page = <AboutPage />;
+  else if (route.kind === "contact") page = <ContactPage />;
+  else if (route.kind === "redirect") page = <RedirectToPortfolio />;
+  else if (route.kind === "broadcast") page = <BroadcastPage />;
+  else if (route.kind === "category") page = <PortfolioPage category={route.category} />;
+  else if (route.kind === "project" && route.project) page = <ProjectPage project={route.project} />;
+  else page = <HomePage />;
 
-  if (path === "/portfolio" || path === "/portfolio.html") return <PortfolioPage />;
-  if (path === "/blog") return <BlogPage />;
-  if (path === "/about") return <AboutPage />;
-  if (path === "/contact") return <ContactPage />;
-  if (path === "/cases" || path === "/cases.html") return <RedirectToPortfolio />;
-  if (path === "/pryamye-translyacii" || path === "/pryamye-translyacii.html") return <BroadcastPage />;
-  if (category) return <PortfolioPage category={category} />;
-  if (project) return <ProjectPage project={project} />;
-  return <HomePage />;
+  return <RoutePathContext.Provider value={route.path}>{page}</RoutePathContext.Provider>;
 }

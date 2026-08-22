@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,6 +9,8 @@ import apiHandler from "../api/[endpoint].js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
+const prerenderManifest = JSON.parse(readFileSync(path.join(distDir, "prerender-manifest.json"), "utf8"));
+const prerenderRoutes = new Set(prerenderManifest.routes);
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
@@ -111,6 +114,14 @@ app.use(
 
 app.get("*", (req, res) => {
   const urlPath = req.path.replace(/\/+$/u, "") || "/";
+  if (prerenderRoutes.has(urlPath)) {
+    const prerenderedFile = urlPath === "/"
+      ? path.join(distDir, "prerender", "index.html")
+      : path.join(distDir, "prerender", urlPath.slice(1), "index.html");
+    return res.sendFile(prerenderedFile, (error) => {
+      if (error) res.status(500).send("Prerender output is missing");
+    });
+  }
   let fileName = pageMap.get(urlPath);
 
   if (!fileName && urlPath.startsWith("/portfolio/")) fileName = "project.html";

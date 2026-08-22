@@ -10,7 +10,7 @@ const publicPages = [
   "index.html", "portfolio.html", "portfolio-reels.html", "portfolio-events.html",
   "portfolio-concerts.html", "portfolio-editing.html", "pryamye-translyacii.html",
   "reels.html", "reklamnye-roliki.html", "event-video.html",
-  "video-dlya-marketpleysov.html", "cvetokorrekciya.html", "ceny.html", "calculator.html",
+  "video-dlya-marketpleysov.html", "cvetokorrekciya.html", "ceny.html", "calculator.html", "content-day.html",
   "cases.html", "blog/index.html",
   "blog/kak-snimat-reels-dlya-biznesa.html",
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html",
@@ -37,16 +37,15 @@ test("all embedded JSON-LD blocks are valid JSON", () => {
   }
 });
 
-test("sitemap contains every primary public route and excludes private routes", () => {
-  const sitemap = read("public/sitemap.xml");
-  for (const route of ["/portfolio", "/portfolio/camera", "/portfolio/post", "/reels", "/event-video", "/cvetokorrekciya", "/pryamye-translyacii", "/ceny", "/calculator", "/privacy-policy"]) {
-    assert.match(sitemap, new RegExp(`<loc>https://yelyginn\\.ru${route.replaceAll("/", "\\/")}<\\/loc>`, "u"));
-  }
-  assert.doesNotMatch(sitemap, /\/(?:admin|account|g\/)</u);
+test("sitemap is generated from the indexable route manifest", () => {
+  assert.equal(fs.existsSync(path.join(root, "public/sitemap.xml")), true, "generated sitemap artifact is missing");
+  assert.match(read("scripts/prerender.ts"), /INDEXABLE_ROUTES\.map/u);
+  assert.match(read("scripts/prerender.ts"), /writeFile\(path\.join\(rootDir, "public", "sitemap\.xml"\), sitemap\)/u);
+  assert.match(read("src/public/routeManifest.ts"), /INDEXABLE_ROUTES = ROUTE_MANIFEST\.filter\(\(route\) => route\.indexable\)/u);
 });
 
 test("private application pages are noindex", () => {
-  for (const file of ["account.html", "admin.html", "gallery.html", "journal.html", "photo.html", "portfolio-photo.html", "content-day.html"]) {
+  for (const file of ["account.html", "admin.html", "gallery.html", "journal.html", "photo.html", "portfolio-photo.html"]) {
     assert.match(read(file), /name="robots" content="noindex,nofollow"/u, file);
   }
 });

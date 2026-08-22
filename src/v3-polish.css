@@ -318,8 +318,8 @@ body:has(.v3-editorial-page) {
   border-radius: 20px;
   background: radial-gradient(circle at 10% 12%, rgba(255,90,31,.35), transparent 34%), radial-gradient(circle at 78% 70%, rgba(124,92,255,.23), transparent 52%), #15131c;
 }
-.v3-contact--unified .v3-contact__intro h2 { font-size: clamp(3.2rem, 4.8vw, 5rem); line-height: .86; }
-.v3-contact__intro h2 i { color: var(--ds-orange); font-family: Georgia, serif; font-weight: 400; }
+.v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3.2rem, 4.8vw, 5rem); line-height: .86; }
+.v3-contact__intro :is(h1, h2) i { color: var(--ds-orange); font-family: Georgia, serif; font-weight: 400; }
 .v3-social-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: auto !important; padding-top: 2rem; }
 .v3-social {
   min-height: 64px;
@@ -552,7 +552,7 @@ body:has(.v3-editorial-page) {
 
 .v3-contact--unified { border-radius: var(--v3-radius-panel); }
 
-.v3-contact--unified .v3-contact__intro h2,
+.v3-contact--unified .v3-contact__intro :is(h1, h2),
 .v3-editorial-hero h1 { text-wrap: balance; }
 
 @media (max-width: 767px) {

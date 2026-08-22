@@ -169,7 +169,7 @@ function HeroShowreel() {
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
-        <h1>ВИДЕОСЪЁМКА<span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></h1>
+        <div className="v32-hero__title" aria-hidden="true">ВИДЕОСЪЁМКА<span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></div>
         <div className="v32-hero__position"><b>YELYGINN</b><span>НИЖНИЙ НОВГОРОД // РОССИЯ // ВЫЕЗД // УДАЛЁННЫЙ ПОСТ</span></div>
         <p className="v32-hero__lead">Снимаю, собираю мультикам, крашу и работаю камерой в команде прямого эфира. Портфолио — сначала видео, потом слова.</p>
         <div className="v32-hero__actions">
@@ -181,6 +181,43 @@ function HeroShowreel() {
         <button type="button" onClick={togglePlayback} aria-label={playing ? "Поставить шоурил на паузу" : "Воспроизвести шоурил"}>{playing ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}<span>{playing ? "ПАУЗА" : "ШОУРИЛ"}</span></button>
         <button type="button" onClick={toggleSound} aria-label={muted ? "Включить звук" : "Выключить звук"}>{muted ? <VolumeX /> : <Volume2 />}<span>{muted ? "ЗВУК" : "ВКЛЮЧЁН"}</span></button>
       </div>}
+    </section>
+  );
+}
+
+const HOME_SERVICES = [
+  { number: "01", title: "Рекламные ролики", description: "Продуктовые, имиджевые и презентационные ролики для брендов и компаний. Полный цикл: идея, сценарий, съёмка, монтаж, цвет и звук.", href: "/reklamnye-roliki" },
+  { number: "02", title: "Видеосъёмка мероприятий", description: "Конференции, форумы, концерты, корпоративы, открытия и спортивные события. Репортажная съёмка, highlights-ролики, работа с несколькими камерами.", href: "/event-video" },
+  { number: "03", title: "Reels для бизнеса", description: "Короткие вертикальные ролики для Instagram и ВКонтакте: рекламные, имиджевые и продуктовые. Съёмка, монтаж, субтитры, цвет.", href: "/reels" },
+  { number: "04", title: "Видео для маркетплейсов", description: "Карточки товаров и видеообзоры для Wildberries и Ozon. Предметная съёмка, свет, монтаж под требования площадок.", href: "/video-dlya-marketpleysov" },
+  { number: "05", title: "Контент-день", description: "Одна съёмочная смена — набор готовых Reels и обработанных фотографий для соцсетей и сайта. Формат для компаний, которым нужен регулярный контент.", href: "/content-day" },
+  { number: "06", title: "Фотосъёмка", description: "Репортажная и студийная фотосъёмка для бизнеса: мероприятия, портреты команды, предметная съёмка.", href: "/photo" },
+] as const;
+
+function HomeServices() {
+  return (
+    <section className="v32-services v3-shell" aria-labelledby="home-services-title">
+      <header className="v32-services__head">
+        <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
+        <h1 id="home-services-title">Видеосъёмка и видеопродакшн в Нижнем Новгороде</h1>
+        <h2>Услуги видеосъёмки в Нижнем Новгороде</h2>
+      </header>
+      <div className="v32-services__grid">
+        {HOME_SERVICES.map((service) => (
+          <article className="v32-services__card" key={service.href}>
+            <p>{service.number} /</p>
+            <h3>{service.title}</h3>
+            <p>{service.description}</p>
+            <a href={service.href}>ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a>
+          </article>
+        ))}
+      </div>
+      <nav className="v32-services__links" aria-label="Полезные разделы">
+        <a href="/ceny">ЦЕНЫ <ArrowRight aria-hidden="true" /></a>
+        <a href="/calculator">КАЛЬКУЛЯТОР <ArrowRight aria-hidden="true" /></a>
+        <a href="/portfolio">ПОРТФОЛИО <ArrowRight aria-hidden="true" /></a>
+      </nav>
+      {/* TODO: сюда добавятся /montazh-video, /pryamye-translyacii, /korporativnoe-video, /promyshlennaya-videosemka, /intervyu-podkasty после создания страниц. */}
     </section>
   );
 }
@@ -368,6 +405,7 @@ function HomePage() {
       <SiteHeader />
       <main className="v32-home">
         <HeroShowreel />
+        <HomeServices />
         <section className="v3-marquee" aria-label="Бренды и проекты"><div className="v3-marquee__track">{[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((brand, index) => <span key={`${brand}-${index}`}>{brand}<b>//</b></span>)}</div></section>
         <div className="v32-work-proof">
           <section className="v3-work"><div className="v3-shell"><header className="v3-section-head"><p className="v3-kicker">ОТОБРАННЫЕ // ПРОЕКТЫ</p><h2>ВЫБРАННЫЕ<br /><i>РАБОТЫ</i></h2><a href="/portfolio">ВСЕ РАБОТЫ <ArrowUpRight /></a></header><PortfolioSystem projects={selectedWorkProjects} /></div></section>

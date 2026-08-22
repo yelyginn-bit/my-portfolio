@@ -71,6 +71,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://yelyginn.ru/photo</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://yelyginn.ru/privacy-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>

@@ -33,7 +33,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/video-dlya-marketpleysov", render: "static", indexable: true, priority: 0.85 },
   { path: "/pryamye-translyacii", render: "static", indexable: true, priority: 0.9 },
   { path: "/ceny", render: "static", indexable: true, priority: 0.8 },
-  { path: "/photo", render: "private", indexable: false },
+  { path: "/photo", render: "static", indexable: true, priority: 0.75 },
   { path: "/portfolio/photo", render: "private", indexable: false },
   { path: "/account", render: "private", indexable: false },
   { path: "/admin", render: "private", indexable: false },
@@ -121,6 +121,6 @@ export function resolveV3Route(rawPath: string, rawSearch = ""): V3RouteResoluti
   if (path === "/cases" || path === "/cases.html") return { path, kind: "redirect", seo: { title: "Портфолио | YELYGINN", description: "Работы Юрия Елыгина.", canonical: "/portfolio" } };
   if (category) return { path, kind: "category", category, seo: { title: `${CATEGORY_META[category].title} | YELYGINN`, description: CATEGORY_META[category].description, canonical: `/portfolio/${category}` } };
   if (project) return { path, kind: "project", project, seo: { title: `${project.title} | YELYGINN`, description: project.description || `${project.title}: ${project.responsibilities.join(", ")}.`, canonical: `/portfolio/${project.slug}` } };
-  if (path === "/") return { path, kind: "home", seo: { title: "Юрий Елыгин — оператор, монтаж, цвет и live production", description: "Операторская работа, монтаж, цвет, commercial, event-видео и live production в Нижнем Новгороде и с выездом.", canonical: "/" } };
+  if (path === "/") return { path, kind: "home", seo: { title: "Видеограф и видеооператор в Нижнем Новгороде — съёмка, монтаж, цвет | Юрий Елыгин", description: "Профессиональная видеосъёмка в Нижнем Новгороде: рекламные ролики, съёмка мероприятий, Reels, монтаж и цветокоррекция. Работаю с брендами и бизнесом. Смета после брифа.", canonical: "/" } };
   return { path, kind: "unknown", seo: { title: "YELYGINN", description: "Операторская работа, монтаж, цвет и live production.", canonical: path } };
 }

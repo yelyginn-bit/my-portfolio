@@ -31,11 +31,12 @@ test("V3 public UI omits generic invented contribution fallbacks", () => {
   }
 });
 
-test("V3 hides internal and photo routes from navigation and sitemap", () => {
+test("V3 hides internal and private photo routes from navigation and sitemap", () => {
   const shell = `${read("src/public/V3App.tsx")}\n${read("public/site-shell.js")}`;
-  assert.doesNotMatch(shell, /href="\/(?:admin|account|gallery|journal|photo|portfolio\/photo)"/u);
+  assert.doesNotMatch(shell, /href="\/(?:admin|account|gallery|journal|portfolio\/photo)"/u);
   const sitemap = read("public/sitemap.xml");
-  assert.doesNotMatch(sitemap, /\/(?:admin|account|gallery|journal|photo|portfolio\/photo)</u);
+  assert.doesNotMatch(sitemap, /\/(?:admin|account|gallery|journal|portfolio\/photo)</u);
+  assert.match(sitemap, /https:\/\/yelyginn\.ru\/photo</u);
   assert.match(sitemap, /\/pryamye-translyacii</u);
 });
 

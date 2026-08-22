@@ -58,7 +58,9 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   res.setHeader("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https://kinescope.io https://*.kinescope.io; frame-src https://kinescope.io https://*.kinescope.io; connect-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google-analytics.com https://*.supabase.co https://kinescope.io https://*.kinescope.io; font-src 'self' data:");
-  if (/^\/(?:account|admin|gallery|g|journal|photo)(?:\/|$)/u.test(req.path) || req.path === "/portfolio/photo") {
+  const noIndexPrefix = /^\/(?:account|admin|gallery|g|journal)(?:\/|$)|^\/photo\//u;
+  const noIndexPaths = new Set(["/portfolio/photo"]);
+  if (noIndexPrefix.test(req.path) || noIndexPaths.has(req.path)) {
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
   }
   next();

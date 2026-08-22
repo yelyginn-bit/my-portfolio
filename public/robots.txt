@@ -6,7 +6,8 @@ Disallow: /account
 Disallow: /g/
 Disallow: /gallery
 Disallow: /journal
-Disallow: /photo
+# Открыта только коммерческая страница /photo; возможные вложенные пути остаются закрыты.
+Disallow: /photo/
 Disallow: /portfolio/photo
 Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term /
 

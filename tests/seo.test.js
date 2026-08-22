@@ -10,7 +10,7 @@ const publicPages = [
   "index.html", "portfolio.html", "portfolio-reels.html", "portfolio-events.html",
   "portfolio-concerts.html", "portfolio-editing.html", "pryamye-translyacii.html",
   "reels.html", "reklamnye-roliki.html", "event-video.html",
-  "video-dlya-marketpleysov.html", "cvetokorrekciya.html", "ceny.html", "calculator.html", "content-day.html",
+  "video-dlya-marketpleysov.html", "cvetokorrekciya.html", "ceny.html", "calculator.html", "content-day.html", "photo.html",
   "cases.html", "blog/index.html",
   "blog/kak-snimat-reels-dlya-biznesa.html",
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html",
@@ -45,7 +45,7 @@ test("sitemap is generated from the indexable route manifest", () => {
 });
 
 test("private application pages are noindex", () => {
-  for (const file of ["account.html", "admin.html", "gallery.html", "journal.html", "photo.html", "portfolio-photo.html"]) {
+  for (const file of ["account.html", "admin.html", "gallery.html", "journal.html", "portfolio-photo.html"]) {
     assert.match(read(file), /name="robots" content="noindex,nofollow"/u, file);
   }
 });

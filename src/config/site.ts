@@ -67,8 +67,8 @@ export const SERVICE_SUMMARIES: ServiceSummary[] = [
     title: "Монтаж",
     description: "Структура, ритм, цвет, звук и адаптация под площадки.",
     price: PUBLIC_PRICE_BY_ID["editing-reels"].price,
-    href: "/portfolio/editing",
-    portfolioHref: "/portfolio/editing",
+    href: "/portfolio/post",
+    portfolioHref: "/portfolio/post",
     mediaId: "wrf4URJ9Q7P7g5B1SZ5A7W",
   },
   {
@@ -76,8 +76,8 @@ export const SERVICE_SUMMARIES: ServiceSummary[] = [
     title: "YouTube",
     description: "Монтаж выпусков, интервью и многокамерных программ.",
     price: PUBLIC_PRICE_BY_ID["editing-youtube"].price,
-    href: "/portfolio/editing",
-    portfolioHref: "/portfolio/editing",
+    href: "/portfolio/post",
+    portfolioHref: "/portfolio/post",
     mediaId: "51pL5GtYFvJB1f9Nf52HHN",
   },
   {

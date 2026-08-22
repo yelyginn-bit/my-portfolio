@@ -20,14 +20,14 @@ export const PUBLIC_PRICES: PublicPriceItem[] = [
   { id: "editing-reels", category: "Монтаж", title: "Монтаж Reels / Shorts", price: "от 5 000 ₽", description: "Один вертикальный ролик с собранной структурой и ритмом.", includes: ["Монтаж", "Базовый цвет", "Звук"], limitations: "Субтитры и сложная графика считаются по задаче.", timeline: "Обычно 3–5 рабочих дней", href: "/calculator", portfolioHref: "/portfolio/post" },
   { id: "editing-youtube", category: "Монтаж", title: "Монтаж YouTube", price: "от 15 000 ₽", description: "Выпуск до 15 минут из подготовленного материала.", includes: ["Сборка", "Цвет", "Чистка звука"], limitations: "Мультикамера и графика рассчитываются отдельно.", timeline: "По объёму исходников", href: "/calculator", portfolioHref: "/portfolio/post" },
   { id: "reels-block", category: "Съёмка", title: "Съёмочный блок Reels", price: "от 22 000 ₽", description: "До трёх часов организованной съёмки по готовому плану.", includes: ["Камера", "Базовый свет", "Запись звука"], limitations: "Монтаж роликов не входит.", timeline: "Одна съёмочная дата", href: "/reels", portfolioHref: "/portfolio/reels" },
-  { id: "reels-package", category: "Съёмка + монтаж", title: "Пакет Reels", price: "от 35 000 ₽", description: "Подготовка, съёмка до двух часов и три готовых ролика.", includes: ["Подготовка", "Съёмка", "3 ролика"], limitations: "Дополнительные сценарии и локации — отдельно.", timeline: "Срок фиксируется после брифа", href: "/reels", portfolioHref: "/portfolio/reels", featured: true },
+  { id: "reels-package", category: "Съёмка", title: "Reels для бизнеса", price: "от 22 000 ₽", description: "Съёмочный блок до 3 часов.", includes: ["Камера", "Базовый свет", "Запись звука"], limitations: "Монтаж роликов не входит.", timeline: "Одна съёмочная дата", href: "/reels", portfolioHref: "/portfolio/reels", featured: true },
   { id: "event", category: "Съёмка", title: "Видеосъёмка мероприятия", price: "от 25 000 ₽", description: "Работа видеографа на событии, минимум три часа.", includes: ["Репортажная съёмка", "Камера", "Базовый звук"], limitations: "Aftermovie и экспресс-монтаж считаются отдельно.", timeline: "От одной даты", href: "/event-video", portfolioHref: "/portfolio/events" },
-  { id: "photo", category: "Фото", title: "Репортажная фотосъёмка", price: "от 8 000 ₽/час", description: "События, команды и рабочие процессы для бизнеса.", includes: ["Съёмка", "Отбор", "Базовая обработка"], limitations: "Минимальный заказ — два часа.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
-  { id: "photo-studio", category: "Фото", title: "Студийная фотосъёмка", price: "от 18 000 ₽", description: "Портретная или контентная съёмка с подготовкой и ретушью.", includes: ["Подготовка", "Съёмка до 1 часа", "Ретушь 10 кадров"], limitations: "Аренда студии и стилист оплачиваются отдельно.", timeline: "Обычно 5–7 рабочих дней", href: "/photo", portfolioHref: "/portfolio/photo" },
+  { id: "photo", category: "Фото", title: "Репортажная фотосъёмка", price: "от 6 000 ₽/час", description: "События, команды и рабочие процессы для бизнеса.", includes: ["Съёмка", "Отбор", "Базовая обработка"], limitations: "Минимальный заказ — два часа.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
+  { id: "photo-studio", category: "Фото", title: "Студийная фотосъёмка", price: "от 8 000 ₽/час", description: "Портретная или контентная съёмка с подготовкой и ретушью; аренда студии включена.", includes: ["Подготовка", "Съёмка до 1 часа", "Ретушь 10 кадров", "Аренда студии"], limitations: "Стилист оплачивается отдельно.", timeline: "Обычно 5–7 рабочих дней", href: "/photo", portfolioHref: "/portfolio/photo" },
   { id: "content-day", category: "Регулярный контент", title: "Контент-день", price: "от 60 000 ₽", description: "Фото и серия коротких роликов за одну подготовленную съёмку.", includes: ["Подготовка", "3–4 часа съёмки", "7 Reels и фото"], limitations: "Точный объём фиксируется в смете.", timeline: "Контент на несколько недель", href: "/content-day", portfolioHref: "/portfolio/reels", featured: true },
   { id: "marketplace", category: "Маркетплейсы", title: "Видео для маркетплейса", price: "от 35 000 ₽", description: "Съёмка и монтаж одного товара с демонстрацией особенностей.", includes: ["Подготовка", "Предметная съёмка", "Монтаж"], limitations: "Модель, реквизит, локация и сложная графика — отдельно.", timeline: "После согласования сценария", href: "/video-dlya-marketpleysov", portfolioHref: "/portfolio" },
   { id: "field-video", category: "Съёмка", title: "Оператор + техника", price: "от 35 000 ₽", description: "Выездная смена с комплектом камеры, света и звука.", includes: ["Оператор", "Камера", "Базовый свет и звук"], limitations: "Логистика и дополнительная техника считаются отдельно.", timeline: "Одна съёмочная дата", href: "/calculator", portfolioHref: "/portfolio" },
-  { id: "color-grading", category: "Цвет", title: "Цветокоррекция в DaVinci Resolve", price: "от 10 000 ₽", description: "Отдельная удалённая услуга: присылаете исходники — возвращаю грейд.", includes: ["Разбор материала", "Первичная коррекция", "Финальный грейд"], limitations: "Реставрация брака съёмки и пересъёмка не входят.", timeline: "Обычно 3–7 рабочих дней", href: "/cvetokorrekciya", portfolioHref: "/portfolio/color", featured: true },
+  { id: "color-grading", category: "Цвет", title: "Цветокоррекция в DaVinci Resolve", price: "от 5 000 ₽", description: "Отдельная удалённая услуга: присылаете исходники — возвращаю грейд.", includes: ["Разбор материала", "Первичная коррекция", "Финальный грейд"], limitations: "Реставрация брака съёмки и пересъёмка не входят.", timeline: "Обычно 3–7 рабочих дней", href: "/cvetokorrekciya", portfolioHref: "/portfolio/color", featured: true },
   { id: "advertising", category: "Полный продакшн", title: "Рекламный ролик", price: "от 70 000 ₽", description: "Проект от концепции и подготовки до финального мастера.", includes: ["Препродакшн", "Съёмка", "Постпродакшн"], limitations: "Команда, площадка и техника зависят от задачи.", timeline: "После брифа и плана производства", href: "/reklamnye-roliki", portfolioHref: "/portfolio", featured: true },
 ];
 
@@ -41,7 +41,7 @@ export const PUBLIC_PRICE_BY_ID = Object.fromEntries(PUBLIC_PRICES.map((item) =>
 export const ESTIMATE_DATA: EstimateData = {
   "Reels / Shorts": {
     base: [
-      { name: "Подготовка, съёмка до 2 часов и 3 ролика", priceMin: 35000, priceMax: 50000, unit: "project" },
+      { name: "Съёмочный блок до 3 часов", priceMin: 22000, priceMax: 22000, unit: "project" },
     ],
     options: [
       { name: "Дополнительный Reels / Shorts", priceMin: 5000, priceMax: 12000, unit: "project" },
@@ -84,23 +84,27 @@ export const ESTIMATE_DATA: EstimateData = {
   },
   "Студийная фотосъёмка": {
     base: [
-      { name: "Подготовка и съёмка до 1 часа", priceMin: 12000, priceMax: 18000, unit: "project" },
-      { name: "Отбор, цвет и ретушь 10 кадров", priceMin: 6000, priceMax: 10000, unit: "project" },
+      { name: "Съёмка в студии до 1 часа, аренда включена", priceMin: 8000, priceMax: 8000, unit: "hour" },
     ],
     options: [
-      { name: "Дополнительный час съёмки", priceMin: 8000, priceMax: 12000, unit: "hour" },
+      { name: "Дополнительный час съёмки в студии", priceMin: 8000, priceMax: 8000, unit: "hour" },
       { name: "Расширенная ретушь 10 кадров", priceMin: 5000, priceMax: 9000, unit: "project" },
-      { name: "Аренда студии", priceMin: 2000, priceMax: 5000, unit: "hour" },
     ],
   },
   "Репортажная фотосъёмка": {
     base: [
-      { name: "Съёмка 2 часа, отбор и базовая обработка", priceMin: 16000, priceMax: 22000, unit: "project" },
+      { name: "Съёмка, отбор и базовая обработка", priceMin: 6000, priceMax: 6000, unit: "hour" },
     ],
     options: [
-      { name: "Дополнительный час", priceMin: 8000, priceMax: 10000, unit: "hour" },
+      { name: "Дополнительный час", priceMin: 6000, priceMax: 6000, unit: "hour" },
       { name: "Срочная подборка для публикации", priceMin: 5000, priceMax: 10000, unit: "project" },
     ],
+  },
+  "Цветокоррекция": {
+    base: [
+      { name: "Цветокоррекция видео", priceMin: 5000, priceMax: 5000, unit: "project" },
+    ],
+    options: [],
   },
   "Контент для бизнеса": {
     base: [

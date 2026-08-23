@@ -3,6 +3,7 @@ import path from "node:path";
 import { createElement, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import Calculator from "../src/calculator/Calculator";
+import ColorGrading from "../src/color/ColorGrading";
 import V3App from "../src/public/V3App";
 import {
   INDEXABLE_ROUTES,
@@ -77,9 +78,10 @@ async function main() {
     throw new Error("/portfolio/photo must remain private and must not be prerendered");
   }
 
-  const [v3Template, calculatorTemplate] = await Promise.all([
+  const [v3Template, calculatorTemplate, colorGradingTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),
     readFile(path.join(distDir, "calculator.html"), "utf8"),
+    readFile(path.join(distDir, "cvetokorrekciya.html"), "utf8"),
   ]);
   await mkdir(prerenderDir, { recursive: true });
 
@@ -104,6 +106,13 @@ async function main() {
   await mkdir(path.dirname(calculatorOutput), { recursive: true });
   await writeFile(calculatorOutput, injectRoot(calculatorTemplate, calculatorMarkup));
   generated.push("/calculator");
+
+  const colorGradingMarkup = renderToString(createElement(StrictMode, null, createElement(ColorGrading)));
+  if (!/<h1(?:\s|>)/iu.test(colorGradingMarkup)) throw new Error("Prerendered cvetokorrekciya has no H1");
+  const colorGradingOutput = outputFileFor("/cvetokorrekciya");
+  await mkdir(path.dirname(colorGradingOutput), { recursive: true });
+  await writeFile(colorGradingOutput, injectRoot(colorGradingTemplate, colorGradingMarkup));
+  generated.push("/cvetokorrekciya");
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);

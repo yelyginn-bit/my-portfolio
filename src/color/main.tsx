@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import ColorGrading from "./ColorGrading";
 import { initAnalytics } from "../lib/analytics";
 import "../index.css";
@@ -7,8 +7,12 @@ import "../design-system.css";
 
 initAnalytics();
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+const app = (
   <StrictMode>
     <ColorGrading />
-  </StrictMode>,
+  </StrictMode>
 );
+
+if (root.hasChildNodes()) hydrateRoot(root, app);
+else createRoot(root).render(app);

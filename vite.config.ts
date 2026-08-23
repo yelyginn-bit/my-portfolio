@@ -97,6 +97,7 @@ export default defineConfig(({mode}) => {
           blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),
           blogEvents: path.resolve(__dirname, 'blog/videosemka-meropriyatiy-nn.html'),
           legal: path.resolve(__dirname, 'legal.html'),
+          caseDetail: path.resolve(__dirname, 'case.html'),
         },
       },
     },

@@ -1,12 +1,17 @@
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createElement, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import Calculator from "../src/calculator/Calculator";
+import CasePage from "../src/case-detail/CasePage";
 import ColorGrading from "../src/color/ColorGrading";
 import LegalApp, { documents as legalDocuments } from "../src/legal/LegalApp";
+import { PORTFOLIO_PROJECTS } from "../src/lib/portfolio.data";
+import { validatePortfolioRegistry } from "../src/lib/portfolioValidation";
 import V3App from "../src/public/V3App";
 import {
+  CASE_PROJECTS,
   INDEXABLE_ROUTES,
   PRERENDER_ROUTES,
   ROUTE_MANIFEST,
@@ -65,6 +70,10 @@ function outputFileFor(route: string) {
     : path.join(prerenderDir, route.slice(1), "index.html");
 }
 
+function portfolioPhotoExists(photoId: string) {
+  return existsSync(path.join(rootDir, "public", "portfolio-photos", `${photoId}.webp`));
+}
+
 function sitemapXml() {
   const urls = INDEXABLE_ROUTES.map((route) => [
     "  <url>",
@@ -85,11 +94,15 @@ async function main() {
     throw new Error("/portfolio/photo must remain private and must not be prerendered");
   }
 
-  const [v3Template, calculatorTemplate, colorGradingTemplate, legalTemplate] = await Promise.all([
+  const portfolioIssues = validatePortfolioRegistry(PORTFOLIO_PROJECTS, portfolioPhotoExists).errors;
+  if (portfolioIssues.length) throw new Error(`Portfolio registry validation failed:\n${portfolioIssues.join("\n")}`);
+
+  const [v3Template, calculatorTemplate, colorGradingTemplate, legalTemplate, caseTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),
     readFile(path.join(distDir, "calculator.html"), "utf8"),
     readFile(path.join(distDir, "cvetokorrekciya.html"), "utf8"),
     readFile(path.join(distDir, "legal.html"), "utf8"),
+    readFile(path.join(distDir, "case.html"), "utf8"),
   ]);
   await mkdir(prerenderDir, { recursive: true });
 
@@ -130,6 +143,20 @@ async function main() {
     await mkdir(path.dirname(outputFile), { recursive: true });
     await writeFile(outputFile, html);
     generated.push(legalPath);
+  }
+
+  for (const project of CASE_PROJECTS) {
+    const casePath = `/cases/${project.id}`;
+    const caseMarkup = renderToString(createElement(StrictMode, null, createElement(CasePage, { project })));
+    if (!/<h1(?:\s|>)/iu.test(caseMarkup)) throw new Error(`Prerendered case route has no H1: ${casePath}`);
+    const html = injectRoot(
+      applySeo(caseTemplate, `${project.title} | YELYGINN`, project.role, casePath),
+      caseMarkup,
+    );
+    const outputFile = outputFileFor(casePath);
+    await mkdir(path.dirname(outputFile), { recursive: true });
+    await writeFile(outputFile, html);
+    generated.push(casePath);
   }
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));

@@ -4,6 +4,7 @@ import { createElement, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import Calculator from "../src/calculator/Calculator";
 import ColorGrading from "../src/color/ColorGrading";
+import LegalApp, { documents as legalDocuments } from "../src/legal/LegalApp";
 import V3App from "../src/public/V3App";
 import {
   INDEXABLE_ROUTES,
@@ -46,6 +47,12 @@ function applySeo(html: string, title: string, description: string, canonicalPat
     : result.replace("</head>", `    ${canonicalTag}\n  </head>`);
 }
 
+function applyLegalMeta(html: string, title: string, description: string) {
+  const titlePattern = /<title>.*?<\/title>/isu;
+  const result = titlePattern.test(html) ? html.replace(titlePattern, `<title>${escapeHtml(title)}</title>`) : html;
+  return replaceMeta(result, "description", description);
+}
+
 function injectRoot(html: string, markup: string) {
   const rootPattern = /<div\s+id="root"\s*><\/div>/iu;
   if (!rootPattern.test(html)) throw new Error("Build template does not contain an empty #root element");
@@ -78,10 +85,11 @@ async function main() {
     throw new Error("/portfolio/photo must remain private and must not be prerendered");
   }
 
-  const [v3Template, calculatorTemplate, colorGradingTemplate] = await Promise.all([
+  const [v3Template, calculatorTemplate, colorGradingTemplate, legalTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),
     readFile(path.join(distDir, "calculator.html"), "utf8"),
     readFile(path.join(distDir, "cvetokorrekciya.html"), "utf8"),
+    readFile(path.join(distDir, "legal.html"), "utf8"),
   ]);
   await mkdir(prerenderDir, { recursive: true });
 
@@ -113,6 +121,16 @@ async function main() {
   await mkdir(path.dirname(colorGradingOutput), { recursive: true });
   await writeFile(colorGradingOutput, injectRoot(colorGradingTemplate, colorGradingMarkup));
   generated.push("/cvetokorrekciya");
+
+  for (const [legalPath, page] of Object.entries(legalDocuments)) {
+    const legalMarkup = renderToString(createElement(StrictMode, null, createElement(LegalApp, { pathname: legalPath })));
+    if (!/<h1(?:\s|>)/iu.test(legalMarkup)) throw new Error(`Prerendered legal route has no H1: ${legalPath}`);
+    const html = injectRoot(applyLegalMeta(legalTemplate, page.seo.title, page.seo.description), legalMarkup);
+    const outputFile = outputFileFor(legalPath);
+    await mkdir(path.dirname(outputFile), { recursive: true });
+    await writeFile(outputFile, html);
+    generated.push(legalPath);
+  }
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);

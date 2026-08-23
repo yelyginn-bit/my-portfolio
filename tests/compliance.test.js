@@ -10,7 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 test("legal sources have no merge markers or template placeholders", () => {
-  const files = ["src/legal/main.tsx", "src/config/legal.ts", "legal.html"];
+  const files = ["src/legal/main.tsx", "src/legal/LegalApp.tsx", "src/config/legal.ts", "legal.html"];
   for (const file of files) assert.doesNotMatch(read(file), /<<<<<<<|>>>>>>>|\[ФИО\]|lorem ipsum/iu);
 });
 
@@ -94,7 +94,7 @@ test("webhook verifies amount, currency and idempotency", () => {
 });
 
 test("manual receipt flow never claims automatic tax receipt", () => {
-  const legal = read("src/legal/main.tsx");
+  const legal = read("src/legal/LegalApp.tsx");
   const webhook = read("server/api/payment-webhook.js");
   const migration = read("db/migrations/20260711_legal_security_compliance.sql");
   assert.match(legal, /вручную сформирует чек/u);

@@ -29,6 +29,14 @@ export const COLOR_COMPARE_GROUP_LABELS: Record<ColorComparePairGroup, string> =
   hoff: "Предметная и интерьерная съёмка — HOFF",
 };
 
+/** Необязательная поясняющая строка под заголовком группы — роль на проекте
+ * плюс напоминание про одинаковый кадр/кроп, чтобы не повторять это в
+ * каждой из шести подписей. Есть только у СИБУРа: там формат интервью и
+ * общий баланс делают эту оговорку осмысленной; у KORONA/HOFF она не нужна. */
+export const COLOR_COMPARE_GROUP_INTROS: Partial<Record<ColorComparePairGroup, string>> = {
+  sibur: "Референс задавал колорист проекта — я сводил шесть интервью и общие планы площадки к единому балансу. Слева и справа один и тот же кадр и тот же кроп: исходник и результат.",
+};
+
 export type ColorComparePair = {
   /** Короткий идентификатор для ключа React. */
   id: string;
@@ -64,20 +72,72 @@ export type ColorComparePair = {
  * }
  */
 export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
-  ...Array.from({ length: 6 }, (_, index) => {
-    const number = String(index + 1).padStart(2, "0");
-    return {
-      id: `sibur-interview-${number}`,
-      group: "sibur" as const,
-      title: `Женщины СИБУРа / ракурс ${number}`,
-      note: "Один и тот же кадр и кроп: исходник и финальный цвет из рабочего набора проекта.",
-      before: `/v3-assets/color/sibur-${number}-raw.webp`,
-      after: `/v3-assets/color/sibur-${number}-color.webp`,
-      thumbnail: `/v3-assets/color/sibur-${number}-thumb.webp`,
-      beforeAlt: `Ракурс ${number} проекта «Женщины СИБУРа» до цветокоррекции`,
-      afterAlt: `Тот же ракурс ${number} проекта «Женщины СИБУРа» после цветокоррекции`,
-    };
-  }),
+  {
+    id: "sibur-interview-01",
+    group: "sibur",
+    title: "Женщины СИБУРа · площадка",
+    note: "Общий план площадки довёл до того же баланса, что и портреты: глубокая тень, прибор единственным источником света.",
+    before: "/v3-assets/color/sibur-01-raw.webp",
+    after: "/v3-assets/color/sibur-01-color.webp",
+    thumbnail: "/v3-assets/color/sibur-01-thumb.webp",
+    beforeAlt: "Ракурс 01 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 01 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
+  {
+    id: "sibur-interview-02",
+    group: "sibur",
+    title: "Женщины СИБУРа · средний план",
+    note: "Выровнял кожу и пальто по теплу, фон опустил в тёмный, чтобы героиня не сливалась со стеной.",
+    before: "/v3-assets/color/sibur-02-raw.webp",
+    after: "/v3-assets/color/sibur-02-color.webp",
+    thumbnail: "/v3-assets/color/sibur-02-thumb.webp",
+    beforeAlt: "Ракурс 02 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 02 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
+  {
+    id: "sibur-interview-03",
+    group: "sibur",
+    title: "Женщины СИБУРа · крупный план",
+    note: "Вернул коже плотность и тепло, фон увёл в глубокий тёмный — на крупном плане в этом вся разница.",
+    before: "/v3-assets/color/sibur-03-raw.webp",
+    after: "/v3-assets/color/sibur-03-color.webp",
+    thumbnail: "/v3-assets/color/sibur-03-thumb.webp",
+    beforeAlt: "Ракурс 03 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 03 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
+  {
+    id: "sibur-interview-04",
+    group: "sibur",
+    title: "Женщины СИБУРа · крупный план, вторая героиня",
+    note: "Свёл фон к нейтрально-тёмному, чтобы синий пиджак не спорил с лицом.",
+    before: "/v3-assets/color/sibur-04-raw.webp",
+    after: "/v3-assets/color/sibur-04-color.webp",
+    thumbnail: "/v3-assets/color/sibur-04-thumb.webp",
+    beforeAlt: "Ракурс 04 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 04 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
+  {
+    id: "sibur-interview-05",
+    group: "sibur",
+    title: "Женщины СИБУРа · средний план, вторая героиня",
+    note: "Поднял контраст, вытянул зелень растения и тёплое дерево — плоский серый кадр получил объём.",
+    before: "/v3-assets/color/sibur-05-raw.webp",
+    after: "/v3-assets/color/sibur-05-color.webp",
+    thumbnail: "/v3-assets/color/sibur-05-thumb.webp",
+    beforeAlt: "Ракурс 05 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 05 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
+  {
+    id: "sibur-interview-06",
+    group: "sibur",
+    title: "Женщины СИБУРа · общий план со светом",
+    note: "Собрал свет в одно пятно, остальную площадку утопил в тени.",
+    before: "/v3-assets/color/sibur-06-raw.webp",
+    after: "/v3-assets/color/sibur-06-color.webp",
+    thumbnail: "/v3-assets/color/sibur-06-thumb.webp",
+    beforeAlt: "Ракурс 06 проекта «Женщины СИБУРа» до цветокоррекции",
+    afterAlt: "Тот же ракурс 06 проекта «Женщины СИБУРа» после цветокоррекции",
+  },
   {
     id: "korona-02",
     group: "korona",

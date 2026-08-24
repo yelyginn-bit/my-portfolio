@@ -15,7 +15,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { PageContainer, Section, SectionHeader, SiteFooter, SiteHeader } from "../components/site/Layout";
 import { ColorCompare } from "../components/ColorCompare";
-import { COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
+import { COLOR_COMPARE_GROUP_LABELS, COLOR_COMPARE_GROUP_ORDER, COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
 import { SITE } from "../config/site";
 
 /** Публичные стартовые цены на цветокоррекцию. */
@@ -111,11 +111,20 @@ export default function ColorGrading() {
                 title="Что меняется"
                 intro="Один и тот же кадр, один кроп, одно разрешение. Слева — исходник с камеры."
               />
-              <div className="color-proof-list">
-                {COLOR_COMPARE_PAIRS.map((pair) => (
-                  <ColorCompare key={pair.id} pair={pair} />
-                ))}
-              </div>
+              {COLOR_COMPARE_GROUP_ORDER.map((group) => {
+                const pairsInGroup = COLOR_COMPARE_PAIRS.filter((pair) => pair.group === group);
+                if (pairsInGroup.length === 0) return null;
+                return (
+                  <div className="color-proof-group" key={group}>
+                    <h3 className="color-proof-group-title">{COLOR_COMPARE_GROUP_LABELS[group]}</h3>
+                    <div className="color-proof-list">
+                      {pairsInGroup.map((pair) => (
+                        <ColorCompare key={pair.id} pair={pair} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </PageContainer>
           </Section>
         )}

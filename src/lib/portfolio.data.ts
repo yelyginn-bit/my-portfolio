@@ -63,7 +63,12 @@ export const PORTFOLIO_PROJECTS: readonly PortfolioProject[] = [
       { kinescopeId: "hyQindossxyWZfRxLuDacu", orientation: "16:9", label: "KORONA_MASTER" },
     ],
     photos: [],
-    colorPairs: [],
+    colorPairs: [
+      { id: "korona-01", label: "Ракурс 1", rawPhotoId: "korona-01-raw", colorPhotoId: "korona-01-color" },
+      { id: "korona-02", label: "Ракурс 2", rawPhotoId: "korona-02-raw", colorPhotoId: "korona-02-color" },
+      { id: "korona-03", label: "Ракурс 3", rawPhotoId: "korona-03-raw", colorPhotoId: "korona-03-color" },
+      { id: "korona-04", label: "Ракурс 4", rawPhotoId: "korona-04-raw", colorPhotoId: "korona-04-color" },
+    ],
   },
   {
     id: "hoff-divany",
@@ -85,7 +90,13 @@ export const PORTFOLIO_PROJECTS: readonly PortfolioProject[] = [
       { kinescopeId: "g7DBRUGGfASR1yy1FQs6PT", orientation: "16:9", label: "Аккордеон" },
     ],
     photos: [],
-    colorPairs: [],
+    colorPairs: [
+      { id: "hoff-01", label: "Ракурс 1", rawPhotoId: "hoff-01-raw", colorPhotoId: "hoff-01-color" },
+      { id: "hoff-02", label: "Ракурс 2", rawPhotoId: "hoff-02-raw", colorPhotoId: "hoff-02-color" },
+      { id: "hoff-03", label: "Ракурс 3", rawPhotoId: "hoff-03-raw", colorPhotoId: "hoff-03-color" },
+      { id: "hoff-04", label: "Ракурс 4", rawPhotoId: "hoff-04-raw", colorPhotoId: "hoff-04-color" },
+      { id: "hoff-05", label: "Ракурс 5", rawPhotoId: "hoff-05-raw", colorPhotoId: "hoff-05-color" },
+    ],
   },
   {
     id: "uchenye-nizhnego",
@@ -99,7 +110,19 @@ export const PORTFOLIO_PROJECTS: readonly PortfolioProject[] = [
       { kinescopeId: "tUjFh6nxvKhE3ZwSrD2F6W", orientation: "16:9", label: "Екатерина Солнцева" },
       { kinescopeId: "hjNTmjbczLrKeeLcKT3Vtw", orientation: "16:9", label: "Александр Нючев" },
     ],
-    photos: [],
+    // Скриншот нодового дерева Resolve и чистый стилл — разные картинки, а не
+    // два грейда одного кадра, поэтому это photos, а не ColorGradePair.
+    photos: [
+      { id: "uchenye-nizhnego-setup-01", alt: "Постановка света и камер на съёмке «Учёные Нижнего»" },
+      { id: "uchenye-cam1-node-01", alt: "Нодовое дерево цветокоррекции, камера 1, ракурс 1" },
+      { id: "uchenye-cam1-still-01", alt: "Кадр после цветокоррекции, камера 1, ракурс 1" },
+      { id: "uchenye-cam1-node-02", alt: "Нодовое дерево цветокоррекции, камера 1, ракурс 2" },
+      { id: "uchenye-cam1-still-02", alt: "Кадр после цветокоррекции, камера 1, ракурс 2" },
+      { id: "uchenye-cam2-node-01", alt: "Нодовое дерево цветокоррекции, камера 2, ракурс 1" },
+      { id: "uchenye-cam2-still-01", alt: "Кадр после цветокоррекции, камера 2, ракурс 1" },
+      { id: "uchenye-cam2-node-02", alt: "Нодовое дерево цветокоррекции, камера 2, ракурс 2" },
+      { id: "uchenye-cam2-still-02", alt: "Кадр после цветокоррекции, камера 2, ракурс 2" },
+    ],
     colorPairs: [],
   },
 ];

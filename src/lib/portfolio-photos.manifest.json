@@ -1,0 +1,783 @@
+{
+  "anastasia-box-01": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-02": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-03": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-04": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-05": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-06": {
+    "width": 1600,
+    "height": 2400,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-07": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-08": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-09": {
+    "width": 1600,
+    "height": 2399,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anastasia-box-10": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-01": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-02": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-03": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-04": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-05": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-06": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-07": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-08": {
+    "width": 1600,
+    "height": 1600,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "anton-09": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "darya-01": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "darya-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "darya-03": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "darya-04": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "darya-05": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-01-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-01-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-02-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-02-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-03-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-03-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-04-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-04-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-05-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "hoff-05-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-01-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-01-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-02-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-02-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-03-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-03-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-04-color": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "korona-04-raw": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "marina-01": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "marina-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "marina-03": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "oksana-01": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "oksana-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "oksana-03": {
+    "width": 1600,
+    "height": 2399,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "olya-01": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "olya-02": {
+    "width": 1600,
+    "height": 2400,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "olya-03": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "olya-04": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "olya-05": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "portraits-01": {
+    "width": 1600,
+    "height": 2844,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "portraits-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "portraits-03": {
+    "width": 480,
+    "height": 853,
+    "widths": [
+      480
+    ]
+  },
+  "portraits-04": {
+    "width": 1600,
+    "height": 2400,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "portraits-05": {
+    "width": 1600,
+    "height": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "sofa-01": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "sofa-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "sofa-03": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-01": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-02": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-03": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-04": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-05": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-06": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-07": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-08": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-09": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-10": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-11": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-12": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-13": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-14": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-15": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-16": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "street-17": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam1-node-01": {
+    "width": 1600,
+    "height": 1041,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam1-node-02": {
+    "width": 1600,
+    "height": 1041,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam1-still-01": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam1-still-02": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam2-node-01": {
+    "width": 1600,
+    "height": 1041,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam2-node-02": {
+    "width": 1600,
+    "height": 1041,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam2-still-01": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-cam2-still-02": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "uchenye-nizhnego-setup-01": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  }
+}

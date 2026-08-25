@@ -22,6 +22,7 @@ export default function Cases() {
         <nav className="c-nav">
           <a href="/portfolio">Работы</a>
           <a href="/portfolio/camera">Съёмка</a>
+          <a href="/photo">Фото</a>
           <a href="/portfolio/post">Пост</a>
           <a href="/cases" aria-current="page">Кейсы</a>
           <a href="/blog">Блог</a>

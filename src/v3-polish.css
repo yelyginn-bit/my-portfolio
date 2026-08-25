@@ -10,9 +10,9 @@ body:has(.v3-editorial-page) {
   background: #080808;
 }
 
-/* Five public links, one flexible utility cell and one closing CTA. */
+/* Six public links, one flexible utility cell and one closing CTA. */
 .v3-nav {
-  grid-template-columns: 50px repeat(5, max-content) minmax(118px, 1fr) max-content !important;
+  grid-template-columns: 50px repeat(6, max-content) minmax(118px, 1fr) max-content !important;
 }
 
 /* The MP4 is progressive enhancement: the poster is always present underneath. */
@@ -395,7 +395,7 @@ body:has(.v3-editorial-page) {
 }
 
 @media (max-width: 1080px) and (min-width: 821px) {
-  .v3-nav { grid-template-columns: 48px repeat(5, max-content) minmax(86px,1fr) max-content !important; }
+  .v3-nav { grid-template-columns: 48px repeat(6, max-content) minmax(86px,1fr) max-content !important; }
 }
 
 @media (max-width: 900px) {

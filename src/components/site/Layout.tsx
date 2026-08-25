@@ -88,6 +88,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
     <div id="ds-mobile-menu" className="ds-mobile-menu">
       <nav aria-label="Мобильная навигация">
         <a href="/portfolio" onClick={onClose}>Работы</a><a href="/portfolio/camera" onClick={onClose}>Съёмка</a>
+        <a href="/photo" onClick={onClose}>Фото</a>
         <a href="/portfolio/post" onClick={onClose}>Пост</a>
         <a href="/blog" onClick={onClose}>Блог</a><a href="/about" onClick={onClose}>Обо мне</a><a href="/contact" onClick={onClose}>Обсудить проект</a>
       </nav>
@@ -97,7 +98,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
   );
 }
 
-export function SiteHeader({ active }: { active?: "work" | "camera" | "post" | "cases" | "blog" | "about" }) {
+export function SiteHeader({ active }: { active?: "work" | "camera" | "photo" | "post" | "cases" | "blog" | "about" }) {
   const [open, setOpen] = useState(false);
   return (
     <header className="ds-header">
@@ -106,6 +107,7 @@ export function SiteHeader({ active }: { active?: "work" | "camera" | "post" | "
         <nav className="ds-nav" aria-label="Основная навигация">
           <a href="/portfolio" aria-current={active === "work" ? "page" : undefined}>Работы</a>
           <a href="/portfolio/camera" aria-current={active === "camera" ? "page" : undefined}>Съёмка</a>
+          <a href="/photo" aria-current={active === "photo" ? "page" : undefined}>Фото</a>
           <a href="/portfolio/post" aria-current={active === "post" ? "page" : undefined}>Пост</a>
           <a href="/blog" aria-current={active === "blog" ? "page" : undefined}>Блог</a>
           <a href="/about" aria-current={active === "about" ? "page" : undefined}>Обо мне</a>

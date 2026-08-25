@@ -51,6 +51,7 @@ function LazyPlayer({ asset, title }: { asset: WorkAsset; title: string }) {
 const primaryNav = [
   { href: "/portfolio", label: "РАБОТЫ", active: "work" },
   { href: "/portfolio/camera", label: "СЪЁМКА", active: "camera" },
+  { href: "/photo", label: "ФОТО", active: "photo" },
   { href: "/portfolio/post", label: "ПОСТ", active: "post" },
   { href: "/blog", label: "БЛОГ", active: "blog" },
   { href: "/about", label: "ОБО МНЕ", active: "about" },
@@ -58,6 +59,7 @@ const primaryNav = [
 
 function currentNavItem(path: string) {
   if (path === "/portfolio/camera") return "camera";
+  if (path === "/photo") return "photo";
   if (path === "/portfolio/post" || path === "/portfolio/editing") return "post";
   if (path === "/blog" || path.startsWith("/blog/")) return "blog";
   if (path === "/about") return "about";
@@ -88,7 +90,7 @@ function SiteHeader() {
             {primaryNav.map((item, index) => (
               <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={active === item.active ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item.label}</a>
             ))}
-            <a href="/contact" onClick={() => setOpen(false)}><span>06</span>ОБСУДИТЬ ПРОЕКТ <ArrowUpRight size={16} /></a>
+            <a href="/contact" onClick={() => setOpen(false)}><span>{String(primaryNav.length + 1).padStart(2, "0")}</span>ОБСУДИТЬ ПРОЕКТ <ArrowUpRight size={16} /></a>
           </div>
       )}
     </>

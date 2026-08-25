@@ -7,6 +7,7 @@
     if (href === "/") return path === "/";
     if (href === "/portfolio") return path.startsWith("/portfolio");
     if (href === "/portfolio/camera") return path === "/portfolio/camera";
+    if (href === "/photo") return path === "/photo";
     if (href === "/portfolio/post") return ["/portfolio/post", "/portfolio/editing"].includes(path);
     if (href === "/blog") return path === "/blog" || path.startsWith("/blog/");
     if (href === "/about") return path === "/about";
@@ -25,6 +26,7 @@
         <nav class="site-static-nav" aria-label="Основная навигация">
           <a href="/portfolio"${currentAttr("/portfolio")}>Работы</a>
           <a href="/portfolio/camera"${currentAttr("/portfolio/camera")}>Съёмка</a>
+          <a href="/photo"${currentAttr("/photo")}>Фото</a>
           <a href="/portfolio/post"${currentAttr("/portfolio/post")}>Пост</a>
           <a href="/blog"${currentAttr("/blog")}>Блог</a>
           <a href="/about"${currentAttr("/about")}>Обо мне</a>
@@ -40,6 +42,7 @@
           <a href="/">Главная</a>
           <a href="/portfolio">Работы</a>
           <a href="/portfolio/camera">Съёмка</a>
+          <a href="/photo">Фото</a>
           <a href="/portfolio/post">Пост</a>
           <a href="/blog">Блог</a>
           <a href="/about">Обо мне</a>

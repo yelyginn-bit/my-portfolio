@@ -23,11 +23,14 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import sharp from "sharp";
-import { CAMERA_SCREENSHOTS, COLOR_PAIRS, SINGLE_PHOTOS, type CameraScreenshotSource, type ColorPairSource } from "./photo-map";
+import { CAMERA_SCREENSHOTS, COLOR_PAIRS, PORTFOLIO_GALLERY_IDS, SINGLE_PHOTOS, type CameraScreenshotSource, type ColorPairSource } from "./photo-map";
 
 const execFileAsync = promisify(execFile);
 
 const WIDTHS = [480, 960, 1600] as const;
+/** Кадры галереи /photo дополнительно получают срез 2400w — на этой ширине
+ * лайтбокс показывает их во весь экран, и retina-дисплеям не хватает 1600w. */
+const GALLERY_EXTRA_WIDTH = 2400;
 const CANONICAL_WIDTH = WIDTHS[WIDTHS.length - 1];
 const WEBP_QUALITY = 82;
 
@@ -63,11 +66,15 @@ interface ProcessedPhoto {
 
 /** Ресайзит один источник на все применимые ширины (без апскейла), пишет
  * `<id>-<w>w.webp` для промежуточных ширин, `<id>.webp` для канонической
- * (самой крупной применимой). EXIF не сохраняется нигде: sharp по умолчанию
+ * (самой крупной из WIDTHS). EXIF не сохраняется нигде: sharp по умолчанию
  * не переносит метаданные в выход, если явно не вызван `.withMetadata()` —
  * мы его не вызываем. `.rotate()` без аргументов применяет поворот по EXIF
  * Orientation к самим пикселям до того, как эта метка (и всё остальное
- * EXIF) будет отброшена. */
+ * EXIF) будет отброшена.
+ *
+ * Кадры галереи /photo дополнительно получают `<id>-2400w.webp` — всегда
+ * с суффиксом, никогда не канонический файл, чтобы не менять смысл
+ * `<id>.webp` для остальных мест сайта, где ожидается 1600w. */
 async function processSource(id: string, absoluteSourcePath: string, scratchDir: string): Promise<ProcessedPhoto> {
   const readable = await resolveReadableSource(absoluteSourcePath, scratchDir);
   const base = sharp(readable).rotate();
@@ -88,8 +95,15 @@ async function processSource(id: string, absoluteSourcePath: string, scratchDir:
     if (isCanonical) canonicalDims = { width: info.width, height: info.height };
   }
 
+  const allWidths = [...applicableWidths];
+  if (PORTFOLIO_GALLERY_IDS.has(id) && sourceWidth >= GALLERY_EXTRA_WIDTH) {
+    const outFile = path.join(outputDir, `${id}-${GALLERY_EXTRA_WIDTH}w.webp`);
+    await base.clone().resize({ width: GALLERY_EXTRA_WIDTH, withoutEnlargement: true }).webp({ quality: WEBP_QUALITY }).toFile(outFile);
+    allWidths.push(GALLERY_EXTRA_WIDTH);
+  }
+
   if (!canonicalDims) throw new Error(`No canonical output produced for ${id}`);
-  return { id, width: canonicalDims.width, height: canonicalDims.height, widths: applicableWidths };
+  return { id, width: canonicalDims.width, height: canonicalDims.height, widths: allWidths };
 }
 
 /** Находит файл скриншота по ASCII-безопасной части имени и наличию "(2)",

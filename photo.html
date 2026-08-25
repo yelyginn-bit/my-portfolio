@@ -76,6 +76,40 @@
       .portfolio-request { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.6fr); gap: 24px; align-items: end; border: 1px solid rgba(255,255,255,0.1); padding: clamp(24px, 5vw, 48px); }
       .portfolio-request p { max-width: 58ch; color: rgba(255,255,255,0.65); }
       @media (max-width: 720px) { .portfolio-request { grid-template-columns: 1fr; } }
+      /* Gallery (block 6, "Примеры работ") */
+      .gallery-intro { color: rgba(255,255,255,0.65); max-width: 62ch; margin-bottom: 32px; font-size: 0.95rem; }
+      .gallery-item { display: block; width: 100%; border: 0; background: none; padding: 0; cursor: zoom-in; overflow: hidden; border-radius: 2px; }
+      .gallery-item img { display: block; width: 100%; transition: opacity 0.2s; }
+      .gallery-item:hover img, .gallery-item:focus-visible img { opacity: 0.85; }
+      .gallery-item:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+      .gallery-hero { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 8px; }
+      .gallery-hero .gallery-item { aspect-ratio: 3 / 4; }
+      .gallery-hero .gallery-item img { height: 100%; object-fit: cover; }
+      .gallery-hero .gallery-item--big { grid-column: span 2; grid-row: span 2; }
+      @media (max-width: 720px) {
+        .gallery-hero { grid-template-columns: repeat(2, 1fr); }
+        .gallery-hero .gallery-item--big { grid-row: span 1; }
+      }
+      .gallery-grid { column-count: 3; column-gap: 8px; }
+      @media (max-width: 900px) { .gallery-grid { column-count: 2; } }
+      @media (max-width: 520px) { .gallery-grid { column-count: 1; } }
+      .gallery-grid .gallery-item { break-inside: avoid; margin-bottom: 8px; }
+      .gallery-grid .gallery-item img { height: auto; }
+      .gallery-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,0.1); padding: clamp(20px, 4vw, 32px); margin-top: 32px; }
+      .gallery-cta p { color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 44ch; }
+      /* Lightbox */
+      .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 200; padding: 40px; }
+      .lightbox.is-open { display: flex; }
+      .lightbox-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+      .lightbox-close, .lightbox-prev, .lightbox-next { position: fixed; background: rgba(255,255,255,0.08); color: var(--white); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 44px; height: 44px; font-size: 1.4rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+      .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover { background: rgba(255,255,255,0.18); }
+      .lightbox-close { top: 20px; right: 20px; }
+      .lightbox-prev { left: 20px; top: 50%; transform: translateY(-50%); }
+      .lightbox-next { right: 20px; top: 50%; transform: translateY(-50%); }
+      @media (max-width: 640px) {
+        .lightbox { padding: 16px; }
+        .lightbox-prev, .lightbox-next { width: 38px; height: 38px; font-size: 1.2rem; }
+      }
       .faq { display: grid; gap: 0; }
       .faq-item { padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.06); }
       .faq-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -232,22 +266,161 @@
         </div>
       </section>
 
-      <section>
+      <section class="photo-gallery" aria-label="Примеры работ">
         <div class="wrap">
           <h2>Примеры <span>работ</span></h2>
-          <div class="portfolio-request">
-            <div>
-              <p class="eyebrow">Подборка под задачу</p>
-              <p>Подборка фоторабот доступна по запросу. Напишите нишу и формат проекта — отправлю релевантные предметные, портретные, интерьерные или репортажные серии.</p>
+          <p class="gallery-intro">41 кадр из съёмок: портрет, fashion, костюмированная съёмка, портрет в интерьере, чёрно-белый портрет.</p>
+
+      <div class="gallery-hero">
+          <button class="gallery-item gallery-item--big" type="button" data-index="0">
+            <img src="/portfolio-photos/anastasia-box-08.webp" srcset="/portfolio-photos/anastasia-box-08-480w.webp 480w, /portfolio-photos/anastasia-box-08-960w.webp 960w, /portfolio-photos/anastasia-box-08.webp 1600w, /portfolio-photos/anastasia-box-08-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Модель в синем купальнике с боксёрскими перчатками на фоне неоновых ламп спортзала" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="1">
+            <img src="/portfolio-photos/oksana-02.webp" srcset="/portfolio-photos/oksana-02-480w.webp 480w, /portfolio-photos/oksana-02-960w.webp 960w, /portfolio-photos/oksana-02.webp 1600w, /portfolio-photos/oksana-02-2400w.webp 2400w" sizes="(min-width: 900px) 16vw, (min-width: 640px) 25vw, 50vw" width="1600" height="2133" alt="Чёрно-белый кадр: модель в облегающем костюме держится за деревянную раму дверного проёма" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="2">
+            <img src="/portfolio-photos/olya-01.webp" srcset="/portfolio-photos/olya-01-480w.webp 480w, /portfolio-photos/olya-01-960w.webp 960w, /portfolio-photos/olya-01.webp 1600w, /portfolio-photos/olya-01-2400w.webp 2400w" sizes="(min-width: 900px) 16vw, (min-width: 640px) 25vw, 50vw" width="1600" height="2133" alt="Модель в леопардовом пальто и чёрном платье на диване в клубном интерьере с неоновой подсветкой" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item gallery-item--big" type="button" data-index="3">
+            <img src="/portfolio-photos/portraits-02.webp" srcset="/portfolio-photos/portraits-02-480w.webp 480w, /portfolio-photos/portraits-02-960w.webp 960w, /portfolio-photos/portraits-02.webp 1600w, /portfolio-photos/portraits-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет в красном платье у бетонной стены с цветным светом, вечерняя съёмка" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="4">
+            <img src="/portfolio-photos/marina-02.webp" srcset="/portfolio-photos/marina-02-480w.webp 480w, /portfolio-photos/marina-02-960w.webp 960w, /portfolio-photos/marina-02.webp 1600w, /portfolio-photos/marina-02-2400w.webp 2400w" sizes="(min-width: 900px) 16vw, (min-width: 640px) 25vw, 50vw" width="1600" height="2133" alt="Полный кадр готического образа с веером, платьем с красным сердцем на корсете и перьями в причёске" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="5">
+            <img src="/portfolio-photos/anton-05.webp" srcset="/portfolio-photos/anton-05-480w.webp 480w, /portfolio-photos/anton-05-960w.webp 960w, /portfolio-photos/anton-05.webp 1600w, /portfolio-photos/anton-05-2400w.webp 2400w" sizes="(min-width: 900px) 16vw, (min-width: 640px) 25vw, 50vw" width="1600" height="2133" alt="Антон Ильинский на фоне окна с переплётом, диагональная композиция, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+      </div>
+
+      <div class="gallery-grid">
+          <button class="gallery-item" type="button" data-index="6">
+            <img src="/portfolio-photos/anastasia-box-01.webp" srcset="/portfolio-photos/anastasia-box-01-480w.webp 480w, /portfolio-photos/anastasia-box-01-960w.webp 960w, /portfolio-photos/anastasia-box-01.webp 1600w, /portfolio-photos/anastasia-box-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портретная съёмка в спортзале: модель в синем купальнике сидит у боксёрской груши, на фоне неоновые лампы и боксёрская перчатка" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="7">
+            <img src="/portfolio-photos/anastasia-box-02.webp" srcset="/portfolio-photos/anastasia-box-02-480w.webp 480w, /portfolio-photos/anastasia-box-02-960w.webp 960w, /portfolio-photos/anastasia-box-02.webp 1600w, /portfolio-photos/anastasia-box-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Тот же образ крупным планом: синий купальник, цепочка на шее, неоновый свет спортзала на фоне" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="8">
+            <img src="/portfolio-photos/anastasia-box-03.webp" srcset="/portfolio-photos/anastasia-box-03-480w.webp 480w, /portfolio-photos/anastasia-box-03-960w.webp 960w, /portfolio-photos/anastasia-box-03.webp 1600w, /portfolio-photos/anastasia-box-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Модель сидит на полу, прижавшись щекой к боксёрской перчатке, синий купальник и чёрные брюки с лампасами" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="9">
+            <img src="/portfolio-photos/anastasia-box-04.webp" srcset="/portfolio-photos/anastasia-box-04-480w.webp 480w, /portfolio-photos/anastasia-box-04-960w.webp 960w, /portfolio-photos/anastasia-box-04.webp 1600w, /portfolio-photos/anastasia-box-04-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Деталь съёмки в гараже: старый мотоцикл с фарой на фоне жалюзи, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="10">
+            <img src="/portfolio-photos/anastasia-box-05.webp" srcset="/portfolio-photos/anastasia-box-05-480w.webp 480w, /portfolio-photos/anastasia-box-05-960w.webp 960w, /portfolio-photos/anastasia-box-05.webp 1600w, /portfolio-photos/anastasia-box-05-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Чёрно-белый кадр: модель сидит у боксёрской груши в спортивном образе, на заднем плане второй мотоцикл и стойка с шинами" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="11">
+            <img src="/portfolio-photos/anastasia-box-06.webp" srcset="/portfolio-photos/anastasia-box-06-480w.webp 480w, /portfolio-photos/anastasia-box-06-960w.webp 960w, /portfolio-photos/anastasia-box-06.webp 1600w, /portfolio-photos/anastasia-box-06-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2400" alt="Портрет в синем купальнике на фоне неоновых ламп и боксёрских снарядов, рука у виска" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="12">
+            <img src="/portfolio-photos/anastasia-box-07.webp" srcset="/portfolio-photos/anastasia-box-07-480w.webp 480w, /portfolio-photos/anastasia-box-07-960w.webp 960w, /portfolio-photos/anastasia-box-07.webp 1600w, /portfolio-photos/anastasia-box-07-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Крупный план: боксёрская перчатка у плеча, глаза закрыты, цепочка на шее" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="13">
+            <img src="/portfolio-photos/anastasia-box-09.webp" srcset="/portfolio-photos/anastasia-box-09-480w.webp 480w, /portfolio-photos/anastasia-box-09-960w.webp 960w, /portfolio-photos/anastasia-box-09.webp 1600w, /portfolio-photos/anastasia-box-09-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2399" alt="Чёрно-белый крупный план лица с графичной стрелкой на веках, взгляд поверх плеча" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="14">
+            <img src="/portfolio-photos/anastasia-box-10.webp" srcset="/portfolio-photos/anastasia-box-10-480w.webp 480w, /portfolio-photos/anastasia-box-10-960w.webp 960w, /portfolio-photos/anastasia-box-10.webp 1600w, /portfolio-photos/anastasia-box-10-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Крупный план лица между двух поднятых боксёрских перчаток, прямой взгляд в камеру" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="15">
+            <img src="/portfolio-photos/anton-01.webp" srcset="/portfolio-photos/anton-01-480w.webp 480w, /portfolio-photos/anton-01-960w.webp 960w, /portfolio-photos/anton-01.webp 1600w, /portfolio-photos/anton-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Портрет Антона Ильинского с камерой в руках, чёрно-белый кадр в студии на белом диване" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="16">
+            <img src="/portfolio-photos/anton-02.webp" srcset="/portfolio-photos/anton-02-480w.webp 480w, /portfolio-photos/anton-02-960w.webp 960w, /portfolio-photos/anton-02.webp 1600w, /portfolio-photos/anton-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Портрет Антона Ильинского в профиль на фоне тёмной кафельной стены, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="17">
+            <img src="/portfolio-photos/anton-03.webp" srcset="/portfolio-photos/anton-03-480w.webp 480w, /portfolio-photos/anton-03-960w.webp 960w, /portfolio-photos/anton-03.webp 1600w, /portfolio-photos/anton-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Антон Ильинский с камерой у лица крупным планом, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="18">
+            <img src="/portfolio-photos/anton-04.webp" srcset="/portfolio-photos/anton-04-480w.webp 480w, /portfolio-photos/anton-04-960w.webp 960w, /portfolio-photos/anton-04.webp 1600w, /portfolio-photos/anton-04-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Антон Ильинский на фоне промышленного окна, низкий ракурс и контровой свет, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="19">
+            <img src="/portfolio-photos/anton-06.webp" srcset="/portfolio-photos/anton-06-480w.webp 480w, /portfolio-photos/anton-06-960w.webp 960w, /portfolio-photos/anton-06.webp 1600w, /portfolio-photos/anton-06-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Антон Ильинский на фоне того же окна, статичная фронтальная поза, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="20">
+            <img src="/portfolio-photos/anton-07.webp" srcset="/portfolio-photos/anton-07-480w.webp 480w, /portfolio-photos/anton-07-960w.webp 960w, /portfolio-photos/anton-07.webp 1600w, /portfolio-photos/anton-07-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Антон Ильинский держит камеру у глаза крупным планом, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="21">
+            <img src="/portfolio-photos/anton-08.webp" srcset="/portfolio-photos/anton-08-480w.webp 480w, /portfolio-photos/anton-08-960w.webp 960w, /portfolio-photos/anton-08.webp 1600w, /portfolio-photos/anton-08-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1600" alt="Антон Ильинский сидит на полу между белых полотен с камерой, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="22">
+            <img src="/portfolio-photos/anton-09.webp" srcset="/portfolio-photos/anton-09-480w.webp 480w, /portfolio-photos/anton-09-960w.webp 960w, /portfolio-photos/anton-09.webp 1600w, /portfolio-photos/anton-09-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет Антона Ильинского крупным планом с размытым передним планом, чёрно-белый кадр" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="23">
+            <img src="/portfolio-photos/darya-01.webp" srcset="/portfolio-photos/darya-01-480w.webp 480w, /portfolio-photos/darya-01-960w.webp 960w, /portfolio-photos/darya-01.webp 1600w, /portfolio-photos/darya-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет в интерьере мастерской скульптора: модель в белой рубашке поверх коричневого топа, силуэт статуи на фоне" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="24">
+            <img src="/portfolio-photos/darya-02.webp" srcset="/portfolio-photos/darya-02-480w.webp 480w, /portfolio-photos/darya-02-960w.webp 960w, /portfolio-photos/darya-02.webp 1600w, /portfolio-photos/darya-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Модель с кистью в руке на фоне мастерской со скульптурами, портрет в интерьере" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="25">
+            <img src="/portfolio-photos/darya-03.webp" srcset="/portfolio-photos/darya-03-480w.webp 480w, /portfolio-photos/darya-03-960w.webp 960w, /portfolio-photos/darya-03.webp 1600w, /portfolio-photos/darya-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Модель у деревянного мольберта в мастерской с гипсовыми бюстами, портрет в интерьере" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="26">
+            <img src="/portfolio-photos/darya-04.webp" srcset="/portfolio-photos/darya-04-480w.webp 480w, /portfolio-photos/darya-04-960w.webp 960w, /portfolio-photos/darya-04.webp 1600w, /portfolio-photos/darya-04-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Крупный портрет с закрытыми глазами на фоне мастерской скульптора" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="27">
+            <img src="/portfolio-photos/darya-05.webp" srcset="/portfolio-photos/darya-05-480w.webp 480w, /portfolio-photos/darya-05-960w.webp 960w, /portfolio-photos/darya-05.webp 1600w, /portfolio-photos/darya-05-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Модель с кистью у подбородка, мастерская со скульптурами на фоне" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="28">
+            <img src="/portfolio-photos/marina-01.webp" srcset="/portfolio-photos/marina-01-480w.webp 480w, /portfolio-photos/marina-01-960w.webp 960w, /portfolio-photos/marina-01.webp 1600w, /portfolio-photos/marina-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Костюмированная съёмка в готическом образе: чёрное платье, кружевной чокер с камеей, веер в руке" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="29">
+            <img src="/portfolio-photos/marina-03.webp" srcset="/portfolio-photos/marina-03-480w.webp 480w, /portfolio-photos/marina-03-960w.webp 960w, /portfolio-photos/marina-03.webp 1600w, /portfolio-photos/marina-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Готический образ с мечом в руке, тёмный оливковый фон, живописный свет" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="30">
+            <img src="/portfolio-photos/oksana-01.webp" srcset="/portfolio-photos/oksana-01-480w.webp 480w, /portfolio-photos/oksana-01-960w.webp 960w, /portfolio-photos/oksana-01.webp 1600w, /portfolio-photos/oksana-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет на кровати в белой полупрозрачной блузе на фоне оливковой стены" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="31">
+            <img src="/portfolio-photos/oksana-03.webp" srcset="/portfolio-photos/oksana-03-480w.webp 480w, /portfolio-photos/oksana-03-960w.webp 960w, /portfolio-photos/oksana-03.webp 1600w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2399" alt="Модель у панорамного окна с видом на заснеженный двор, драпированный костюм" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="32">
+            <img src="/portfolio-photos/olya-02.webp" srcset="/portfolio-photos/olya-02-480w.webp 480w, /portfolio-photos/olya-02-960w.webp 960w, /portfolio-photos/olya-02.webp 1600w, /portfolio-photos/olya-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2400" alt="Модель в леопардовом пальто стоит в клубном интерьере с красно-синей подсветкой, цепочка-пояс на платье" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="33">
+            <img src="/portfolio-photos/olya-03.webp" srcset="/portfolio-photos/olya-03-480w.webp 480w, /portfolio-photos/olya-03-960w.webp 960w, /portfolio-photos/olya-03.webp 1600w, /portfolio-photos/olya-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет в леопардовом пальто на тёмном фоне, цепочка-пояс на чёрном платье" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="34">
+            <img src="/portfolio-photos/olya-04.webp" srcset="/portfolio-photos/olya-04-480w.webp 480w, /portfolio-photos/olya-04-960w.webp 960w, /portfolio-photos/olya-04.webp 1600w, /portfolio-photos/olya-04-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Профильный портрет в леопардовом пальто с крупными серьгами-кольцами" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="35">
+            <img src="/portfolio-photos/olya-05.webp" srcset="/portfolio-photos/olya-05-480w.webp 480w, /portfolio-photos/olya-05-960w.webp 960w, /portfolio-photos/olya-05.webp 1600w, /portfolio-photos/olya-05-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1200" alt="Портрет в леопардовом пальто, рука за головой, взгляд в камеру" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="36">
+            <img src="/portfolio-photos/portraits-04.webp" srcset="/portfolio-photos/portraits-04-480w.webp 480w, /portfolio-photos/portraits-04-960w.webp 960w, /portfolio-photos/portraits-04.webp 1600w, /portfolio-photos/portraits-04-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2400" alt="Портрет в чёрных очках и берете, чёрный жакет и белый топ, цветная прядь волос" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="37">
+            <img src="/portfolio-photos/portraits-05.webp" srcset="/portfolio-photos/portraits-05-480w.webp 480w, /portfolio-photos/portraits-05-960w.webp 960w, /portfolio-photos/portraits-05.webp 1600w, /portfolio-photos/portraits-05-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="1067" alt="Крупный портрет с вьющимися волосами в мягком дневном свете у окна" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="38">
+            <img src="/portfolio-photos/sofa-01.webp" srcset="/portfolio-photos/sofa-01-480w.webp 480w, /portfolio-photos/sofa-01-960w.webp 960w, /portfolio-photos/sofa-01.webp 1600w, /portfolio-photos/sofa-01-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Съёмка в народном костюме: кружевной кокошник с красными бусинами, ассистент поправляет украшение" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="39">
+            <img src="/portfolio-photos/sofa-02.webp" srcset="/portfolio-photos/sofa-02-480w.webp 480w, /portfolio-photos/sofa-02-960w.webp 960w, /portfolio-photos/sofa-02.webp 1600w, /portfolio-photos/sofa-02-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Портрет в кокошнике и белой блузе с красными лентами, озорной прищур" loading="lazy" decoding="async" />
+          </button>
+          <button class="gallery-item" type="button" data-index="40">
+            <img src="/portfolio-photos/sofa-03.webp" srcset="/portfolio-photos/sofa-03-480w.webp 480w, /portfolio-photos/sofa-03-960w.webp 960w, /portfolio-photos/sofa-03.webp 1600w, /portfolio-photos/sofa-03-2400w.webp 2400w" sizes="(min-width: 900px) 33vw, (min-width: 640px) 50vw, 100vw" width="1600" height="2133" alt="Полный рост в народном костюме с кокошником и прозрачной юбкой поверх красных колготок" loading="lazy" decoding="async" />
+          </button>
+      </div>
+
+          <div class="gallery-cta">
+            <p>Студийная фотосъёмка — от 8 000 ₽/час, аренда студии включена.</p>
+            <div class="ctas">
+              <a href="/ceny" class="cta">Смотреть все цены</a>
+              <a href="https://t.me/YuriElygin" class="cta-ghost">Написать в Telegram</a>
             </div>
-            <a href="https://t.me/YuriElygin" class="cta">Получить подборку</a>
           </div>
+
           <p style="font-size:0.85rem; color:rgba(255,255,255,0.45); margin-top:20px;">
             Полное портфолио и кейсы — в <a href="/portfolio" style="color:var(--red);">разделе работ</a>
             или по запросу в Telegram под вашу нишу.
           </p>
         </div>
       </section>
+
+      <div class="lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" aria-hidden="true">
+        <button class="lightbox-close" type="button" aria-label="Закрыть">&times;</button>
+        <button class="lightbox-prev" type="button" aria-label="Предыдущее фото">&lsaquo;</button>
+        <button class="lightbox-next" type="button" aria-label="Следующее фото">&rsaquo;</button>
+        <img class="lightbox-img" id="lightboxImg" alt="" />
+      </div>
 
       <section>
         <div class="wrap">
@@ -329,5 +502,103 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        var buttons = Array.prototype.slice.call(document.querySelectorAll(".gallery-item"));
+        if (!buttons.length) return;
+
+        var lightbox = document.getElementById("photoLightbox");
+        var lightboxImg = document.getElementById("lightboxImg");
+        var closeBtn = lightbox.querySelector(".lightbox-close");
+        var prevBtn = lightbox.querySelector(".lightbox-prev");
+        var nextBtn = lightbox.querySelector(".lightbox-next");
+        var focusables = [closeBtn, prevBtn, nextBtn];
+
+        var currentIndex = -1;
+        var lastTrigger = null;
+
+        function show(index) {
+          var img = buttons[index].querySelector("img");
+          lightboxImg.src = img.currentSrc || img.src;
+          lightboxImg.srcset = img.srcset;
+          lightboxImg.sizes = "100vw";
+          lightboxImg.alt = img.alt;
+          currentIndex = index;
+        }
+
+        function preventTouch(e) {
+          e.preventDefault();
+        }
+
+        function onKeydown(e) {
+          if (e.key === "Escape") {
+            close();
+            return;
+          }
+          if (e.key === "ArrowLeft") {
+            step(-1);
+            return;
+          }
+          if (e.key === "ArrowRight") {
+            step(1);
+            return;
+          }
+          if (e.key === "Tab") {
+            var activeIndex = focusables.indexOf(document.activeElement);
+            if (e.shiftKey) {
+              if (activeIndex <= 0) {
+                e.preventDefault();
+                focusables[focusables.length - 1].focus();
+              }
+            } else if (activeIndex === focusables.length - 1 || activeIndex === -1) {
+              e.preventDefault();
+              focusables[0].focus();
+            }
+          }
+        }
+
+        function open(index, trigger) {
+          lastTrigger = trigger;
+          show(index);
+          lightbox.classList.add("is-open");
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+          lightbox.addEventListener("touchmove", preventTouch, { passive: false });
+          document.addEventListener("keydown", onKeydown);
+          closeBtn.focus();
+        }
+
+        function close() {
+          lightbox.classList.remove("is-open");
+          lightbox.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          lightbox.removeEventListener("touchmove", preventTouch);
+          document.removeEventListener("keydown", onKeydown);
+          if (lastTrigger) lastTrigger.focus();
+        }
+
+        function step(delta) {
+          show((currentIndex + delta + buttons.length) % buttons.length);
+        }
+
+        buttons.forEach(function (btn, index) {
+          btn.addEventListener("click", function () {
+            open(index, btn);
+          });
+        });
+
+        closeBtn.addEventListener("click", close);
+        prevBtn.addEventListener("click", function () {
+          step(-1);
+        });
+        nextBtn.addEventListener("click", function () {
+          step(1);
+        });
+        lightbox.addEventListener("click", function (e) {
+          if (e.target === lightbox) close();
+        });
+      })();
+    </script>
   </body>
 </html>

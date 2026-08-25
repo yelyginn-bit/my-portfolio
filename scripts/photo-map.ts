@@ -121,3 +121,20 @@ export const SINGLE_PHOTOS: readonly SinglePhotoSource[] = [
     "Photo Album 1 - 00000062.jpg", "Photo Album 1 - 00000063.jpg", "Photo Album 1 - 00000118.jpg",
   ]),
 ];
+
+/**
+ * id-ы, публикуемые в галерее /photo (41 из 43 кадров «фото_портфолио»):
+ * portraits-01 и portraits-03 — бэкстейдж со съёмочной площадкой, а не
+ * портреты, на странице услуги фотосъёмки они сбивают питч — оставлены
+ * файлами для соцсетей, в галерею и в срез 2400w не идут. street-* сюда
+ * не попадает уже по префиксу — это отдельная (пока непубликуемая) серия.
+ * Только эти id получают широкий срез 2400w для чёткости в лайтбоксе.
+ */
+const PORTFOLIO_PHOTO_PREFIXES = ["anton-", "anastasia-box-", "darya-", "marina-", "oksana-", "olya-", "portraits-", "sofa-"];
+const PORTFOLIO_GALLERY_EXCLUDED_IDS = new Set(["portraits-01", "portraits-03"]);
+
+export const PORTFOLIO_GALLERY_IDS: ReadonlySet<string> = new Set(
+  SINGLE_PHOTOS
+    .map((p) => p.id)
+    .filter((id) => PORTFOLIO_PHOTO_PREFIXES.some((prefix) => id.startsWith(prefix)) && !PORTFOLIO_GALLERY_EXCLUDED_IDS.has(id)),
+);

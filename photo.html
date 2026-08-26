@@ -77,7 +77,7 @@
       .portfolio-request p { max-width: 58ch; color: rgba(255,255,255,0.65); }
       @media (max-width: 720px) { .portfolio-request { grid-template-columns: 1fr; } }
       /* Gallery (block 6, "Примеры работ") */
-      .gallery-intro { color: rgba(255,255,255,0.65); max-width: 62ch; margin-bottom: 32px; font-size: 0.95rem; }
+      .gallery-intro { color: var(--ds-text); max-width: 62ch; margin-bottom: 32px; font-size: 0.95rem; }
       .gallery-item { display: block; width: 100%; border: 0; background: none; padding: 0; cursor: zoom-in; overflow: hidden; border-radius: 2px; }
       .gallery-item img { display: block; width: 100%; transition: opacity 0.2s; }
       .gallery-item:hover img, .gallery-item:focus-visible img { opacity: 0.85; }
@@ -96,7 +96,7 @@
       .gallery-grid .gallery-item { break-inside: avoid; margin-bottom: 8px; }
       .gallery-grid .gallery-item img { height: auto; }
       .gallery-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,0.1); padding: clamp(20px, 4vw, 32px); margin-top: 32px; }
-      .gallery-cta p { color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 44ch; }
+      .gallery-cta p { color: var(--ds-text); font-size: 0.95rem; max-width: 44ch; }
       /* Lightbox */
       .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 200; padding: 40px; }
       .lightbox.is-open { display: flex; }

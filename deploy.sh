@@ -56,6 +56,7 @@ STATIC_PUBLIC_ROUTES=(
   /content-day
   /cvetokorrekciya
   /video-dlya-marketpleysov
+  /pryamye-translyacii
 )
 
 declare -A SEEN_ROUTES=()

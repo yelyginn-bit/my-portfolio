@@ -1,6 +1,6 @@
 import type { EstimateData } from "./types";
 
-export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн" | "Цвет";
+export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн" | "Цвет" | "Прямые трансляции";
 
 export type PublicPriceItem = {
   id: string;
@@ -29,6 +29,9 @@ export const PUBLIC_PRICES: PublicPriceItem[] = [
   { id: "field-video", category: "Съёмка", title: "Оператор + техника", price: "от 35 000 ₽", description: "Выездная смена с комплектом камеры, света и звука.", includes: ["Оператор", "Камера", "Базовый свет и звук"], limitations: "Логистика и дополнительная техника считаются отдельно.", timeline: "Одна съёмочная дата", href: "/calculator", portfolioHref: "/portfolio" },
   { id: "color-grading", category: "Цвет", title: "Цветокоррекция в DaVinci Resolve", price: "от 5 000 ₽", description: "Отдельная удалённая услуга: присылаете исходники — возвращаю грейд.", includes: ["Разбор материала", "Первичная коррекция", "Финальный грейд"], limitations: "Реставрация брака съёмки и пересъёмка не входят.", timeline: "Обычно 3–7 рабочих дней", href: "/cvetokorrekciya", portfolioHref: "/portfolio/color", featured: true },
   { id: "advertising", category: "Полный продакшн", title: "Рекламный ролик", price: "от 70 000 ₽", description: "Проект от концепции и подготовки до финального мастера.", includes: ["Препродакшн", "Съёмка", "Постпродакшн"], limitations: "Команда, площадка и техника зависят от задачи.", timeline: "После брифа и плана производства", href: "/reklamnye-roliki", portfolioHref: "/portfolio", featured: true },
+  { id: "broadcast-operator", category: "Прямые трансляции", title: "Оператор или режиссёр на трансляцию", price: "18 000 – 25 000 ₽", description: "Выход в собранную командой площадки — оператором камеры или режиссёром эфира.", includes: ["Работа на смене", "Оператор или режиссёр эфира"], limitations: "Оборудование и организацию эфира обеспечивает команда площадки.", timeline: "Одна смена", href: "/pryamye-translyacii", portfolioHref: "/portfolio/broadcast" },
+  { id: "broadcast-turnkey", category: "Прямые трансляции", title: "Простая трансляция под ключ", price: "40 000 ₽", description: "Один рабочий день: застройка, эфир, демонтаж и выезд. Одна камерная точка, картинка сводится с презентацией в один эфир, звук — с микшерного пульта площадки.", includes: ["Застройка и демонтаж", "Эфир весь день", "Своё оборудование"], limitations: "Многокамерная режиссура и запись каждой камеры — отдельный проект.", timeline: "Один рабочий день", href: "/pryamye-translyacii", portfolioHref: "/portfolio/broadcast", featured: true },
+  { id: "broadcast-multicam", category: "Прямые трансляции", title: "Сложные многокамерные трансляции", price: "по смете", description: "Под конкретное событие, в команде: несколько камер, режиссура эфира, запись и монтаж.", includes: ["Многокамерный эфир", "Режиссура", "Запись и монтаж"], limitations: "Состав команды и техники зависит от события.", timeline: "После брифа", href: "/pryamye-translyacii", portfolioHref: "/portfolio/broadcast" },
 ];
 
 export const PUBLIC_PRICE_BY_ID = Object.fromEntries(PUBLIC_PRICES.map((item) => [item.id, item])) as Record<string, PublicPriceItem>;

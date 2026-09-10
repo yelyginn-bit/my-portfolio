@@ -189,6 +189,83 @@
       2400
     ]
   },
+  "broadcast-01": {
+    "width": 1600,
+    "height": 1065,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "broadcast-02": {
+    "width": 960,
+    "height": 1442,
+    "widths": [
+      480,
+      960
+    ]
+  },
+  "broadcast-03": {
+    "width": 1600,
+    "height": 1065,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "broadcast-04": {
+    "width": 960,
+    "height": 1442,
+    "widths": [
+      480,
+      960
+    ]
+  },
+  "broadcast-05": {
+    "width": 1600,
+    "height": 1065,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "broadcast-06": {
+    "width": 960,
+    "height": 1442,
+    "widths": [
+      480,
+      960
+    ]
+  },
+  "broadcast-07": {
+    "width": 960,
+    "height": 1442,
+    "widths": [
+      480,
+      960
+    ]
+  },
+  "broadcast-08": {
+    "width": 1600,
+    "height": 1065,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
+  "broadcast-09": {
+    "width": 1600,
+    "height": 1065,
+    "widths": [
+      480,
+      960,
+      1600
+    ]
+  },
   "darya-01": {
     "width": 1600,
     "height": 2133,

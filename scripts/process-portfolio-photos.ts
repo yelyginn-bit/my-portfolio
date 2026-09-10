@@ -18,7 +18,7 @@
  * автогенерация из имён файлов.
  */
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -42,9 +42,19 @@ function parseArgs(argv: readonly string[]) {
   const sourceFlagIndex = argv.indexOf("--source");
   const source = sourceFlagIndex >= 0 ? argv[sourceFlagIndex + 1] : argv[0];
   if (!source) {
-    throw new Error("Usage: tsx scripts/process-portfolio-photos.ts --source <path-to-archive>");
+    throw new Error("Usage: tsx scripts/process-portfolio-photos.ts --source <path-to-archive> [--only <id-prefix>]");
   }
-  return { source: path.resolve(source) };
+  // `--only <prefix>` обрабатывает лишь id, равные префиксу или начинающиеся
+  // с `<prefix>-` (например `broadcast` → `broadcast-01`..`broadcast-09`).
+  // В этом режиме манифест не перезаписывается целиком, а сливается: остальные
+  // записи и их webp-файлы не трогаются. Без флага поведение прежнее —
+  // полный прогон всего списка и перезапись манифеста.
+  const onlyFlagIndex = argv.indexOf("--only");
+  const only = onlyFlagIndex >= 0 ? argv[onlyFlagIndex + 1] : undefined;
+  if (onlyFlagIndex >= 0 && (!only || only.startsWith("--"))) {
+    throw new Error("--only requires an id prefix, e.g. --only broadcast");
+  }
+  return { source: path.resolve(source), only };
 }
 
 /** sharp не умеет декодировать HEIC из коробки (нет libheif в прекомпилированном
@@ -130,8 +140,21 @@ async function processPair(pair: ColorPairSource, sourceRoot: string, scratchDir
   return [raw, color];
 }
 
+/** Прочитать текущий манифест как объект. Отсутствие файла — не ошибка
+ * (первый прогон), любой другой сбой чтения/разбора пробрасываем: молча
+ * начать с пустого манифеста в режиме `--only` значило бы потерять записи. */
+async function readManifest(): Promise<Record<string, unknown>> {
+  try {
+    return JSON.parse(await readFile(manifestPath, "utf8")) as Record<string, unknown>;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return {};
+    throw error;
+  }
+}
+
 async function main() {
-  const { source } = parseArgs(process.argv.slice(2));
+  const { source, only } = parseArgs(process.argv.slice(2));
+  const matchesOnly = (id: string) => !only || id === only || id.startsWith(`${only}-`);
   await mkdir(outputDir, { recursive: true });
   const scratchDir = await mkdtemp(path.join(tmpdir(), "yelyginn-photo-pipeline-"));
 
@@ -139,33 +162,44 @@ async function main() {
     const processed: ProcessedPhoto[] = [];
 
     for (const pair of COLOR_PAIRS) {
+      if (only && !matchesOnly(pair.rawId) && !matchesOnly(pair.colorId)) continue;
       const [raw, color] = await processPair(pair, source, scratchDir);
       processed.push(raw, color);
       console.log(`pair OK: ${pair.rawId} / ${pair.colorId} — ${raw.width}x${raw.height}`);
     }
 
     for (const single of SINGLE_PHOTOS) {
+      if (!matchesOnly(single.id)) continue;
       const result = await processSource(single.id, path.join(source, single.source), scratchDir);
       processed.push(result);
       console.log(`photo OK: ${single.id} — ${result.width}x${result.height}`);
     }
 
     for (const screenshot of CAMERA_SCREENSHOTS) {
+      if (!matchesOnly(screenshot.id)) continue;
       const absoluteSource = await resolveCameraScreenshot(screenshot, source);
       const result = await processSource(screenshot.id, absoluteSource, scratchDir);
       processed.push(result);
       console.log(`photo OK: ${screenshot.id} — ${result.width}x${result.height}`);
     }
 
-    const manifest = Object.fromEntries(
-      processed
-        .sort((a, b) => a.id.localeCompare(b.id))
-        .map(({ id, width, height, widths }) => [id, { width, height, widths }]),
-    );
+    if (only && processed.length === 0) {
+      throw new Error(`--only ${only} matched no ids in photo-map.ts`);
+    }
+
+    // В режиме `--only` сливаем в существующий манифест, вне его — перезаписываем
+    // целиком (прежнее поведение). Ключи всегда сортируются одинаково, поэтому
+    // повторный прогон с тем же `--only` даёт побайтово тот же файл.
+    const base = only ? await readManifest() : {};
+    const merged: Record<string, unknown> = { ...base };
+    for (const { id, width, height, widths } of processed) {
+      merged[id] = { width, height, widths };
+    }
+    const manifest = Object.fromEntries(Object.keys(merged).sort().map((id) => [id, merged[id]]));
     await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
     console.log(`\nProcessed ${processed.length} photos into ${path.relative(rootDir, outputDir)}`);
-    console.log(`Manifest written to ${path.relative(rootDir, manifestPath)}`);
+    console.log(`Manifest ${only ? "merged" : "written"}: ${path.relative(rootDir, manifestPath)} (${Object.keys(manifest).length} ids total)`);
   } finally {
     await rm(scratchDir, { recursive: true, force: true });
   }

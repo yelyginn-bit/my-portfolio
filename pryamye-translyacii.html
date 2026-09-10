@@ -68,10 +68,12 @@
       section { padding: clamp(3rem, 6vw, 4.5rem) 0; border-top: 1px solid var(--ds-border); }
       h2 { margin-bottom: clamp(1.5rem, 4vw, 2.5rem); }
 
-      .card-num { margin-bottom: 12px; color: var(--ds-accent-text); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; }
-
-      .price-label { color: var(--ds-text-secondary); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
-      .price-tag { display: block; margin: 6px 0 10px; color: var(--ds-text); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
+      /* Цвет .card-num / .price-label / .price-tag задаёт site-skin.css
+         (приглушённо-серый для мелких меток, --ds-accent для суммы) —
+         здесь только размер, регистр и трекинг, цвет не дублируем. */
+      .card-num { margin-bottom: 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; }
+      .price-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+      .price-tag { display: block; margin: 6px 0 10px; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
       .price-note { max-width: 66ch; margin-top: clamp(1.5rem, 3vw, 2rem); color: var(--ds-text-secondary); font-size: 0.92rem; line-height: 1.6; }
 
       .bts-intro { max-width: 68ch; margin-bottom: clamp(1.5rem, 3vw, 2rem); color: var(--ds-text-secondary); font-size: 0.95rem; line-height: 1.6; }
@@ -147,7 +149,7 @@
       <section>
         <div class="wrap">
           <h2>Сколько <span>стоит</span></h2>
-          <p class="price-label" style="margin-bottom:20px;">Ориентиры для первичной сметы. Точная сумма — после брифа: событие, площадка, число камер и сроки.</p>
+          <p class="bts-intro" style="margin-bottom:20px;">Ориентиры для первичной сметы. Точная сумма — после брифа: событие, площадка, число камер и сроки.</p>
           <div class="price-row">
             <div class="price-card">
               <p class="price-label">Оператор или режиссёр на трансляцию</p>

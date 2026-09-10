@@ -438,13 +438,6 @@ function PortfolioPage({ category }: { category?: PortfolioCategory }) {
   );
 }
 
-function BroadcastPage() {
-  const liveProjects = projectsForCategory("broadcast");
-  return (
-    <><SiteHeader /><main className="v3-catalog v3-shell"><header className="v3-catalog__hero"><p className="v3-kicker">ЭФИР // МУЛЬТИКАМ // КОМАНДА</p><h1>ПРЯМЫЕ<br />ТРАНСЛЯЦИИ</h1><p>Работаю оператором на трансляциях и в составе production-команды. Снимаю события, концерты и сценические проекты.</p></header><section className="v32-broadcast-proof"><figure><img src="/v3-assets/bts-broadcast-camera.webp" width="720" height="1565" loading="eager" decoding="async" alt="Мультикамерная съёмка на площадке" /><figcaption>МУЛЬТИКАМ // ПЛОЩАДКА</figcaption></figure><figure><img src="/v3-assets/bts-gimbal.webp" width="720" height="1565" loading="lazy" decoding="async" alt="Камера на стабилизаторе на выездной съёмке" /><figcaption>КАМЕРА // ВЫЕЗД</figcaption></figure><div><p className="v3-kicker">ПОДТВЕРЖДЁННЫЕ // РОЛИ</p><h2>РАБОТА В ЭФИРНОЙ КОМАНДЕ</h2><ul><li>Оператор камеры на мероприятии</li><li>Камера в составе многокамерной трансляции</li><li>Мультикамерная запись и последующий монтаж</li><li>Съёмка событий, концертов и сценических проектов</li></ul></div></section><header className="v3-section-head"><p className="v3-kicker">СВЯЗАННЫЕ // ПРОЕКТЫ // {liveProjects.length}</p><h2>ЭФИР<br /><i>МУЛЬТИКАМ.</i></h2></header><section className="v3-catalog__list"><PortfolioSystem projects={liveProjects} /></section><ContactSection /></main><SiteFooter /></>
-  );
-}
-
 function ProjectPage({ project }: { project: Project }) {
   const assets = assetsForProject(project.id);
   const currentIndex = projects.indexOf(project);
@@ -501,7 +494,6 @@ export default function V3App({ initialPath, initialSearch }: { initialPath?: st
   else if (route.kind === "about") page = <AboutPage />;
   else if (route.kind === "contact") page = <ContactPage />;
   else if (route.kind === "redirect") page = <RedirectToPortfolio />;
-  else if (route.kind === "broadcast") page = <BroadcastPage />;
   else if (route.kind === "category") page = <PortfolioPage category={route.category} />;
   else if (route.kind === "project" && route.project) page = <ProjectPage project={route.project} />;
   else page = <HomePage />;

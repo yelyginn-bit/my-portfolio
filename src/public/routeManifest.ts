@@ -118,7 +118,7 @@ export const normalizePublicPath = (rawPath: string) => rawPath.replace(/\/+$/u,
 
 export interface V3RouteResolution {
   path: string;
-  kind: "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "broadcast" | "redirect" | "unknown";
+  kind: "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "redirect" | "unknown";
   category?: PortfolioCategory;
   project?: Project;
   seo: { title: string; description: string; canonical: string };
@@ -145,7 +145,6 @@ export function resolveV3Route(rawPath: string, rawSearch = ""): V3RouteResoluti
   if (path === "/blog") return { path, kind: "blog", seo: { title: "Блог о съёмке и постпродакшне | YELYGINN", description: "Практические заметки Юрия Елыгина о подготовке, видеосъёмке, монтаже и постпродакшне.", canonical: "/blog" } };
   if (path === "/about") return { path, kind: "about", seo: { title: "Обо мне — Юрий Елыгин | YELYGINN", description: "Юрий Елыгин — оператор, режиссёр монтажа и колорист из Нижнего Новгорода.", canonical: "/about" } };
   if (path === "/contact") return { path, kind: "contact", seo: { title: "Обсудить проект | YELYGINN", description: "Связаться с Юрием Елыгиным: Instagram, Telegram, YouTube, email и короткий бриф проекта.", canonical: "/contact" } };
-  if (path === "/pryamye-translyacii" || path === "/pryamye-translyacii.html") return { path, kind: "broadcast", seo: { title: "Оператор прямых трансляций в Нижнем Новгороде | YELYGINN", description: "Оператор камеры на прямую трансляцию, многокамерная съёмка и работа в составе live production crew в Нижнем Новгороде и с выездом.", canonical: "/pryamye-translyacii" } };
   if (path === "/portfolio" || path === "/portfolio.html") return { path, kind: "portfolio", seo: { title: "Портфолио — 89 видеоработ | YELYGINN", description: "89 видеоработ Юрия Елыгина: операторская работа, монтаж, цвет, commercial, events, Reels и live production.", canonical: "/portfolio" } };
   if (path === "/cases" || path === "/cases.html") return { path, kind: "redirect", seo: { title: "Портфолио | YELYGINN", description: "Работы Юрия Елыгина.", canonical: "/portfolio" } };
   if (category) return { path, kind: "category", category, seo: { title: `${CATEGORY_META[category].title} | YELYGINN`, description: CATEGORY_META[category].description, canonical: `/portfolio/${category}` } };

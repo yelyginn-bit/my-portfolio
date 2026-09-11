@@ -178,6 +178,7 @@ body.site-menu-open { overflow: hidden; }
   .site-static-footer { grid-template-columns: repeat(4, minmax(0,1fr)); row-gap: 2.5rem; }
   .site-static-footer__brand, .site-static-footer nav, .site-static-footer__contacts, .site-static-footer__legal { grid-column: 1 / -1; }
   .site-static-footer__legal { align-items: flex-start; flex-direction: column; }
+  .site-static-footer nav a, .site-static-footer__legal a, .site-static-footer__legal button { min-height: 44px; display: inline-flex; align-items: center; }
   .site-static .stats { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
   .site-static .stat { border-bottom: 1px solid var(--site-border); }
   .service-showcase-main { grid-column: 1 / -1; }

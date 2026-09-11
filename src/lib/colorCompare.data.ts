@@ -55,6 +55,12 @@ export type ColorComparePair = {
   /** Альт для результата. */
   afterAlt: string;
   thumbnail?: string;
+  /** Пиксельные размеры before/after (у пары они совпадают — п.1 контракта
+   * выше). Нужны как атрибуты width/height на <img>: без них рамка до
+   * загрузки кадра нулевой высоты, из-за чего плавающие бейджи «Исходник»/
+   * «После цвета» рисуются поверх подписи ниже, а не внутри рамки. */
+  width: number;
+  height: number;
 };
 
 /**
@@ -82,6 +88,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-01-thumb.webp",
     beforeAlt: "Ракурс 01 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 01 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "sibur-interview-02",
@@ -93,6 +101,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-02-thumb.webp",
     beforeAlt: "Ракурс 02 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 02 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "sibur-interview-03",
@@ -104,6 +114,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-03-thumb.webp",
     beforeAlt: "Ракурс 03 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 03 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "sibur-interview-04",
@@ -115,6 +127,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-04-thumb.webp",
     beforeAlt: "Ракурс 04 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 04 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "sibur-interview-05",
@@ -126,6 +140,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-05-thumb.webp",
     beforeAlt: "Ракурс 05 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 05 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "sibur-interview-06",
@@ -137,6 +153,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/v3-assets/color/sibur-06-thumb.webp",
     beforeAlt: "Ракурс 06 проекта «Женщины СИБУРа» до цветокоррекции",
     afterAlt: "Тот же ракурс 06 проекта «Женщины СИБУРа» после цветокоррекции",
+    width: 1920,
+    height: 1080,
   },
   {
     id: "korona-02",
@@ -148,6 +166,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/portfolio-photos/korona-02-color-480w.webp",
     beforeAlt: "Лазерная резка на производстве KORONA до цветокоррекции",
     afterAlt: "Тот же кадр лазерной резки KORONA после цветокоррекции",
+    width: 1600,
+    height: 900,
   },
   {
     id: "korona-03",
@@ -159,6 +179,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/portfolio-photos/korona-03-color-480w.webp",
     beforeAlt: "Сварщик у стола на производстве KORONA до цветокоррекции",
     afterAlt: "Тот же кадр сварочного участка KORONA после цветокоррекции",
+    width: 1600,
+    height: 900,
   },
   {
     id: "hoff-02",
@@ -170,6 +192,8 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/portfolio-photos/hoff-02-color-480w.webp",
     beforeAlt: "Спальня с торшером, карточка товара HOFF, до цветокоррекции",
     afterAlt: "Та же сцена спальни HOFF после цветокоррекции",
+    width: 1600,
+    height: 900,
   },
   {
     id: "hoff-05",
@@ -181,5 +205,7 @@ export const COLOR_COMPARE_PAIRS: ColorComparePair[] = [
     thumbnail: "/portfolio-photos/hoff-05-color-480w.webp",
     beforeAlt: "Кровать сверху с прикроватной лампой, карточка товара HOFF, до цветокоррекции",
     afterAlt: "Тот же кадр кровати сверху HOFF после цветокоррекции",
+    width: 1600,
+    height: 900,
   },
 ];

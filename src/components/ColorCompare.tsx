@@ -76,7 +76,7 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
       >
         {/* Результат лежит снизу и виден целиком: если скрипт не отработает,
             посетитель увидит финальный кадр, а не пустоту. */}
-        <img className="color-compare-img" src={pair.after} alt={pair.afterAlt} loading="lazy" decoding="async" />
+        <img className="color-compare-img" src={pair.after} alt={pair.afterAlt} width={pair.width} height={pair.height} loading="lazy" decoding="async" />
 
         {/* Исходник лежит поверх и обрезается clip-path, а не шириной контейнера:
             так кадр не сжимается и оба изображения гарантированно совпадают
@@ -87,6 +87,8 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
           src={pair.before}
           alt=""
           aria-hidden="true"
+          width={pair.width}
+          height={pair.height}
           loading="lazy"
           decoding="async"
         />

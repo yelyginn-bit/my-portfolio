@@ -80,6 +80,12 @@ body:has(.v3-editorial-page) {
 .v32-angle-selector button {
   position: relative;
   min-width: 0;
+  /* Высоту раньше задавала только вложенная <img> (когда у пары есть
+     thumbnail) — у пар без неё кнопка схлопывалась почти в ноль, а номер
+     (position: absolute; bottom: 5px) наезжал на кнопку в соседнем ряду.
+     aspect-ratio держит кнопку тех же пропорций, что и .v32-angle-selector
+     img, независимо от того, есть ли картинка внутри. */
+  aspect-ratio: 16 / 9;
   padding: 0;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.24);

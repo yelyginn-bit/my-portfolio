@@ -32,7 +32,7 @@
           <a href="/about"${currentAttr("/about")}>Обо мне</a>
         </nav>
         <span class="site-static-status">CORE // READY</span>
-        <a class="site-static-header__cta" href="/contact">Обсудить проект</a>
+        <a class="site-static-header__cta" href="/contact"><span class="site-static-header__cta-full">Обсудить проект</span><span class="site-static-header__cta-short">Обсудить</span></a>
         <button class="site-static-menu-button" type="button" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Открыть меню">
           <span></span><span></span>
         </button>

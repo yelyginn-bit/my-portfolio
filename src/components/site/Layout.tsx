@@ -113,7 +113,7 @@ export function SiteHeader({ active }: { active?: "work" | "camera" | "photo" | 
           <a href="/about" aria-current={active === "about" ? "page" : undefined}>Обо мне</a>
         </nav>
         <span className="ds-header-status">CORE // READY</span>
-        <a className="ds-header-cta" href="/contact">Обсудить проект</a>
+        <a className="ds-header-cta" href="/contact"><span className="ds-header-cta-full">Обсудить проект</span><span className="ds-header-cta-short">Обсудить</span></a>
         <button type="button" className="ds-menu-button" aria-label={open ? "Закрыть меню" : "Открыть меню"} aria-expanded={open} aria-controls="ds-mobile-menu" onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
       </PageContainer>
       <MobileMenu open={open} onClose={() => setOpen(false)} />

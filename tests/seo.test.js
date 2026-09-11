@@ -62,7 +62,9 @@ test("design tokens stay in sync between bundle and static pages", () => {
 });
 
 test("static pages load the shared token file before the skin", () => {
-  const pages = ["reels.html", "photo.html", "ceny.html", "event-video.html", "reklamnye-roliki.html"];
+  // ceny.html убран из списка: это React-страница (как cvetokorrekciya.html,
+  // тоже не в списке) и site-skin.css ей не нужен — см. коммит про подвал /ceny.
+  const pages = ["reels.html", "photo.html", "event-video.html", "reklamnye-roliki.html"];
   for (const page of pages) {
     const html = read(page);
     assert.ok(html.includes('href="/tokens.css"'), `${page}: нет /tokens.css`);

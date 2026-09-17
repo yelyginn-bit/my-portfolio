@@ -664,7 +664,12 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-footer__frame { min-height: 520px; grid-template-columns: 1fr; }
   .v3-footer__frame h2 { max-width: 100%; font-size: 2.5rem; overflow-wrap: anywhere; }
   .v3-footer__frame .v3-button { justify-self: start; }
-  .v3-footer__wordmark { font-size: 23vw; }
+  /* 19vw, не 23vw: не смог воспроизвести обрезку в этом инструменте
+     (Chromium), но она видна на реальном iPhone (Safari) — шрифт
+     "Arial Narrow" реально не установлен на macOS/iOS, замена браузером
+     может быть шире расчёта. Запас по ширине защищает от разницы
+     в фолбэк-шрифте между движками, которую здесь не измерить. */
+  .v3-footer__wordmark { font-size: 19vw; }
   .v3-footer__meta { grid-template-columns: 1fr; }
   .v3-footer__meta nav { justify-content: flex-start; }
   .v3-footer__meta nav a, .v3-footer__meta button { min-height: 44px; display: inline-flex; align-items: center; }

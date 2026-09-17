@@ -203,6 +203,7 @@ body.site-menu-open { overflow: hidden; }
 html {
   scroll-behavior: smooth;
   background: #f7f7f5;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {

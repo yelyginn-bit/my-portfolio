@@ -562,6 +562,10 @@ body:has(.v3-editorial-page) {
 .v3-editorial-hero h1 { text-wrap: balance; }
 
 @media (max-width: 767px) {
+  /* Базовое правило (без media) — clamp(3.2rem,4.8vw,5rem) — на 360-390px
+     тоже сидит на нижней границе и на 3% шире колонки обрезает
+     "ЕСТЬ ЗАДАЧА?" (эта же карточка используется на / и на /contact). */
+  .v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3rem, 4.8vw, 5rem); }
   /* A deliberately composed mobile hero — not desktop type scaled down. */
   .v32-hero__copy {
     top: clamp(7.35rem, 19vw, 8.75rem);
@@ -575,7 +579,12 @@ body:has(.v3-editorial-page) {
     font-size: .58rem;
   }
 
-  .v32-hero__copy h1 {
+  /* :is(h1, .v32-hero__title): реальная разметка — div.v32-hero__title
+     (aria-hidden, декоративный дубль настоящего h1 ниже по странице), а не
+     <h1>. Это правило раньше писалось как "h1" и никогда не применялось —
+     реально работал только clamp(4.2rem,18.8vw,6rem) из design-system.css,
+     чей нижний порог на 360–390px слишком велик и обрезал "НОВГОРОДЕ". */
+  .v32-hero__copy :is(h1, .v32-hero__title) {
     max-width: 100%;
     margin: 0;
     font-size: clamp(2.95rem, 13.35vw, 3.65rem);
@@ -583,7 +592,7 @@ body:has(.v3-editorial-page) {
     letter-spacing: -.058em;
   }
 
-  .v32-hero__copy h1 .v32-hero__place {
+  .v32-hero__copy :is(h1, .v32-hero__title) .v32-hero__place {
     max-width: none;
     color: var(--ds-orange);
     font-size: .82em;

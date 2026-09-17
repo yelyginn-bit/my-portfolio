@@ -1077,6 +1077,17 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
 }
 
 @media (max-width: 767px) {
+  /* Нижняя граница --ds-h1/--ds-h2 (3.5rem/2.75rem) рассчитана на десктопные
+     колонки в 10-13ch — на 360-390px в те же max-width обрезает слова
+     ("Стоимость продакшна" на /ceny, "Цвет в DaVinci Resolve" на
+     /cvetokorrekciya, "Выберите подходящий формат"). vw- и верхняя граница
+     не трогаются — при ширинах, где реально работает vw-часть (>767px),
+     значение не меняется. */
+  :root { --ds-h1: clamp(3.1rem, 7.5vw, 7rem); --ds-h2: clamp(2.35rem, 5.5vw, 5rem); }
+  /* Перенос длинных слов — защитный слой: снижение нижней границы токенов
+     не убирает обрезание там, где отдельное слово (не вся строка) шире
+     колонки — там помогает только разрешение переноса внутри слова. */
+  h1, h2, h3, .v32-hero__title { overflow-wrap: break-word; }
   .v32-hero { min-height: max(840px, 100svh); }
   .v32-showreel > img, .v32-showreel > iframe { inset: 0; width: 100%; height: 100%; }
   .v32-showreel > img { object-position: 58% center; }

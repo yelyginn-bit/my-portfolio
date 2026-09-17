@@ -1510,7 +1510,7 @@ body,
 .direction-page {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100svh;
   color: var(--black);
   background: var(--ds-bg);
 }

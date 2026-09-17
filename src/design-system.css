@@ -563,7 +563,11 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-check span { display: flex !important; align-items: flex-start; gap: .55rem; color: var(--ds-text-secondary) !important; font: 500 .76rem/1.4 Arial, sans-serif !important; text-transform: none; letter-spacing: 0 !important; }
 .v3-check svg { width: 18px; height: 18px; flex: 0 0 18px; padding: 2px; border: 1px solid var(--ds-text); color: transparent; }
 .v3-check input:checked + span svg { color: #fff; background: var(--ds-text); }
-.v3-check a { text-decoration: underline; }
+/* color явно, иначе UA-стиль :link/:visited (rgb(0,0,238) синий, затем
+   фиолетовый) перебивает унаследованный от .v3-check span цвет — оба
+   псевдокласса имеют специфичность как у обычного класса, color:inherit
+   с типом (0,1,1) их обоих перебивает без :visited-исключения отдельно. */
+.v3-check a { color: inherit; text-decoration: underline; }
 .v3-form .v3-button { width: 100%; margin-top: 1.4rem; border: 0; }
 .v3-form__status { margin: 1rem 0 0; color: #176229; font-size: .82rem; }
 .v3-form__status--error { color: var(--ds-accent); }

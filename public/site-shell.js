@@ -48,7 +48,7 @@
           <a href="/about">Обо мне</a>
           <a href="/contact">Обсудить проект</a>
         </nav>
-        <div><a href="/contact">Все контакты</a></div>
+        <div><a href="https://t.me/YuriElygin">Telegram</a><a href="mailto:y.elyginn@gmail.com">Email</a></div>
       </div>
     `;
 

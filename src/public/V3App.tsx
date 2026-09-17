@@ -91,6 +91,10 @@ function SiteHeader() {
               <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={active === item.active ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item.label}</a>
             ))}
             <a href="/contact" onClick={() => setOpen(false)}><span>{String(primaryNav.length + 1).padStart(2, "0")}</span>ОБСУДИТЬ ПРОЕКТ <ArrowUpRight size={16} /></a>
+            <div className="v3-mobile-menu__contacts">
+              <a href={SITE.telegramUrl}>Telegram</a>
+              <a href={`mailto:${SITE.email}`}>Email</a>
+            </div>
           </div>
       )}
     </>

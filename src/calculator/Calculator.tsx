@@ -437,7 +437,16 @@ export default function Calculator() {
                 </div>
 
                 <label className="calc-hint" style={{ display: "flex", gap: 10, alignItems: "flex-start", margin: "14px 0" }}>
-                  <input type="checkbox" checked={consentAccepted} onChange={(event) => setConsentAccepted(event.target.checked)} />
+                  {/* Был голый нативный чекбокс 13×13 — оформлен под акцент
+                      сайта (accent-color) и увеличен до 20px; сама строка
+                      (label) уже была выше 44px за счёт переноса текста, но
+                      визуальная цель была заметно меньше порога. */}
+                  <input
+                    type="checkbox"
+                    checked={consentAccepted}
+                    onChange={(event) => setConsentAccepted(event.target.checked)}
+                    style={{ width: 20, height: 20, minWidth: 20, accentColor: "var(--red)", flexShrink: 0, marginTop: 2 }}
+                  />
                   <span>Даю согласие Елыгину Юрию Сергеевичу на обработку персональных данных для обработки заявки, связи со мной и подготовки предложения в соответствии с <a href="/personal-data-consent" target="_blank" rel="noreferrer">условиями согласия</a>. С <a href="/privacy-policy" target="_blank" rel="noreferrer">политикой обработки данных</a> ознакомлен.</span>
                 </label>
 

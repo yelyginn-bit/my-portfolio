@@ -119,6 +119,11 @@
       }
       .calc-input:focus, .calc-textarea:focus { border-color: var(--red); }
       .calc-textarea { resize: vertical; min-height: 84px; }
+      @media (max-width: 767px) {
+        /* 14px ниже 16px — Safari зумит страницу на фокусе и не отматывает
+           обратно. Только мобильный диапазон, десктопный размер не трогаем. */
+        .calc-input, .calc-textarea { font-size: 16px; }
+      }
       .calc-hint { font-size: 11.5px; color: var(--gray); margin-top: 6px; }
 
       /* Discount badge */

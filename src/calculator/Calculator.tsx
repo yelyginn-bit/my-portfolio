@@ -395,6 +395,7 @@ export default function Calculator() {
                   <input
                     className="calc-input"
                     placeholder="Как к вам обращаться"
+                    autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -404,6 +405,7 @@ export default function Calculator() {
                     className="calc-input"
                     placeholder="Телефон, напр. +7 999 123-45-67"
                     inputMode="tel"
+                    autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     readOnly={!!session}

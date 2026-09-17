@@ -476,6 +476,13 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-button--line { color: var(--ds-text); background: transparent; border-style: dashed; }
 .v3-button--orange { color: #0b0b0b; background: var(--ds-orange); border-color: var(--ds-orange); }
 .v3-header { position: fixed; z-index: var(--ds-header-z); inset: max(10px, env(safe-area-inset-top)) 0 auto; pointer-events: none; }
+/* Шапка fixed — не занимает место в потоке, поэтому якорный переход
+   (например /#contact — им пользуются нав/CTA почти на каждой
+   статической странице и в подвале React-страниц) кладёт цель ровно
+   под неё без компенсации. Тот же приём и то же значение, что уже
+   в index.css для /ceny и /cvetokorrekciya. Чисто поведение скролла —
+   на видимую раскладку не влияет ни на каком брейкпоинте. */
+#contact, #process, #about, #home-services-title, #davinci-breakdown { scroll-margin-top: clamp(78px, 11vh, 116px); }
 .v3-nav { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; margin-inline: auto; display: grid; grid-template-columns: 56px repeat(8, max-content) minmax(210px, 1fr); align-items: stretch; padding: 5px; border: 1px solid rgba(16,16,16,.22); border-radius: 19px; background: rgba(244,244,239,.86); box-shadow: 0 16px 52px rgba(20,20,18,.1); backdrop-filter: blur(18px) saturate(1.15); pointer-events: auto; }
 .v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid rgba(16,16,16,.13); border-radius: 13px; color: var(--ds-text); font: 680 .68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
 .v3-nav > a:hover, .v3-nav > a:focus-visible { background: #fff; }

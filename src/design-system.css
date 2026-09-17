@@ -409,7 +409,12 @@ body { background: var(--ds-bg); color: var(--ds-text); }
 /* Слайдер сравнения. Кадры лежат друг на друге и обрезаются clip-path,
    поэтому геометрия совпадает пиксель в пиксель при любом положении ручки. */
 .color-compare { margin: 0; }
-.color-compare-frame { position: relative; overflow: hidden; border-radius: var(--ds-radius); background: var(--ds-bg-alt); touch-action: none; cursor: ew-resize; user-select: none; }
+/* pan-y, не none: с none палец, начавший движение внутри рамки, не мог
+   прокрутить страницу вниз — жест целиком забирал слайдер. pan-y отдаёт
+   браузеру только вертикальную прокрутку; горизонтальный драг слайдера
+   остаётся на pointer-события ниже, тот же паттерн уже используется
+   в .v32-resolve-chapter__scrubber (v3-polish.css). */
+.color-compare-frame { position: relative; overflow: hidden; border-radius: var(--ds-radius); background: var(--ds-bg-alt); touch-action: pan-y; cursor: ew-resize; user-select: none; }
 .color-compare-frame[data-dragging] { cursor: grabbing; }
 .color-compare-img { display: block; width: 100%; height: auto; }
 .color-compare-img--before { position: absolute; inset: 0; height: 100%; object-fit: cover; }

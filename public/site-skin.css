@@ -109,6 +109,11 @@ body.site-menu-open { overflow: hidden; }
 .site-static .price-card[data-featured="true"], .site-static .price-card.featured { color: var(--site-text) !important; background: var(--ds-surface) !important; padding-inline: clamp(1.5rem, 3vw, 2.5rem) !important; }
 .site-static .card h3, .site-static .price-card h3 { min-height: 0 !important; margin: .75rem 0; color: inherit !important; font-size: clamp(1.3rem, 2vw, 2rem); line-height: 1; text-transform: none; }
 .site-static .card p, .site-static .price-card p { min-height: 0 !important; color: var(--site-muted) !important; font-size: .95rem; line-height: 1.55; }
+/* Тот же дефицит, что чинили для .card-num: --site-muted (#5f5f59) на
+   подложке карточки (~#d4d4d0) даёт 4.33:1, ниже AA. Только .card p —
+   .price-card p не трогаем, там не измеряли. !important обязателен по
+   той же причине, что и ниже для .card-num. */
+.site-static .card p { color: #595953 !important; }
 /* .card-num — это <p>, поэтому правило выше (рассчитанное на абзацы текста)
    тоже его ловит и красит в --site-muted (#5f5f59) — на подложке карточки
    (~#d4d4d0) это даёт 4.3:1, ниже AA. Нужна !important: правило выше уже

@@ -403,6 +403,7 @@ export default function Calculator() {
                 <div className="calc-field">
                   <input
                     className="calc-input"
+                    type="tel"
                     placeholder="Телефон, напр. +7 999 123-45-67"
                     inputMode="tel"
                     autoComplete="tel"

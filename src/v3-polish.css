@@ -365,7 +365,6 @@ body:has(.v3-editorial-page) {
   letter-spacing: .06em;
   text-transform: uppercase;
 }
-.v3-footer__socials a:first-child { color: #101010; background: var(--ds-orange); border-color: var(--ds-orange); }
 .v3-footer__socials svg { width: 15px; }
 .v3-footer__wordmark { padding: clamp(3rem, 6vw, 6rem) 1rem 0; font-size: clamp(5rem, 17.3vw, 19rem); letter-spacing: -.055em; line-height: .72; }
 .v3-footer__wordmark span { display: block; transform: scaleX(.985); transform-origin: left bottom; }

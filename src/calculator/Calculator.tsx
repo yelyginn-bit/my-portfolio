@@ -6,7 +6,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getActiveEstimateData, getActiveShootTypes, hydratePriceRules } from "../lib/pricing.runtime";
 import { MAX_DAYS, URGENCY_SURCHARGE } from "../lib/pricing.config";
-import { computeBreakdown, formatRub } from "../lib/calc";
+import { computeBreakdown, formatRubRange } from "../lib/calc";
 import { hydrateTiers, resolveTier } from "../lib/discounts";
 import { getStore, isValidPhone, normalizePhone } from "../lib/store";
 import { getSession } from "../lib/auth";
@@ -168,7 +168,7 @@ export default function Calculator() {
         (urgent ? `Срочность: да (+${Math.round(URGENCY_SURCHARGE * 100)}%)\n` : "") +
         opts +
         discLine +
-        `\nИТОГ: ${formatRub(breakdown.totalMin)} – ${formatRub(breakdown.totalMax)}` +
+        `\nИТОГ: ${formatRubRange(breakdown.totalMin, breakdown.totalMax)}` +
         (comment.trim() ? `\nКомментарий: ${comment.trim()}` : "");
 
       try {
@@ -210,7 +210,7 @@ export default function Calculator() {
 
   const phoneValid = isValidPhone(phone);
   const telegramEstimateUrl = `https://t.me/YuriElygin?text=${encodeURIComponent(
-    `Здравствуйте, Юрий!\nРасчёт: ${shootType}\nОриентир: ${formatRub(breakdown.totalMin)} – ${formatRub(breakdown.totalMax)}\nКомментарий: ${comment.trim() || "хочу обсудить проект"}`,
+    `Здравствуйте, Юрий!\nРасчёт: ${shootType}\nОриентир: ${formatRubRange(breakdown.totalMin, breakdown.totalMax)}\nКомментарий: ${comment.trim() || "хочу обсудить проект"}`,
   )}`;
 
   return (
@@ -290,7 +290,7 @@ export default function Calculator() {
                       <span className="calc-row-unit">· {unitLabel(item.unit)}</span>
                     </div>
                     <div className="calc-row-price">
-                      {formatRub(item.priceMin)}–{formatRub(item.priceMax)}
+                      {formatRubRange(item.priceMin, item.priceMax)}
                     </div>
                   </div>
                 );
@@ -317,7 +317,7 @@ export default function Calculator() {
                         <span className="calc-row-unit">· {unitLabel(item.unit)}</span>
                       </div>
                       <div className="calc-row-price">
-                        {formatRub(item.priceMin)}–{formatRub(item.priceMax)}
+                        {formatRubRange(item.priceMin, item.priceMax)}
                       </div>
                     </div>
                   );
@@ -363,7 +363,7 @@ export default function Calculator() {
               <div style={{ marginTop: 14 }}>
                 <div className="calc-sum-line">
                   <span>Стоимость</span>
-                  <b>{formatRub(breakdown.subtotalMin)} – {formatRub(breakdown.subtotalMax)}</b>
+                  <b>{formatRubRange(breakdown.subtotalMin, breakdown.subtotalMax)}</b>
                 </div>
                 {discountPercent > 0 && (
                   <div className="calc-sum-line calc-sum-disc">
@@ -376,11 +376,11 @@ export default function Calculator() {
               <div className="calc-total">
                 <div className="calc-total-label">Итого</div>
                 <div className="calc-total-val">
-                  {formatRub(breakdown.totalMin)} – {formatRub(breakdown.totalMax)}
+                  {formatRubRange(breakdown.totalMin, breakdown.totalMax)}
                 </div>
                 {discountPercent > 0 && (
                   <div className="calc-total-strike">
-                    {formatRub(breakdown.subtotalMin)} – {formatRub(breakdown.subtotalMax)}
+                    {formatRubRange(breakdown.subtotalMin, breakdown.subtotalMax)}
                   </div>
                 )}
               </div>

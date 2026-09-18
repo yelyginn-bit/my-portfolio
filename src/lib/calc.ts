@@ -58,3 +58,11 @@ export function computeBreakdown(
 export function formatRub(value: number): string {
   return `${Math.round(value).toLocaleString("ru-RU")} ₽`;
 }
+
+/** Диапазон рублей: 18000,25000 → "18 000 ₽ – 25 000 ₽"; 5000,5000 → "от 5 000 ₽" —
+    без этого фиксированная позиция (priceMin===priceMax, например
+    цветокоррекция) показывала "5 000 ₽ – 5 000 ₽" сама с собой. */
+export function formatRubRange(min: number, max: number): string {
+  if (Math.round(min) === Math.round(max)) return `от ${formatRub(min)}`;
+  return `${formatRub(min)} – ${formatRub(max)}`;
+}

@@ -175,9 +175,9 @@ function HeroShowreel() {
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
-        <div className="v32-hero__title" aria-hidden="true">ВИДЕОСЪЁМКА<span>И МОНТАЖ</span><span className="v32-hero__place">В НИЖНЕМ</span><span className="v32-hero__place">НОВГОРОДЕ</span></div>
+        <div className="v32-hero__title" aria-hidden="true">СНИМАЮ<span>МОНТИРУЮ</span><span>ФОТОГРАФИРУЮ</span></div>
         <div className="v32-hero__position"><b>YELYGINN</b><span>НИЖНИЙ НОВГОРОД // РОССИЯ // ВЫЕЗД // УДАЛЁННЫЙ ПОСТ</span></div>
-        <p className="v32-hero__lead">Снимаю, собираю мультикам, крашу и работаю камерой в команде прямого эфира. Портфолио — сначала видео, потом слова.</p>
+        <p className="v32-hero__lead">Реклама, события, репортаж. Многокамерный монтаж и цвет. На трансляциях работаю в команде. Портфолио — сначала видео, потом слова.</p>
         <div className="v32-hero__actions">
           <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a>
           <a className="v3-button v3-button--line" href="#contact">ОБСУДИТЬ ПРОЕКТ <ArrowUpRight /></a>

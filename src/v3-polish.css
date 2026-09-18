@@ -562,10 +562,11 @@ body:has(.v3-editorial-page) {
 .v3-editorial-hero h1 { text-wrap: balance; }
 
 @media (max-width: 767px) {
-  /* Базовое правило (без media) — clamp(3.2rem,4.8vw,5rem) — на 360-390px
-     тоже сидит на нижней границе и на 3% шире колонки обрезает
-     "ЕСТЬ ЗАДАЧА?" (эта же карточка используется на / и на /contact). */
-  .v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3rem, 4.8vw, 5rem); }
+  /* Нижняя граница 3rem всё ещё обрезала курсивное слово "РАССКАЖИТЕ"
+     (Georgia italic, отдельный letter-spacing) на 360px — детач-проба
+     показала обрезание 15px при 48px и чистые 289.61 vs 283.26 при 44px.
+     2.75rem даёт запас ~6px на 360px. */
+  .v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(2.75rem, 4.8vw, 5rem); }
   /* A deliberately composed mobile hero — not desktop type scaled down. */
   .v32-hero__copy {
     top: clamp(7.35rem, 19vw, 8.75rem);
@@ -583,11 +584,19 @@ body:has(.v3-editorial-page) {
      (aria-hidden, декоративный дубль настоящего h1 ниже по странице), а не
      <h1>. Это правило раньше писалось как "h1" и никогда не применялось —
      реально работал только clamp(4.2rem,18.8vw,6rem) из design-system.css,
-     чей нижний порог на 360–390px слишком велик и обрезал "НОВГОРОДЕ". */
+     чей нижний порог на 360–390px слишком велик и обрезал "НОВГОРОДЕ".
+     Кегль под "ФОТОГРАФИРУЮ" (12 знаков, детач-проба): 36px даёт запас
+     24px на 360px. Прежний vw-член (13.35vw = 48-52px на 360-390px) был
+     ВСЕГДА выше любой нижней границы — floor математически не влиял на
+     рендер (проверено эмпирически). Чтобы 36px реально применялся на
+     360-390px, а не только формально стоял в floor, vw снижен до 9vw
+     (9vw < 36px вплоть до 400px) — единственный способ получить строку
+     без переноса, как просил владелец. Только мобильный медиа-блок,
+     верхняя граница (ceiling) не трогается. */
   .v32-hero__copy :is(h1, .v32-hero__title) {
     max-width: 100%;
     margin: 0;
-    font-size: clamp(2.95rem, 13.35vw, 3.65rem);
+    font-size: clamp(2.25rem, 9vw, 3.65rem);
     line-height: .83;
     letter-spacing: -.058em;
   }

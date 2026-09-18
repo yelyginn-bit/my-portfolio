@@ -172,8 +172,10 @@ body.site-menu-open { overflow: hidden; }
   :root { --site-gutter: clamp(1rem, 5vw, 1.25rem); --site-section: clamp(3.5rem, 18vw, 5rem); }
   /* Перенос длинных слов — защитный слой на случай обрезания заголовков
      похожего рода, что нашлись на React-страницах; на статических
-     маршрутах новым детектором не подтверждено, но проверено не было. */
-  h1, h2, h3 { overflow-wrap: break-word; }
+     маршрутах новым детектором не подтверждено, но проверено не было.
+     hyphens:auto вместо break-word — html lang="ru" стоит на всех
+     статических страницах, перенос идёт по слогу с дефисом. */
+  h1, h2, h3 { hyphens: auto; }
   .site-static-header__inner { min-height: 64px; }
   .site-static-header__cta { display: none; }
   .site-static-mobile-menu { inset-block-start: 64px; }

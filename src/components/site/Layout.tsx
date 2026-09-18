@@ -138,7 +138,7 @@ export function SiteFooter() {
             <a href="/#contact">Контакты</a>
           </nav>
           <div className="ds-footer-contact">
-            <a href={SITE.telegramUrl} target="_blank" rel="noreferrer">Telegram <ArrowUpRight size={15} /></a>
+            <a className="ds-footer-contact__primary" href={SITE.telegramUrl} target="_blank" rel="noreferrer">Telegram <ArrowUpRight size={15} /></a>
             <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             <span>{LEGAL.operator}</span>
             <span>{LEGAL.status} · ИНН {LEGAL.taxId}</span>

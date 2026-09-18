@@ -150,7 +150,10 @@ body.site-menu-open { overflow: hidden; }
 .site-static-footer nav { grid-column: 8 / span 2; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem !important; }
 .site-static-footer :is(a,button) { color: inherit !important; letter-spacing: 0 !important; text-transform: none; }
 .site-static-footer__contacts { grid-column: 10 / -1; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; }
-.site-static-footer__contacts a:first-child { color: var(--site-accent); }
+/* Был a:first-child — с единственной ссылкой сейчас не критично, но при
+   добавлении второй ссылка порвала бы адресацию (тот же класс ошибки,
+   что span:nth-child(2) в hero). Явный класс, а не позиция. */
+.site-static-footer__contacts-primary { color: var(--site-accent); }
 .site-static-footer__contacts span { color: var(--site-muted); font-size: .78rem; line-height: 1.45; }
 .site-static-footer__legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin-top: clamp(3rem,6vw,6rem); padding-top: 1.5rem; border-top: 1px solid var(--site-border); color: var(--site-muted); font-size: .75rem; }
 .site-static-footer__legal button { padding: 0; color: inherit; background: none; border: 0; cursor: pointer; }

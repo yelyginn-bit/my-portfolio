@@ -85,7 +85,7 @@
           <a href="/blog">Блог</a><a href="/about">Обо мне</a>
         </nav>
         <div class="site-static-footer__contacts">
-          <a href="/contact">Все контакты ↗</a>
+          <a class="site-static-footer__contacts-primary" href="/contact">Все контакты ↗</a>
           <span>Елыгин Юрий Сергеевич</span>
           <span>Плательщик НПД, самозанятый · ИНН 526219298988</span>
         </div>

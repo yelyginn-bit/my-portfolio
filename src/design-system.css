@@ -171,6 +171,11 @@ body { background: var(--ds-bg); color: var(--ds-text); }
   .price-page-hero { grid-template-columns: repeat(4,minmax(0,1fr)); padding-top: 5rem; }
   .price-page-hero > div:first-child, .price-page-hero > div:last-child { grid-column: 1 / -1; }
   .price-page-hero > div:last-child { margin-top: 2rem; }
+  /* max-width:10ch (десктопная колонка) с text-transform:uppercase режет
+     "СТОИМОСТЬ"/"ПРОДАКШНА" (274/283px) даже в full-width родителе
+     (324px на 360px) — оба слова были ЧУТЬ шире самой ch-колонки,
+     хотя в полную ширину родителя влезают с запасом 40-50px. */
+  .price-page-hero h1 { max-width: 100%; }
   .price-page-catalog > header { grid-template-columns: repeat(4,minmax(0,1fr)); }
   .price-page-catalog > header > p, .price-page-catalog h2 { grid-column: 1 / -1; }
   .price-page-list article { grid-template-columns: repeat(4,minmax(0,1fr)); row-gap: 1.25rem; }

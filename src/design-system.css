@@ -460,8 +460,41 @@ body { background: var(--ds-bg); color: var(--ds-text); }
 @media (max-width: 767px) {
   .color-tier-list, .color-process-list, .color-req-list { grid-template-columns: minmax(0, 1fr); }
   .color-hero-actions .color-btn, .color-cta > .ds-container > div .color-btn { flex: 1 1 100%; justify-content: center; }
-  .color-compare-tag { font-size: .62rem; }
   .case-technique-list, .case-video-grid { grid-template-columns: minmax(0, 1fr); }
+
+  /* Шторка на узком экране делит кадр пополам (~175px на 351px рамке) —
+     тона кожи и тени не видно ни в одной половине. Полноэкранный
+     переключатель "Исходник"/"После цвета" вместо деления: вдвое больше
+     картинки на каждое состояние. Драга нет — жест конфликтовал бы
+     с вертикальным скроллом на всю ширину рамки, а не только у ручки. */
+  .color-compare-frame { touch-action: auto; cursor: default; }
+  .color-compare-handle, .color-compare-tag { display: none; }
+
+  .color-compare-toggle { display: flex; gap: .5rem; margin-top: .75rem; }
+  .color-compare-toggle button {
+    flex: 1 1 0;
+    min-height: 44px;
+    padding: 0 .75rem;
+    border: 1px solid var(--ds-border-strong);
+    border-radius: var(--ds-radius-sm);
+    background: var(--ds-surface);
+    color: var(--ds-text-secondary);
+    font: 650 .78rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .color-compare-toggle button[aria-pressed="true"] {
+    color: var(--ds-on-accent);
+    background: var(--ds-accent);
+    border-color: var(--ds-accent);
+  }
+  .color-compare-toggle button:focus-visible { outline: 2px solid var(--ds-accent); outline-offset: 2px; }
+}
+
+/* Обратный порядок: на ≥768px переключатель не нужен и не должен занимать
+   место в потоке — шторка остаётся штатным способом сравнения. */
+@media (min-width: 768px) {
+  .color-compare-toggle { display: none; }
 }
 
 /* Перетаскивание — жест пользователя, а не анимация, поэтому слайдер остаётся
@@ -1141,6 +1174,15 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
   .v32-proof__head h2 { font-size: clamp(3rem, 14vw, 4.6rem); }
   .v32-proof__grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
   .v32-proof__color, .v32-proof__davinci, .v32-proof__operator { grid-column: 1 / -1; }
+  /* .color-compare-caption здесь — figcaption внутри .v32-proof__grid, а тот
+     кладёт любой figcaption поверх нижнего края картинки (position:absolute,
+     bottom:0 — design-system.css ~1075), рассчитано на статичные карточки
+     без контролов под кадром. Наш новый .color-compare-toggle встаёт между
+     рамкой и подписью в обычном потоке — абсолютная подпись не сдвигается
+     от него и залезает поверх кнопок. На /cvetokorrekciya той же проблемы
+     нет — там figcaption не внутри .v32-proof__grid, живёт в потоке как
+     обычно. Возвращаем это же поведение здесь, только на мобильном. */
+  .v32-proof__color .color-compare-caption { position: static; padding-inline: 0; }
   .v32-proof__davinci, .v32-proof__operator { min-height: 270px; }
   .v32-proof__vertical, .v32-proof__live { grid-column: span 2; min-height: 0; }
   .v32-proof__label { align-items: flex-start; flex-direction: column; }

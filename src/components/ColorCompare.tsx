@@ -18,9 +18,24 @@ import type { ColorComparePair } from "../lib/colorCompare.data";
 export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | number }) => {
   const [position, setPosition] = useState(50);
   const [dragging, setDragging] = useState(false);
+  // ≤767px: шторка нечитаема (рамка 351×197 делится на две половины по
+  // ~175px — тона кожи и тени не видно). Переключатель на весь кадр даёт
+  // вдвое больше картинки в каждом состоянии. mobileView independent от
+  // position: слайдер на мобильном не перетаскивается вовсе.
+  const [mobileView, setMobileView] = useState<"before" | "after">("after");
+  const [isNarrow, setIsNarrow] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setPosition(50), [pair.id]);
+  useEffect(() => setMobileView("after"), [pair.id]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const setFromClientX = useCallback((clientX: number) => {
     const frame = frameRef.current;
@@ -62,31 +77,54 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
     }
   };
 
+  // На ≤767px оба изображения уже загружены (тот же <img>, просто без
+  // clip-path-разреза) — переключение кнопкой меняет только видимость,
+  // без повторной загрузки и без мигания.
+  const effectivePosition = isNarrow ? (mobileView === "before" ? 100 : 0) : position;
+  const afterVisible = !isNarrow || mobileView === "after";
+  const beforeVisible = isNarrow && mobileView === "before";
+
   return (
     <figure className="color-compare">
       <div
         ref={frameRef}
         className="color-compare-frame"
         data-dragging={dragging || undefined}
+        data-mobile-view={isNarrow ? mobileView : undefined}
         onPointerDown={(event) => {
+          if (isNarrow) return;
           event.preventDefault();
           setDragging(true);
           setFromClientX(event.clientX);
         }}
+        onClick={() => {
+          // Тап по кадру — дополнение к кнопкам ниже, не замена им.
+          if (isNarrow) setMobileView((view) => (view === "before" ? "after" : "before"));
+        }}
       >
         {/* Результат лежит снизу и виден целиком: если скрипт не отработает,
             посетитель увидит финальный кадр, а не пустоту. */}
-        <img className="color-compare-img" src={pair.after} alt={pair.afterAlt} width={pair.width} height={pair.height} loading="lazy" decoding="async" />
+        <img
+          className="color-compare-img"
+          src={pair.after}
+          alt={afterVisible ? pair.afterAlt : ""}
+          aria-hidden={afterVisible ? undefined : "true"}
+          width={pair.width}
+          height={pair.height}
+          loading="lazy"
+          decoding="async"
+        />
 
         {/* Исходник лежит поверх и обрезается clip-path, а не шириной контейнера:
             так кадр не сжимается и оба изображения гарантированно совпадают
-            пиксель в пиксель при любом положении разделителя. */}
+            пиксель в пиксель при любом положении разделителя (десктоп) или
+            переключателя (мобильный — 0% или 100%, без промежуточных). */}
         <img
           className="color-compare-img color-compare-img--before"
-          style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+          style={{ clipPath: `inset(0 ${100 - effectivePosition}% 0 0)` }}
           src={pair.before}
-          alt=""
-          aria-hidden="true"
+          alt={beforeVisible ? pair.beforeAlt : ""}
+          aria-hidden={beforeVisible ? undefined : "true"}
           width={pair.width}
           height={pair.height}
           loading="lazy"
@@ -98,7 +136,7 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
 
         <div
           role="slider"
-          tabIndex={0}
+          tabIndex={isNarrow ? -1 : 0}
           aria-label={`Сравнение до и после цветокоррекции: ${pair.title}`}
           aria-valuemin={0}
           aria-valuemax={100}
@@ -110,6 +148,25 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
         >
           <span className="color-compare-grip" aria-hidden="true" />
         </div>
+      </div>
+
+      {/* Только ≤767px (скрыто в CSS на десктопе) — замена шторке, а не
+          дополнение: на узком экране деления не видно. */}
+      <div className="color-compare-toggle" role="group" aria-label={`Переключить вид: ${pair.title}`}>
+        <button
+          type="button"
+          aria-pressed={mobileView === "before"}
+          onClick={() => setMobileView("before")}
+        >
+          Исходник
+        </button>
+        <button
+          type="button"
+          aria-pressed={mobileView === "after"}
+          onClick={() => setMobileView("after")}
+        >
+          После цвета
+        </button>
       </div>
 
       <figcaption className="color-compare-caption">

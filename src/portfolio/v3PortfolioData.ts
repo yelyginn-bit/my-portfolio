@@ -14,7 +14,8 @@ export type RoleTag =
   | "sound"
   | "graphics"
   | "cleanup"
-  | "sde";
+  | "sde"
+  | "light";
 
 export type FormatTag =
   | "commercial"
@@ -138,11 +139,17 @@ export const CANONICAL_ASSET_ROWS: readonly AssetRow[] = [
   ["mLGNoFi4cj3vAdBrqrsdtP", "landscape"], ["7MmmoQkeKtLJFA3aqZGToF", "landscape"],
   ["6kMP6pfn8UtNRXS8eYfjPc", "landscape"], ["hyQindossxyWZfRxLuDacu", "landscape"],
   ["iXmVYXkXdmFiHpn6NCNoyq", "landscape"],
+  // sourceOrder 90 — добавлено 21.09.2026, со слов владельца, не из
+  // канонической транскрипции выше. См. evidenceSource у сида social-uchastkovy.
+  ["u5iktxrKAE3hfguCnYyA3o", "landscape"],
 ] as const;
 
 type ProjectSeed = Omit<Project, "videos" | "evidence"> & {
   range: readonly [number, number];
   evidenceNote?: string;
+  /** Переопределяет source по умолчанию ("транскрибация с описанием проекта.docx")
+      для записей, добавленных не из этой транскрипции. */
+  evidenceSource?: string;
   assetTitles?: readonly string[];
 };
 
@@ -179,17 +186,18 @@ const seeds: readonly ProjectSeed[] = [
   { id: "caprigo-presentation", slug: "caprigo-presentation", title: "Caprigo. Презентация производства", client: "Caprigo", sourceCategory: "презентационные", range: [87, 87], roles: ["edit", "color", "sound"], formats: ["presentation", "product", "commercial"], responsibilities: ["Монтаж", "Цвет", "Звук"], featured: true, description: "Презентационное видео о производстве Caprigo. Я сделал монтаж, цвет и звук." },
   { id: "korona-factory", slug: "korona-production", title: "KORONA. Производство", client: "KORONA", sourceCategory: "заводы / производства", range: [88, 88], roles: ["edit", "color", "graphics"], formats: ["factory", "presentation", "commercial"], responsibilities: ["Монтаж", "Цвет", "Подбор музыки", "Поиск визуальной концепции", "Инфографика"], featured: true, description: "Презентационное видео о производстве сельскохозяйственной техники." },
   { id: "gorky-war", slug: "gorky-v-teni-voyny", title: "Горький в тени войны", sourceCategory: "спектакли", range: [89, 89], roles: ["operator", "edit", "multicam", "color", "sound"], formats: ["theatre", "event", "broadcast"], responsibilities: ["Оператор", "Режиссура монтажа", "Мультикамерный монтаж", "Цвет", "Работа со звуком", "Интеграция готовых титров и логотипов"], featured: true, description: "Мультикамерная запись спектакля в Нижегородском театре юного зрителя." },
+  { id: "social-uchastkovy", slug: "socialnyy-uchastkovyy", title: "Губернский проект — Социальный участковый", sourceCategory: "интервью", range: [90, 90], roles: ["light"], formats: ["interview"], responsibilities: ["Свет для интервью"], featured: false, description: "Работал по свету: ставил свет на интервью с героями проекта.", evidenceSource: "со слов владельца, 17.09.2026" },
 ] as const;
 
 const idsForRange = ([start, end]: readonly [number, number]) =>
   CANONICAL_ASSET_ROWS.slice(start - 1, end).map(([id]) => id);
 
-export const projects: Project[] = seeds.map(({ range, evidenceNote, assetTitles: _assetTitles, ...seed }) => ({
+export const projects: Project[] = seeds.map(({ range, evidenceNote, evidenceSource, assetTitles: _assetTitles, ...seed }) => ({
   ...seed,
   videos: idsForRange(range),
   evidence: {
     status: "SOURCE_CONFIRMED",
-    source: "транскрибация с описанием проекта.docx",
+    source: evidenceSource ?? "транскрибация с описанием проекта.docx",
     note: evidenceNote,
   },
 }));

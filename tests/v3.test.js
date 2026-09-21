@@ -7,12 +7,12 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
-test("V3 canonical source contains 89 unique Kinescope assets in the audited orientation split", () => {
+test("V3 canonical source contains 90 unique Kinescope assets in the audited orientation split", () => {
   const source = read("src/portfolio/v3PortfolioData.ts");
   const rows = [...source.matchAll(/\["([A-Za-z0-9]{20,})", "(landscape|portrait)"\]/gu)].map((match) => ({ id: match[1], orientation: match[2] }));
-  assert.equal(rows.length, 89);
-  assert.equal(new Set(rows.map(({ id }) => id)).size, 89);
-  assert.equal(rows.filter(({ orientation }) => orientation === "landscape").length, 75);
+  assert.equal(rows.length, 90);
+  assert.equal(new Set(rows.map(({ id }) => id)).size, 90);
+  assert.equal(rows.filter(({ orientation }) => orientation === "landscape").length, 76);
   assert.equal(rows.filter(({ orientation }) => orientation === "portrait").length, 14);
   assert.ok(rows.some(({ id }) => id === "hCJmSvmN6S7P8uAnexguQ5"), "source-confirmed website showreel is missing");
 });
@@ -21,7 +21,7 @@ test("every V3 asset source order is covered exactly once by a project range", (
   const source = read("src/portfolio/v3PortfolioData.ts");
   const ranges = [...source.matchAll(/range: \[(\d+), (\d+)\]/gu)].map((match) => [Number(match[1]), Number(match[2])]);
   const covered = ranges.flatMap(([start, end]) => Array.from({ length: end - start + 1 }, (_, index) => start + index));
-  assert.deepEqual(covered, Array.from({ length: 89 }, (_, index) => index + 1));
+  assert.deepEqual(covered, Array.from({ length: 90 }, (_, index) => index + 1));
 });
 
 test("V3 public UI omits generic invented contribution fallbacks", () => {
@@ -44,7 +44,7 @@ test("every canonical V3 project has a sitemap URL and legacy redirects do not",
   const source = read("src/portfolio/v3PortfolioData.ts");
   const slugs = [...source.matchAll(/slug: "([a-z0-9-]+)"/gu)].map((match) => match[1]);
   const sitemap = read("public/sitemap.xml");
-  assert.equal(slugs.length, 32);
+  assert.equal(slugs.length, 33);
   for (const slug of slugs) assert.match(sitemap, new RegExp(`<loc>https://yelyginn\\.ru/portfolio/${slug}</loc>`, "u"));
   assert.doesNotMatch(sitemap, /\/portfolio\/(?:editing|metro-gorkovskaya|sber-architecture-course)<\/loc>/u);
 });

@@ -25,7 +25,7 @@ import { resolveV3Route } from "./routeManifest";
 const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
   camera: "камера", operator: "оператор", edit: "монтаж", multicam: "мультикам",
-  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE",
+  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE", light: "свет",
 };
 const formatLabels: Record<string, string> = {
   commercial: "реклама", event: "событие", reels: "reels", concert: "концерт",

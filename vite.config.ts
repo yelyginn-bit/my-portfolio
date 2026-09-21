@@ -98,6 +98,7 @@ export default defineConfig(({mode}) => {
           blogEvents: path.resolve(__dirname, 'blog/videosemka-meropriyatiy-nn.html'),
           legal: path.resolve(__dirname, 'legal.html'),
           caseDetail: path.resolve(__dirname, 'case.html'),
+          notFound: path.resolve(__dirname, '404.html'),
         },
       },
     },

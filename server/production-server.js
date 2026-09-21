@@ -9,6 +9,7 @@ import apiHandler from "../api/[endpoint].js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
+const notFoundFile = path.join(distDir, "404.html");
 const prerenderManifest = JSON.parse(readFileSync(path.join(distDir, "prerender-manifest.json"), "utf8"));
 const prerenderRoutes = new Set(prerenderManifest.routes);
 const app = express();
@@ -134,9 +135,17 @@ app.get("*", (req, res) => {
     fileName = `blog/${slug}.html`;
   }
 
-  if (!fileName) fileName = "index.html";
+  if (!fileName) {
+    return res.status(404).sendFile(notFoundFile, (error) => {
+      if (error) res.status(404).send("Not found");
+    });
+  }
+
   res.sendFile(path.join(distDir, fileName), (error) => {
-    if (error) res.status(404).sendFile(path.join(distDir, "index.html"));
+    if (!error) return;
+    res.status(404).sendFile(notFoundFile, (fallbackError) => {
+      if (fallbackError) res.status(404).send("Not found");
+    });
   });
 });
 

@@ -9,6 +9,7 @@ import ColorGrading from "../src/color/ColorGrading";
 import LegalApp, { documents as legalDocuments } from "../src/legal/LegalApp";
 import { PORTFOLIO_PROJECTS } from "../src/lib/portfolio.data";
 import { validatePortfolioRegistry } from "../src/lib/portfolioValidation";
+import Prices from "../src/prices/Prices";
 import V3App from "../src/public/V3App";
 import {
   CASE_PROJECTS,
@@ -97,10 +98,11 @@ async function main() {
   const portfolioIssues = validatePortfolioRegistry(PORTFOLIO_PROJECTS, portfolioPhotoExists).errors;
   if (portfolioIssues.length) throw new Error(`Portfolio registry validation failed:\n${portfolioIssues.join("\n")}`);
 
-  const [v3Template, calculatorTemplate, colorGradingTemplate, legalTemplate, caseTemplate] = await Promise.all([
+  const [v3Template, calculatorTemplate, colorGradingTemplate, pricesTemplate, legalTemplate, caseTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),
     readFile(path.join(distDir, "calculator.html"), "utf8"),
     readFile(path.join(distDir, "cvetokorrekciya.html"), "utf8"),
+    readFile(path.join(distDir, "ceny.html"), "utf8"),
     readFile(path.join(distDir, "legal.html"), "utf8"),
     readFile(path.join(distDir, "case.html"), "utf8"),
   ]);
@@ -134,6 +136,13 @@ async function main() {
   await mkdir(path.dirname(colorGradingOutput), { recursive: true });
   await writeFile(colorGradingOutput, injectRoot(colorGradingTemplate, colorGradingMarkup));
   generated.push("/cvetokorrekciya");
+
+  const pricesMarkup = renderToString(createElement(StrictMode, null, createElement(Prices)));
+  if (!/<h1(?:\s|>)/iu.test(pricesMarkup)) throw new Error("Prerendered ceny has no H1");
+  const pricesOutput = outputFileFor("/ceny");
+  await mkdir(path.dirname(pricesOutput), { recursive: true });
+  await writeFile(pricesOutput, injectRoot(pricesTemplate, pricesMarkup));
+  generated.push("/ceny");
 
   for (const [legalPath, page] of Object.entries(legalDocuments)) {
     const legalMarkup = renderToString(createElement(StrictMode, null, createElement(LegalApp, { pathname: legalPath })));

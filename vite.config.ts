@@ -2,6 +2,45 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
+import {extractPriceLikeNumbers} from './scripts/priceGuard';
+import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
+
+const pryamyeTranslyaciiJsonLd = () => ({
+  name: 'pryamye-translyacii-jsonld',
+  transformIndexHtml(html: string) {
+    const placeholder = '"offers": "__PRYAMYE_TRANSLYACII_OFFERS__"';
+    if (!html.includes(placeholder)) return html;
+
+    const operator = PUBLIC_PRICE_BY_ID['broadcast-operator'];
+    const turnkey = PUBLIC_PRICE_BY_ID['broadcast-turnkey'];
+    if (!operator || !turnkey) {
+      throw new Error('pryamyeTranslyaciiJsonLd: broadcast-operator/broadcast-turnkey missing from PUBLIC_PRICES');
+    }
+    const [minPrice, maxPrice] = extractPriceLikeNumbers(operator.price);
+    const [turnkeyPrice] = extractPriceLikeNumbers(turnkey.price);
+    if (!minPrice || !maxPrice || !turnkeyPrice) {
+      throw new Error('pryamyeTranslyaciiJsonLd: could not parse a price from pricing.data.ts');
+    }
+
+    const offers = [
+      {
+        '@type': 'Offer',
+        priceCurrency: 'RUB',
+        price: String(minPrice),
+        priceSpecification: {'@type': 'PriceSpecification', minPrice: String(minPrice), maxPrice: String(maxPrice), priceCurrency: 'RUB'},
+        description: 'Оператор или режиссёр на трансляцию, за смену',
+      },
+      {
+        '@type': 'Offer',
+        priceCurrency: 'RUB',
+        price: String(turnkeyPrice),
+        description: 'Простая трансляция под ключ, один рабочий день',
+      },
+    ];
+
+    return html.replace(placeholder, `"offers": ${JSON.stringify(offers)}`);
+  },
+});
 
 const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
   name: 'shared-head-assets',
@@ -58,6 +97,7 @@ export default defineConfig(({mode}) => {
     plugins: [
       react(),
       tailwindcss(),
+      pryamyeTranslyaciiJsonLd(),
       sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID || '', env.VITE_GA_ID || ''),
     ],
     resolve: {

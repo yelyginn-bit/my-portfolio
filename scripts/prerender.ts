@@ -19,10 +19,26 @@ import {
   resolveV3Route,
 } from "../src/public/routeManifest";
 import { sitemapXml, siteOrigin } from "./sitemap";
+import { checkJsonLdPrices } from "./priceGuard";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const prerenderDir = path.join(distDir, "prerender");
+
+/**
+ * Статические страницы с руками вписанным JSON-LD. pryamye-translyacii.html
+ * сюда не входит — его offers генерируются из pricing.data.ts на сборке
+ * (см. pryamyeTranslyaciiJsonLd в vite.config.ts), проверять там нечего.
+ */
+const HAND_WRITTEN_JSONLD_PAGES = [
+  "index.html",
+  "photo.html",
+  "event-video.html",
+  "video-dlya-marketpleysov.html",
+  "reklamnye-roliki.html",
+  "reels.html",
+  "cvetokorrekciya.html",
+];
 
 const escapeHtml = (value: string) => value
   .replaceAll("&", "&amp;")
@@ -85,6 +101,11 @@ async function main() {
 
   const portfolioIssues = validatePortfolioRegistry(PORTFOLIO_PROJECTS, portfolioPhotoExists).errors;
   if (portfolioIssues.length) throw new Error(`Portfolio registry validation failed:\n${portfolioIssues.join("\n")}`);
+
+  const jsonLdPriceIssues = checkJsonLdPrices(rootDir, HAND_WRITTEN_JSONLD_PAGES);
+  if (jsonLdPriceIssues.length) {
+    throw new Error(`Второй источник цен в JSON-LD (нет в pricing.data.ts):\n${jsonLdPriceIssues.join("\n")}`);
+  }
 
   const [v3Template, calculatorTemplate, colorGradingTemplate, pricesTemplate, legalTemplate, caseTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),

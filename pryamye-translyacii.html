@@ -12,6 +12,7 @@
     <meta property="og:title" content="Оператор и режиссёр на прямую трансляцию | YELYGINN" />
     <meta property="og:description" content="Выход в команду прямого эфира оператором или режиссёром, либо простая однокамерная трансляция «спикер плюс презентация» целиком." />
     <meta property="og:locale" content="ru_RU" />
+    <!-- offers подставляются на сборке из src/lib/pricing.data.ts, см. pryamyeTranslyaciiJsonLd в vite.config.ts -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -35,21 +36,7 @@
         "@type": "Country",
         "name": "Россия"
       },
-      "offers": [
-        {
-          "@type": "Offer",
-          "priceCurrency": "RUB",
-          "price": "18000",
-          "priceSpecification": { "@type": "PriceSpecification", "minPrice": "18000", "maxPrice": "25000", "priceCurrency": "RUB" },
-          "description": "Оператор или режиссёр на трансляцию, за смену"
-        },
-        {
-          "@type": "Offer",
-          "priceCurrency": "RUB",
-          "price": "40000",
-          "description": "Простая трансляция под ключ, один рабочий день"
-        }
-      ]
+      "offers": "__PRYAMYE_TRANSLYACII_OFFERS__"
     }
     </script>
     <style>

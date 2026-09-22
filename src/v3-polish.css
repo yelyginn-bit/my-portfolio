@@ -245,7 +245,7 @@ body:has(.v3-editorial-page) {
 .portfolio-row--text-only > .portfolio-project-info { min-height: clamp(270px, 28vw, 390px); }
 .portfolio-mosaic__item > div { grid-template-rows: auto auto auto auto; }
 .portfolio-mosaic__item span { grid-row: span 4; }
-.portfolio-mosaic__item p { max-width: 42ch; display: -webkit-box; margin: 0; overflow: hidden; color: rgba(244,244,239,.7); font: 400 .75rem/1.35 Georgia, "Times New Roman", serif; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.portfolio-mosaic__item p { max-width: 42ch; display: -webkit-box; margin: 0; overflow: hidden; color: rgba(244,244,239,.7); font: 400 .75rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .portfolio-text-project {
   min-height: clamp(270px, 28vw, 390px);
   display: block;
@@ -257,7 +257,7 @@ body:has(.v3-editorial-page) {
 .portfolio-text-project .portfolio-project-info { height: auto; min-height: inherit; }
 .portfolio-posters a > div { grid-template-rows: auto auto auto; }
 .portfolio-posters a > div > span { grid-row: span 3; }
-.portfolio-posters p { margin: 0; color: rgba(244,244,239,.64); font: 400 .76rem/1.4 Georgia, "Times New Roman", serif; }
+.portfolio-posters p { margin: 0; color: rgba(244,244,239,.64); font: 400 .76rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 /* One complete live module: copy and the real BTS image no longer overlap. */
 .v3-broadcast { min-height: 0; padding-block: clamp(4rem, 7vw, 7rem); }
@@ -371,14 +371,14 @@ body:has(.v3-editorial-page) {
 
 .v3-editorial-page { min-height: 100svh; padding-top: clamp(6.8rem, 8vw, 8.5rem); color: #f4f4ef; background: #080808; }
 .v3-editorial-hero { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--v3-module-gap); align-items: end; padding-bottom: clamp(2rem, 4vw, 4rem); border-bottom: 1px solid rgba(255,255,255,.24); }
-.v3-editorial-hero h1 { max-width: 8ch; margin: 0; font: 880 clamp(4.2rem, 8.5vw, 9rem)/.82 "Arial Narrow", Arial, sans-serif; letter-spacing: -.06em; }
+.v3-editorial-hero h1 { max-width: 8ch; margin: 0; font: 800 clamp(4.2rem, 8.5vw, 9rem)/.82 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.06em; }
 .v3-editorial-hero h1 i { color: var(--ds-orange); font-family: Georgia, serif; font-weight: 400; }
 .v3-editorial-hero > p:last-child { margin: 0; color: rgba(244,244,239,.64); line-height: 1.55; }
 .v3-blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem) clamp(6rem, 10vw, 10rem); }
 .v3-blog-grid > a { position: relative; min-height: clamp(300px, 36vw, 520px); display: flex; flex-direction: column; padding: clamp(1.25rem, 2.6vw, 2.5rem); border: 1px solid rgba(255,255,255,.22); border-radius: 20px; color: inherit; background: #141414; text-decoration: none; overflow: hidden; }
 .v3-blog-grid > a:nth-child(1), .v3-blog-grid > a:nth-child(4) { background: #21140f; }
 .v3-blog-grid span { color: var(--ds-orange); font: 700 .56rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
-.v3-blog-grid h2 { max-width: 13ch; margin: auto 0 1rem; font: 820 clamp(2.1rem, 4.3vw, 5rem)/.88 "Arial Narrow", Arial, sans-serif; letter-spacing: -.045em; text-transform: uppercase; }
+.v3-blog-grid h2 { max-width: 13ch; margin: auto 0 1rem; font: 800 clamp(2.1rem, 4.3vw, 5rem)/.88 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.045em; text-transform: uppercase; }
 .v3-blog-grid p { max-width: 36ch; margin: 0; color: rgba(244,244,239,.62); line-height: 1.5; }
 .v3-blog-grid svg { position: absolute; top: 1.25rem; right: 1.25rem; width: 20px; }
 .v3-about-page { display: grid; grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr); gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem); }
@@ -386,7 +386,7 @@ body:has(.v3-editorial-page) {
 .v3-about-page figure img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .v3-about-page figcaption { position: absolute; right: 0; bottom: 0; left: 0; padding: .7rem; background: #101010; font: 650 .54rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .v3-about-page > div { display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.4rem, 3vw, 3rem); border-radius: 20px; background: #171717; }
-.v3-about-page h2 { margin: 0 0 2rem; font: 840 clamp(2.8rem, 5vw, 5.5rem)/.87 "Arial Narrow", Arial, sans-serif; letter-spacing: -.05em; }
+.v3-about-page h2 { margin: 0 0 2rem; font: 800 clamp(2.8rem, 5vw, 5.5rem)/.87 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.05em; }
 .v3-about-page p { color: rgba(244,244,239,.68); line-height: 1.55; }
 .v3-about-page .v3-button { align-self: flex-start; margin-top: 1.5rem; }
 .v3-contact-page { padding-bottom: var(--v3-module-gap); }
@@ -512,16 +512,6 @@ body:has(.v3-editorial-page) {
   text-wrap: balance;
 }
 
-.v3-project__description,
-.v3-editorial-hero > p:last-child,
-.v32-proof__head > p:last-child,
-.v32-proof__color .color-compare-caption,
-.portfolio-project-info p,
-.portfolio-mosaic__item p,
-.portfolio-posters p {
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-}
-
 /* RAW/COLOR and DaVinci are one family of work surfaces, not two competing systems. */
 .v32-proof__color,
 .v32-resolve-chapter,
@@ -616,7 +606,6 @@ body:has(.v3-editorial-page) {
   .v32-hero__lead {
     max-width: 31ch;
     margin-top: .95rem;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     font-size: .98rem;
     line-height: 1.45;
     text-wrap: pretty;

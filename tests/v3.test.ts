@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sitemapXml } from "../scripts/sitemap.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
@@ -34,7 +35,7 @@ test("V3 public UI omits generic invented contribution fallbacks", () => {
 test("V3 hides internal and private photo routes from navigation and sitemap", () => {
   const shell = `${read("src/public/V3App.tsx")}\n${read("public/site-shell.js")}`;
   assert.doesNotMatch(shell, /href="\/(?:admin|account|gallery|journal|portfolio\/photo)"/u);
-  const sitemap = read("public/sitemap.xml");
+  const sitemap = sitemapXml();
   assert.doesNotMatch(sitemap, /\/(?:admin|account|gallery|journal|portfolio\/photo)</u);
   assert.match(sitemap, /https:\/\/yelyginn\.ru\/photo</u);
   assert.match(sitemap, /\/pryamye-translyacii</u);
@@ -43,7 +44,7 @@ test("V3 hides internal and private photo routes from navigation and sitemap", (
 test("every canonical V3 project has a sitemap URL and legacy redirects do not", () => {
   const source = read("src/portfolio/v3PortfolioData.ts");
   const slugs = [...source.matchAll(/slug: "([a-z0-9-]+)"/gu)].map((match) => match[1]);
-  const sitemap = read("public/sitemap.xml");
+  const sitemap = sitemapXml();
   assert.equal(slugs.length, 33);
   for (const slug of slugs) assert.match(sitemap, new RegExp(`<loc>https://yelyginn\\.ru/portfolio/${slug}</loc>`, "u"));
   assert.doesNotMatch(sitemap, /\/portfolio\/(?:editing|metro-gorkovskaya|sber-architecture-course)<\/loc>/u);

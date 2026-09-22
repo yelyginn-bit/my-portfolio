@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sitemapXml, siteOrigin } from "../scripts/sitemap.ts";
+import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
@@ -38,10 +40,12 @@ test("all embedded JSON-LD blocks are valid JSON", () => {
 });
 
 test("sitemap is generated from the indexable route manifest", () => {
-  assert.equal(fs.existsSync(path.join(root, "public/sitemap.xml")), true, "generated sitemap artifact is missing");
-  assert.match(read("scripts/prerender.ts"), /INDEXABLE_ROUTES\.map/u);
-  assert.match(read("scripts/prerender.ts"), /writeFile\(path\.join\(rootDir, "public", "sitemap\.xml"\), sitemap\)/u);
-  assert.match(read("src/public/routeManifest.ts"), /INDEXABLE_ROUTES = ROUTE_MANIFEST\.filter\(\(route\) => route\.indexable\)/u);
+  const sitemap = sitemapXml();
+  assert.ok(INDEXABLE_ROUTES.length > 0, "route manifest has no indexable routes to check against");
+  assert.equal((sitemap.match(/<loc>/gu) || []).length, INDEXABLE_ROUTES.length, "sitemap entry count must match INDEXABLE_ROUTES");
+  for (const route of INDEXABLE_ROUTES) {
+    assert.match(sitemap, new RegExp(`<loc>${siteOrigin}${route.path}</loc>`, "u"), `${route.path} missing from sitemap`);
+  }
 });
 
 test("private application pages are noindex", () => {

@@ -13,17 +13,16 @@ import Prices from "../src/prices/Prices";
 import V3App from "../src/public/V3App";
 import {
   CASE_PROJECTS,
-  INDEXABLE_ROUTES,
   PRERENDER_ROUTES,
   ROUTE_MANIFEST,
   V3_PRERENDER_ROUTES,
   resolveV3Route,
 } from "../src/public/routeManifest";
+import { sitemapXml, siteOrigin } from "./sitemap";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const prerenderDir = path.join(distDir, "prerender");
-const siteOrigin = "https://yelyginn.ru";
 
 const escapeHtml = (value: string) => value
   .replaceAll("&", "&amp;")
@@ -73,17 +72,6 @@ function outputFileFor(route: string) {
 
 function portfolioPhotoExists(photoId: string) {
   return existsSync(path.join(rootDir, "public", "portfolio-photos", `${photoId}.webp`));
-}
-
-function sitemapXml() {
-  const urls = INDEXABLE_ROUTES.map((route) => [
-    "  <url>",
-    `    <loc>${siteOrigin}${route.path}</loc>`,
-    "    <changefreq>monthly</changefreq>",
-    `    <priority>${route.priority ?? 0.5}</priority>`,
-    "  </url>",
-  ].join("\n"));
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
 }
 
 async function main() {
@@ -174,7 +162,6 @@ async function main() {
   const sitemap = sitemapXml();
   await Promise.all([
     writeFile(path.join(distDir, "prerender-manifest.json"), `${JSON.stringify({ routes: generated }, null, 2)}\n`),
-    writeFile(path.join(rootDir, "public", "sitemap.xml"), sitemap),
     writeFile(path.join(distDir, "sitemap.xml"), sitemap),
   ]);
   console.log(`Prerendered ${generated.length} routes from the shared route manifest.`);

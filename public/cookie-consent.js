@@ -23,13 +23,16 @@
   };
 
   const style = document.createElement("style");
-  // color:#f4f4ef!important на h2 обязателен: на static-страницах
-  // .site-static h2 { color: var(--site-text) !important } (site-skin.css)
-  // красит и этот виджет — он вставлен глобально, вне контента страницы,
-  // но всё равно оказывается внутри body.site-static. Без !important не
-  // перебить: конкурирующее правило само !important. Итог без правки —
-  // тёмный текст на тёмной подложке виджета, контраст 1.11:1.
-  style.textContent = `.yel-cookie{position:fixed;inset:0;z-index:9999;display:grid;place-items:end end;padding:clamp(8px,1.2vw,16px);pointer-events:none;font:600 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.yel-cookie[hidden]{display:none}.yel-cookie__box{width:min(540px,100%);padding:14px;border:1px solid rgba(255,255,255,.42);border-radius:16px;background:rgba(14,14,14,.94);color:#f4f4ef;box-shadow:0 16px 42px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:auto}.yel-cookie h2{margin:0 0 6px;font-size:16px;letter-spacing:-.02em;color:#f4f4ef!important}.yel-cookie p{margin:0 0 12px;color:rgba(244,244,239,.72)}.yel-cookie__actions{display:flex;gap:5px;flex-wrap:wrap}.yel-cookie button{min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:transparent;color:inherit;cursor:pointer;font:inherit}.yel-cookie button[data-primary]{border-color:#ff5a1f;background:#ff5a1f;color:#101010}.yel-cookie__settings{padding:8px 0}.yel-cookie label{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-top:1px solid rgba(255,255,255,.2)}.yel-cookie a{color:inherit;text-underline-offset:3px}@media(max-width:620px){.yel-cookie{place-items:end center}.yel-cookie__box{width:100%;padding:12px}.yel-cookie__actions{display:grid;grid-template-columns:1fr 1fr}.yel-cookie button{width:100%}.yel-cookie button[data-settings]{grid-column:1/-1}}`;
+  // color:#f4f4ef!important и font-size:16px!important на h2 обязательны:
+  // на static-страницах site-skin.css задаёт `.site-static h2 { color:
+  // var(--site-text) !important; font-size: var(--site-h2) !important }`.
+  // Этот виджет вставлен глобально, вне контента страницы, но всё равно
+  // оказывается внутри body.site-static — и матчится тем же правилом.
+  // Конкурирующее правило само !important, обычной специфичностью не
+  // перебить. Без font-size!important заголовок виджета брал var(--site-h2)
+  // (до ~43px на 390px и больше на широких экранах) вместо заданных 16px —
+  // на телефоне заголовок баннера был крупнее H1 страницы, под которой стоял.
+  style.textContent = `.yel-cookie{position:fixed;inset:0;z-index:9999;display:grid;place-items:end end;padding:clamp(8px,1.2vw,16px);pointer-events:none;font:600 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.yel-cookie[hidden]{display:none}.yel-cookie__box{width:min(540px,100%);padding:14px;border:1px solid rgba(255,255,255,.42);border-radius:16px;background:rgba(14,14,14,.94);color:#f4f4ef;box-shadow:0 16px 42px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:auto}.yel-cookie h2{margin:0 0 6px;font-size:16px!important;letter-spacing:-.02em;color:#f4f4ef!important}.yel-cookie p{margin:0 0 12px;color:rgba(244,244,239,.72)}.yel-cookie__actions{display:flex;gap:5px;flex-wrap:wrap}.yel-cookie button{min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:transparent;color:inherit;cursor:pointer;font:inherit}.yel-cookie button[data-primary]{border-color:var(--ds-orange,#ff5a1f);background:var(--ds-orange,#ff5a1f);color:#101010}.yel-cookie__settings{padding:8px 0}.yel-cookie label{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-top:1px solid rgba(255,255,255,.2)}.yel-cookie a{color:inherit;text-underline-offset:3px}@media(max-width:620px){.yel-cookie{place-items:end center}.yel-cookie__box{width:100%;padding:12px}.yel-cookie__actions{display:grid;grid-template-columns:1fr 1fr}.yel-cookie button{width:100%}.yel-cookie button[data-settings]{grid-column:1/-1}}`;
   document.head.appendChild(style);
 
   const root = document.createElement("div");

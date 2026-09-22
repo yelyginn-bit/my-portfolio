@@ -38,7 +38,6 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/portfolio/photo", render: "private", indexable: false },
   { path: "/account", render: "private", indexable: false },
   { path: "/admin", render: "private", indexable: false },
-  { path: "/gallery", render: "private", indexable: false },
   { path: "/journal", render: "private", indexable: false },
   { path: "/privacy-policy", render: "static", indexable: true, priority: 0.3 },
   { path: "/personal-data-consent", render: "static", indexable: true, priority: 0.2 },

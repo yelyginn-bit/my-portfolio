@@ -1289,7 +1289,14 @@ body.v3-menu-open { overflow: hidden; }
   .v3-project-card__body, .v3-project-card--mosaic .v3-project-card__body, .v3-project-card--poster .v3-project-card__body { min-height: 168px; }
   .v3-project-card__body h3 { margin-top: 3rem; font-size: clamp(2.15rem, 10vw, 3.4rem); }
 }
-@media (prefers-reduced-motion: reduce) { .v3-marquee__track { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .v3-marquee__track { animation: none; }
+  /* Без анимации строка стоит на первом кадре и режет имя на границе
+     контейнера (на 390px — уже третье, «БАРЬЕР» — видно только «БАРЬ»).
+     Мягкое затухание вместо жёсткого обреза — реального имени не
+     дочитать в статике в любом случае, так честнее, чем ровный срез. */
+  .v3-marquee { -webkit-mask-image: linear-gradient(to right, #000 90%, transparent); mask-image: linear-gradient(to right, #000 90%, transparent); }
+}
 
 /* The non-V3 public mounts use the same information architecture. */
 .ds-header-inner { grid-template-columns: 54px minmax(0,1fr) max-content max-content; gap: 0; }

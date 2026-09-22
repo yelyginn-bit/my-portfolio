@@ -98,10 +98,10 @@ body.site-menu-open { overflow: hidden; }
 .site-static .stat:last-child { border-right: 0; }
 .site-static .hero .hero-copy, .site-static .hero .wrap > div:first-child, .site-static .price-hero > div:first-child { grid-column: 1 / span 8; }
 .site-static .hero .hero-side, .site-static .hero .wrap > div:last-child, .site-static .price-hero > div:last-child { grid-column: 9 / -1; }
-.site-static h1, .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
-.site-static h1 br { display: none; }
-.site-static h1 em, .site-static h1 span, .site-static h2 span { color: var(--site-accent) !important; font-style: normal; }
-.site-static h2 { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h1, .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h1 br { display: none; }
+.site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span, .site-static :is(header, main, footer) h2 span { color: var(--site-accent) !important; font-style: normal; }
+.site-static :is(header, main, footer) h2 { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(.lead, .hero p, .price-lead) { color: var(--site-text) !important; font-size: clamp(1.125rem, 1.65vw, 1.5rem) !important; line-height: 1.5; }
 .site-static :is(.grid-3, .price-row, .price-grid) { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)) !important; gap: 0 !important; border-top: 1px solid var(--site-border); border-left: 0 !important; }
 .site-static :is(.card, .price-card) { grid-column: span 4; min-height: 0; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem) clamp(1.5rem, 3vw, 2.5rem) 0 !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--site-border) !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -190,8 +190,8 @@ body.site-menu-open { overflow: hidden; }
   .site-static .hero .wrap > .lead { margin-top: 1.5rem; padding: 1.25rem 0 0; border-top: 1px solid var(--site-border); border-left: 0; }
   .site-static .hero .wrap > .ctas { padding-left: 0; }
   .site-static .hero .wrap > .ctas :is(.cta,.cta-ghost) { flex: 1 1 100%; width: 100%; }
-  .site-static h1, .site-static .price-hero h1 { font-size: clamp(2.75rem, 14vw, 4rem) !important; }
-  .site-static h2 { font-size: clamp(2.25rem, 11vw, 3.25rem) !important; }
+  .site-static :is(header, main, footer) h1, .site-static .price-hero h1 { font-size: clamp(2.75rem, 14vw, 4rem) !important; }
+  .site-static :is(header, main, footer) h2 { font-size: clamp(2.25rem, 11vw, 3.25rem) !important; }
   .site-static :is(.grid-3, .price-row, .price-grid) { grid-template-columns: repeat(4, minmax(0,1fr)) !important; }
   .site-static :is(.card, .price-card) { grid-column: 1 / -1; padding: 1.5rem 0 !important; border-left: 0 !important; }
   .site-static :is(.card, .price-card) + :is(.card, .price-card) { padding-left: 0 !important; border-left: 0 !important; }

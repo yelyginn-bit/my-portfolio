@@ -23,26 +23,13 @@
   };
 
   const style = document.createElement("style");
-  // ДОЛГ (заход 20): весь этот !important-блок на h2 — эскалация, не
-  // починка. Причина одна: .site-static h2 в site-skin.css правило для
-  // КОНТЕНТА страницы, а этот виджет — глобальный оверлей, вставленный
-  // в document.body напрямую, без своего контейнера вне .site-static.
-  // Правильное решение — сузить область .site-static h2 (например, до
-  // содержимого <main>/<header>/<footer>), а не глушить её здесь ещё
-  // одним !important. Не трогать отдельно — сделать вместе с перекраской
-  // site-shell (заход 20, фаза C, там всё равно в этом файле). Заодно
-  // добавить на сборке проверку «объявлено против вычисленного» — она
-  // поймала бы все четыре случая, когда этот слой ломал постороннее.
-  //
-  // Пока не сужено — координаты конфликта: color/font-size/line-height/
-  // letter-spacing/text-transform у .site-static h2 помечены !important,
-  // max-width:11ch и text-wrap:balance — нет, но конкурировать с ними
-  // виджету нечем (свой h2 их не объявлял), поэтому применялись как есть.
-  // Из-за max-width:11ch (~106px на 16px monospace) заголовок «Настройки
-  // cookie» переносился с дефисом даже после того, как размер поправили.
-  // Без font-size!important брался var(--site-h2) — до ~43px на 390px —
-  // и заголовок баннера был крупнее H1 страницы, под которой стоял.
-  style.textContent = `.yel-cookie{position:fixed;inset:0;z-index:9999;display:grid;place-items:end end;padding:clamp(8px,1.2vw,16px);pointer-events:none;font:600 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.yel-cookie[hidden]{display:none}.yel-cookie__box{width:min(540px,100%);padding:14px;border:1px solid rgba(255,255,255,.42);border-radius:16px;background:rgba(14,14,14,.94);color:#f4f4ef;box-shadow:0 16px 42px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:auto}.yel-cookie h2{margin:0 0 6px;font-size:16px!important;max-width:none!important;letter-spacing:-.02em;color:#f4f4ef!important}.yel-cookie p{margin:0 0 12px;color:rgba(244,244,239,.72)}.yel-cookie__actions{display:flex;gap:5px;flex-wrap:wrap}.yel-cookie button{min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:transparent;color:inherit;cursor:pointer;font:inherit}.yel-cookie button[data-primary]{border-color:var(--ds-orange,#ff5a1f);background:var(--ds-orange,#ff5a1f);color:#101010}.yel-cookie__settings{padding:8px 0}.yel-cookie label{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-top:1px solid rgba(255,255,255,.2)}.yel-cookie a{color:inherit;text-underline-offset:3px}@media(max-width:620px){.yel-cookie{place-items:end center}.yel-cookie__box{width:100%;padding:12px}.yel-cookie__actions{display:grid;grid-template-columns:1fr 1fr}.yel-cookie button{width:100%}.yel-cookie button[data-settings]{grid-column:1/-1}}`;
+  // Долг из захода 20 закрыт: .site-static h1/h2 в site-skin.css теперь
+  // скопированы до `.site-static :is(header, main, footer) h1/h2` — этот
+  // виджет вставлен прямо в document.body, вне всех трёх, и больше не
+  // матчится тем правилом. !important здесь были нужны только чтобы
+  // перебить ту (тогда не сужённую) конкурирующую запись — три штуки:
+  // color, font-size, max-width. Сейчас конкурировать нечему, убраны все три.
+  style.textContent = `.yel-cookie{position:fixed;inset:0;z-index:9999;display:grid;place-items:end end;padding:clamp(8px,1.2vw,16px);pointer-events:none;font:600 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.yel-cookie[hidden]{display:none}.yel-cookie__box{width:min(540px,100%);padding:14px;border:1px solid rgba(255,255,255,.42);border-radius:16px;background:rgba(14,14,14,.94);color:#f4f4ef;box-shadow:0 16px 42px rgba(0,0,0,.34);backdrop-filter:blur(10px);pointer-events:auto}.yel-cookie h2{margin:0 0 6px;font-size:16px;max-width:none;letter-spacing:-.02em;color:#f4f4ef}.yel-cookie p{margin:0 0 12px;color:rgba(244,244,239,.72)}.yel-cookie__actions{display:flex;gap:5px;flex-wrap:wrap}.yel-cookie button{min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:transparent;color:inherit;cursor:pointer;font:inherit}.yel-cookie button[data-primary]{border-color:var(--ds-orange,#ff5a1f);background:var(--ds-orange,#ff5a1f);color:#101010}.yel-cookie__settings{padding:8px 0}.yel-cookie label{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-top:1px solid rgba(255,255,255,.2)}.yel-cookie a{color:inherit;text-underline-offset:3px}@media(max-width:620px){.yel-cookie{place-items:end center}.yel-cookie__box{width:100%;padding:12px}.yel-cookie__actions{display:grid;grid-template-columns:1fr 1fr}.yel-cookie button{width:100%}.yel-cookie button[data-settings]{grid-column:1/-1}}`;
   document.head.appendChild(style);
 
   const root = document.createElement("div");

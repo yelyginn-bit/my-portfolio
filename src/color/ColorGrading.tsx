@@ -17,6 +17,10 @@ import { PageContainer, Section, SectionHeader, SiteFooter, SiteHeader } from ".
 import { ColorCompare } from "../components/ColorCompare";
 import { COLOR_COMPARE_GROUP_INTROS, COLOR_COMPARE_GROUP_LABELS, COLOR_COMPARE_GROUP_ORDER, COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
 import { SITE } from "../config/site";
+import { CATEGORY_META, projectsForCategory } from "../portfolio/v3PortfolioData";
+import { CALCULATOR_LINK, PRICES_LINK } from "../lib/navigation.data";
+
+const RELATED_PROJECTS = [...projectsForCategory("color").filter((p) => p.featured), ...projectsForCategory("color").filter((p) => !p.featured)].slice(0, 3);
 
 /** Публичные стартовые цены на цветокоррекцию. */
 const TIERS = [
@@ -188,6 +192,22 @@ export default function ColorGrading() {
             </div>
           </PageContainer>
         </Section>
+
+        {RELATED_PROJECTS.length > 0 && (
+          <Section className="color-related">
+            <PageContainer>
+              <SectionHeader title={<>Похожие <i>работы</i></>} />
+              <div className="color-related-list">
+                {RELATED_PROJECTS.map((project) => <a key={project.slug} className="color-related-card" href={`/portfolio/${project.slug}`}>{project.title}</a>)}
+              </div>
+              <div className="color-related-actions">
+                <a className="color-btn color-btn--ghost" href="/portfolio/color">Все работы категории «{CATEGORY_META.color.title}»</a>
+                <a className="color-btn color-btn--ghost" href={PRICES_LINK.href}>{PRICES_LINK.label}</a>
+                <a className="color-btn color-btn--ghost" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
+              </div>
+            </PageContainer>
+          </Section>
+        )}
 
         <Section className="color-cta">
           <PageContainer>

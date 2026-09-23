@@ -140,6 +140,13 @@ body.site-menu-open { overflow: hidden; }
 .site-static .faq-q { color: var(--site-text); font-size: clamp(1.05rem, 1.5vw, 1.3rem); font-weight: 700; }
 .site-static .faq-a { max-width: 62ch; margin-top: .75rem; color: var(--site-muted) !important; font-size: 1rem; line-height: 1.6; }
 .site-static .links-row { display: flex; flex-wrap: wrap; gap: .5rem !important; }
+
+/* Похожие работы (PROMPT-21 §5) — карточки берутся из projectsForCategory на
+   сборке (scripts/relatedWork.ts), не прописаны руками. */
+.site-static .related-work-list { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem !important; margin-bottom: 1.25rem; }
+.site-static .related-work-card { display: flex; min-height: 64px; align-items: center; padding: 1rem !important; color: var(--site-text) !important; background: var(--ds-surface); border: 1px solid var(--site-border); border-radius: 3px; font-size: .92rem; font-weight: 650; }
+.site-static .related-work-card:hover { border-color: var(--site-accent); }
+@media (max-width: 767px) { .site-static .related-work-list { grid-template-columns: 1fr; } }
 .site-static .tag, .site-static :is(.cta, .cta-ghost, .price-button) { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 1rem !important; color: var(--site-text) !important; background: transparent !important; border: 1px solid var(--site-border) !important; border-radius: 3px !important; font-size: .82rem !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none; }
 .site-static :is(.cta, .price-button--primary) { color: var(--ds-on-accent) !important; background: var(--site-accent) !important; border-color: var(--site-accent) !important; }
 .site-static .cta-band { color: var(--site-text); background: var(--ds-surface); }

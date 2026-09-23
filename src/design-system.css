@@ -388,6 +388,12 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .color-proof-list { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
 
 .color-tiers { border-bottom: 1px solid var(--ds-border); }
+.color-related-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin-bottom: var(--ds-s5); }
+.color-related-card { display: flex; min-height: 72px; align-items: center; padding: var(--ds-s4); color: var(--ds-text); background: var(--ds-surface); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); font-size: .95rem; font-weight: 650; }
+.color-related-card:hover { border-color: var(--ds-orange); }
+.color-related-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+@media (max-width: 767px) { .color-related-list { grid-template-columns: 1fr; } }
+
 .color-tier-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); border-top: 1px solid var(--ds-border); }
 .color-tier { padding: clamp(1.5rem, 2.5vw, 2.25rem) 0 0; border-top: 2px solid var(--ds-text); }
 .color-tier h3 { margin: 0 0 .75rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.15; }

@@ -66,7 +66,7 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
    ds-сетке оставались без индикатора фокуса — это нарушение WCAG 2.4.7.
    Здесь правило привязано к самим ds-компонентам, а не к странице. */
 :is(.ds-header, .ds-footer, .ds-section, .price-page) :is(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--ds-accent);
+  outline: 2px solid var(--ds-text);
   outline-offset: 3px;
   border-radius: var(--ds-radius-sm);
 }
@@ -374,7 +374,12 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .color-btn:hover { color: var(--ds-on-accent); background: var(--ds-orange); border-color: var(--ds-orange); }
 .color-btn--ghost { color: var(--ds-text); background: transparent; border-color: var(--ds-border-strong); }
 .color-btn--ghost:hover { color: var(--ds-text); background: transparent; border-color: var(--ds-text); }
-.color-btn:focus-visible, .color-compare-handle:focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 3px; }
+/* База — INK: ColorCompare общий компонент, используется и на светлой
+   /cvetokorrekciya (.color-proof-list), где ORANGE на PAPER = 2.62 не
+   проходит порог фокуса. На тёмной главной (.v32-proof__color,
+   .v32-project-proof) ниже — явный оверрайд на ORANGE. */
+.color-btn:focus-visible, .color-compare-handle:focus-visible { outline: 2px solid var(--ds-text); outline-offset: 3px; }
+:is(.v32-proof__color, .v32-project-proof) :is(.color-btn:focus-visible, .color-compare-handle:focus-visible) { outline-color: var(--ds-orange); }
 
 .color-proof { border-bottom: 1px solid var(--ds-border); }
 .color-proof-group { display: grid; gap: clamp(1.5rem, 3vw, 2rem); }
@@ -489,7 +494,10 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
     background: var(--ds-orange);
     border-color: var(--ds-orange);
   }
-  .color-compare-toggle button:focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 2px; }
+  /* База — INK, тот же довод, что у .color-btn:focus-visible выше:
+     .cvetokorrekciya светлая, ORANGE на PAPER не проходит порог фокуса. */
+  .color-compare-toggle button:focus-visible { outline: 2px solid var(--ds-text); outline-offset: 2px; }
+  :is(.v32-proof__color, .v32-project-proof) .color-compare-toggle button:focus-visible { outline-color: var(--ds-orange); }
 }
 
 /* Обратный порядок: на ≥768px переключатель не нужен и не должен занимать
@@ -550,7 +558,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-hero__system { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 3rem; border-left: 1px solid var(--ds-border); writing-mode: vertical-rl; font: 600 .57rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; color: var(--ds-text-muted); }
 .v3-marquee { overflow: hidden; border-block: 1px solid var(--ds-text); background: var(--ds-orange); }
 .v3-marquee > div { width: max-content; display: flex; animation: v3-marquee 32s linear infinite; }
-.v3-marquee span { display: inline-flex; align-items: center; gap: 2rem; padding: .95rem 1rem; font: 800 clamp(.85rem, 1.4vw, 1.2rem)/1 "Arial Narrow", Arial, sans-serif; letter-spacing: -.02em; }
+.v3-marquee span { display: inline-flex; align-items: center; gap: 2rem; padding: .95rem 1rem; color: var(--ds-text); font: 800 clamp(.85rem, 1.4vw, 1.2rem)/1 "Arial Narrow", Arial, sans-serif; letter-spacing: -.02em; }
 .v3-marquee b { font-size: .65rem; }
 @keyframes v3-marquee { to { transform: translateX(-50%); } }
 .v3-work { padding-block: clamp(6rem, 10vw, 11rem); }

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { createContext, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
@@ -21,6 +21,7 @@ import PortfolioSystem from "./PortfolioSystem";
 import { PRIMARY_SOCIALS, SECONDARY_SOCIALS } from "../config/socials";
 import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES } from "./v3Content";
 import { resolveV3Route } from "./routeManifest";
+import { CALCULATOR_LINK, CONTACT_LINK, FOOTER_GROUPS, PRIMARY_NAV } from "../lib/navigation.data";
 
 const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
@@ -48,28 +49,41 @@ function LazyPlayer({ asset, title }: { asset: WorkAsset; title: string }) {
   );
 }
 
-const primaryNav = [
-  { href: "/portfolio", label: "РАБОТЫ", active: "work" },
-  { href: "/portfolio/camera", label: "СЪЁМКА", active: "camera" },
-  { href: "/photo", label: "ФОТО", active: "photo" },
-  { href: "/portfolio/post", label: "ПОСТ", active: "post" },
-  { href: "/blog", label: "БЛОГ", active: "blog" },
-  { href: "/about", label: "ОБО МНЕ", active: "about" },
-] as const;
+/** Пункт шапки активен, если путь совпадает с его href, с href его выпадающего
+ * списка, или (для «Портфолио») с любым вложенным маршрутом /portfolio/*. */
+function isNavEntryActive(entry: (typeof PRIMARY_NAV)[number], path: string): boolean {
+  const normalized = path === "/portfolio/editing" ? "/portfolio/post" : path;
+  if (entry.kind === "link") return entry.href === normalized;
+  if (entry.href && normalized.startsWith(entry.href)) return true;
+  return entry.items.some((item) => item.href === normalized);
+}
 
-function currentNavItem(path: string) {
-  if (path === "/portfolio/camera") return "camera";
-  if (path === "/photo") return "photo";
-  if (path === "/portfolio/post" || path === "/portfolio/editing") return "post";
-  if (path === "/blog" || path.startsWith("/blog/")) return "blog";
-  if (path === "/about") return "about";
-  if (path === "/portfolio" || path.startsWith("/portfolio/")) return "work";
-  return undefined;
+function NavDropdownMenu({ entry, path, mobile, onNavigate }: { entry: Extract<(typeof PRIMARY_NAV)[number], { kind: "dropdown" }>; path: string; mobile?: boolean; onNavigate?: () => void }) {
+  const [open, setOpen] = useState(false);
+  const isActive = isNavEntryActive(entry, path);
+  if (mobile) {
+    return (
+      <details className="v3-mobile-menu__group">
+        <summary aria-current={isActive ? "page" : undefined}>{entry.label}</summary>
+        {entry.href && <a href={entry.href} onClick={onNavigate}>Все — {entry.label.toLowerCase()}</a>}
+        {entry.items.map((item) => <a key={item.href} href={item.href} onClick={onNavigate} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
+      </details>
+    );
+  }
+  return (
+    <div className="v3-nav__dropdown">
+      <button type="button" aria-expanded={open} data-active={isActive ? "true" : undefined} onClick={() => setOpen((value) => !value)} onBlur={(event) => { if (!event.currentTarget.parentElement?.contains(event.relatedTarget as Node)) setOpen(false); }}>{entry.label}</button>
+      <div className={`v3-nav__dropdown-menu${open ? " is-open" : ""}`}>
+        {entry.href && <a href={entry.href} onClick={() => setOpen(false)}>Всё портфолио</a>}
+        {entry.items.map((item) => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
+      </div>
+    </div>
+  );
 }
 
 function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const active = currentNavItem(useContext(RoutePathContext));
+  const path = useContext(RoutePathContext);
   useEffect(() => {
     document.body.classList.toggle("v3-menu-open", open);
     return () => document.body.classList.remove("v3-menu-open");
@@ -79,18 +93,32 @@ function SiteHeader() {
       <header className="v3-header">
         <nav className="v3-nav" aria-label="Основная навигация">
           <a className="v3-nav__brand" href="/" aria-label="YELYGINN — главная">Y</a>
-          <div className="v3-nav__links">{primaryNav.map((item) => <a key={item.href} href={item.href} aria-current={active === item.active ? "page" : undefined}>{item.label}</a>)}</div>
+          <div className="v3-nav__links">
+            {PRIMARY_NAV.map((entry) => (
+              <Fragment key={entry.label}>
+                {entry.kind === "dropdown"
+                  ? <NavDropdownMenu entry={entry} path={path} />
+                  : <a href={entry.href} aria-current={isNavEntryActive(entry, path) ? "page" : undefined}>{entry.label}</a>}
+              </Fragment>
+            ))}
+          </div>
+          <a className="v3-nav__calc" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
           <span className="v3-nav__status">CORE // READY</span>
-          <a className="v3-nav__cta" href="/contact"><span className="v3-nav__cta-full">ОБСУДИТЬ ПРОЕКТ</span><span className="v3-nav__cta-short">ОБСУДИТЬ</span><ArrowUpRight size={14} /></a>
+          <a className="v3-nav__cta" href={CONTACT_LINK.href}><span className="v3-nav__cta-full">{CONTACT_LINK.label.toUpperCase()}</span><span className="v3-nav__cta-short">ОБСУДИТЬ</span><ArrowUpRight size={14} /></a>
           <button className="v3-nav__menu" type="button" aria-expanded={open} aria-controls="v3-mobile-menu" aria-label={open ? "Закрыть меню" : "Открыть меню"} onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
         </nav>
       </header>
       {open && (
           <div id="v3-mobile-menu" className="v3-mobile-menu">
-            {primaryNav.map((item, index) => (
-              <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={active === item.active ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item.label}</a>
+            <a className="v3-mobile-menu__calc" href={CALCULATOR_LINK.href} onClick={() => setOpen(false)}>{CALCULATOR_LINK.label}</a>
+            {PRIMARY_NAV.map((entry) => (
+              <Fragment key={entry.label}>
+                {entry.kind === "dropdown"
+                  ? <NavDropdownMenu entry={entry} path={path} mobile onNavigate={() => setOpen(false)} />
+                  : <a href={entry.href} onClick={() => setOpen(false)} aria-current={isNavEntryActive(entry, path) ? "page" : undefined}>{entry.label}</a>}
+              </Fragment>
             ))}
-            <a href="/contact" onClick={() => setOpen(false)}><span>{String(primaryNav.length + 1).padStart(2, "0")}</span>ОБСУДИТЬ ПРОЕКТ <ArrowUpRight size={16} /></a>
+            <a href={CONTACT_LINK.href} onClick={() => setOpen(false)}>{CONTACT_LINK.label} <ArrowUpRight size={16} /></a>
             <div className="v3-mobile-menu__contacts">
               <a href={SITE.telegramUrl}>Telegram</a>
               <a href={`mailto:${SITE.email}`}>Email</a>
@@ -105,6 +133,14 @@ function SiteFooter() {
   return (
     <footer className="v3-footer">
       <div className="v3-footer__wordmark" aria-label="YELYGINN"><span>YELYGINN</span></div>
+      <div className="v3-footer__groups">
+        {FOOTER_GROUPS.map((group) => (
+          <nav key={group.title} aria-label={group.title}>
+            <strong>{group.title}</strong>
+            {group.links.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+          </nav>
+        ))}
+      </div>
       <div className="v3-footer__meta">
         <span>© 2026 YELYGINN</span>
         <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>

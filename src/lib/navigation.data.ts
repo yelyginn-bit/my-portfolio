@@ -35,6 +35,19 @@ export const PORTFOLIO_CATEGORY_LINKS: readonly NavLink[] = PORTFOLIO_CATEGORY_O
   link(`/portfolio/${category}`, CATEGORY_META[category].title),
 );
 
+/** Категория портфолио → посадочная услуга (PROMPT-21 §5: «кейс в портфолио
+ * → услуга, к которой он относится»). У camera/post/concerts/interviews нет
+ * отдельной посадочной — только у семи услуг из SERVICE_LINKS, — для них
+ * ссылка ведёт на общий прайс. */
+export const CATEGORY_TO_SERVICE: Readonly<Record<string, NavLink>> = {
+  commercial: link("/reklamnye-roliki", "Рекламные ролики"),
+  events: link("/event-video", "Видеосъёмка мероприятий"),
+  reels: link("/reels", "Reels для бизнеса"),
+  product: link("/video-dlya-marketpleysov", "Видео для маркетплейсов"),
+  broadcast: link("/pryamye-translyacii", "Прямые трансляции"),
+  color: link("/cvetokorrekciya", "Цветокоррекция"),
+};
+
 export const PHOTO_LINK: NavLink = link("/photo", "Фото");
 export const PRICES_LINK: NavLink = link("/ceny", "Цены");
 export const BLOG_LINK: NavLink = link("/blog", "Блог");

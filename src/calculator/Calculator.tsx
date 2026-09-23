@@ -346,7 +346,7 @@ export default function Calculator() {
           {status === "success" ? (
             <div className="calc-success">
               <div className="calc-success-mark">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fe2c1f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF6422" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
               </div>
               <h3>Заявка отправлена</h3>
               <p>Смета сохранена, я свяжусь с вами в ближайшее время. Спасибо за доверие!</p>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getStore } from "../lib/store";
 import { logAudit } from "../lib/audit";
+import { isSupabaseConfigured } from "../lib/supabaseClient";
 import type { BlogPost } from "../lib/types";
 
 const store = getStore();
@@ -70,6 +71,11 @@ export default function BlogAdmin() {
 
   return (
     <div className="adm-card" style={{ padding: 18 }}>
+      {!isSupabaseConfigured && (
+        <div style={{ background: "rgba(255,100,34,0.12)", border: "1px solid rgba(255,100,34,0.4)", borderRadius: 12, padding: "12px 16px", marginBottom: 18, fontSize: 13, lineHeight: 1.5 }}>
+          Хранилище не подключено: записи сохраняются только в этом браузере, на этом устройстве. Они не появятся на других устройствах и пропадут при очистке данных браузера.
+        </div>
+      )}
       <div style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 16, marginBottom: 22 }}>
         <strong style={{ fontSize: 15 }}>{editing ? "Редактирование поста" : "Новый пост"}</strong>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>

@@ -639,7 +639,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-footer__meta span:last-child { text-align: right; }
 .v3-footer__meta button { padding: 0; border: 0; color: inherit; background: transparent; }
 .v3-footer__meta a { color: rgba(255,255,255,.78); }
-.v3-form label > span:first-child { color: #6840d8; }
+.v3-form label > span:first-child { color: var(--ds-violet); }
 .v3-catalog { padding-block: clamp(8rem, 14vw, 12rem) 8rem; }
 .v3-catalog__hero { display: grid; grid-template-columns: 3fr 6fr 3fr; gap: var(--ds-grid-gap); align-items: end; margin-bottom: 4rem; }
 .v3-catalog__hero h1 { margin: 0; font: 800 clamp(4rem, 10vw, 10rem)/.78 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.075em; text-transform: uppercase; }

@@ -1,7 +1,8 @@
 // Общий выпадающий пункт шапки («Услуги», «Портфолио») — используется системой
 // V3 (src/public/V3App.tsx) и системой Layout (src/prices/Prices.tsx,
 // src/color/ColorGrading.tsx). Пункты берутся из src/lib/navigation.data.ts.
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { PrimaryNavEntry, NavDropdown } from "../../lib/navigation.data";
 
 /** Пункт активен, если путь совпадает с его href, с href его выпадающего
@@ -15,7 +16,32 @@ export function isNavEntryActive(entry: PrimaryNavEntry, path: string): boolean 
 
 export function NavDropdownMenu({ entry, path, mobile, onNavigate }: { entry: NavDropdown; path: string; mobile?: boolean; onNavigate?: () => void }) {
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
   const isActive = isNavEntryActive(entry, path);
+
+  const cancelClose = () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+  const scheduleClose = () => { cancelClose(); closeTimer.current = setTimeout(() => setOpen(false), 150); };
+  const openNow = () => { cancelClose(); setOpen(true); };
+
+  useEffect(() => {
+    if (!open || !buttonRef.current) return;
+    const place = () => {
+      const rect = buttonRef.current!.getBoundingClientRect();
+      setCoords({ top: rect.bottom + 8, left: rect.left });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open]);
+
+  useEffect(() => () => cancelClose(), []);
+
   if (mobile) {
     return (
       <details className="nav-dropdown-mobile-group">
@@ -27,11 +53,25 @@ export function NavDropdownMenu({ entry, path, mobile, onNavigate }: { entry: Na
   }
   return (
     <div className="nav-dropdown">
-      <button type="button" aria-expanded={open} data-active={isActive ? "true" : undefined} onClick={() => setOpen((value) => !value)} onBlur={(event) => { if (!event.currentTarget.parentElement?.contains(event.relatedTarget as Node)) setOpen(false); }}>{entry.label}</button>
-      <div className={`nav-dropdown-menu${open ? " is-open" : ""}`}>
-        {entry.href && <a href={entry.href} onClick={() => setOpen(false)}>Всё портфолио</a>}
-        {entry.items.map((item) => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
-      </div>
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        data-active={isActive ? "true" : undefined}
+        onClick={() => (open ? setOpen(false) : openNow())}
+        onMouseEnter={openNow}
+        onMouseLeave={scheduleClose}
+        onBlur={(event) => { if (!event.relatedTarget || !(event.relatedTarget as HTMLElement).closest?.(".nav-dropdown-menu")) setOpen(false); }}
+      >
+        {entry.label}
+      </button>
+      {open && typeof document !== "undefined" && createPortal(
+        <div className="nav-dropdown-menu is-open" style={{ top: coords.top, left: coords.left }} onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+          {entry.href && <a href={entry.href} onClick={() => setOpen(false)}>Всё портфолио</a>}
+          {entry.items.map((item) => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
+        </div>,
+        document.body,
+      )}
     </div>
   );
 }

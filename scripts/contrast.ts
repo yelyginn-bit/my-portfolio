@@ -46,27 +46,50 @@ const WHITE = "#FFFFFF";
 const LEGACY_ACCENT_TEXT = "#C83227";
 const CURRENT_ACCENT = "#EF3F32";
 
-const PAIRS: Array<{ label: string; a: string; b: string; threshold: number }> = [
-  { label: "ORANGE на INK", a: BRAND.ORANGE, b: BRAND.INK, threshold: 3.0 },
-  { label: "ORANGE на GRAPHITE", a: BRAND.ORANGE, b: BRAND.GRAPHITE, threshold: 3.0 },
-  { label: "ORANGE на PAPER", a: BRAND.ORANGE, b: BRAND.PAPER, threshold: 3.0 },
-  { label: "INK на ORANGE", a: BRAND.INK, b: BRAND.ORANGE, threshold: 3.0 },
-  { label: "белый на ORANGE", a: WHITE, b: BRAND.ORANGE, threshold: 3.0 },
-  { label: "PAPER на ORANGE", a: BRAND.PAPER, b: BRAND.ORANGE, threshold: 3.0 },
-  { label: "#C83227 на PAPER", a: LEGACY_ACCENT_TEXT, b: BRAND.PAPER, threshold: 4.5 },
-  { label: "INK на нынешнем #EF3F32", a: BRAND.INK, b: CURRENT_ACCENT, threshold: 4.5 },
-  { label: "VIOLET на INK", a: BRAND.VIOLET, b: BRAND.INK, threshold: 4.5 },
-  { label: "VIOLET на GRAPHITE", a: BRAND.VIOLET, b: BRAND.GRAPHITE, threshold: 3.0 },
-  { label: "VIOLET на PAPER", a: BRAND.VIOLET, b: BRAND.PAPER, threshold: 3.0 },
-  { label: "белый на VIOLET", a: WHITE, b: BRAND.VIOLET, threshold: 3.0 },
-  { label: "FOG на INK", a: BRAND.FOG, b: BRAND.INK, threshold: 4.5 },
-  { label: "FOG на PAPER", a: BRAND.FOG, b: BRAND.PAPER, threshold: 3.0 },
+// Порог задаётся РОЛЬЮ пары, не нынешним значением цвета:
+// "text"     — любой текст (в т.ч. мелкий) → AA требует 4.5.
+// "large-ui" — только крупный текст (≥24px/≥18.66px bold), элементы интерфейса
+//              (границы контролов, иконки) и индикаторы фокуса → AA требует 3.0.
+type Role = "text" | "large-ui";
+const THRESHOLD: Record<Role, number> = { text: 4.5, "large-ui": 3.0 };
+
+// expect: "pass" — реально используется как заливка+текст, обязан пройти порог
+//         своей роли (tests/palette.test.ts это проверяет).
+//         "fail" — документирует, почему прямое использование запрещено (в коде
+//         не встречается — роль занята заменой типа --ds-accent-text-legacy);
+//         тест проверяет, что пара НЕ проходит, иначе документация лжёт.
+type Expect = "pass" | "fail";
+const PAIRS: Array<{ label: string; a: string; b: string; role: Role; expect: Expect }> = [
+  // nav a[aria-current], .v3-button--orange, .calc-cta, .calc-type[data-active] —
+  // все мелкий текст на заливке ORANGE. Было порог 3 — правило требует 4.5.
+  { label: "ORANGE на INK", a: BRAND.ORANGE, b: BRAND.INK, role: "text", expect: "pass" },
+  { label: "ORANGE на GRAPHITE", a: BRAND.ORANGE, b: BRAND.GRAPHITE, role: "text", expect: "pass" },
+  { label: "INK на ORANGE", a: BRAND.INK, b: BRAND.ORANGE, role: "text", expect: "pass" },
+  // ORANGE как текст на PAPER нигде не используется (роль занята accent-text-legacy) —
+  // пара документирует, почему замена нужна; тот же класс, что и три выше.
+  { label: "ORANGE на PAPER", a: BRAND.ORANGE, b: BRAND.PAPER, role: "text", expect: "fail" },
+  // белый/PAPER текст на ORANGE — тот же класс (белый-на-заливке), в коде не
+  // встречается (был баг, уже исправлен на INK-текст); оставлено как документация бага.
+  { label: "белый на ORANGE", a: WHITE, b: BRAND.ORANGE, role: "text", expect: "fail" },
+  { label: "PAPER на ORANGE", a: BRAND.PAPER, b: BRAND.ORANGE, role: "text", expect: "fail" },
+  { label: "#C83227 на PAPER", a: LEGACY_ACCENT_TEXT, b: BRAND.PAPER, role: "text", expect: "pass" },
+  { label: "INK на нынешнем #EF3F32", a: BRAND.INK, b: CURRENT_ACCENT, role: "text", expect: "pass" },
+  { label: "VIOLET на INK", a: BRAND.VIOLET, b: BRAND.INK, role: "text", expect: "pass" },
+  // VIOLET нигде не используется как заливка под текст (только акцентная левая
+  // граница, .v32-hero__position) — реальная роль пока "large-ui", не текст.
+  { label: "VIOLET на GRAPHITE", a: BRAND.VIOLET, b: BRAND.GRAPHITE, role: "large-ui", expect: "pass" },
+  { label: "VIOLET на PAPER", a: BRAND.VIOLET, b: BRAND.PAPER, role: "large-ui", expect: "pass" },
+  { label: "белый на VIOLET", a: WHITE, b: BRAND.VIOLET, role: "large-ui", expect: "pass" },
+  { label: "FOG на INK", a: BRAND.FOG, b: BRAND.INK, role: "text", expect: "pass" },
+  // FOG — линии/разделители (--ds-border), не текст.
+  { label: "FOG на PAPER", a: BRAND.FOG, b: BRAND.PAPER, role: "large-ui", expect: "fail" },
 ];
 
 export function printTable(): void {
   console.log("Пара".padEnd(28), "Контраст".padEnd(10), "Порог", "Проходит");
-  for (const { label, a, b, threshold } of PAIRS) {
+  for (const { label, a, b, role } of PAIRS) {
     const ratio = contrastRatio(a, b);
+    const threshold = THRESHOLD[role];
     const pass = ratio >= threshold;
     console.log(
       label.padEnd(28),
@@ -76,6 +99,8 @@ export function printTable(): void {
     );
   }
 }
+
+export { PAIRS, THRESHOLD };
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   printTable();

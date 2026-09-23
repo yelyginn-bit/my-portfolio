@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { BRAND, contrastRatio } from "../scripts/contrast.ts";
+import { BRAND, contrastRatio, PAIRS, THRESHOLD } from "../scripts/contrast.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
@@ -25,27 +25,26 @@ test("the six brand tokens in design-system.css match the Figma brand book exact
   }
 });
 
-test("every allowed pair from the brand book contrast table clears its threshold", () => {
-  const pairs: Array<[string, string, string, number]> = [
-    ["ORANGE на INK", BRAND.ORANGE, BRAND.INK, 3.0],
-    ["ORANGE на GRAPHITE", BRAND.ORANGE, BRAND.GRAPHITE, 3.0],
-    ["INK на ORANGE", BRAND.INK, BRAND.ORANGE, 3.0],
-    ["#C83227 на PAPER", "#C83227", BRAND.PAPER, 4.5],
-    ["VIOLET на INK", BRAND.VIOLET, BRAND.INK, 4.5],
-    ["VIOLET на GRAPHITE", BRAND.VIOLET, BRAND.GRAPHITE, 3.0],
-    ["VIOLET на PAPER", BRAND.VIOLET, BRAND.PAPER, 3.0],
-    ["белый на VIOLET", "#FFFFFF", BRAND.VIOLET, 3.0],
-    ["FOG на INK", BRAND.FOG, BRAND.INK, 4.5],
-  ];
-  for (const [label, a, b, threshold] of pairs) {
+// Порог и ожидание берутся из scripts/contrast.ts — единственного источника.
+// Раньше этот список дублировался здесь с собственными (заниженными) порогами,
+// что и было найдено расхождение фазы 2 §0.1: тест хранил порог 3 для пар,
+// которые по роли "любой текст" обязаны проходить 4.5.
+test("every allowed pair from the brand book contrast table clears its role's threshold", () => {
+  for (const { label, a, b, role, expect } of PAIRS) {
+    if (expect !== "pass") continue;
     const ratio = contrastRatio(a, b);
-    assert.ok(ratio >= threshold, `${label}: ${ratio.toFixed(2)} < ${threshold}`);
+    const threshold = THRESHOLD[role];
+    assert.ok(ratio >= threshold, `${label}: ${ratio.toFixed(2)} < ${threshold} (role: ${role})`);
   }
 });
 
-test("forbidden pairs are documented as failing, not silently used as text/border/focus on light", () => {
-  assert.ok(contrastRatio(BRAND.ORANGE, BRAND.PAPER) < 3.0, "ORANGE на PAPER should fail — guards against reintroducing it as light-page text/border/focus");
-  assert.ok(contrastRatio("#FFFFFF", BRAND.ORANGE) < 3.0, "белый на ORANGE should fail — guards against white labels on orange fills");
+test("forbidden pairs are documented as failing, not silently used as text/border/focus", () => {
+  for (const { label, a, b, role, expect } of PAIRS) {
+    if (expect !== "fail") continue;
+    const ratio = contrastRatio(a, b);
+    const threshold = THRESHOLD[role];
+    assert.ok(ratio < threshold, `${label}: ${ratio.toFixed(2)} >= ${threshold} — no longer fails, update its "expect" in contrast.ts`);
+  }
 });
 
 // Список файлов растёт вместе с фазой 5: страница переведена на тёмное —
@@ -53,15 +52,27 @@ test("forbidden pairs are documented as failing, not silently used as text/borde
 const SCANNED_FILES = ["src/design-system.css"];
 
 // Не нарушение: шесть цветов брендбука, легаси-акцент, альфа-белый/чёрный
-// (стекло брендбука), transparent/currentColor/inherit, --ds-success/--ds-error
-// (семантические статусы — вне темы этой фазы, см. отчёт фазы 2 "не сделано").
+// (стекло брендбука), transparent/currentColor/inherit.
 //
-// Три находки аудита, оставлены как есть до отдельного решения (PROMPT-20
-// §5 правило 6 — новый оттенок не заводить и не менять без «ок»):
-// #176229 — .v3-form__status (успех формы), отдельный от --ds-success токен,
-//   тот же класс «второй источник», что и остальные — не трогал, не просили;
-// #a58cff — .v3-contact__intro a, светлее --ds-violet, для читаемости ссылки
-//   на тёмном тексте — не консолидировал без «ок» (см. отчёт «ховеры»);
+// Категория «статусные цвета формы» (PROMPT-21 §0.4) — успех/ошибка формы,
+// это смысл, а не раскраска, брендбук их не запрещает: --ds-success,
+// --ds-error, #176229.
+//
+// #176229 (.v3-form__status, успех формы) — измерено на реальном фоне формы
+// (.v3-form, живой белый #fff, не PAPER — отдельная находка) перед решением
+// заменить на var(--ds-success), как просили. #176229 на #fff даёт 7.46 (AA
+// с запасом). --ds-success (#4ade80) на том же фоне даёт 1.74 — замена была бы
+// регрессом, а не починкой. Условие «если на фоне от 4.5» не выполняется —
+// не менял, оставил #176229 как есть.
+//
+// #a58cff (.v3-catalog .v3-contact__intro a) — просили сначала замерить фон
+// перед заменой на var(--ds-violet). Измерение показало: селектор не
+// совпадает ни с одним элементом на живом сайте — ContactSection везде
+// рендерится с классом v3-contact--unified, не вложенным в .v3-catalog
+// (тот же .v3-catalog контейнер, что и .v3-catalog .v3-contact, там нет).
+// Правило мёртвое, фона для замера не существует — не трогал, добавил в
+// список мёртвого кода на отдельную чистку (вместе с --ds-surface).
+//
 // #211712 — .portfolio-row:nth-of-type(4n), тёплый почти-нейтральный фон
 //   чередования строк, за порогом isNeutral (15 против 12) на волосок.
 const ALLOWED_HEX = new Set(

@@ -4,6 +4,26 @@ import path from 'path';
 import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
 import {extractPriceLikeNumbers} from './scripts/priceGuard';
 import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
+import {augmentStaticHeader, augmentStaticFooter, STATIC_SHELL_FILES} from './scripts/staticShellTemplate';
+
+/**
+ * Достраивает шапку/подвал 11 статических страниц (7 услуг + 4 статьи блога)
+ * на сборке. У каждой страницы уже есть свой рукописный <header>/<nav> с
+ * реальными ссылками — плагин добавляет недостающие обязательные пункты
+ * (Портфолио/Фото/Цены/Блог/Обо мне/Калькулятор), не трогая то, что уже
+ * есть. В футере ссылок не было вообще — туда впекается карта сайта из
+ * navigation.data.ts. Раньше это в рантайме переписывал site-shell.js через
+ * innerHTML, каждый раз стирая рукописный контент страницы (PROMPT-21 §2.2,
+ * поправка после аудита фазы 4). site-shell.js теперь это не трогает.
+ */
+const bakeStaticShellNav = () => ({
+  name: 'bake-static-shell-nav',
+  transformIndexHtml(html: string, ctx: {filename: string}) {
+    const relativePath = path.relative(process.cwd(), ctx.filename).split(path.sep).join('/');
+    if (!STATIC_SHELL_FILES.includes(relativePath)) return html;
+    return augmentStaticFooter(augmentStaticHeader(html, relativePath), relativePath);
+  },
+});
 
 const pryamyeTranslyaciiJsonLd = () => ({
   name: 'pryamye-translyacii-jsonld',
@@ -97,6 +117,7 @@ export default defineConfig(({mode}) => {
     plugins: [
       react(),
       tailwindcss(),
+      bakeStaticShellNav(),
       pryamyeTranslyaciiJsonLd(),
       sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID || '', env.VITE_GA_ID || ''),
     ],

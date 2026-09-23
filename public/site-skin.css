@@ -44,6 +44,19 @@ body.site-menu-open { overflow: hidden; }
 .site-static a { color: inherit; text-decoration: none; }
 .site-static :is(a, button, input, textarea, select):focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 
+/* Карта сайта в подвале (PROMPT-21 §4/§4.3): раньше футер этих 11 страниц
+   нёс только копирайт и кнопку Telegram, ни одной ссылки на другую
+   страницу. Впекается на сборке (scripts/staticShellTemplate.ts), ширина —
+   та же формула, что у .wrap, но без зависимости от вложенности в него. */
+.site-static-footer-nav { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.75rem clamp(1rem, 3vw, 2rem); width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))); margin: 2.5rem auto 0; padding-top: 2rem; border-top: 1px solid var(--site-border); }
+.site-static-footer-nav nav { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; min-width: 0; }
+.site-static-footer-nav nav strong { margin-bottom: .25rem; color: var(--site-text); font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.site-static-footer-nav nav a { color: var(--site-muted); font-size: .84rem; line-height: 1.45; overflow-wrap: anywhere; }
+.site-static-footer-nav nav a:hover { color: var(--site-text); }
+@media (max-width: 767px) {
+  .site-static-footer-nav { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
 .site-static-header {
   position: sticky;
   top: 0;

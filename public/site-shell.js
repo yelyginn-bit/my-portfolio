@@ -20,7 +20,14 @@
   const header = document.querySelector("body > header");
   if (header) {
     header.className = "site-static-header";
-    header.innerHTML = `
+
+    // На 11 страницах (7 услуг + 4 статьи блога) навигация теперь впекается
+    // на сборке (vite.config.ts: bakeStaticShellNav), а не пишется здесь —
+    // робот без JS должен её видеть. Если шапка уже не пустая — мы на одной
+    // из них: только вешаем поведение, контент не трогаем. На остальных
+    // статических страницах, до которых бэйк ещё не дошёл, остаётся старый
+    // рантайм-фолбэк — ничего не ломаем там, где не просили.
+    if (header.children.length === 0) header.innerHTML = `
       <div class="site-static-header__inner">
         <a class="site-static-brand" href="/" aria-label="Yelyginn — на главную">Y</a>
         <nav class="site-static-nav" aria-label="Основная навигация">
@@ -52,9 +59,11 @@
       </div>
     `;
 
+    const mobileMenu = document.getElementById("site-mobile-menu");
+    if (mobileMenu instanceof HTMLElement && mobileMenu.parentElement !== document.body) {
+      document.body.appendChild(mobileMenu);
+    }
     const menuButton = header.querySelector(".site-static-menu-button");
-    const mobileMenu = header.querySelector(".site-static-mobile-menu");
-    if (mobileMenu) document.body.appendChild(mobileMenu);
     menuButton?.addEventListener("click", () => {
       const open = menuButton.getAttribute("aria-expanded") === "true";
       menuButton.setAttribute("aria-expanded", String(!open));
@@ -74,7 +83,7 @@
   const footer = document.querySelector("body > footer");
   if (footer) {
     footer.className = "site-static-footer-shell";
-    footer.innerHTML = `
+    if (footer.children.length === 0) footer.innerHTML = `
       <div class="site-static-footer">
         <div class="site-static-footer__brand">
           <a href="/">YELYGINN</a>

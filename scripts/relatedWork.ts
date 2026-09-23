@@ -3,7 +3,7 @@
 // берутся из данных (projectsForCategory), а не прописываются руками —
 // иначе появится ещё одна копия, которая разойдётся с остальными.
 import { CATEGORY_META, projectsForCategory, type PortfolioCategory } from "../src/portfolio/v3PortfolioData";
-import { CALCULATOR_LINK, PRICES_LINK } from "../src/lib/navigation.data";
+import { CALCULATOR_LINK, PRICES_LINK, SERVICE_LINKS } from "../src/lib/navigation.data";
 
 const escapeHtml = (value: string) =>
   value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -53,5 +53,33 @@ export function augmentServiceRelatedWork(html: string, fileLabel: string): stri
   const mainCloseIndex = html.lastIndexOf("</main>");
   if (mainCloseIndex === -1) throw new Error(`augmentServiceRelatedWork: </main> not found in ${fileLabel}`);
   const section = relatedWorkHtml(category);
+  return html.slice(0, mainCloseIndex) + section + "\n    " + html.slice(mainCloseIndex);
+}
+
+/** Файл статьи блога → услуга, о которой она (PROMPT-21 §5: «статья блога →
+ * услуга, о которой она, и калькулятор»). */
+export const BLOG_SERVICE: Readonly<Record<string, string>> = {
+  "blog/kak-snimat-reels-dlya-biznesa.html": "/reels",
+  "blog/skolko-stoit-snyat-reklamnyy-rolik.html": "/reklamnye-roliki",
+  "blog/video-dlya-kartochek-wildberries.html": "/video-dlya-marketpleysov",
+  "blog/videosemka-meropriyatiy-nn.html": "/event-video",
+};
+
+export function augmentBlogContext(html: string, fileLabel: string): string {
+  if (html.includes('class="blog-context"')) return html;
+  const mainCloseIndex = html.lastIndexOf("</main>");
+  if (mainCloseIndex === -1) throw new Error(`augmentBlogContext: </main> not found in ${fileLabel}`);
+  const serviceHref = BLOG_SERVICE[fileLabel];
+  const service = SERVICE_LINKS.find((item) => item.href === serviceHref);
+  const serviceLink = service ? `<a class="tag" href="${service.href}">${escapeHtml(service.label)}</a>\n            ` : "";
+  const section = `
+      <section class="blog-context" aria-label="Дальше по теме">
+        <div class="wrap">
+          <h2>Дальше <span>по теме</span></h2>
+          <div class="links-row blog-context-actions">
+            ${serviceLink}<a class="tag" href="${CALCULATOR_LINK.href}">${CALCULATOR_LINK.label}</a>
+          </div>
+        </div>
+      </section>`;
   return html.slice(0, mainCloseIndex) + section + "\n    " + html.slice(mainCloseIndex);
 }

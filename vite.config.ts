@@ -5,7 +5,7 @@ import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
 import {extractPriceLikeNumbers} from './scripts/priceGuard';
 import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
 import {augmentStaticHeader, augmentStaticFooter, STATIC_SHELL_FILES} from './scripts/staticShellTemplate';
-import {augmentServiceRelatedWork} from './scripts/relatedWork';
+import {augmentServiceRelatedWork, augmentBlogContext, BLOG_SERVICE} from './scripts/relatedWork';
 
 /**
  * Достраивает шапку/подвал 11 статических страниц (7 услуг + 4 статьи блога)
@@ -23,7 +23,9 @@ const bakeStaticShellNav = () => ({
     const relativePath = path.relative(process.cwd(), ctx.filename).split(path.sep).join('/');
     if (!STATIC_SHELL_FILES.includes(relativePath)) return html;
     const withShell = augmentStaticFooter(augmentStaticHeader(html, relativePath), relativePath);
-    return augmentServiceRelatedWork(withShell, relativePath);
+    const withRelatedWork = augmentServiceRelatedWork(withShell, relativePath);
+    if (relativePath in BLOG_SERVICE) return augmentBlogContext(withRelatedWork, relativePath);
+    return withRelatedWork;
   },
 });
 

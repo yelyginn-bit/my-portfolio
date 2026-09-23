@@ -1,22 +1,21 @@
 :root {
-  /* ── Светлая рабочая палитра ──────────────────────────────────────────
-     База — чистый лист монтажной раскладки. Тёмный цвет остаётся только
-     у видео, постеров и отдельных медиаповерхностей; красный ведёт к
-     действию, а не заливает весь интерфейс. */
-  --ds-bg: #f4f4ef;
+  /* ── Брендбук: YELYGINN — Cyber Brutalism Design System (Figma) ────────
+     Шесть цветов: INK/PAPER/GRAPHITE/FOG/VIOLET/SIGNAL ORANGE. Красный —
+     не цвет интерфейса вообще, только внутри изображений. */
+  --ds-bg: #f2f1ec;
   --ds-bg-alt: #e9e9e2;
   --ds-surface: #ffffff;
-  --ds-text: #101010;
+  --ds-text: #0a0a0a;
   --ds-text-secondary: #5f5f59;
   --ds-text-muted: #74746d;
   --ds-border: rgba(16, 16, 16, 0.14);
   --ds-border-strong: rgba(16, 16, 16, 0.34);
-  --ds-accent: #ef3f32;
-  --ds-accent-hover: #dc3025;
+  --ds-accent: #ff6422;
   --ds-accent-text: #c83227;
-  --ds-orange: #ff5a1f;
-  --ds-violet: #7c5cff;
-  --ds-charcoal: #20201e;
+  --ds-orange: #ff6422;
+  --ds-violet: #8a5cf6;
+  --ds-charcoal: #171717;
+  --ds-fog: #d9d7d1;
   --ds-on-accent: #101010;
   --ds-success: #4ade80;
   --ds-error: #ff6b5e;
@@ -104,13 +103,13 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .ds-nav { display: flex; align-items: center; justify-content: center; gap: clamp(1rem,2.1vw,2rem); }
 .ds-nav a { display: inline-flex; min-height: 44px; align-items: center; color: var(--ds-text-secondary); font-size: .82rem; font-weight: 650; }
 .ds-nav a:hover, .ds-nav a[aria-current="page"] { color: var(--ds-text); }
-.ds-nav a[aria-current="page"] { box-shadow: inset 0 -2px var(--ds-accent); }
+.ds-nav a[aria-current="page"] { box-shadow: inset 0 -2px var(--ds-accent-text); }
 .ds-header-cta { justify-self: end; display: inline-flex; min-height: 44px; align-items: center; padding: 0 1rem; color: var(--ds-bg); background: var(--ds-text); border-radius: var(--ds-radius-sm); font-size: .8rem; font-weight: 700; }
 .ds-menu-button { display: none; width: 44px; height: 44px; place-items: center; justify-self: end; padding: 0; background: transparent; border: 1px solid var(--ds-border); }
 .ds-mobile-menu { position: fixed; inset: 72px 0 0; z-index: 89; padding: 1.25rem var(--ds-gutter) 2rem; color: var(--ds-text); background: var(--ds-surface); overflow-y: auto; }
 .ds-mobile-menu nav { display: grid; }
 .ds-mobile-menu nav a { display: flex; min-height: 52px; align-items: center; border-bottom: 1px solid var(--ds-border); font-size: clamp(1.35rem,7vw,2.5rem); }
-.ds-mobile-menu > div { display: flex; gap: 1.5rem; margin-top: 2rem; color: var(--ds-accent); }
+.ds-mobile-menu > div { display: flex; gap: 1.5rem; margin-top: 2rem; color: var(--ds-accent-text); }
 
 .price-static-fallback { display: none !important; }
 .price-page { min-height: 100vh; background: var(--ds-bg); }
@@ -132,7 +131,7 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .price-page-name span { color: var(--ds-accent-text); font-size: .72rem; font-weight: 700; text-transform: uppercase; }
 .price-page-name h3 { margin: .5rem 0; font-size: clamp(1.25rem,2vw,2rem); line-height: 1; }
 .price-page-name p, .price-page-details p, .price-page-details small { color: var(--ds-text-secondary); line-height: 1.5; }
-.price-page-list article > strong { grid-column: 5 / span 2; color: var(--ds-accent); font-size: clamp(1.45rem,2.4vw,2.5rem); line-height: 1; }
+.price-page-list article > strong { grid-column: 5 / span 2; color: var(--ds-accent-text); font-size: clamp(1.45rem,2.4vw,2.5rem); line-height: 1; }
 .price-page-details { grid-column: 7 / span 4; }
 .price-page-details p { margin: 0 0 .6rem; }
 .price-page-actions { grid-column: 11 / -1; display: flex; justify-content: flex-end; gap: .5rem; }
@@ -392,7 +391,7 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .color-tier-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); border-top: 1px solid var(--ds-border); }
 .color-tier { padding: clamp(1.5rem, 2.5vw, 2.25rem) 0 0; border-top: 2px solid var(--ds-text); }
 .color-tier h3 { margin: 0 0 .75rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.15; }
-.color-tier strong { display: block; color: var(--ds-orange); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; }
+.color-tier strong { display: block; color: var(--ds-accent-text); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; }
 .color-tier span { display: block; margin-top: .3rem; color: var(--ds-text-secondary); font-size: .78rem; }
 .color-tier p { margin: 1rem 0 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
 .color-note { max-width: 60ch; margin: clamp(2rem, 3.5vw, 3rem) 0 0; color: var(--ds-text-secondary); font-size: .875rem; line-height: 1.55; }
@@ -400,7 +399,7 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .color-process { border-bottom: 1px solid var(--ds-border); }
 .color-process-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin: 0; padding: 0; list-style: none; }
 .color-process-list li { padding-top: 1.25rem; border-top: 1px solid var(--ds-border); }
-.color-process-list li > span { display: block; margin-bottom: .75rem; color: var(--ds-orange); font-size: .75rem; font-weight: 700; }
+.color-process-list li > span { display: block; margin-bottom: .75rem; color: var(--ds-accent-text); font-size: .75rem; font-weight: 700; }
 .color-process-list h3 { margin: 0 0 .6rem; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.2; }
 .color-process-list p { margin: 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
 

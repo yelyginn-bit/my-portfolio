@@ -152,7 +152,6 @@ export default defineConfig(({mode}) => {
           advertising: path.resolve(__dirname, 'reklamnye-roliki.html'),
           marketplace: path.resolve(__dirname, 'video-dlya-marketpleysov.html'),
           broadcast: path.resolve(__dirname, 'pryamye-translyacii.html'),
-          blog: path.resolve(__dirname, 'blog/index.html'),
           blogReels: path.resolve(__dirname, 'blog/kak-snimat-reels-dlya-biznesa.html'),
           blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),
           blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),

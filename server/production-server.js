@@ -30,7 +30,6 @@ const pageMap = new Map([
   ["/portfolio/reels", "portfolio-reels.html"],
   ["/portfolio/events", "portfolio-events.html"],
   ["/portfolio/concerts", "portfolio-concerts.html"],
-  ["/portfolio/photo", "portfolio-photo.html"],
   ["/portfolio/editing", "portfolio-editing.html"],
   ["/project", "project.html"],
   ["/content-day", "content-day.html"],
@@ -85,6 +84,10 @@ app.get("/privacy-policy.html", (_req, res) => {
 
 app.get("/cases", (_req, res) => {
   res.redirect(301, "/portfolio");
+});
+
+app.get("/portfolio/photo", (_req, res) => {
+  res.redirect(301, "/photo#gallery");
 });
 
 app.get("/portfolio/editing", (_req, res) => {

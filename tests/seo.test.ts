@@ -13,7 +13,7 @@ const publicPages = [
   "portfolio-concerts.html", "portfolio-editing.html", "pryamye-translyacii.html",
   "reels.html", "reklamnye-roliki.html", "event-video.html",
   "video-dlya-marketpleysov.html", "cvetokorrekciya.html", "ceny.html", "calculator.html", "content-day.html", "photo.html",
-  "cases.html", "blog/index.html",
+  "cases.html",
   "blog/kak-snimat-reels-dlya-biznesa.html",
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html",
   "blog/video-dlya-kartochek-wildberries.html",

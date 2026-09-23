@@ -78,7 +78,7 @@ export default function ColorGrading() {
 
   return (
     <>
-      <SiteHeader active="post" />
+      <SiteHeader path="/cvetokorrekciya" />
 
       <main id="main">
         <Section className="color-hero">

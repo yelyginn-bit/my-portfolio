@@ -11,7 +11,7 @@ import type { PortfolioProject } from "../lib/portfolio.data";
 export function CasePage({ project }: { project: PortfolioProject }) {
   return (
     <>
-      <SiteHeader active="cases" />
+      <SiteHeader path={`/cases/${project.id}`} />
 
       <main id="main">
         <Section className="case-hero">

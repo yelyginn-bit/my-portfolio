@@ -1,8 +1,10 @@
-import { createElement, useState, type ComponentPropsWithoutRef, type ElementType, type ReactNode } from "react";
+import { createElement, Fragment, useState, type ComponentPropsWithoutRef, type ElementType, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { LEGAL, LEGAL_PATHS } from "../../config/legal";
 import { SITE } from "../../config/site";
+import { CALCULATOR_LINK, CONTACT_LINK, FOOTER_GROUPS, PRIMARY_NAV } from "../../lib/navigation.data";
+import { isNavEntryActive, NavDropdownMenu } from "./NavMenu";
 
 type PolymorphicProps<T extends ElementType> = {
   as?: T;
@@ -82,15 +84,20 @@ export function SectionHeader({
   );
 }
 
-export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function MobileMenu({ open, onClose, path }: { open: boolean; onClose: () => void; path: string }) {
   if (!open || typeof document === "undefined") return null;
   return createPortal(
     <div id="ds-mobile-menu" className="ds-mobile-menu">
+      <a className="nav-mobile-calc-button" href={CALCULATOR_LINK.href} onClick={onClose}>{CALCULATOR_LINK.label}</a>
       <nav aria-label="Мобильная навигация">
-        <a href="/portfolio" onClick={onClose}>Работы</a><a href="/portfolio/camera" onClick={onClose}>Съёмка</a>
-        <a href="/photo" onClick={onClose}>Фото</a>
-        <a href="/portfolio/post" onClick={onClose}>Пост</a>
-        <a href="/blog" onClick={onClose}>Блог</a><a href="/about" onClick={onClose}>Обо мне</a><a href="/contact" onClick={onClose}>Обсудить проект</a>
+        {PRIMARY_NAV.map((entry) => (
+          <Fragment key={entry.label}>
+            {entry.kind === "dropdown"
+              ? <NavDropdownMenu entry={entry} path={path} mobile onNavigate={onClose} />
+              : <a href={entry.href} onClick={onClose} aria-current={isNavEntryActive(entry, path) ? "page" : undefined}>{entry.label}</a>}
+          </Fragment>
+        ))}
+        <a href={CONTACT_LINK.href} onClick={onClose}>{CONTACT_LINK.label}</a>
       </nav>
       <div><a href={SITE.telegramUrl}>Telegram</a><a href={`mailto:${SITE.email}`}>Email</a></div>
     </div>,
@@ -98,25 +105,27 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
   );
 }
 
-export function SiteHeader({ active }: { active?: "work" | "camera" | "photo" | "post" | "cases" | "blog" | "about" }) {
+export function SiteHeader({ path }: { path: string }) {
   const [open, setOpen] = useState(false);
   return (
     <header className="ds-header">
       <PageContainer className="ds-header-inner">
         <a className="ds-brand" href="/" aria-label="YELYGINN — на главную">Y</a>
         <nav className="ds-nav" aria-label="Основная навигация">
-          <a href="/portfolio" aria-current={active === "work" ? "page" : undefined}>Работы</a>
-          <a href="/portfolio/camera" aria-current={active === "camera" ? "page" : undefined}>Съёмка</a>
-          <a href="/photo" aria-current={active === "photo" ? "page" : undefined}>Фото</a>
-          <a href="/portfolio/post" aria-current={active === "post" ? "page" : undefined}>Пост</a>
-          <a href="/blog" aria-current={active === "blog" ? "page" : undefined}>Блог</a>
-          <a href="/about" aria-current={active === "about" ? "page" : undefined}>Обо мне</a>
+          {PRIMARY_NAV.map((entry) => (
+            <Fragment key={entry.label}>
+              {entry.kind === "dropdown"
+                ? <NavDropdownMenu entry={entry} path={path} />
+                : <a href={entry.href} aria-current={isNavEntryActive(entry, path) ? "page" : undefined}>{entry.label}</a>}
+            </Fragment>
+          ))}
         </nav>
+        <a className="nav-calc-button" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
         <span className="ds-header-status">CORE // READY</span>
-        <a className="ds-header-cta" href="/contact"><span className="ds-header-cta-full">Обсудить проект</span><span className="ds-header-cta-short">Обсудить</span></a>
+        <a className="ds-header-cta" href={CONTACT_LINK.href}><span className="ds-header-cta-full">{CONTACT_LINK.label}</span><span className="ds-header-cta-short">Обсудить</span></a>
         <button type="button" className="ds-menu-button" aria-label={open ? "Закрыть меню" : "Открыть меню"} aria-expanded={open} aria-controls="ds-mobile-menu" onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
       </PageContainer>
-      <MobileMenu open={open} onClose={() => setOpen(false)} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} path={path} />
     </header>
   );
 }
@@ -130,13 +139,14 @@ export function SiteFooter() {
             <a href="/">{SITE.brand}</a>
             <p>Видео, фото и монтаж для бизнеса в Нижнем Новгороде и по России.</p>
           </div>
-          <nav aria-label="Навигация в подвале">
-            <a href="/portfolio">Работы</a>
-            <a href="/#services">Услуги</a>
-            <a href="/ceny">Цены</a>
-            <a href="/calculator">Калькулятор</a>
-            <a href="/#contact">Контакты</a>
-          </nav>
+          <div className="v3-footer__groups">
+            {FOOTER_GROUPS.map((group) => (
+              <nav key={group.title} aria-label={group.title}>
+                <strong>{group.title}</strong>
+                {group.links.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+              </nav>
+            ))}
+          </div>
           <div className="ds-footer-contact">
             <a className="ds-footer-contact__primary" href={SITE.telegramUrl} target="_blank" rel="noreferrer">Telegram <ArrowUpRight size={15} /></a>
             <a href={`mailto:${SITE.email}`}>{SITE.email}</a>

@@ -22,6 +22,7 @@ import { PRIMARY_SOCIALS, SECONDARY_SOCIALS } from "../config/socials";
 import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES } from "./v3Content";
 import { resolveV3Route } from "./routeManifest";
 import { CALCULATOR_LINK, CONTACT_LINK, FOOTER_GROUPS, PRIMARY_NAV } from "../lib/navigation.data";
+import { isNavEntryActive, NavDropdownMenu } from "../components/site/NavMenu";
 
 const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
@@ -45,38 +46,6 @@ function LazyPlayer({ asset, title }: { asset: WorkAsset; title: string }) {
           <img src={posterUrl(asset.kinescopeId, "md")} srcSet={`${posterUrl(asset.kinescopeId, "sm")} 640w, ${posterUrl(asset.kinescopeId, "md")} 1280w`} sizes="(max-width: 720px) 94vw, 72vw" width={portrait ? 900 : 1600} height={portrait ? 1600 : 900} alt={`Кадр из проекта «${title}»`} loading="lazy" decoding="async" />
           <span><Play fill="currentColor" />СМОТРЕТЬ ВИДЕО</span>
         </a>
-    </div>
-  );
-}
-
-/** Пункт шапки активен, если путь совпадает с его href, с href его выпадающего
- * списка, или (для «Портфолио») с любым вложенным маршрутом /portfolio/*. */
-function isNavEntryActive(entry: (typeof PRIMARY_NAV)[number], path: string): boolean {
-  const normalized = path === "/portfolio/editing" ? "/portfolio/post" : path;
-  if (entry.kind === "link") return entry.href === normalized;
-  if (entry.href && normalized.startsWith(entry.href)) return true;
-  return entry.items.some((item) => item.href === normalized);
-}
-
-function NavDropdownMenu({ entry, path, mobile, onNavigate }: { entry: Extract<(typeof PRIMARY_NAV)[number], { kind: "dropdown" }>; path: string; mobile?: boolean; onNavigate?: () => void }) {
-  const [open, setOpen] = useState(false);
-  const isActive = isNavEntryActive(entry, path);
-  if (mobile) {
-    return (
-      <details className="v3-mobile-menu__group">
-        <summary aria-current={isActive ? "page" : undefined}>{entry.label}</summary>
-        {entry.href && <a href={entry.href} onClick={onNavigate}>Все — {entry.label.toLowerCase()}</a>}
-        {entry.items.map((item) => <a key={item.href} href={item.href} onClick={onNavigate} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
-      </details>
-    );
-  }
-  return (
-    <div className="v3-nav__dropdown">
-      <button type="button" aria-expanded={open} data-active={isActive ? "true" : undefined} onClick={() => setOpen((value) => !value)} onBlur={(event) => { if (!event.currentTarget.parentElement?.contains(event.relatedTarget as Node)) setOpen(false); }}>{entry.label}</button>
-      <div className={`v3-nav__dropdown-menu${open ? " is-open" : ""}`}>
-        {entry.href && <a href={entry.href} onClick={() => setOpen(false)}>Всё портфолио</a>}
-        {entry.items.map((item) => <a key={item.href} href={item.href} onClick={() => setOpen(false)} aria-current={item.href === path ? "page" : undefined}>{item.label}</a>)}
-      </div>
     </div>
   );
 }

@@ -39,11 +39,20 @@
       .calc-wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
 
       /* Top bar */
-      .calc-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 28px; }
+      .calc-top { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding-bottom: 28px; }
       .calc-logo { font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
       .calc-logo span { color: var(--ds-accent-text-legacy); }
+      .calc-nav { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
       .calc-back { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); transition: color 0.2s; }
       .calc-back:hover { color: var(--white); }
+
+      /* Footer — карта сайта (PROMPT-21 §4), раньше отсутствовала вообще */
+      .calc-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+      .calc-footer nav { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+      .calc-footer nav strong { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+      .calc-footer nav a { font-size: 12.5px; color: rgba(255,255,255,0.7); overflow-wrap: anywhere; }
+      .calc-footer nav a:hover { color: var(--white); }
+      @media (max-width: 767px) { .calc-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
       /* Header */
       .calc-eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--ds-accent-text-legacy); margin-bottom: 14px; }

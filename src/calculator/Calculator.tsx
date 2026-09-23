@@ -15,6 +15,7 @@ import { secureFetch } from "../lib/api";
 import { LEGAL } from "../config/legal";
 import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
+import { ABOUT_LINK, BLOG_LINK, FOOTER_GROUPS, PHOTO_LINK, PORTFOLIO_OVERVIEW_LINK, PRICES_LINK } from "../lib/navigation.data";
 
 const store = getStore();
 
@@ -217,11 +218,14 @@ export default function Calculator() {
     <div className="calc-wrap">
       <div className="calc-top">
         <a className="calc-logo" href="/">YELYG<span>I</span>NN</a>
-        <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <nav className="calc-nav" aria-label="Основная навигация">
+          <a className="calc-back" href={PORTFOLIO_OVERVIEW_LINK.href}>{PORTFOLIO_OVERVIEW_LINK.label}</a>
+          <a className="calc-back" href={PHOTO_LINK.href}>{PHOTO_LINK.label}</a>
+          <a className="calc-back" href={PRICES_LINK.href}>{PRICES_LINK.label}</a>
+          <a className="calc-back" href={BLOG_LINK.href}>{BLOG_LINK.label}</a>
+          <a className="calc-back" href={ABOUT_LINK.href}>{ABOUT_LINK.label}</a>
           <a className="calc-back" href="/account">{session ? "Кабинет" : "Войти"}</a>
-          <a className="calc-back" href="/#all-sections">Все разделы</a>
-          <a className="calc-back" href="/">← на главную</a>
-        </div>
+        </nav>
       </div>
 
       <p className="calc-eyebrow">Калькулятор сметы</p>
@@ -470,6 +474,14 @@ export default function Calculator() {
           )}
         </div>
       </div>
+      <footer className="calc-footer">
+        {FOOTER_GROUPS.map((group) => (
+          <nav key={group.title} aria-label={group.title}>
+            <strong>{group.title}</strong>
+            {group.links.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+          </nav>
+        ))}
+      </footer>
     </div>
   );
 }

@@ -83,6 +83,11 @@ const PAIRS: Array<{ label: string; a: string; b: string; role: Role; expect: Ex
   { label: "FOG на INK", a: BRAND.FOG, b: BRAND.INK, role: "text", expect: "pass" },
   // FOG — линии/разделители (--ds-border), не текст.
   { label: "FOG на PAPER", a: BRAND.FOG, b: BRAND.PAPER, role: "large-ui", expect: "fail" },
+  // Тёмная тема (PROMPT-29 §3): PAPER — основной текст на INK/GRAPHITE,
+  // FOG — вторичный текст на GRAPHITE (FOG на INK уже выше).
+  { label: "PAPER на INK", a: BRAND.PAPER, b: BRAND.INK, role: "text", expect: "pass" },
+  { label: "PAPER на GRAPHITE", a: BRAND.PAPER, b: BRAND.GRAPHITE, role: "text", expect: "pass" },
+  { label: "FOG на GRAPHITE", a: BRAND.FOG, b: BRAND.GRAPHITE, role: "text", expect: "pass" },
 ];
 
 export function printTable(): void {

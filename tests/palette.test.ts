@@ -48,8 +48,9 @@ test("forbidden pairs are documented as failing, not silently used as text/borde
 });
 
 // Список файлов растёт вместе с фазой 5: страница переведена на тёмное —
-// добавляется сюда. Пока только design-system.css (см. PROMPT-20 §7.3).
-const SCANNED_FILES = ["src/design-system.css"];
+// добавляется сюда (см. PROMPT-20 §7.3). video-dlya-marketpleysov.html —
+// пилот PROMPT-29.
+const SCANNED_FILES = ["src/design-system.css", "video-dlya-marketpleysov.html"];
 
 // Не нарушение: шесть цветов брендбука, легаси-акцент, альфа-белый/чёрный
 // (стекло брендбука), transparent/currentColor/inherit.

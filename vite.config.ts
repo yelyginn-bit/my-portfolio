@@ -73,7 +73,6 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
     const tags: HtmlTagDescriptor[] = [
       { tag: 'link', attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }, injectTo: 'head' },
       { tag: 'link', attrs: { rel: 'manifest', href: '/site.webmanifest' }, injectTo: 'head' },
-      { tag: 'meta', attrs: { name: 'theme-color', content: '#f4f4ef' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' }, injectTo: 'head' },
       { tag: 'meta', attrs: { property: 'og:image:height', content: '630' }, injectTo: 'head' },
@@ -81,6 +80,10 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
       { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true }, injectTo: 'body' },
     ];
+    // PROMPT-29 фаза 5: тёмные страницы несут собственный
+    // <meta name="theme-color" content="#0A0A0A"> в исходнике (пилот —
+    // video-dlya-marketpleysov.html) — не перебивать его светлым умолчанием.
+    if (!html.includes('name="theme-color"')) tags.push({ tag: 'meta', attrs: { name: 'theme-color', content: '#f4f4ef' }, injectTo: 'head' });
     if (!html.includes('property="og:type"')) tags.push({ tag: 'meta', attrs: { property: 'og:type', content: 'website' }, injectTo: 'head' });
     if (!html.includes('property="og:site_name"')) tags.push({ tag: 'meta', attrs: { property: 'og:site_name', content: 'YELYGINN' }, injectTo: 'head' });
     if (!html.includes('property="og:locale"')) tags.push({ tag: 'meta', attrs: { property: 'og:locale', content: 'ru_RU' }, injectTo: 'head' });

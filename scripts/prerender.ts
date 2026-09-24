@@ -43,9 +43,11 @@ const escapeHtml = (value: string) => value
   .replaceAll("<", "&lt;")
   .replaceAll(">", "&gt;");
 
-function replaceMeta(html: string, selector: "description" | "og:title" | "og:description" | "og:url", value: string) {
+const NAME_ATTRIBUTE_META = new Set(["description", "theme-color"]);
+
+function replaceMeta(html: string, selector: "description" | "og:title" | "og:description" | "og:url" | "theme-color", value: string) {
   const escaped = escapeHtml(value);
-  const attribute = selector === "description" ? `name="${selector}"` : `property="${selector}"`;
+  const attribute = NAME_ATTRIBUTE_META.has(selector) ? `name="${selector}"` : `property="${selector}"`;
   const pattern = new RegExp(`<meta\\s+${attribute}\\s+content="[^"]*"\\s*/?>`, "iu");
   const replacement = `<meta ${attribute} content="${escaped}" />`;
   return pattern.test(html) ? html.replace(pattern, replacement) : html.replace("</head>", `    ${replacement}\n  </head>`);
@@ -63,6 +65,22 @@ function applySeo(html: string, title: string, description: string, canonicalPat
   return canonicalPattern.test(result)
     ? result.replace(canonicalPattern, canonicalTag)
     : result.replace("</head>", `    ${canonicalTag}\n  </head>`);
+}
+
+/**
+ * PROMPT-29 §5.3: единственное место, откуда пререндер знает, что страница
+ * тёмная, — поле theme в её записи ROUTE_MANIFEST. Для V3-страниц (готовый
+ * html-шаблон ещё без разметки) это единственный способ поставить
+ * data-theme на <html> — сама страница про тему ничего не знает. Статические
+ * страницы (site-shell.js) несут атрибут в своём исходном html руками —
+ * этой функции они не касаются, но обе стороны проверяет один и тот же тест.
+ */
+function applyTheme(html: string, isDark: boolean) {
+  if (!isDark) return html;
+  const withAttr = /<html\b[^>]*\bdata-theme=/iu.test(html)
+    ? html
+    : html.replace(/<html\b/iu, '<html data-theme="dark"');
+  return replaceMeta(withAttr, "theme-color", "#0A0A0A");
 }
 
 function applyLegalMeta(html: string, title: string, description: string) {
@@ -112,10 +130,11 @@ async function main() {
   const generated: string[] = [];
   for (const routePath of V3_PRERENDER_ROUTES) {
     const resolution = resolveV3Route(routePath);
+    const isDark = ROUTE_MANIFEST.find((route) => route.path === routePath)?.theme === "dark";
     const markup = renderToString(createElement(StrictMode, null, createElement(V3App, { initialPath: routePath })));
     if (!/<h1(?:\s|>)/iu.test(markup)) throw new Error(`Prerendered route has no H1: ${routePath}`);
     const html = injectRoot(
-      applySeo(v3Template, resolution.seo.title, resolution.seo.description, resolution.seo.canonical),
+      applyTheme(applySeo(v3Template, resolution.seo.title, resolution.seo.description, resolution.seo.canonical), isDark),
       markup,
     );
     const outputFile = outputFileFor(routePath);

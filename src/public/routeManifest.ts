@@ -16,6 +16,11 @@ export interface PublicRouteRecord {
   render: RouteRenderKind;
   indexable: boolean;
   priority?: number;
+  /** PROMPT-29 §5.3: единственное место в коде, откуда берётся
+   * data-theme="dark" на <html> — длина списка страниц с этим полем и есть
+   * прогресс фазы 5. Главная уже тёмная визуально, но собрана до токенов
+   * тёмной темы — сюда пока не заведена (промпт §2.4: не трогать в этой фазе). */
+  theme?: "dark";
 }
 
 const fixedRoutes: readonly PublicRouteRecord[] = [
@@ -30,7 +35,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/event-video", render: "static", indexable: true, priority: 0.85 },
   { path: "/reels", render: "static", indexable: true, priority: 0.9 },
   { path: "/cvetokorrekciya", render: "static", indexable: true, priority: 0.85 },
-  { path: "/video-dlya-marketpleysov", render: "static", indexable: true, priority: 0.85 },
+  { path: "/video-dlya-marketpleysov", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/pryamye-translyacii", render: "static", indexable: true, priority: 0.9 },
   { path: "/ceny", render: "static", indexable: true, priority: 0.8 },
   { path: "/photo", render: "static", indexable: true, priority: 0.75 },

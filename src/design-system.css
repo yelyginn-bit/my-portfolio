@@ -77,6 +77,39 @@
   color-scheme: light;
 }
 
+/* ── Тёмная тема (PROMPT-29, фаза 5) — механизм: переопределение тех же
+   токенов, не перекраска страниц. Компонент не знает, в какой он теме, он
+   просто использует var(--ds-*) — так и переводится следующая страница:
+   атрибут data-theme="dark" на <html> + уборка локальных хардкодов страницы,
+   без нового CSS. Если для перевода страницы нужен новый CSS под тёмную —
+   это сигнал, что у страницы хардкод мимо токенов, чинить хардкод.
+   Список страниц с этой темой — routeManifest.ts, поле theme: "dark"
+   (единственное место, tests/navigation.test.ts проверяет соответствие
+   пре-рендеру). Светлые значения выше остаются значениями по умолчанию —
+   фаза 5 не делает тёмную тему умолчанием, только механизм + один пилот. */
+:root[data-theme="dark"] {
+  --ds-bg: #0a0a0a; /* INK */
+  --ds-bg-alt: #171717; /* GRAPHITE — второй цвет для тонких секций, третьего в брендбуке нет */
+  --ds-surface: #171717; /* GRAPHITE */
+  --ds-text: #f2f1ec; /* PAPER — 17.51 на INK, 15.85 на GRAPHITE */
+  --ds-text-secondary: #d9d7d1; /* FOG — 13.76 на INK, 12.46 на GRAPHITE */
+  --ds-text-muted: #d9d7d1; /* тот же FOG — двух уровней достаточно (правило §3.2), третий не заводим */
+  --ds-border: rgba(255, 255, 255, 0.12); /* декоративные линии/разделители */
+  /* Границы контролов: промпт предлагал белый 18%, но белый 18% на INK
+     считает 1.64:1 — далеко не 3:1 (UI-порог). Белый 18% на #fff/светлом фоне
+     даёт совсем другую цифру; на INK/GRAPHITE непрозрачность нужна другая.
+     Белый 40% на INK — 3.77:1, проходит с запасом; отчёт об этом — отдельно. */
+  --ds-border-strong: rgba(255, 255, 255, 0.4);
+  --ds-accent: #ff6422; /* SIGNAL ORANGE — тот же цвет в обеих темах */
+  --ds-accent-text-legacy: #ff6422; /* §3.1: на тёмной теме легаси-красный не используется, мелкий акцентный текст — сразу ORANGE */
+  --ds-orange: #ff6422;
+  --ds-violet: #8a5cf6;
+  --ds-charcoal: #171717;
+  --ds-fog: #d9d7d1;
+  --ds-on-accent: #101010; /* подпись на заливке ORANGE — всегда тёмная, тема не меняет */
+  color-scheme: dark;
+}
+
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }

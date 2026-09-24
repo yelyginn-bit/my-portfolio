@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Видео для маркетплейсов в Нижнем Новгороде — съёмка для Wildberries, Ozon и Яндекс.Маркет | Yelyginn</title>
     <meta name="description" content="Видео для карточек Wildberries, Ozon и Яндекс Маркета в Нижнем Новгороде: предметная съёмка, монтаж и инфографика. Проекты от 35 000 ₽." />
     <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0A0A0A" />
     <link rel="canonical" href="https://yelyginn.ru/video-dlya-marketpleysov" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://yelyginn.ru/video-dlya-marketpleysov" />
@@ -31,67 +32,60 @@
     </script>
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      /* Заход 20, фаза B, стадия 2: значения ниже переопределяют --red/--black/--white/--gray
-         (легаси-имена страницы) и --site-bg/--site-text/--site-accent/--site-accent-text/
-         --site-font (общая оболочка site-skin.css) в области видимости #page-marketplace —
-         точнее, чем :root в site-skin.css, поэтому побеждают без !important: конкурирующие
-         правила body.site-static {background: var(--site-bg) !important} и body
-         {font-family: var(--site-font, Inter, ...) !important} не тронуты, просто эти
-         переменные для этой страницы теперь резолвятся в тёмную/моноширинную тему.
-         --site-font раньше не существовал (в site-skin.css font-family был захардкожен
-         без var()) — добавлен туда же, с тем же фолбэком, так что остальные 10
-         site-shell-страниц не задеты. */
-      #page-marketplace {
-        --red: #ff5a1f; --black: #0a0a0a; --white: #f4f4ef; --gray: #9a9a94;
-        --site-bg: #0a0a0a; --site-text: #f4f4ef; --site-accent: #ff5a1f; --site-accent-text: #ff5a1f;
-        --site-font: ui-monospace, SFMono-Regular, Menlo, monospace;
-      }
-      body { background: var(--black); color: var(--white); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      /* PROMPT-29, фаза 5 — пилот механизма тёмной темы: html[data-theme="dark"]
+         переопределяет --ds-bg/--ds-text/--ds-surface/... в design-system.css и
+         public/tokens.css, эта страница их просто использует. Раньше здесь был
+         локальный блок #page-marketplace {--red/--black/--white/--gray/--site-bg/
+         --site-text/--site-accent/--site-accent-text: ...} — своя копия тёмной
+         темы для одной страницы, ровно то, чего механизм теперь не требует.
+         Убран целиком; --red был к тому же не тем оттенком — на SIGNAL
+         ORANGE (var(--ds-orange)) страница не была сведена. */
+      body { background: var(--ds-bg); color: var(--ds-text); line-height: 1.55; -webkit-font-smoothing: antialiased; }
       a { color: inherit; text-decoration: none; }
       .wrap { width: min(1100px, 100% - 40px); margin: 0 auto; }
-      header { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
+      header { border-bottom: 1px solid var(--ds-border); padding: 20px 0; }
       header .inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .logo { font-size: 13px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; }
-      .logo span { color: var(--red); }
-      nav { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
-      nav a:hover { color: var(--white); }
-      .hero { padding: 72px 0 60px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-      .eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
-      h1 { font-family: var(--ds-font-display); font-size: clamp(2.4rem, 6vw, 5.2rem); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; max-width: 14ch; }
-      h1 em { color: var(--red); font-style: normal; display: block; }
-      .lead { font-size: clamp(1rem, 1.6vw, 1.2rem); color: rgba(255,255,255,0.7); max-width: 62ch; margin: 28px 0 36px; line-height: 1.65; }
-      .cta { display: inline-flex; align-items: center; gap: 10px; background: var(--red); color: var(--white); font-size: 12px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; padding: 16px 32px; border-radius: 4px; transition: opacity 0.2s; }
+      .logo span { color: var(--ds-orange); }
+      nav { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ds-text-secondary); }
+      nav a:hover { color: var(--ds-text); }
+      .hero { padding: 72px 0 60px; border-bottom: 1px solid var(--ds-border); }
+      .eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--ds-orange); margin-bottom: 20px; }
+      h1 { font-family: var(--ds-font-display); font-size: clamp(2.4rem, 6vw, 5.2rem); font-weight: 700; line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; text-wrap: balance; }
+      h1 em { color: var(--ds-orange); font-style: normal; display: block; }
+      .lead { font-size: clamp(1rem, 1.6vw, 1.2rem); color: var(--ds-text-secondary); max-width: 62ch; margin: 28px 0 36px; line-height: 1.65; }
+      .cta { display: inline-flex; align-items: center; gap: 10px; background: var(--ds-orange); color: var(--ds-on-accent); font-size: 12px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; padding: 16px 32px; border-radius: 0; transition: opacity 0.2s; }
       .cta:hover { opacity: 0.88; }
-      .cta-ghost { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; padding: 15px 28px; border-radius: 4px; transition: all 0.2s; }
-      .cta-ghost:hover { border-color: var(--white); color: var(--white); }
+      .cta-ghost { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--ds-border-strong); color: var(--ds-text-secondary); font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; padding: 15px 28px; border-radius: 0; transition: all 0.2s; }
+      .cta-ghost:hover { border-color: var(--ds-text); color: var(--ds-text); }
       .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-      section { padding: 64px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-      h2 { font-family: var(--ds-font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; text-transform: none; margin-bottom: 40px; }
-      h2 span { color: var(--red); }
-      .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
-      .card { background: var(--black); padding: 32px 28px; }
-      .card-num { font-size: 10px; letter-spacing: 0.3em; color: var(--red); text-transform: uppercase; margin-bottom: 14px; }
+      section { padding: 64px 0; border-bottom: 1px solid var(--ds-border); }
+      h2 { font-family: var(--ds-font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; text-transform: none; margin-bottom: 40px; }
+      h2 span { color: var(--ds-orange); }
+      .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--ds-border); border: 1px solid var(--ds-border); }
+      .card { background: var(--ds-surface); padding: 32px 28px; }
+      .card-num { font-size: 10px; letter-spacing: 0.3em; color: var(--ds-orange); text-transform: uppercase; margin-bottom: 14px; }
       .card h3 { font-family: var(--ds-font-display); font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; text-transform: uppercase; }
-      .card p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+      .card p { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.6; }
       .platforms { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
-      .platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.15); }
+      .platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--ds-border-strong); }
       .price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-      .price-card { border: 1px solid rgba(255,255,255,0.1); padding: 28px 24px; border-radius: 4px; }
-      .price-card.featured { border-color: var(--red); }
+      .price-card { border: 1px solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
+      .price-card.featured { border-color: var(--ds-orange); }
       .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
-      .price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
-      .price-desc { font-size: 0.85rem; color: rgba(255,255,255,0.55); line-height: 1.55; margin-top: 12px; }
+      .price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
+      .price-desc { font-size: 0.85rem; color: var(--ds-text-secondary); line-height: 1.55; margin-top: 12px; }
       .faq { display: grid; gap: 0; }
-      .faq-item { padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.06); }
-      .faq-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .faq-item { padding: 24px 0; border-top: 1px solid var(--ds-border); }
+      .faq-item:last-child { border-bottom: 1px solid var(--ds-border); }
       .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
-      .faq-a { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+      .faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
       .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 2px; }
-      .tag:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: 1px solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
+      .tag:hover { color: var(--ds-text); border-color: var(--ds-border-strong); }
       footer { padding: 40px 0; }
       .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-      .foot-copy { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+      .foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
     </style>
     <link rel="stylesheet" href="/tokens.css" />
     <link rel="stylesheet" href="/site-skin.css" />

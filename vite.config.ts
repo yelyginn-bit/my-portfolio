@@ -147,7 +147,6 @@ export default defineConfig(({mode}) => {
           account: path.resolve(__dirname, 'account.html'),
           admin: path.resolve(__dirname, 'admin.html'),
           gallery: path.resolve(__dirname, 'gallery.html'),
-          cases: path.resolve(__dirname, 'cases.html'),
           journal: path.resolve(__dirname, 'journal.html'),
           prices: path.resolve(__dirname, 'ceny.html'),
           eventVideo: path.resolve(__dirname, 'event-video.html'),

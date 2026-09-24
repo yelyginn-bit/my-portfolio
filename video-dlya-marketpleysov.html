@@ -59,6 +59,16 @@
       #page-marketplace header.site-static-header { padding: 0 !important; }
       #page-marketplace header.site-static-header .bb-nav { position: static; min-height: 100%; background: var(--ds-bg); backdrop-filter: none; border-radius: 17px; }
 
+      /* public/site-skin.css: `section { color: #111 !important }` (базовый
+         читаемый цвет для старых Inter-страниц на светлом фоне) +
+         `.site-static a { color: inherit }` (0,1,1 — специфичнее локальных
+         .mk-tag/.bb-btn--secondary, 0,1,0) — любая ссылка внутри <section>
+         без СВОЕЙ явной привязки тега `a` наследует #111 вместо токена: тёмный
+         текст на тёмном (вторичные кнопки, теги «Другие услуги»). Правим у
+         корня — !important обязателен, порядок важности иначе не преодолеть,
+         специфичность через #page-marketplace выше, чем у голого `section`. */
+      #page-marketplace section { color: var(--ds-text) !important; }
+
       .bb-hero { grid-template-columns: repeat(12, minmax(0, 1fr)); }
       .bb-hero em { color: var(--ds-orange); font-style: normal; }
       .bb-hero__proof { display: grid; gap: 1.25rem; padding: 1.75rem; }

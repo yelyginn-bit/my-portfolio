@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component kit | Yelyginn</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body { background: var(--ds-bg); color: var(--ds-text); font-family: var(--ds-font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      .kit-wrap { width: min(1200px, 100% - 48px); margin: 0 auto; padding: 48px 0 120px; }
+      .kit-intro { padding-bottom: 48px; border-bottom: var(--ds-stroke) solid var(--ds-border); margin-bottom: 48px; }
+      .kit-intro p { max-width: 60ch; color: var(--ds-text-secondary); }
+      .kit-section { margin-bottom: 80px; }
+      .kit-section__head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+      .kit-section__head h2 { margin: 0; font-family: var(--ds-font-display); font-weight: var(--ds-fw-display); font-size: var(--ds-fs-32); text-transform: uppercase; letter-spacing: -0.02em; }
+      .kit-section__frame { color: var(--ds-text-secondary); font: 500 0.68rem/1 var(--ds-font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+      .kit-swatch { padding: 2rem; border: var(--ds-stroke) dashed var(--ds-border); border-radius: var(--ds-radius); }
+      .kit-swatch + .kit-swatch { margin-top: 1.5rem; }
+      .kit-swatch--flat { padding: 0; border: 0; }
+    </style>
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/bb-components.css" />
+  </head>
+  <body>
+    <nav class="bb-nav">
+      <a class="bb-nav__logo" href="/_kit">YELYGINN</a>
+      <ul class="bb-nav__links">
+        <li><a href="/_kit#nav">Nav</a></li>
+        <li><a href="/_kit#work">Work</a></li>
+        <li><a href="/_kit#case">Case</a></li>
+        <li><a href="/_kit#glass">Glass</a></li>
+      </ul>
+      <a class="bb-btn bb-nav__cta" href="#signal">Start a project</a>
+    </nav>
+
+    <div class="kit-wrap">
+      <header class="kit-intro">
+        <p class="bb-kicker">00 / KIT</p>
+        <h1 class="bb-display" style="font-size: var(--ds-h1); margin-top: 0.5rem;">Component kit</h1>
+        <p>Служебная витрина компонентов брендбука (PROMPT-30 §3.4) — не в навигации, <code>noindex</code>, не в sitemap. Рядом с каждым — кадр брендбука для сверки. Владелец смотрит здесь пилот шапки/фильтра/карточки до одобрения (PROMPT-30 §9.2), а не на живых страницах.</p>
+      </header>
+
+      <section class="kit-section" id="nav">
+        <div class="kit-section__head"><h2>bb-nav</h2><span class="kit-section__frame">кадр: NAVIGATION, DARK</span></div>
+        <p style="color:var(--ds-text-secondary); font-size:0.85rem; max-width:60ch;">Показана в текущем виде наверху страницы — так шапка заменит нынешнюю светлую пилюлю V3 на всех страницах (PROMPT-30 §9.2.4), после одобрения владельца.</p>
+      </section>
+
+      <section class="kit-section" id="atoms">
+        <div class="kit-section__head"><h2>Атомы</h2><span class="kit-section__frame">кадр: BUTTONS + BADGES, TYPOGRAPHY</span></div>
+        <div class="kit-swatch">
+          <p class="bb-kicker">01 / КИКЕР</p>
+          <h3 class="bb-display" style="font-size: var(--ds-fs-48); margin: 0.5rem 0 1.5rem;">Display</h3>
+          <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1.5rem;">
+            <a class="bb-btn" href="#signal">Start now</a>
+            <a class="bb-btn bb-btn--secondary" href="#work">Secondary / view</a>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.6rem;">
+            <span class="bb-badge bb-badge--active">Active</span>
+            <span class="bb-badge bb-badge--online">Online</span>
+            <span class="bb-badge bb-badge--alert">Alert</span>
+          </div>
+        </div>
+        <div class="kit-swatch">
+          <p class="bb-frame-label">Frame label / project_04 / 16:9</p>
+          <hr class="bb-rule" style="margin-top: 1rem;" />
+        </div>
+      </section>
+
+      <section class="kit-section" id="hero">
+        <div class="kit-section__head"><h2>bb-hero</h2><span class="kit-section__frame">кадр: DARK, SUMMARY</span></div>
+        <div class="bb-hero kit-swatch--flat">
+          <div class="bb-hero__copy">
+            <p class="bb-kicker">Нижний Новгород / Видеопродакшн</p>
+            <h1 class="bb-display">Видео, которое<br />продаёт товар</h1>
+            <p class="bb-hero__lead">Операторская работа, монтаж, цвет и live production — редакционный масштаб, не шаблон.</p>
+            <div class="bb-hero__ctas">
+              <a class="bb-btn" href="#signal">Заказать съёмку</a>
+              <a class="bb-btn bb-btn--secondary" href="#work">Смотреть работы</a>
+            </div>
+          </div>
+          <div class="bb-hero__media bb-atmosphere">
+            <div class="bb-media bb-glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kit-section" id="work">
+        <div class="kit-section__head"><h2>bb-work-grid / bb-project-card</h2><span class="kit-section__frame">кадр: PROJECT CARDS</span></div>
+        <div class="bb-work-grid bb-work-grid--3">
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">01</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">HOFF</h3>
+              <p class="bb-project-card__role">Operator / Film / Live</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">02</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">Caprigo</h3>
+              <p class="bb-project-card__role">Product / Commercial</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">03</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">KORONA</h3>
+              <p class="bb-project-card__role">Color / Post</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="kit-section" id="case">
+        <div class="kit-section__head"><h2>bb-case-hero / bb-meta-panel</h2><span class="kit-section__frame">кадр: CASE PAGE</span></div>
+        <div class="bb-case-hero">
+          <div class="bb-case-hero__top">
+            <div>
+              <p class="bb-kicker">Project_004</p>
+              <h2 class="bb-display" style="font-size: var(--ds-fs-72); margin-top: 0.5rem;">HOFF</h2>
+            </div>
+            <dl class="bb-case-hero__meta">
+              <div><dt>Role</dt><dd>Operator</dd></div>
+              <div><dt>Format</dt><dd>16:9</dd></div>
+              <div><dt>Year</dt><dd>2026</dd></div>
+            </dl>
+          </div>
+          <div class="bb-media bb-atmosphere"></div>
+          <p class="bb-frame-label">Full-bleed media / video / 16:9</p>
+          <hr class="bb-rule" />
+          <div class="bb-meta-panel">
+            <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Node</span><span class="bb-meta-panel__value">YLG_01</span></div>
+            <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Location</span><span class="bb-meta-panel__value">Nizhny Novgorod</span></div>
+            <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Role</span><span class="bb-meta-panel__value">Operator</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kit-section" id="steps">
+        <div class="kit-section__head"><h2>bb-steps</h2><span class="kit-section__frame">кадр: ELEMENT-BY-ELEMENT RULES</span></div>
+        <ol class="bb-steps">
+          <li class="bb-step"><span class="bb-step__num">01</span><div><h3 class="bb-step__title">Бриф</h3><p class="bb-step__body">Формат, площадка, срок.</p></div></li>
+          <li class="bb-step"><span class="bb-step__num">02</span><div><h3 class="bb-step__title">Съёмка</h3><p class="bb-step__body">Один рабочий день на площадке.</p></div></li>
+          <li class="bb-step"><span class="bb-step__num">03</span><div><h3 class="bb-step__title">Монтаж и цвет</h3><p class="bb-step__body">Готовое видео под требования платформы.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="kit-section" id="glass">
+        <div class="kit-section__head"><h2>bb-glass</h2><span class="kit-section__frame">кадр: GLASS + GRADIENT COMPONENTS</span></div>
+        <div class="bb-atmosphere" style="padding: 3rem; border-radius: var(--ds-radius-shell);">
+          <div class="bb-glass" style="padding: 2rem; max-width: 28rem;">
+            <p class="bb-kicker">Glass over depth</p>
+            <p style="margin: 0.75rem 0 0; color: var(--ds-text-secondary);">Стекло — только над реальной глубиной (фото/градиент), не как самостоятельный фон.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="kit-section" id="signal">
+        <div class="kit-section__head"><h2>bb-signal</h2><span class="kit-section__frame">кадр: DARK</span></div>
+        <div class="bb-signal">
+          <h2 class="bb-display bb-signal__title" style="font-size: var(--ds-fs-48);">Обсудим проект?</h2>
+          <a class="bb-btn" href="/contact">Start now</a>
+        </div>
+      </section>
+    </div>
+
+    <footer class="bb-footer">
+      <div class="kit-wrap">
+        <div class="bb-footer__groups">
+          <div class="bb-footer__group"><strong>Kit</strong><a href="#nav">Nav</a><a href="#work">Work</a><a href="#case">Case</a></div>
+          <div class="bb-footer__group"><strong>Сайт</strong><a href="/">Главная</a><a href="/portfolio">Портфолио</a></div>
+        </div>
+        <div class="bb-footer__legal"><span>Служебная страница — noindex</span></div>
+      </div>
+    </footer>
+  </body>
+</html>

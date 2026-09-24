@@ -825,7 +825,13 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-footer__meta nav a, .v3-footer__meta button { min-height: 44px; display: inline-flex; align-items: center; }
   .v3-footer__meta span:last-child { text-align: left; }
   .v3-catalog { padding-top: 6.5rem; }
-  .v3-filters { top: 66px; margin-inline: -4px; }
+  /* Владелец, iPhone, 24.09: пилюля фильтров упиралась в левый край экрана,
+     рамка обрезана. -4px тянул блок за границу .v3-shell вместо того, чтобы
+     компенсировать внутренний padding:4px (.v3-catalog .v3-filters, ~1493) —
+     на мобильном ширина max-content уже не оставляла запаса. Поле — 16px, как
+     у остальной сетки на <768 (PROMPT-30 §9.1.1). */
+  .v3-filters { top: 66px; margin-inline: 16px; }
+  .v3-catalog .v3-filters { max-width: calc(100% - 32px); }
   .v3-project { padding-top: 6.5rem; }
   .v3-project__head, .v3-project__credits, .v3-project__related, .v3-project__case { grid-template-columns: 1fr; }
   .v3-project__head h1 { font-size: 18vw; }
@@ -1385,6 +1391,13 @@ body.v3-menu-open { overflow: hidden; }
   .v3-mobile-menu a:last-child { border-bottom: 0; }
   .v3-mobile-menu a span { color: rgba(0,0,0,.5); }
   .v3-mobile-menu a svg { margin-left: auto; }
+  /* Владелец, iPhone, 24.09: «Услуги»/«Портфолио» в мобильном меню — светлый
+     текст на светлом, пока не нажмёшь (родом из #fff/rgba(255,255,255,.12)
+     на ~1689 — правило для тёмного контекста шапки, а .v3-mobile-menu здесь
+     светлый (см. выше), но для <summary> (не <a>) не было своего мобильного
+     переопределения (PROMPT-30 §9.1.2). */
+  .nav-dropdown-mobile-group summary { color: #090909; border-bottom-color: rgba(0,0,0,.14); }
+  .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
   .v3-project-card, .v3-project-card--featured, .v3-project-card--split, .v3-project-card--mosaic, .v3-project-card--poster, .v3-project-card--full { grid-column: 1 / -1; grid-template-columns: 1fr; }
   .v3-project-card .v3-media, .v3-project-card--mosaic .v3-media, .v3-project-card--poster .v3-media { min-height: 0; aspect-ratio: 16 / 10; }
   .v3-project-card--poster .v3-media { aspect-ratio: 4 / 5; }

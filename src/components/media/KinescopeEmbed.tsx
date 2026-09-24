@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
-import type { VideoOrientation } from "../../lib/portfolio.data";
+
+export type VideoOrientation = "16:9" | "9:16";
 
 /**
  * Ленивый embed видео Kinescope.
@@ -25,9 +26,11 @@ export interface KinescopeEmbedProps {
   orientation: VideoOrientation;
   /** Осмысленная подпись ролика — видна на заглушке и уходит в aria-label и iframe title. */
   title: string;
+  /** Кадр видео на заглушке до активации. Без него заглушка — просто иконка + подпись. */
+  poster?: { src: string; srcSet?: string; sizes?: string };
 }
 
-export function KinescopeEmbed({ id, orientation, title }: KinescopeEmbedProps) {
+export function KinescopeEmbed({ id, orientation, title, poster }: KinescopeEmbedProps) {
   const [active, setActive] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +65,8 @@ export function KinescopeEmbed({ id, orientation, title }: KinescopeEmbedProps) 
           onClick={() => setActive(true)}
           aria-label={`Воспроизвести видео: ${title}`}
         >
+          {poster && <img className="kinescope-embed-poster" src={poster.src} srcSet={poster.srcSet} sizes={poster.sizes} alt="" loading="lazy" decoding="async" />}
+          {poster && <span className="kinescope-embed-scrim" aria-hidden="true" />}
           <span className="kinescope-embed-play" aria-hidden="true"><Play size={22} fill="currentColor" /></span>
           <span className="kinescope-embed-label">{title}</span>
         </button>

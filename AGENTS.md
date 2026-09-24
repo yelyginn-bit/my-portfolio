@@ -10,3 +10,4 @@
 - Keep React 19 + TypeScript + Vite + Express + Supabase and the existing secure form/backend, CSRF, rate limits and consent journal.
 - Design authority: the six files in `референсы/`; premium cyber-brutalism, not gaming UI. Real video is the product.
 - Required check: `npm run lint && npm test && npm run test:integration && npm run build && npm run check:budget`.
+- A task that changes the site updates `docs/SITE-HANDOFF.md` in the same pass — the "Сделано" section and the queue — PROMPT-27 (2026-09-24). Otherwise the handoff file drifts from the code, same failure mode that made the old `~/Documents/New_claude/site/SITE-HANDOFF.md` a month stale.

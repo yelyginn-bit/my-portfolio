@@ -3,7 +3,6 @@ import path from "node:path";
 import { createElement, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import Calculator from "../src/calculator/Calculator";
-import CasePage from "../src/case-detail/CasePage";
 import ColorGrading from "../src/color/ColorGrading";
 import LegalApp, { documents as legalDocuments } from "../src/legal/LegalApp";
 import { projects, workAssets } from "../src/portfolio/v3PortfolioData";
@@ -11,7 +10,6 @@ import { validatePortfolioRegistry } from "../src/lib/portfolioValidation";
 import Prices from "../src/prices/Prices";
 import V3App from "../src/public/V3App";
 import {
-  CASE_PROJECTS,
   PRERENDER_ROUTES,
   ROUTE_MANIFEST,
   V3_PRERENDER_ROUTES,
@@ -102,13 +100,12 @@ async function main() {
     throw new Error(`Второй источник цен в JSON-LD (нет в pricing.data.ts):\n${jsonLdPriceIssues.join("\n")}`);
   }
 
-  const [v3Template, calculatorTemplate, colorGradingTemplate, pricesTemplate, legalTemplate, caseTemplate] = await Promise.all([
+  const [v3Template, calculatorTemplate, colorGradingTemplate, pricesTemplate, legalTemplate] = await Promise.all([
     readFile(path.join(distDir, "index.html"), "utf8"),
     readFile(path.join(distDir, "calculator.html"), "utf8"),
     readFile(path.join(distDir, "cvetokorrekciya.html"), "utf8"),
     readFile(path.join(distDir, "ceny.html"), "utf8"),
     readFile(path.join(distDir, "legal.html"), "utf8"),
-    readFile(path.join(distDir, "case.html"), "utf8"),
   ]);
   await mkdir(prerenderDir, { recursive: true });
 
@@ -156,20 +153,6 @@ async function main() {
     await mkdir(path.dirname(outputFile), { recursive: true });
     await writeFile(outputFile, html);
     generated.push(legalPath);
-  }
-
-  for (const project of CASE_PROJECTS) {
-    const casePath = `/cases/${project.id}`;
-    const caseMarkup = renderToString(createElement(StrictMode, null, createElement(CasePage, { project })));
-    if (!/<h1(?:\s|>)/iu.test(caseMarkup)) throw new Error(`Prerendered case route has no H1: ${casePath}`);
-    const html = injectRoot(
-      applySeo(caseTemplate, `${project.title} | YELYGINN`, project.role, casePath),
-      caseMarkup,
-    );
-    const outputFile = outputFileFor(casePath);
-    await mkdir(path.dirname(outputFile), { recursive: true });
-    await writeFile(outputFile, html);
-    generated.push(casePath);
   }
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));

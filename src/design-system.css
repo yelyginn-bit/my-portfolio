@@ -461,13 +461,6 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 .kinescope-embed-play { position: relative; z-index: 1; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: rgba(246, 246, 243, .16); transition: background .2s ease; }
 .kinescope-embed-label { position: relative; z-index: 1; max-width: 32ch; font-size: .85rem; line-height: 1.4; color: rgba(246, 246, 243, .85); }
 
-/* Механизм страницы кейса (/cases/<slug>) — сейчас ни один slug не
-   опубликован, стили нужны только для будущей проверки/публикации. */
-.case-hero-lead { max-width: 62ch; margin-top: var(--ds-s4); font-size: var(--ds-lead); color: var(--ds-text-secondary); }
-.case-technique-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin: 0; padding: 0; list-style: none; }
-.case-technique-list li { padding: var(--ds-s3) 0; border-top: 1px solid var(--ds-border); color: var(--ds-text-secondary); font-size: .95rem; }
-.case-video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
-
 @media (max-width: 1023px) {
   .color-tier-list, .color-process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.75rem, 3vw, 2.5rem) var(--ds-grid-gap); }
   .color-req-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -476,7 +469,6 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: ui-monospac
 @media (max-width: 767px) {
   .color-tier-list, .color-process-list, .color-req-list { grid-template-columns: minmax(0, 1fr); }
   .color-hero-actions .color-btn, .color-cta > .ds-container > div .color-btn { flex: 1 1 100%; justify-content: center; }
-  .case-technique-list, .case-video-grid { grid-template-columns: minmax(0, 1fr); }
 
   /* Шторка на узком экране делит кадр пополам (~175px на 351px рамке) —
      тона кожи и тени не видно ни в одной половине. Полноэкранный

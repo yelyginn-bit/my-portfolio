@@ -8,9 +8,8 @@ import {
   type PortfolioCategory,
   type Project,
 } from "../portfolio/v3PortfolioData";
-import { PORTFOLIO_PROJECTS, type PortfolioProject } from "../lib/portfolio.data";
 
-export type RouteRenderKind = "v3" | "calculator" | "static" | "private" | "redirect" | "case";
+export type RouteRenderKind = "v3" | "calculator" | "static" | "private" | "redirect";
 
 export interface PublicRouteRecord {
   path: string;
@@ -68,47 +67,19 @@ const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
   priority: project.featured ? 0.8 : 0.75,
 }));
 
-/**
- * Механизм маршрутов кейсов `/cases/<slug>`, порождаемых из
- * `src/lib/portfolio.data.ts`. Публикация — по явному опт-ину: пока slug не
- * добавлен сюда, для него не будет ни маршрута в манифесте, ни sitemap-записи,
- * ни pre-render файла. Пусто по умолчанию — реестр данных не значит
- * публикацию кейсов.
- */
-export const PUBLISHED_CASE_SLUGS: readonly string[] = [];
-
-export const CASE_PROJECTS: readonly PortfolioProject[] = PUBLISHED_CASE_SLUGS.map((slug) => {
-  const project = PORTFOLIO_PROJECTS.find((candidate) => candidate.id === slug);
-  if (!project) throw new Error(`PUBLISHED_CASE_SLUGS references unknown portfolio project: ${slug}`);
-  return project;
-});
-
-const caseRoutes: readonly PublicRouteRecord[] = CASE_PROJECTS.map((project) => ({
-  path: `/cases/${project.id}`,
-  render: "case" as const,
-  indexable: true,
-  priority: 0.75,
-}));
-
 export const ROUTE_MANIFEST: readonly PublicRouteRecord[] = [
   ...fixedRoutes,
   ...categoryRoutes,
   ...projectRoutes,
-  ...caseRoutes,
 ];
 
 export const V3_PRERENDER_ROUTES = ROUTE_MANIFEST
   .filter((route) => route.render === "v3")
   .map((route) => route.path);
 
-export const CASE_PRERENDER_ROUTES = ROUTE_MANIFEST
-  .filter((route) => route.render === "case")
-  .map((route) => route.path);
-
 export const PRERENDER_ROUTES = [
   ...V3_PRERENDER_ROUTES,
   "/calculator",
-  ...CASE_PRERENDER_ROUTES,
 ];
 
 export const INDEXABLE_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable);

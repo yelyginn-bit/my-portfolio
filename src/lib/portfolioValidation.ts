@@ -10,8 +10,7 @@
  * страницу чужой ролик.
  *
  * Проверяет живой реестр (`src/portfolio/v3PortfolioData.ts`), из которого
- * реально строятся страницы — не архивный `src/lib/portfolio.data.ts`
- * (PROMPT-25 §2).
+ * реально строятся страницы (PROMPT-25 §2).
  */
 import type { Project, WorkAsset } from "../portfolio/v3PortfolioData";
 

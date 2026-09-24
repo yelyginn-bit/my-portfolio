@@ -30,198 +30,227 @@
       "sameAs": ["https://t.me/YuriElygin"]
     }
     </script>
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/bb-components.css" />
+    <link rel="stylesheet" href="/site-skin.css" />
     <style>
+      /* PROMPT-30 — пилот заново на компонентах брендбука (docs/brandbook/).
+         Общие атомы/компоненты — /bb-components.css; здесь только то, что
+         специфично этой странице (сетка цен, FAQ) и ещё не входит в дерево
+         компонентов брендбука. Текст ниже не менялся ни на букву — менялись
+         только разметка и классы. */
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      /* PROMPT-29, фаза 5 — пилот механизма тёмной темы: html[data-theme="dark"]
-         переопределяет --ds-bg/--ds-text/--ds-surface/... в design-system.css и
-         public/tokens.css, эта страница их просто использует. Раньше здесь был
-         локальный блок #page-marketplace {--red/--black/--white/--gray/--site-bg/
-         --site-text/--site-accent/--site-accent-text: ...} — своя копия тёмной
-         темы для одной страницы, ровно то, чего механизм теперь не требует.
-         Убран целиком; --red был к тому же не тем оттенком — на SIGNAL
-         ORANGE (var(--ds-orange)) страница не была сведена. */
-      body { background: var(--ds-bg); color: var(--ds-text); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      body { background: var(--ds-bg); color: var(--ds-text); line-height: 1.55; -webkit-font-smoothing: antialiased; font-family: var(--ds-font-body); }
       a { color: inherit; text-decoration: none; }
       .wrap { width: min(1100px, 100% - 40px); margin: 0 auto; }
-      header { border-bottom: 1px solid var(--ds-border); padding: 20px 0; }
-      header .inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-      .logo { font-size: 13px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; }
-      .logo span { color: var(--ds-orange); }
-      nav { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ds-text-secondary); }
-      nav a:hover { color: var(--ds-text); }
-      .hero { padding: 72px 0 60px; border-bottom: 1px solid var(--ds-border); }
-      .eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--ds-orange); margin-bottom: 20px; }
-      h1 { font-family: var(--ds-font-display); font-size: clamp(2.4rem, 6vw, 5.2rem); font-weight: 700; line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; text-wrap: balance; }
-      h1 em { color: var(--ds-orange); font-style: normal; display: block; }
-      .lead { font-size: clamp(1rem, 1.6vw, 1.2rem); color: var(--ds-text-secondary); max-width: 62ch; margin: 28px 0 36px; line-height: 1.65; }
-      .cta { display: inline-flex; align-items: center; gap: 10px; background: var(--ds-orange); color: var(--ds-on-accent); font-size: 12px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; padding: 16px 32px; border-radius: 0; transition: opacity 0.2s; }
-      .cta:hover { opacity: 0.88; }
-      .cta-ghost { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--ds-border-strong); color: var(--ds-text-secondary); font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; padding: 15px 28px; border-radius: 0; transition: all 0.2s; }
-      .cta-ghost:hover { border-color: var(--ds-text); color: var(--ds-text); }
-      .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-      section { padding: 64px 0; border-bottom: 1px solid var(--ds-border); }
-      h2 { font-family: var(--ds-font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; text-transform: none; margin-bottom: 40px; }
-      h2 span { color: var(--ds-orange); }
-      .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--ds-border); border: 1px solid var(--ds-border); }
-      .card { background: var(--ds-surface); padding: 32px 28px; }
-      .card-num { font-size: 10px; letter-spacing: 0.3em; color: var(--ds-orange); text-transform: uppercase; margin-bottom: 14px; }
-      .card h3 { font-family: var(--ds-font-display); font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; text-transform: uppercase; }
-      .card p { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.6; }
-      .platforms { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
-      .platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--ds-border-strong); }
-      .price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-      .price-card { border: 1px solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
-      .price-card.featured { border-color: var(--ds-orange); }
-      .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
-      .price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
-      .price-desc { font-size: 0.85rem; color: var(--ds-text-secondary); line-height: 1.55; margin-top: 12px; }
-      .faq { display: grid; gap: 0; }
-      .faq-item { padding: 24px 0; border-top: 1px solid var(--ds-border); }
-      .faq-item:last-child { border-bottom: 1px solid var(--ds-border); }
-      .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
-      .faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
-      .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: 1px solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
-      .tag:hover { color: var(--ds-text); border-color: var(--ds-border-strong); }
-      footer { padding: 40px 0; }
-      .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-      .foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
-    </style>
-    <link rel="stylesheet" href="/tokens.css" />
-    <link rel="stylesheet" href="/site-skin.css" />
 
+      /* Шапка этой страницы физически вложена в общий для всех 11
+         статических страниц хром — public/site-shell.js навешивает класс
+         .site-static-header на любой <header>, а public/site-skin.css красит
+         его светлой PAPER-пилюлей безусловно (документировано в
+         docs/SITE-HANDOFF.md: «фиксированный хром независимо от темы тела
+         страницы», этот слой в этой задаче не снимается — PROMPT-30 §8.3).
+         Стекло bb-nav (rule 11: «стекло — только где за ним глубина») тут
+         неуместно само по себе — за пилюлей нет глубины, только заливка;
+         полупрозрачная заливка bb-nav поверх светлой пилюли давала грязно-
+         серую полосу вместо тёмной. Сплошной непрозрачный фон, заполняющий
+         внутренний отступ пилюли (5px, см. site-skin.css:1281) — тёмная
+         навигация без конфликта со слоем, который эта задача не трогает. */
+      #page-marketplace header.site-static-header { padding: 0 !important; }
+      #page-marketplace header.site-static-header .bb-nav { position: static; min-height: 100%; background: var(--ds-bg); backdrop-filter: none; border-radius: 17px; }
+
+      /* public/site-skin.css: `section { color: #111 !important }` (базовый
+         читаемый цвет для старых Inter-страниц на светлом фоне) +
+         `.site-static a { color: inherit }` (0,1,1 — специфичнее локальных
+         .mk-tag/.bb-btn--secondary, 0,1,0) — любая ссылка внутри <section>
+         без СВОЕЙ явной привязки тега `a` наследует #111 вместо токена: тёмный
+         текст на тёмном (вторичные кнопки, теги «Другие услуги»). Правим у
+         корня — !important обязателен, порядок важности иначе не преодолеть,
+         специфичность через #page-marketplace выше, чем у голого `section`. */
+      #page-marketplace section { color: var(--ds-text) !important; }
+
+      .bb-hero { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+      .bb-hero em { color: var(--ds-orange); font-style: normal; }
+      .bb-hero__proof { display: grid; gap: 1.25rem; padding: 1.75rem; }
+
+      section { padding-block: 64px; }
+      h2 { font-family: var(--ds-font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 40px; }
+      h2 span { color: var(--ds-orange); }
+
+      .platforms { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+      .mk-platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: var(--ds-stroke) solid var(--ds-border-strong); color: var(--ds-text-secondary); }
+
+      .mk-price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+      .mk-price-card { border: var(--ds-stroke) solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
+      .mk-price-card.featured { border-color: var(--ds-orange); }
+      .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
+      .mk-price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
+      .mk-price-desc { font-size: 0.85rem; color: var(--ds-text-secondary); line-height: 1.55; margin-top: 12px; }
+      .price-note { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 20px; }
+      .price-footnote { font-size: 0.85rem; color: var(--ds-text-muted); margin-top: 20px; }
+
+      .faq { display: grid; gap: 0; }
+      .faq-item { padding: 24px 0; border-top: var(--ds-stroke) solid var(--ds-border); }
+      .faq-item:last-child { border-bottom: var(--ds-stroke) solid var(--ds-border); }
+      .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+      .mk-faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
+
+      .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+      .mk-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: var(--ds-stroke) solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
+      .mk-tag:hover { color: var(--ds-text); border-color: var(--ds-border-strong); }
+
+      footer { padding: 40px 0; background: var(--ds-bg); border-top: var(--ds-stroke) solid var(--ds-border); }
+      footer .site-static-footer-nav { width: min(1100px, 100% - 40px); margin: 0 auto 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem 1rem; }
+      footer .site-static-footer-nav nav { display: grid; gap: 0.55rem; align-content: start; }
+      footer .site-static-footer-nav strong { display: block; margin-bottom: 0.2rem; color: var(--ds-text); font: 600 0.62rem/1 var(--ds-font-mono); letter-spacing: 0.14em; text-transform: uppercase; }
+      footer .site-static-footer-nav a { color: var(--ds-text-secondary); font-size: 0.82rem; }
+      footer .site-static-footer-nav a:hover { color: var(--ds-text); }
+      .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+      .mk-foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
+    </style>
   </head>
   <body id="page-marketplace">
     <header>
-      <div class="wrap">
-        <div class="inner">
-          <a href="/" class="logo">YELYGINN <span>·</span> ВИДЕО</a>
-          <nav>
-            <a href="/">Главная</a>
-            <a href="/#all-sections">Все разделы</a>
-            <a href="/portfolio">Портфолио</a>
-            <a href="/reklamnye-roliki">Рекламные ролики</a>
-            <a href="/ceny">Цены</a>
-            <a href="/#contact">Контакт</a>
-          </nav>
-        </div>
+      <div class="bb-nav">
+        <a class="bb-nav__logo" href="/">YELYGINN</a>
+        <nav class="bb-nav__links" aria-label="Основная навигация">
+          <a href="/portfolio">Портфолио</a>
+          <a href="/photo">Фото</a>
+          <a href="/ceny">Цены</a>
+          <a href="/blog">Блог</a>
+          <a href="/about">Обо мне</a>
+          <a href="/calculator">Рассчитать стоимость</a>
+        </nav>
+        <a class="bb-btn bb-nav__cta" href="/contact">Обсудить проект</a>
       </div>
     </header>
 
     <main>
-      <div class="hero">
-        <div class="wrap">
-          <p class="eyebrow">Нижний Новгород / Видео для маркетплейсов</p>
-          <h1>Видео для <em>маркетплейсов</em></h1>
-          <p class="lead">
+      <section class="bb-hero wrap">
+        <div class="bb-hero__copy">
+          <p class="bb-kicker">Нижний Новгород / Видео для маркетплейсов</p>
+          <h1 class="bb-display">Видео для <em>маркетплейсов</em></h1>
+          <p class="bb-hero__lead">
             Снимаю видео для карточек товара на Wildberries, Ozon и Яндекс.Маркет в Нижнем Новгороде. Видео помогает наглядно показать товар, его особенности и сценарий использования. Влияние на конверсию зависит от категории, цены, трафика, отзывов и качества карточки.
           </p>
-          <div class="ctas">
-            <a href="/#contact" class="cta">Заказать съёмку</a>
-            <a href="/portfolio" class="cta-ghost">Смотреть работы</a>
+          <div class="bb-hero__ctas">
+            <a href="/#contact" class="bb-btn">Заказать съёмку</a>
+            <a href="/portfolio" class="bb-btn bb-btn--secondary">Смотреть работы</a>
           </div>
         </div>
-      </div>
+        <div class="bb-hero__media bb-atmosphere">
+          <div class="bb-glass bb-hero__proof">
+            <div class="bb-meta-panel">
+              <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Площадки</span><span class="bb-meta-panel__value">5</span></div>
+              <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Съёмка и монтаж</span><span class="bb-meta-panel__value">от 35 000 ₽</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="bb-rule" />
 
       <section>
         <div class="wrap">
           <h2>Работаю с <span>платформами</span></h2>
           <div class="platforms">
-            <span class="platform">Wildberries</span>
-            <span class="platform">Ozon</span>
-            <span class="platform">Яндекс.Маркет</span>
-            <span class="platform">AliExpress</span>
-            <span class="platform">Мегамаркет</span>
+            <span class="mk-platform">Wildberries</span>
+            <span class="mk-platform">Ozon</span>
+            <span class="mk-platform">Яндекс.Маркет</span>
+            <span class="mk-platform">AliExpress</span>
+            <span class="mk-platform">Мегамаркет</span>
           </div>
-          <div class="grid-3">
-            <div class="card">
-              <p class="card-num">01</p>
-              <h3>Видео для карточки</h3>
-              <p>Короткое видео 15–30 сек, показывающее товар со всех сторон. Белый фон или образ жизни — под требования платформы.</p>
-            </div>
-            <div class="card">
-              <p class="card-num">02</p>
-              <h3>Lifestyle-видео</h3>
-              <p>Товар в реальном использовании: в интерьере, на модели, в движении. Создаёт эмоциональную связь покупателя с продуктом.</p>
-            </div>
-            <div class="card">
-              <p class="card-num">03</p>
-              <h3>360° обзор товара</h3>
-              <p>Медленная панорамная съёмка продукта для полного визуального представления. Покупатель видит товар как в реальности.</p>
-            </div>
-            <div class="card">
-              <p class="card-num">04</p>
-              <h3>Видео-инструкция</h3>
-              <p>Показываю как пользоваться товаром, собирать или устанавливать. Снижает количество возвратов и вопросов от покупателей.</p>
-            </div>
-            <div class="card">
-              <p class="card-num">05</p>
-              <h3>Пакетная съёмка</h3>
-              <p>Снимаю несколько товаров за один день — выгодно для селлеров с большим каталогом. Цена за единицу снижается.</p>
-            </div>
-            <div class="card">
-              <p class="card-num">06</p>
-              <h3>Фото для карточки</h3>
-              <p>Также делаю профессиональные фотографии товара для маркетплейсов. Несколько ракурсов, обработка, форматы платформ.</p>
-            </div>
+          <ol class="bb-steps">
+            <li class="bb-step">
+              <span class="bb-step__num">01</span>
+              <div><h3 class="bb-step__title">Видео для карточки</h3><p class="bb-step__body">Короткое видео 15–30 сек, показывающее товар со всех сторон. Белый фон или образ жизни — под требования платформы.</p></div>
+            </li>
+            <li class="bb-step">
+              <span class="bb-step__num">02</span>
+              <div><h3 class="bb-step__title">Lifestyle-видео</h3><p class="bb-step__body">Товар в реальном использовании: в интерьере, на модели, в движении. Создаёт эмоциональную связь покупателя с продуктом.</p></div>
+            </li>
+            <li class="bb-step">
+              <span class="bb-step__num">03</span>
+              <div><h3 class="bb-step__title">360° обзор товара</h3><p class="bb-step__body">Медленная панорамная съёмка продукта для полного визуального представления. Покупатель видит товар как в реальности.</p></div>
+            </li>
+            <li class="bb-step">
+              <span class="bb-step__num">04</span>
+              <div><h3 class="bb-step__title">Видео-инструкция</h3><p class="bb-step__body">Показываю как пользоваться товаром, собирать или устанавливать. Снижает количество возвратов и вопросов от покупателей.</p></div>
+            </li>
+            <li class="bb-step">
+              <span class="bb-step__num">05</span>
+              <div><h3 class="bb-step__title">Пакетная съёмка</h3><p class="bb-step__body">Снимаю несколько товаров за один день — выгодно для селлеров с большим каталогом. Цена за единицу снижается.</p></div>
+            </li>
+            <li class="bb-step">
+              <span class="bb-step__num">06</span>
+              <div><h3 class="bb-step__title">Фото для карточки</h3><p class="bb-step__body">Также делаю профессиональные фотографии товара для маркетплейсов. Несколько ракурсов, обработка, форматы платформ.</p></div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <hr class="bb-rule" />
+
+      <section aria-label="Примеры товарного видео">
+        <div class="wrap">
+          <div class="bb-work-grid bb-work-grid--2">
+            <a href="/portfolio" class="bb-project-card">
+              <div class="bb-project-card__media"><img src="https://kinescope.io/vFFSNV1fcvUEAPjk5gGMV7/poster/lg.webp" alt="Кадр из товарного ролика HOFF" loading="lazy" width="1280" height="720" /></div>
+              <div class="bb-project-card__meta"><p class="bb-project-card__role">HOFF · товарный ролик</p></div>
+            </a>
+            <a href="/portfolio" class="bb-project-card">
+              <div class="bb-project-card__media"><img src="https://kinescope.io/6cL2AVoFUHmKCTZSbXsNWR/poster/md.webp" alt="Кадр из товарного ролика Caprigo" loading="lazy" width="720" height="960" /></div>
+              <div class="bb-project-card__meta"><p class="bb-project-card__role">Caprigo · новая коллекция</p></div>
+            </a>
           </div>
         </div>
       </section>
 
-      <section class="service-showcase" aria-label="Примеры товарного видео">
-        <div class="wrap service-showcase-grid">
-          <a href="/portfolio" class="service-showcase-main">
-            <img src="https://kinescope.io/vFFSNV1fcvUEAPjk5gGMV7/poster/lg.webp" alt="Кадр из товарного ролика HOFF" loading="lazy" width="1280" height="720" />
-            <span>HOFF · товарный ролик</span>
-          </a>
-          <a href="/portfolio" class="service-showcase-side">
-            <img src="https://kinescope.io/6cL2AVoFUHmKCTZSbXsNWR/poster/md.webp" alt="Кадр из товарного ролика Caprigo" loading="lazy" width="720" height="960" />
-            <span>Caprigo · новая коллекция</span>
-          </a>
-        </div>
-      </section>
+      <hr class="bb-rule" />
 
       <section>
         <div class="wrap">
           <h2>Стоимость видео для <span>маркетплейсов</span></h2>
-          <p style="font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:20px;">Съёмка и монтаж одного товара — от 35 000 ₽</p>
-          <div class="price-row">
-            <div class="price-card">
-              <p class="price-label">Монтаж — базовый</p>
+          <p class="price-note">Съёмка и монтаж одного товара — от 35 000 ₽</p>
+          <div class="mk-price-row">
+            <div class="mk-price-card">
+              <p class="mk-price-label">Монтаж — базовый</p>
               <p class="price-tag">от 10 000 ₽/ролик</p>
-              <p class="price-desc">Нарезка, синхронизация аудио, титры, LUT-коррекция. Формат под требования платформы.</p>
+              <p class="mk-price-desc">Нарезка, синхронизация аудио, титры, LUT-коррекция. Формат под требования платформы.</p>
             </div>
-            <div class="price-card featured">
-              <p class="price-label">Монтаж — стандарт</p>
+            <div class="mk-price-card featured">
+              <p class="mk-price-label">Монтаж — стандарт</p>
               <p class="price-tag">от 18 000 ₽/ролик</p>
-              <p class="price-desc">Динамика, моушн-графика, стабилизация, инфографика. Оптимально для конкурентных карточек.</p>
+              <p class="mk-price-desc">Динамика, моушн-графика, стабилизация, инфографика. Оптимально для конкурентных карточек.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Серия с инфографикой</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Серия с инфографикой</p>
               <p class="price-tag">от 70 000 ₽</p>
-              <p class="price-desc">Комплект динамичных роликов с инфографикой под ключ. Для продвижения всего каталога.</p>
+              <p class="mk-price-desc">Комплект динамичных роликов с инфографикой под ключ. Для продвижения всего каталога.</p>
             </div>
           </div>
-          <div class="price-row" style="margin-top:12px;">
-            <div class="price-card">
-              <p class="price-label">Адаптация под площадки</p>
+          <div class="mk-price-row" style="margin-top:12px;">
+            <div class="mk-price-card">
+              <p class="mk-price-label">Адаптация под площадки</p>
               <p class="price-tag">от 5 000 ₽</p>
-              <p class="price-desc">Версии под требования Wildberries, Ozon, Яндекс Маркета и социальных сетей.</p>
+              <p class="mk-price-desc">Версии под требования Wildberries, Ozon, Яндекс Маркета и социальных сетей.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Ретушь и композитинг</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Ретушь и композитинг</p>
               <p class="price-tag">от 8 000 ₽</p>
-              <p class="price-desc">Удаление дефектов, чистка кадра и аккуратная работа с фоном.</p>
+              <p class="mk-price-desc">Удаление дефектов, чистка кадра и аккуратная работа с фоном.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Скидка от 5 роликов</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Скидка от 5 роликов</p>
               <p class="price-tag">−10%</p>
-              <p class="price-desc">При заказе 5 и более роликов одного типа — скидка 10% на монтаж.</p>
+              <p class="mk-price-desc">При заказе 5 и более роликов одного типа — скидка 10% на монтаж.</p>
             </div>
           </div>
-          <p style="font-size:0.85rem; color:rgba(255,255,255,0.45); margin-top:20px;">Реквизит, модель, локация и сложная инфографика рассчитываются отдельно. Точная стоимость — после брифа и списка товаров.</p>
+          <p class="price-footnote">Реквизит, модель, локация и сложная инфографика рассчитываются отдельно. Точная стоимость — после брифа и списка товаров.</p>
         </div>
       </section>
+
+      <hr class="bb-rule" />
 
       <section>
         <div class="wrap">
@@ -229,33 +258,44 @@
           <div class="faq">
             <div class="faq-item">
               <p class="faq-q">Нужно ли привозить товар на студию?</p>
-              <p class="faq-a">Да, товар привозите вы или доставляете курьером. Могу выехать на ваш склад или офис — уточните при бронировании.</p>
+              <p class="mk-faq-a">Да, товар привозите вы или доставляете курьером. Могу выехать на ваш склад или офис — уточните при бронировании.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Видео соответствует требованиям Wildberries/Ozon?</p>
-              <p class="faq-a">Да, сдаю видео в форматах и соотношениях сторон, принятых на каждой платформе. Слежу за обновлениями требований.</p>
+              <p class="mk-faq-a">Да, сдаю видео в форматах и соотношениях сторон, принятых на каждой платформе. Слежу за обновлениями требований.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Сколько по времени занимает съёмка одного товара?</p>
-              <p class="faq-a">В среднем 30–60 минут на один товар при базовой съёмке. Lifestyle с несколькими сценами — 1,5–2 часа.</p>
+              <p class="mk-faq-a">В среднем 30–60 минут на один товар при базовой съёмке. Lifestyle с несколькими сценами — 1,5–2 часа.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Как быстро получу готовое видео?</p>
-              <p class="faq-a">Через 3–5 рабочих дней после съёмки. При пакетных заказах — 5–7 дней.</p>
+              <p class="mk-faq-a">Через 3–5 рабочих дней после съёмки. При пакетных заказах — 5–7 дней.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="bb-rule" />
+
+      <section>
+        <div class="wrap">
+          <h2>Другие <span>услуги</span></h2>
+          <div class="links-row">
+            <a href="/reklamnye-roliki" class="mk-tag">Рекламные ролики</a>
+            <a href="/reels" class="mk-tag">Reels для бизнеса</a>
+            <a href="/event-video" class="mk-tag">Event-видео</a>
+            <a href="/photo" class="mk-tag">Фотосъёмка</a>
+            <a href="/ceny" class="mk-tag">Все цены</a>
           </div>
         </div>
       </section>
 
       <section>
         <div class="wrap">
-          <h2>Другие <span>услуги</span></h2>
-          <div class="links-row">
-            <a href="/reklamnye-roliki" class="tag">Рекламные ролики</a>
-            <a href="/reels" class="tag">Reels для бизнеса</a>
-            <a href="/event-video" class="tag">Event-видео</a>
-            <a href="/photo" class="tag">Фотосъёмка</a>
-            <a href="/ceny" class="tag">Все цены</a>
+          <div class="bb-signal">
+            <h2 class="bb-display bb-signal__title" style="font-size: var(--ds-fs-48);">Видео для маркетплейсов</h2>
+            <a href="/#contact" class="bb-btn">Заказать съёмку</a>
           </div>
         </div>
       </section>
@@ -264,8 +304,8 @@
     <footer>
       <div class="wrap">
         <div class="foot">
-          <p class="foot-copy">© 2026 Yelyginn — видеопродакшн в Нижнем Новгороде</p>
-          <a href="https://t.me/YuriElygin" class="cta" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
+          <p class="mk-foot-copy">© 2026 Yelyginn — видеопродакшн в Нижнем Новгороде</p>
+          <a href="https://t.me/YuriElygin" class="bb-btn" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
         </div>
       </div>
     </footer>

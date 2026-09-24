@@ -64,6 +64,32 @@ test("design tokens stay in sync between bundle and static pages", () => {
   assert.equal(statics, bundle, "public/tokens.css устарел: пересобрать из src/design-system.css");
 });
 
+const TOKEN_SCAN_FILES = [
+  "src/design-system.css", "src/v3-polish.css", "src/legal/legal.css", "src/index.css",
+  "public/tokens.css", "public/site-skin.css", "public/bb-components.css",
+  ...publicPages, "_kit.html", "404.html", "account.html", "admin.html", "gallery.html", "journal.html",
+  "portfolio-editing.html", "portfolio-photo.html", "legal.html", "project.html",
+];
+
+test("every var(--ds-*) referenced in CSS/HTML is defined somewhere (PROMPT-30 §8.2)", () => {
+  // qwen/site §6.1: --ds-accent-text было прочитано в двух местах и нигде не
+  // объявлено — молча наследовало цвет родителя. Тест ловит следующий такой
+  // случай сразу, а не через жалобу владельца с телефона.
+  const defined = new Set<string>();
+  for (const file of ["src/design-system.css", "public/tokens.css"]) {
+    for (const m of read(file).matchAll(/(--ds-[\w-]+)\s*:/gu)) defined.add(m[1]);
+  }
+  const used = new Map<string, string>();
+  for (const file of TOKEN_SCAN_FILES) {
+    for (const m of read(file).matchAll(/var\((--ds-[\w-]+)/gu)) {
+      if (!used.has(m[1])) used.set(m[1], file);
+    }
+  }
+  for (const [token, file] of used) {
+    assert.ok(defined.has(token), `${token}: используется в ${file}, но не объявлен ни в src/design-system.css, ни в public/tokens.css`);
+  }
+});
+
 test("static pages load the shared token file before the skin", () => {
   // ceny.html убран из списка: это React-страница (как cvetokorrekciya.html,
   // тоже не в списке) и site-skin.css ей не нужен — см. коммит про подвал /ceny.

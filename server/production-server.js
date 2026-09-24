@@ -47,6 +47,7 @@ const pageMap = new Map([
   ["/blog", "index.html"],
   ["/about", "index.html"],
   ["/contact", "index.html"],
+  ["/_kit", "_kit.html"],
 ]);
 
 app.disable("x-powered-by");
@@ -59,7 +60,7 @@ app.use((req, res, next) => {
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   res.setHeader("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https://kinescope.io https://*.kinescope.io; frame-src https://kinescope.io https://*.kinescope.io; connect-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google-analytics.com https://*.supabase.co https://kinescope.io https://*.kinescope.io; font-src 'self' data:");
   const noIndexPrefix = /^\/(?:account|admin|gallery|g|journal)(?:\/|$)|^\/photo\//u;
-  const noIndexPaths = new Set(["/portfolio/photo"]);
+  const noIndexPaths = new Set(["/portfolio/photo", "/_kit"]);
   if (noIndexPrefix.test(req.path) || noIndexPaths.has(req.path)) {
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
   }

@@ -56,6 +56,10 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7 },
   { path: "/blog/videosemka-meropriyatiy-nn", render: "static", indexable: true, priority: 0.7 },
   { path: "/portfolio/editing", render: "redirect", indexable: false },
+  /* PROMPT-30 §3.4: служебная витрина компонентов брендбука — не публичный
+   * продукт, не в PRIMARY_NAV/FOOTER_GROUPS, indexable: false держит её вне
+   * sitemap.xml (см. INDEXABLE_ROUTES ниже) так же, как /admin, /journal. */
+  { path: "/_kit", render: "static", indexable: false, theme: "dark" },
 ];
 
 const categoryRoutes: readonly PublicRouteRecord[] = PORTFOLIO_CATEGORY_ORDER.map((category) => ({

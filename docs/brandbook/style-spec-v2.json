@@ -1,0 +1,46 @@
+{
+  "_source": "Расшифровка кадра JSON/V2.png (MACHINE READABLE / STYLE_SPEC_V2.JSON) из брендбука YELYGINN. Кадр обрезан после блока composition.",
+  "version": "2.0",
+  "identity": "YELYGINN — editorial cyber-brutalism with cinematic glass depth",
+  "core_palette": {
+    "ink": "#0A0A0A",
+    "paper": "#F2F1EC",
+    "graphite": "#171717",
+    "fog": "#D9D7D1",
+    "violet": "#8A5CF6",
+    "signal_orange": "#FF6422"
+  },
+  "forbidden_palette": ["acid lime", "toxic yellow-green", "#D7FF3F", "rainbow neon as UI system"],
+  "accent_policy": {
+    "ui_primary": ["violet", "signal_orange"],
+    "image_only_optional": ["red", "electric blue", "skin tones", "brand colors from source footage"],
+    "rule": "photo-derived colors may dominate an artwork but do not become permanent UI tokens"
+  },
+  "typography": {
+    "display": "Inter Bold or similarly hard grotesk",
+    "body": "Inter Regular / neutral sans",
+    "interface": "Roboto Mono Regular or neutral mono",
+    "behavior": ["oversized display", "tight hierarchy", "technical metadata", "small mono labels", "abrupt scale shifts"]
+  },
+  "grid": {
+    "desktop_columns": 12,
+    "base_spacing_px": 8,
+    "gutter_px": "24-32",
+    "rule_px": 1,
+    "three_items": "use dedicated 3-column grid; never reserve a blank fourth cell"
+  },
+  "glass": {
+    "light": { "fill": "rgba(255,255,255,0.52-0.58)", "backdrop_blur_px": "24-32", "border": "1px rgba(255,255,255,0.60-0.75)", "radius_px": "20-28" },
+    "dark": { "fill": "rgba(17,17,17,0.38-0.46)", "backdrop_blur_px": "24-32", "border": "1px rgba(255,255,255,0.12-0.20)", "radius_px": "20-28" },
+    "rule": "glass appears only when there is image/gradient depth behind it; brutal structure stays visible outside glass"
+  },
+  "gradients": {
+    "rule": "broad soft low-frequency fields, never rainbow or neon tubes",
+    "warm": "signal orange → transparent over paper or ink",
+    "digital": "violet → transparent over paper or ink",
+    "blur_px": "60-120",
+    "usage": "background atmosphere, hero media, selected cards; not every section"
+  },
+  "image_language": ["cinematic stills", "hard crops", "grain / halftone", "scanline or directional blur when justified", "editorial typography overlays", "photo-led color", "visible crop/frame UI"],
+  "composition": ["asymmetric negative space", "visible 1px rules", "boxed regions", "oversized type", "micro metadata", "glass layer over depth", "controlled overlap", "occasional intentional overflow"]
+}

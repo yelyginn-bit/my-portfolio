@@ -1,9 +1,9 @@
 {
   "src/design-system.css": {
-    "color": 344,
-    "radius": 50,
-    "fontFamily": 6,
-    "total": 400
+    "color": 262,
+    "radius": 44,
+    "fontFamily": 4,
+    "total": 310
   },
   "src/index.css": {
     "color": 54,
@@ -12,16 +12,16 @@
     "total": 91
   },
   "src/legal/legal.css": {
-    "color": 10,
+    "color": 0,
     "radius": 0,
     "fontFamily": 0,
-    "total": 10
+    "total": 0
   },
   "src/v3-polish.css": {
-    "color": 77,
+    "color": 75,
     "radius": 28,
     "fontFamily": 3,
-    "total": 108
+    "total": 106
   },
   "public/bb-components.css": {
     "color": 0,
@@ -30,10 +30,10 @@
     "total": 0
   },
   "public/site-skin.css": {
-    "color": 61,
+    "color": 58,
     "radius": 12,
     "fontFamily": 1,
-    "total": 74
+    "total": 71
   },
   "public/tokens.css": {
     "color": 0,
@@ -66,10 +66,10 @@
     "total": 0
   },
   "calculator.html <style>": {
-    "color": 18,
+    "color": 17,
     "radius": 16,
-    "fontFamily": 3,
-    "total": 37
+    "fontFamily": 2,
+    "total": 35
   },
   "content-day.html <style>": {
     "color": 12,

@@ -1298,6 +1298,19 @@ body.site-static .site-static-footer__brand p,
 body.site-static .site-static-footer__contacts span,
 body.site-static .site-static-footer__legal { color: rgba(244,244,239,.62) !important; }
 
+/* Тёмный подвал закреплён literals-строкой выше (#080808), а часть текста
+   внутри него брала цвет из ТЕМАТИЧЕСКИХ токенов --site-text / --site-muted и
+   из списка с .foot-copy (около :900). На светлой теме это тёмные цвета, и
+   карта сайта в подвале десяти страниц была невидимой: замер 390px дал
+   `strong` rgb(10,10,10) и `p.foot-copy` rgba(10,10,10,.7) на rgb(8,8,8) —
+   контраст 1.01. Комментарий у :900 признаётся, что в этот же список уже
+   попадал голый nav («контраст 1:1»), но колонки навигации и строку копирайта
+   не расправили. Внутри закреплённого тёмного хрома чернила берутся из
+   тематически стабильных токенов брендбука: --ds-fog одинаков в обеих темах
+   и даёт 13.76 на #080808. */
+body.site-static .foot-copy,
+body.site-static .site-static-footer-nav nav strong { color: var(--ds-fog) !important; }
+
 @media (max-width: 900px) {
   body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr 48px; }
   body.site-static .site-static-brand { height: 46px; }

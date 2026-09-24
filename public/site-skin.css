@@ -231,12 +231,12 @@ body.site-menu-open { overflow: hidden; }
 
 html {
   scroll-behavior: smooth;
-  background: #f7f7f5;
+  background: var(--ds-bg);
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: #f6f6f3 !important;
+  background: var(--ds-bg) !important;
   color: var(--white);
   font-family: var(--site-font, var(--ds-font-body)) !important;
   text-rendering: optimizeLegibility;
@@ -1029,7 +1029,7 @@ textarea::placeholder {
 }
 
 body {
-  background: #f7f7f5 !important;
+  background: var(--ds-bg) !important;
 }
 
 .wrap {

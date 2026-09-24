@@ -1,4 +1,3 @@
-import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createElement, StrictMode } from "react";
@@ -7,7 +6,7 @@ import Calculator from "../src/calculator/Calculator";
 import CasePage from "../src/case-detail/CasePage";
 import ColorGrading from "../src/color/ColorGrading";
 import LegalApp, { documents as legalDocuments } from "../src/legal/LegalApp";
-import { PORTFOLIO_PROJECTS } from "../src/lib/portfolio.data";
+import { projects, workAssets } from "../src/portfolio/v3PortfolioData";
 import { validatePortfolioRegistry } from "../src/lib/portfolioValidation";
 import Prices from "../src/prices/Prices";
 import V3App from "../src/public/V3App";
@@ -86,10 +85,6 @@ function outputFileFor(route: string) {
     : path.join(prerenderDir, route.slice(1), "index.html");
 }
 
-function portfolioPhotoExists(photoId: string) {
-  return existsSync(path.join(rootDir, "public", "portfolio-photos", `${photoId}.webp`));
-}
-
 async function main() {
   const duplicateRoutes = ROUTE_MANIFEST
     .map((route) => route.path)
@@ -99,7 +94,7 @@ async function main() {
     throw new Error("/portfolio/photo must remain private and must not be prerendered");
   }
 
-  const portfolioIssues = validatePortfolioRegistry(PORTFOLIO_PROJECTS, portfolioPhotoExists).errors;
+  const portfolioIssues = validatePortfolioRegistry(projects, workAssets).errors;
   if (portfolioIssues.length) throw new Error(`Portfolio registry validation failed:\n${portfolioIssues.join("\n")}`);
 
   const jsonLdPriceIssues = checkJsonLdPrices(rootDir, HAND_WRITTEN_JSONLD_PAGES);

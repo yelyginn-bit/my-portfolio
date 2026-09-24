@@ -1,30 +1,34 @@
 /**
  * Проверки целостности реестра портфолио — встраиваются в тот же пре-рендер,
- * где уже стоит проверка H1, и валят сборку до того, как чужое видео или
- * битая ссылка на фото попадут на сайт.
+ * где уже стоит проверка H1, и валят сборку до того, как чужое видео попадёт
+ * на сайт.
  *
  * Известная история, ради которой это существует: в
- * `YELYGINN-registry-proektov.md` два Kinescope ID уже были найдены
- * приписанными сразу к двум разным проектам (VK Fest ↔ «Горький в тени
- * войны», тизер СИБУРа ↔ «Основа»). Без этой проверки такой ID один раз
- * тихо утащит на страницу чужой ролик.
+ * `YELYGINN-registry-proektov.md` два Kinescope ID были найдены приписанными
+ * сразу к двум разным проектам (VK Fest ↔ «Горький в тени войны», тизер
+ * СИБУРа ↔ «Основа»). Без этой проверки такой ID один раз тихо утащит на
+ * страницу чужой ролик.
+ *
+ * Проверяет живой реестр (`src/portfolio/v3PortfolioData.ts`), из которого
+ * реально строятся страницы — не архивный `src/lib/portfolio.data.ts`
+ * (PROMPT-25 §2).
  */
-import type { PortfolioProject, VideoOrientation } from "./portfolio.data";
+import type { Project, WorkAsset } from "../portfolio/v3PortfolioData";
 
-const VALID_ORIENTATIONS: readonly VideoOrientation[] = ["16:9", "9:16"];
+const VALID_ORIENTATIONS: readonly WorkAsset["orientation"][] = ["landscape", "portrait"];
 
 export interface PortfolioValidationResult {
   errors: string[];
 }
 
 /** Один и тот же Kinescope ID не должен встречаться в двух разных проектах. */
-export function findDuplicateKinescopeIds(projects: readonly PortfolioProject[]): string[] {
+export function findDuplicateKinescopeIds(projects: readonly Pick<Project, "id" | "videos">[]): string[] {
   const owners = new Map<string, Set<string>>();
   for (const project of projects) {
-    for (const video of project.videos) {
-      const set = owners.get(video.kinescopeId) ?? new Set<string>();
+    for (const kinescopeId of project.videos) {
+      const set = owners.get(kinescopeId) ?? new Set<string>();
       set.add(project.id);
-      owners.set(video.kinescopeId, set);
+      owners.set(kinescopeId, set);
     }
   }
   const errors: string[] = [];
@@ -37,53 +41,24 @@ export function findDuplicateKinescopeIds(projects: readonly PortfolioProject[])
 }
 
 /** Каждый ролик должен иметь заявленное и допустимое соотношение сторон. */
-export function findInvalidOrientations(projects: readonly PortfolioProject[]): string[] {
+export function findInvalidOrientations(assets: readonly Pick<WorkAsset, "projectId" | "kinescopeId" | "orientation">[]): string[] {
   const errors: string[] = [];
-  for (const project of projects) {
-    for (const video of project.videos) {
-      if (!VALID_ORIENTATIONS.includes(video.orientation)) {
-        errors.push(`Проект "${project.id}": ролик "${video.kinescopeId}" имеет недопустимое соотношение сторон "${video.orientation}"`);
-      }
-    }
-  }
-  return errors;
-}
-
-/** Каждая упомянутая в реестре фотография должна существовать в обработанной
- * статике. `photoExists` — внешняя проверка файловой системы (прокидывается
- * снаружи, чтобы этот модуль не зависел от Node fs и был тестируемым). */
-export function findMissingPhotos(
-  projects: readonly PortfolioProject[],
-  photoExists: (photoId: string) => boolean,
-): string[] {
-  const errors: string[] = [];
-  for (const project of projects) {
-    for (const photo of project.photos) {
-      if (!photoExists(photo.id)) {
-        errors.push(`Проект "${project.id}": фотография "${photo.id}" не найдена в обработанной статике`);
-      }
-    }
-    for (const pair of project.colorPairs) {
-      if (!photoExists(pair.rawPhotoId)) {
-        errors.push(`Проект "${project.id}": RAW-кадр "${pair.rawPhotoId}" пары "${pair.id}" не найден в обработанной статике`);
-      }
-      if (!photoExists(pair.colorPhotoId)) {
-        errors.push(`Проект "${project.id}": цветокорректированный кадр "${pair.colorPhotoId}" пары "${pair.id}" не найден в обработанной статике`);
-      }
+  for (const asset of assets) {
+    if (!VALID_ORIENTATIONS.includes(asset.orientation)) {
+      errors.push(`Проект "${asset.projectId}": ролик "${asset.kinescopeId}" имеет недопустимое соотношение сторон "${asset.orientation}"`);
     }
   }
   return errors;
 }
 
 export function validatePortfolioRegistry(
-  projects: readonly PortfolioProject[],
-  photoExists: (photoId: string) => boolean,
+  projects: readonly Pick<Project, "id" | "videos">[],
+  assets: readonly Pick<WorkAsset, "projectId" | "kinescopeId" | "orientation">[],
 ): PortfolioValidationResult {
   return {
     errors: [
       ...findDuplicateKinescopeIds(projects),
-      ...findInvalidOrientations(projects),
-      ...findMissingPhotos(projects, photoExists),
+      ...findInvalidOrientations(assets),
     ],
   };
 }

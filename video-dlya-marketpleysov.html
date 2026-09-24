@@ -53,14 +53,14 @@
       h2 span { color: var(--ds-orange); }
 
       .platforms { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
-      .platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: var(--ds-stroke) solid var(--ds-border-strong); color: var(--ds-text-secondary); }
+      .mk-platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: var(--ds-stroke) solid var(--ds-border-strong); color: var(--ds-text-secondary); }
 
       .price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-      .price-card { border: var(--ds-stroke) solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
-      .price-card.featured { border-color: var(--ds-orange); }
+      .mk-price-card { border: var(--ds-stroke) solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
+      .mk-price-card.featured { border-color: var(--ds-orange); }
       .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
-      .price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
-      .price-desc { font-size: 0.85rem; color: var(--ds-text-secondary); line-height: 1.55; margin-top: 12px; }
+      .mk-price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
+      .mk-price-desc { font-size: 0.85rem; color: var(--ds-text-secondary); line-height: 1.55; margin-top: 12px; }
       .price-note { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 20px; }
       .price-footnote { font-size: 0.85rem; color: var(--ds-text-muted); margin-top: 20px; }
 
@@ -68,11 +68,11 @@
       .faq-item { padding: 24px 0; border-top: var(--ds-stroke) solid var(--ds-border); }
       .faq-item:last-child { border-bottom: var(--ds-stroke) solid var(--ds-border); }
       .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
-      .faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
+      .mk-faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
 
       .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-      .tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: var(--ds-stroke) solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
-      .tag:hover { color: var(--ds-text); border-color: var(--ds-border-strong); }
+      .mk-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: var(--ds-stroke) solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
+      .mk-tag:hover { color: var(--ds-text); border-color: var(--ds-border-strong); }
 
       footer { padding: 40px 0; background: var(--ds-bg); border-top: var(--ds-stroke) solid var(--ds-border); }
       footer .site-static-footer-nav { width: min(1100px, 100% - 40px); margin: 0 auto 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem 1rem; }
@@ -81,7 +81,7 @@
       footer .site-static-footer-nav a { color: var(--ds-text-secondary); font-size: 0.82rem; }
       footer .site-static-footer-nav a:hover { color: var(--ds-text); }
       .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-      .foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
+      .mk-foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
     </style>
   </head>
   <body id="page-marketplace">
@@ -129,11 +129,11 @@
         <div class="wrap">
           <h2>Работаю с <span>платформами</span></h2>
           <div class="platforms">
-            <span class="platform">Wildberries</span>
-            <span class="platform">Ozon</span>
-            <span class="platform">Яндекс.Маркет</span>
-            <span class="platform">AliExpress</span>
-            <span class="platform">Мегамаркет</span>
+            <span class="mk-platform">Wildberries</span>
+            <span class="mk-platform">Ozon</span>
+            <span class="mk-platform">Яндекс.Маркет</span>
+            <span class="mk-platform">AliExpress</span>
+            <span class="mk-platform">Мегамаркет</span>
           </div>
           <ol class="bb-steps">
             <li class="bb-step">
@@ -188,37 +188,37 @@
           <h2>Стоимость видео для <span>маркетплейсов</span></h2>
           <p class="price-note">Съёмка и монтаж одного товара — от 35 000 ₽</p>
           <div class="price-row">
-            <div class="price-card">
-              <p class="price-label">Монтаж — базовый</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Монтаж — базовый</p>
               <p class="price-tag">от 10 000 ₽/ролик</p>
-              <p class="price-desc">Нарезка, синхронизация аудио, титры, LUT-коррекция. Формат под требования платформы.</p>
+              <p class="mk-price-desc">Нарезка, синхронизация аудио, титры, LUT-коррекция. Формат под требования платформы.</p>
             </div>
-            <div class="price-card featured">
-              <p class="price-label">Монтаж — стандарт</p>
+            <div class="mk-price-card featured">
+              <p class="mk-price-label">Монтаж — стандарт</p>
               <p class="price-tag">от 18 000 ₽/ролик</p>
-              <p class="price-desc">Динамика, моушн-графика, стабилизация, инфографика. Оптимально для конкурентных карточек.</p>
+              <p class="mk-price-desc">Динамика, моушн-графика, стабилизация, инфографика. Оптимально для конкурентных карточек.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Серия с инфографикой</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Серия с инфографикой</p>
               <p class="price-tag">от 70 000 ₽</p>
-              <p class="price-desc">Комплект динамичных роликов с инфографикой под ключ. Для продвижения всего каталога.</p>
+              <p class="mk-price-desc">Комплект динамичных роликов с инфографикой под ключ. Для продвижения всего каталога.</p>
             </div>
           </div>
           <div class="price-row" style="margin-top:12px;">
-            <div class="price-card">
-              <p class="price-label">Адаптация под площадки</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Адаптация под площадки</p>
               <p class="price-tag">от 5 000 ₽</p>
-              <p class="price-desc">Версии под требования Wildberries, Ozon, Яндекс Маркета и социальных сетей.</p>
+              <p class="mk-price-desc">Версии под требования Wildberries, Ozon, Яндекс Маркета и социальных сетей.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Ретушь и композитинг</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Ретушь и композитинг</p>
               <p class="price-tag">от 8 000 ₽</p>
-              <p class="price-desc">Удаление дефектов, чистка кадра и аккуратная работа с фоном.</p>
+              <p class="mk-price-desc">Удаление дефектов, чистка кадра и аккуратная работа с фоном.</p>
             </div>
-            <div class="price-card">
-              <p class="price-label">Скидка от 5 роликов</p>
+            <div class="mk-price-card">
+              <p class="mk-price-label">Скидка от 5 роликов</p>
               <p class="price-tag">−10%</p>
-              <p class="price-desc">При заказе 5 и более роликов одного типа — скидка 10% на монтаж.</p>
+              <p class="mk-price-desc">При заказе 5 и более роликов одного типа — скидка 10% на монтаж.</p>
             </div>
           </div>
           <p class="price-footnote">Реквизит, модель, локация и сложная инфографика рассчитываются отдельно. Точная стоимость — после брифа и списка товаров.</p>
@@ -233,19 +233,19 @@
           <div class="faq">
             <div class="faq-item">
               <p class="faq-q">Нужно ли привозить товар на студию?</p>
-              <p class="faq-a">Да, товар привозите вы или доставляете курьером. Могу выехать на ваш склад или офис — уточните при бронировании.</p>
+              <p class="mk-faq-a">Да, товар привозите вы или доставляете курьером. Могу выехать на ваш склад или офис — уточните при бронировании.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Видео соответствует требованиям Wildberries/Ozon?</p>
-              <p class="faq-a">Да, сдаю видео в форматах и соотношениях сторон, принятых на каждой платформе. Слежу за обновлениями требований.</p>
+              <p class="mk-faq-a">Да, сдаю видео в форматах и соотношениях сторон, принятых на каждой платформе. Слежу за обновлениями требований.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Сколько по времени занимает съёмка одного товара?</p>
-              <p class="faq-a">В среднем 30–60 минут на один товар при базовой съёмке. Lifestyle с несколькими сценами — 1,5–2 часа.</p>
+              <p class="mk-faq-a">В среднем 30–60 минут на один товар при базовой съёмке. Lifestyle с несколькими сценами — 1,5–2 часа.</p>
             </div>
             <div class="faq-item">
               <p class="faq-q">Как быстро получу готовое видео?</p>
-              <p class="faq-a">Через 3–5 рабочих дней после съёмки. При пакетных заказах — 5–7 дней.</p>
+              <p class="mk-faq-a">Через 3–5 рабочих дней после съёмки. При пакетных заказах — 5–7 дней.</p>
             </div>
           </div>
         </div>
@@ -257,11 +257,11 @@
         <div class="wrap">
           <h2>Другие <span>услуги</span></h2>
           <div class="links-row">
-            <a href="/reklamnye-roliki" class="tag">Рекламные ролики</a>
-            <a href="/reels" class="tag">Reels для бизнеса</a>
-            <a href="/event-video" class="tag">Event-видео</a>
-            <a href="/photo" class="tag">Фотосъёмка</a>
-            <a href="/ceny" class="tag">Все цены</a>
+            <a href="/reklamnye-roliki" class="mk-tag">Рекламные ролики</a>
+            <a href="/reels" class="mk-tag">Reels для бизнеса</a>
+            <a href="/event-video" class="mk-tag">Event-видео</a>
+            <a href="/photo" class="mk-tag">Фотосъёмка</a>
+            <a href="/ceny" class="mk-tag">Все цены</a>
           </div>
         </div>
       </section>
@@ -279,7 +279,7 @@
     <footer>
       <div class="wrap">
         <div class="foot">
-          <p class="foot-copy">© 2026 Yelyginn — видеопродакшн в Нижнем Новгороде</p>
+          <p class="mk-foot-copy">© 2026 Yelyginn — видеопродакшн в Нижнем Новгороде</p>
           <a href="https://t.me/YuriElygin" class="bb-btn" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
         </div>
       </div>

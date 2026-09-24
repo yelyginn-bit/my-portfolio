@@ -23,8 +23,9 @@ import PortfolioSystem from "./PortfolioSystem";
 import { PRIMARY_SOCIALS, SECONDARY_SOCIALS } from "../config/socials";
 import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES } from "./v3Content";
 import { resolveV3Route } from "./routeManifest";
-import { CALCULATOR_LINK, CATEGORY_TO_SERVICE, CONTACT_LINK, FOOTER_GROUPS, PRICES_LINK, PRIMARY_NAV } from "../lib/navigation.data";
+import { CALCULATOR_LINK, CATEGORY_TO_SERVICE, CONTACT_LINK, FOOTER_GROUPS, PRICES_LINK, PRIMARY_NAV, SERVICE_LINKS, type NavLink } from "../lib/navigation.data";
 import { isNavEntryActive, NavDropdownMenu } from "../components/site/NavMenu";
+import { KinescopeEmbed } from "../components/media/KinescopeEmbed";
 
 const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
@@ -457,15 +458,32 @@ function primaryCategory(project: Project): PortfolioCategory {
   return PORTFOLIO_CATEGORY_ORDER.find((category) => projectMatchesCategory(project, category)) ?? "post";
 }
 
+/** «Куда дальше»: project.caseStudy.relatedServiceHrefs переопределяет
+ * авто-вывод услуги по категории, когда категория портфолио не отражает
+ * точную услугу (PROMPT-23 §3.8, найдено на HOFF: formats includes
+ * "commercial" авто-выводит «Рекламные ролики», хотя по сути это «Видео
+ * для маркетплейсов»). Без переопределения — прежнее поведение, один
+ * авто-вывод по категории, ни один из 37 остальных проектов не меняется. */
+function resolveRelatedServices(project: Project, category: PortfolioCategory): NavLink[] {
+  const overrideHrefs = project.caseStudy?.relatedServiceHrefs;
+  if (!overrideHrefs) return [CATEGORY_TO_SERVICE[category] ?? PRICES_LINK];
+  return overrideHrefs.map((href) => {
+    const known = [...SERVICE_LINKS, PRICES_LINK].find((item) => item.href === href);
+    if (!known) throw new Error(`resolveRelatedServices: "${href}" is not a known service link`);
+    return known;
+  });
+}
+
 function ProjectPage({ project }: { project: Project }) {
   const assets = assetsForProject(project.id);
   const currentIndex = projects.indexOf(project);
   const next = projects[(currentIndex + 1) % projects.length];
   const category = primaryCategory(project);
   const neighbors = projectsForCategory(category).filter((item) => item.id !== project.id).slice(0, 3);
-  const serviceLink = CATEGORY_TO_SERVICE[category] ?? PRICES_LINK;
+  const serviceLinks = resolveRelatedServices(project, category);
+  const caseStudy = project.caseStudy;
   return (
-    <><SiteHeader /><main className="v3-project v3-shell"><a className="v3-project__back" href="/portfolio"><ArrowLeft /> ВСЕ РАБОТЫ</a><header className="v3-project__head"><div><p className="v3-kicker">ПРОЕКТ // {String(currentIndex + 1).padStart(2, "0")}</p><h1>{project.title}</h1></div><dl>{project.client && <><dt>КЛИЕНТ</dt><dd>{project.client}</dd></>}<dt>ФОРМАТ</dt><dd>{project.formats.map((item) => formatLabels[item]).join(" // ")}</dd><dt>МОЯ РОЛЬ</dt><dd>{project.roles.map((item) => roleLabels[item]).join(" // ")}</dd><dt>ВИДЕО</dt><dd>{assets.length}</dd></dl></header>{project.description && <p className="v3-project__description">{project.description}</p>}<section className="v3-project__media">{assets.map((asset, index) => <article key={asset.kinescopeId}><div className="v3-project__media-meta"><span>{String(index + 1).padStart(2, "0")} // {String(assets.length).padStart(2, "0")}</span><a href={`#video-${asset.kinescopeId}`}>#{asset.kinescopeId}</a></div><LazyPlayer asset={asset} title={project.title} /></article>)}</section><ProjectEvidence project={project} /><section className="v3-project__credits"><div><p className="v3-kicker">МОЯ РОЛЬ // ПОДТВЕРЖДЕНО ИСТОЧНИКОМ</p><h2>ЧТО Я СДЕЛАЛ</h2></div><ul>{project.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul></section>{neighbors.length > 0 && <section className="v3-project__related"><div><p className="v3-kicker">{CATEGORY_META[category].title.toUpperCase()}</p><h2>Соседние <i>кейсы</i></h2></div><div className="v3-project__related-list">{neighbors.map((item) => <a key={item.slug} href={`/portfolio/${item.slug}`}>{item.title}</a>)}</div><a className="v3-project__related-service" href={serviceLink.href}>Об услуге «{serviceLink.label}» <ArrowUpRight aria-hidden="true" /></a></section>}<a className="v3-next" href={`/portfolio/${next.slug}`}><span>СЛЕДУЮЩИЙ // ПРОЕКТ</span><strong>{next.title}</strong><ArrowRight /></a></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-project v3-shell"><a className="v3-project__back" href="/portfolio"><ArrowLeft /> ВСЕ РАБОТЫ</a><header className="v3-project__head"><div><p className="v3-kicker">ПРОЕКТ // {String(currentIndex + 1).padStart(2, "0")}</p><h1>{project.title}</h1></div><dl>{project.client && <><dt>КЛИЕНТ</dt><dd>{project.client}</dd></>}<dt>ФОРМАТ</dt><dd>{project.formats.map((item) => formatLabels[item]).join(" // ")}</dd><dt>МОЯ РОЛЬ</dt><dd>{project.roles.map((item) => roleLabels[item]).join(" // ")}</dd><dt>ВИДЕО</dt><dd>{assets.length}</dd></dl></header>{project.description && <p className="v3-project__description">{project.description}</p>}{caseStudy && <section className="v3-project__case"><div><h2>Задача</h2><p>{caseStudy.task}</p></div><div><h2>Моя роль</h2><p>{caseStudy.role}</p></div><div><h2>Как сделано</h2><p>{caseStudy.method}</p></div><div><h2>Результат</h2><p>{caseStudy.result}</p></div></section>}<section className="v3-project__media">{assets.map((asset, index) => <article key={asset.kinescopeId}><div className="v3-project__media-meta"><span>{String(index + 1).padStart(2, "0")} // {String(assets.length).padStart(2, "0")}</span><a href={`#video-${asset.kinescopeId}`}>#{asset.kinescopeId}</a></div>{caseStudy ? <div id={`video-${asset.kinescopeId}`}><KinescopeEmbed id={asset.kinescopeId} orientation={asset.orientation === "portrait" ? "9:16" : "16:9"} title={asset.title ?? project.title} /></div> : <LazyPlayer asset={asset} title={project.title} />}</article>)}</section><ProjectEvidence project={project} /><section className="v3-project__credits"><div><p className="v3-kicker">МОЯ РОЛЬ // ПОДТВЕРЖДЕНО ИСТОЧНИКОМ</p><h2>ЧТО Я СДЕЛАЛ</h2></div><ul>{project.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul></section>{neighbors.length > 0 && <section className="v3-project__related"><div><p className="v3-kicker">{CATEGORY_META[category].title.toUpperCase()}</p><h2>Соседние <i>кейсы</i></h2></div><div className="v3-project__related-list">{neighbors.map((item) => <a key={item.slug} href={`/portfolio/${item.slug}`}>{item.title}</a>)}</div><div className="v3-project__related-actions">{serviceLinks.map((item) => <a key={item.href} className="v3-project__related-service" href={item.href}>Об услуге «{item.label}» <ArrowUpRight aria-hidden="true" /></a>)}<a className="v3-project__related-service" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label} <ArrowUpRight aria-hidden="true" /></a></div></section>}<a className="v3-next" href={`/portfolio/${next.slug}`}><span>СЛЕДУЮЩИЙ // ПРОЕКТ</span><strong>{next.title}</strong><ArrowRight /></a></main><SiteFooter /></>
   );
 }
 

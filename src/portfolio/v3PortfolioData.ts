@@ -64,6 +64,32 @@ export interface ProjectEvidence {
   note?: string;
 }
 
+/**
+ * Обогащённый кейс (PROMPT-23) — необязательное поле. Заполняется по одному
+ * проекту за промпт (решение владельца), не для всех сразу. Текст — дословно
+ * из промпта, не сочиняется и не «улучшается» на месте (PROMPT-23 §3).
+ */
+export interface CaseStudy {
+  /** Задача. */
+  task: string;
+  /** Моя роль — прозой, ровно то, что делал автор (не путать с responsibilities — короткими тегами для блока «ЧТО Я СДЕЛАЛ», который остаётся как есть). */
+  role: string;
+  /** Как сделано — техника и решения. */
+  method: string;
+  /** Результат — что сдано, без выдуманных метрик. */
+  result: string;
+  /**
+   * «Куда дальше» — необязательное переопределение услуги(услуг) из общего
+   * авто-вывода по категории (CATEGORY_TO_SERVICE в navigation.data.ts).
+   * Нужно, когда категория портфолио не отражает точную услугу проекта
+   * (пример: HOFF по формату "commercial" авто-выведется в «Рекламные
+   * ролики», а по сути это «Видео для маркетплейсов»). Значения — href из
+   * navigation.data.ts, проверяются тем же способом (падает сборка, если
+   * маршрута нет в манифесте).
+   */
+  relatedServiceHrefs?: readonly string[];
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -77,6 +103,7 @@ export interface Project {
   videos: string[];
   featured: boolean;
   legacyHidden?: boolean;
+  caseStudy?: CaseStudy;
   evidence: ProjectEvidence;
 }
 
@@ -169,7 +196,22 @@ const seeds: readonly ProjectSeed[] = [
   { id: "metro-reels", slug: "metro-gorkovskaya-reels", title: "Станция «Горьковская». Reels", sourceCategory: "Reels", range: [45, 46], roles: ["edit", "multicam"], formats: ["reels", "concert", "event"], responsibilities: ["Монтаж вертикальных версий", "Работа с мультикамерным материалом"], featured: false, description: "Две вертикальные версии концертных выступлений, собранные из мультикамерного материала." },
   { id: "yango", slug: "yango-campaign", title: "Yango. Мультиязычная кампания", client: "Yango", sourceCategory: "Reels", range: [47, 47], roles: ["edit", "color"], formats: ["commercial", "reels"], responsibilities: ["Монтаж", "Адаптации форматов", "Локальная работа с цветом"], featured: true, description: "Короткие версии рекламного ролика для нескольких языков и площадок." },
   { id: "osnova-reels", slug: "osnova-report-reels", title: "«Основа». Отчётные Reels", client: "Основа", sourceCategory: "Reels", range: [48, 52], roles: ["edit", "color", "sound", "sde"], formats: ["reels", "event"], responsibilities: ["Монтаж день в день", "Стабилизация", "Цвет", "Звук"], featured: false, description: "Пять коротких отчётных роликов с семейных и городских событий." },
-  { id: "hoff-products", slug: "hoff-product-cards", title: "HOFF. Карточки товара", client: "HOFF", sourceCategory: "карточки товара", range: [53, 62], roles: ["edit", "color", "graphics", "cleanup"], formats: ["product", "commercial"], responsibilities: ["Монтаж десяти роликов", "Цвет", "Базовая инфографика", "Cleanup"], featured: true, description: "Десять роликов о механизмах и сценариях использования мебели." },
+  {
+    id: "hoff-products", slug: "hoff-product-cards", title: "HOFF. Карточки товара", client: "HOFF",
+    sourceCategory: "карточки товара", range: [53, 62],
+    roles: ["edit", "color", "graphics", "cleanup"], formats: ["product", "commercial"],
+    responsibilities: ["Монтаж десяти роликов", "Цвет", "Базовая инфографика", "Cleanup"], featured: true,
+    // Вводная (PROMPT-23 §4) — дословно, не старое короткое description.
+    description: "Для обновления каталога HOFF нужно было показать, как раскладывается каждый диван — не описанием, а в движении. Десять коротких роликов, по одному на механизм.",
+    assetTitles: ["Франция", "Пума", "Пантограф", "Кушетка", "Книжка", "Клик-кляк", "Еврокнижка", "Дельфин", "Выкатной", "Аккордеон"],
+    caseStudy: {
+      task: "Показать механизм трансформации десяти моделей: с разных ракурсов и в сценарии использования — человек садится, раскладывает диван, пользуется им. Ролики — для карточек товара на сайте HOFF.",
+      role: "Постпродакшн всей серии: монтаж, титры с названием механизма, цветокоррекция и клинап — убирал следы обуви и мелкие недочёты с белой циклорамы. Музыку подбирал заказчик.",
+      method: "Съёмка на одну камеру Fujifilm X-T4 на белой циклораме. Для всех десяти роликов — один сценарий: общий план, механизм в работе, сценарий использования, титр с названием механизма.",
+      result: "Десять роликов для карточек товара: «Франция», «Пума», «Пантограф», «Кушетка», «Книжка», «Клик-кляк», «Еврокнижка», «Дельфин», «Выкатной», «Аккордеон».",
+      relatedServiceHrefs: ["/video-dlya-marketpleysov", "/cvetokorrekciya"],
+    },
+  },
   { id: "caprigo-products", slug: "caprigo-product-catalog", title: "Caprigo. Каталог продукции", client: "Caprigo", sourceCategory: "карточки товара", range: [63, 72], roles: ["edit", "multicam", "sound"], formats: ["product", "commercial"], responsibilities: ["Мультикамерный монтаж", "Вставки", "Подстановка цветовых стиллов", "Работа со звуком"], featured: false, description: "Серия презентационных роликов для новых продуктов и печатного каталога." },
   { id: "cartier-products", slug: "cartier-product-video", title: "Cartier. Product video", client: "Cartier", sourceCategory: "карточки товара", range: [73, 74], roles: ["edit"], formats: ["product", "commercial"], responsibilities: ["Монтаж", "Работа с предоставленной музыкой"], featured: false, description: "Два продуктовых ролика Cartier. Моя работа — монтаж под предоставленную музыку." },
   { id: "showreel-site", slug: "showreel-site", title: "YELYGINN. Showreel", sourceCategory: "showreels", range: [75, 75], roles: ["edit"], formats: ["showreel"], responsibilities: ["Монтаж showreel"], featured: true, description: "Монтажный showreel для главной страницы." },

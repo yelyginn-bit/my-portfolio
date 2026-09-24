@@ -674,6 +674,12 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-player--landscape { aspect-ratio: 16/9; }
 .v3-player--portrait { width: min(100%, 520px); aspect-ratio: 9/16; justify-self: center; }
 .v3-player iframe { width: 100%; height: 100%; display: block; border: 0; }
+/* Обогащённый кейс (PROMPT-23) — Задача/Моя роль/Как сделано/Результат.
+   Рендерится только когда у проекта есть project.caseStudy (пока — HOFF). */
+.v3-project__case { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-grid-gap) var(--ds-s7); margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--ds-border); }
+.v3-project__case h2 { margin: 0 0 .6rem; font-size: clamp(1.1rem, 1.6vw, 1.4rem); text-transform: uppercase; letter-spacing: .02em; color: var(--ds-accent-text-legacy); }
+.v3-project__case p { margin: 0; color: var(--ds-text-secondary); line-height: 1.55; }
+.v3-project__related-actions { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; }
 .v3-project__credits { display: grid; grid-template-columns: 5fr 7fr; gap: var(--ds-grid-gap); margin-block: 8rem; padding-block: 3rem; border-block: 1px solid var(--ds-text); }
 .v3-project__credits h2 { margin: .7rem 0 0; font: 800 clamp(2.5rem, 5vw, 5rem)/.9 "Helvetica Neue", Arial, sans-serif; }
 .v3-project__credits ul { margin: 0; padding: 0; list-style: none; }
@@ -748,7 +754,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-catalog { padding-top: 6.5rem; }
   .v3-filters { top: 66px; margin-inline: -4px; }
   .v3-project { padding-top: 6.5rem; }
-  .v3-project__head, .v3-project__credits, .v3-project__related { grid-template-columns: 1fr; }
+  .v3-project__head, .v3-project__credits, .v3-project__related, .v3-project__case { grid-template-columns: 1fr; }
   .v3-project__head h1 { font-size: 18vw; }
   .v3-project__description { margin: 2rem 0 4rem; }
   .v3-project__media article { grid-template-columns: 1fr; }

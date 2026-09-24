@@ -55,6 +55,11 @@ const BROADCAST_DIR = "../НОТДЕЙЛИ/New";
  * Разрешение на публикацию в портфолио подтверждено владельцем; детей в
  * кадрах нет (проверено владельцем). PROMPT-22. */
 const KVN_DIR = "../КВН/Обработано";
+/** Мастер-класс «Школа джазовых блогеров», фестиваль «Осень в Швейцарии ·
+ * Джаз народов», Парк Швейцария, Нижний Новгород, 14.09.2026 — тоже соседняя
+ * папка. Разрешение на публикацию подтверждено владельцем; в кадрах есть
+ * дети — имена нигде не упоминаются (alt, текст, имена файлов). PROMPT-24. */
+const MASTERKLASS_DIR = "../Джазовые_блогеры/Рендер";
 
 export const COLOR_PAIRS: readonly ColorPairSource[] = [
   { rawId: "korona-01-raw", rawSource: `${KORONA_DIR}/raw/Still 2026-08-07 201039_1.31.1.png`, colorId: "korona-01-color", colorSource: `${KORONA_DIR}/color/Still 2026-08-07 200944_1.31.1.png` },
@@ -137,6 +142,13 @@ export const SINGLE_PHOTOS: readonly SinglePhotoSource[] = [
     "DSC_7872.png", "DSC_7831.png", "DSC_8115.png", "DSC_7902.png",
     "DSC_8333.png", "DSC_8206.png", "DSC_8042.png", "DSC_7938.png",
     "DSC_8310.png", "DSC_8345.png", "DSC_8411.png", "DSC_8153.png",
+  ]),
+
+  // Мастер-класс «Школа джазовых блогеров» — блок «Мастер-класс» на /photo,
+  // сразу после блока КВН. Порядок = PROMPT-24 §2.
+  ...sequential(MASTERKLASS_DIR, "masterklass", [
+    "DSC_7688.png", "DSC_7774.png", "DSC_7654.png", "DSC_7641.png",
+    "DSC_7646.png", "DSC_7747.png", "DSC_7724.png", "DSC_7808.png",
   ]),
 
   // Бэкстейдж прямой трансляции автофестиваля — для страницы /pryamye-translyacii.

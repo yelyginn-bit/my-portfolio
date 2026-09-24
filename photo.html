@@ -106,6 +106,14 @@
       @media (max-width: 640px) { .kvn-grid-2col { grid-template-columns: 1fr; } }
       .kvn-stats { margin: 20px 0 28px; color: var(--ds-text-secondary); font-size: 0.85rem; letter-spacing: 0.02em; }
       .kvn-cta { margin-top: 8px; }
+      /* Мастер-класс: Школа джазовых блогеров (PROMPT-24). Не трогает блок
+         КВН — отдельные классы, идентичные по стилю (только var(--ds-*)). */
+      .masterklass-lead { color: var(--ds-text-secondary); max-width: 62ch; margin-bottom: 28px; font-size: 0.95rem; }
+      .masterklass-full { margin-bottom: 8px; }
+      .masterklass-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+      @media (max-width: 640px) { .masterklass-grid-2col { grid-template-columns: 1fr; } }
+      .masterklass-stats { margin: 20px 0 28px; color: var(--ds-text-secondary); font-size: 0.85rem; letter-spacing: 0.02em; }
+      .masterklass-cta { margin-top: 8px; }
       /* Lightbox */
       .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 200; padding: 40px; }
       .lightbox.is-open { display: flex; }
@@ -467,6 +475,45 @@
           <div class="kvn-cta">
             <a href="/calculator" class="cta">Фотограф на ваше мероприятие</a>
           </div>
+        </div>
+      </section>
+
+      <section id="masterklass" aria-label="Мастер-класс: Школа джазовых блогеров">
+        <div class="wrap">
+          <h2>Мастер-класс: <span>Школа джазовых блогеров</span></h2>
+          <p class="masterklass-lead">Фестиваль «Осень в Швейцарии · Джаз народов», Парк Швейцария, Нижний Новгород</p>
+
+          <div class="masterklass-full">
+            <button class="gallery-item" type="button" data-index="53">
+              <img src="/portfolio-photos/masterklass-01.webp" srcset="/portfolio-photos/masterklass-01-480w.webp 480w, /portfolio-photos/masterklass-01-960w.webp 960w, /portfolio-photos/masterklass-01.webp 1600w" sizes="100vw" width="1600" height="1065" alt="Ведущая мастер-класса у пресс-волла фестиваля" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <div class="masterklass-grid-2col">
+            <button class="gallery-item" type="button" data-index="54">
+              <img src="/portfolio-photos/masterklass-02.webp" srcset="/portfolio-photos/masterklass-02-480w.webp 480w, /portfolio-photos/masterklass-02-960w.webp 960w, /portfolio-photos/masterklass-02.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Мастер-класс «Создаём первый ролик»: ведущая у экрана, участники в зале" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="55">
+              <img src="/portfolio-photos/masterklass-03.webp" srcset="/portfolio-photos/masterklass-03-480w.webp 480w, /portfolio-photos/masterklass-03-960w.webp 960w, /portfolio-photos/masterklass-03.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1600" alt="Ведущая мастер-класса улыбается у экрана" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="56">
+              <img src="/portfolio-photos/masterklass-04.webp" srcset="/portfolio-photos/masterklass-04-480w.webp 480w, /portfolio-photos/masterklass-04-960w.webp 960w, /portfolio-photos/masterklass-04.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Участники мастер-класса в ряд у витражной стены, солнечные тени на полу" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="57">
+              <img src="/portfolio-photos/masterklass-05.webp" srcset="/portfolio-photos/masterklass-05-480w.webp 480w, /portfolio-photos/masterklass-05-960w.webp 960w, /portfolio-photos/masterklass-05.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Участница с тетрадью задаёт вопрос ведущей" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="58">
+              <img src="/portfolio-photos/masterklass-06.webp" srcset="/portfolio-photos/masterklass-06-480w.webp 480w, /portfolio-photos/masterklass-06-960w.webp 960w, /portfolio-photos/masterklass-06.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Участница снимает мастер-класс на телефон" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="59">
+              <img src="/portfolio-photos/masterklass-07.webp" srcset="/portfolio-photos/masterklass-07-480w.webp 480w, /portfolio-photos/masterklass-07-960w.webp 960w, /portfolio-photos/masterklass-07.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Девушка в ряду кресел, на стене — узор теней от витража" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="60">
+              <img src="/portfolio-photos/masterklass-08.webp" srcset="/portfolio-photos/masterklass-08-480w.webp 480w, /portfolio-photos/masterklass-08-960w.webp 960w, /portfolio-photos/masterklass-08.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Ведущая у экрана «Спасибо за внимание» в конце мастер-класса" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <p class="masterklass-stats">50 минут съёмки · 43 кадра в обработке</p>
         </div>
       </section>
 

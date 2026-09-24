@@ -233,8 +233,10 @@ Root по паролю через SSH невозможен by design (`PermitRoo
 **Фаза 3, шрифты (`PROMPT-28-shrifty.md`) — сделано 24.09, `15eff07`+`5a6fef9`.**
 Единая система по брендбуку (Figma `p3IBlfFFdnA03s3U7UiarF`, «02 / TYPOGRAPHY»):
 Display/Body — Inter (self-hosted, `public/fonts/inter/`, 400/500/700 ×
-cyrillic/cyrillic-ext/latin/latin-ext, лицензия OFL рядом), Mono — оставлен
-системный стек по решению владельца. Токены `--ds-font-display/body/mono`,
+cyrillic/cyrillic-ext/latin/latin-ext, лицензия OFL рядом), Mono — на тот
+момент системный стек по решению владельца; PROMPT-30 (брендбук) это решение
+отменило явно — теперь Roboto Mono self-hosted, `public/fonts/roboto-mono/`,
+см. «Компоненты брендбука» ниже. Токены `--ds-font-display/body/mono`,
 `--ds-fs-104…11`, `--ds-track-display/h2`, `--ds-fw-display` (700 — «Inter Bold»,
 не «чем жирнее тем заметнее», хвост этой фазы закрыт уже в PROMPT-29 §1). Все
 три жалобы закрыты и подтверждены замером — см. «Сделано» выше.
@@ -300,6 +302,104 @@ cyrillic/cyrillic-ext/latin/latin-ext, лицензия OFL рядом), Mono �
 
 ---
 
+## Компоненты брендбука
+
+Источник — `docs/brandbook/README.md` (12 правил сборки, токены, дерево
+компонентов) + `docs/brandbook/style-spec-v2.json` (машиночитаемая версия) +
+33 PNG-кадра из Figma в той же папке, скопированы туда целиком PROMPT-30 §0
+(картинки — визуальный эталон, README — правила, не наоборот при расхождении).
+`docs/` не раздаётся сайтом — `vite.config.ts` не ссылается на него ни из
+одного входа, тест `tests/docs-not-in-dist.test.ts` проверяет, что он не
+просочился в `dist/`.
+
+**Набор компонентов** — `public/bb-components.css`, классы с префиксом
+`bb-*`, только на токенах `--ds-*` (`tests/bb-components.test.ts` проверяет
+отсутствие цветовых литералов и произвольных радиусов — 0/50%/999px
+разрешены как геометрические идиомы «квадрат/круг/пилюля», не как значения
+брендовой шкалы). Подключается вторым тегом, после `/tokens.css` и до
+`/site-skin.css` (страница, использующая `bb-*`, обязана этот порядок
+соблюсти — иначе `!important`-слой `site-skin.css` может перебить компоненты
+до рендера, см. `docs/audit/dark-theme-inventory.md` §6.2).
+
+Новые токены (не было до PROMPT-30) — `--ds-glass-bg`, `--ds-glass-border`,
+`--ds-glass-blur`, `--ds-glow-blur`, `--ds-radius-shell`, `--ds-stroke`,
+`--ds-accent-text` (см. «В коде» ниже), плюс `--ds-font-mono` теперь
+`"Roboto Mono"` (self-hosted, `public/fonts/roboto-mono/`), а не системный
+стек — брендбук отменяет решение PROMPT-28 §1 оставить моно системным.
+
+| Класс | Кадр брендбука | Для чего |
+|---|---|---|
+| `.bb-nav` | NAVIGATION, DARK | Шапка: полоса 72–88px, стекло, лого-моно, ссылки капсом, одна CTA |
+| `.bb-hero` + `.bb-atmosphere` | DARK, SUMMARY | Первый экран: две колонки, мягкое поле за медиа |
+| `.bb-work-grid--2/3/4` + `.bb-project-card` | PROJECT CARDS | Сетка работ, номер в углу медиа, метаданные под ним |
+| `.bb-case-hero` | CASE PAGE | Шапка кейса: номер + название + ROLE/FORMAT/YEAR |
+| `.bb-media` | IMAGE LANGUAGE | Медиа от края до края рамки, портрет/квадрат — модификаторы |
+| `.bb-glass` | GLASS + GRADIENT COMPONENTS | Стекло — только поверх `.bb-atmosphere`/медиа, не как фон страницы |
+| `.bb-meta-panel` | DATA PANELS | Моно-таблица «ключ // значение», только реальные данные |
+| `.bb-signal` | DARK | Финальный CTA-блок (заявка) |
+| `.bb-footer` | DARK | Подвал: моно капсом вместо подчёркнутого Inter |
+| `.bb-kicker` / `.bb-display` / `.bb-btn` / `.bb-btn--secondary` / `.bb-badge` / `.bb-rule` / `.bb-steps` / `.bb-frame-label` | TYPOGRAPHY, BUTTONS + BADGES | Атомы — кикер, дисплейный заголовок, кнопки, бейджи, линейка-разделитель, нумерованный список, подпись кадра |
+
+Пример разметки (первый экран + сетка работ):
+
+```html
+<div class="bb-hero">
+  <div class="bb-hero__copy">
+    <p class="bb-kicker">Нижний Новгород / Видео для маркетплейсов</p>
+    <h1 class="bb-display">Видео для <em>маркетплейсов</em></h1>
+    <p class="bb-hero__lead">…</p>
+    <div class="bb-hero__ctas">
+      <a href="/#contact" class="bb-btn">Заказать съёмку</a>
+      <a href="/portfolio" class="bb-btn bb-btn--secondary">Смотреть работы</a>
+    </div>
+  </div>
+  <div class="bb-hero__media bb-atmosphere"><div class="bb-glass">…</div></div>
+</div>
+<div class="bb-work-grid bb-work-grid--2">
+  <a href="/portfolio" class="bb-project-card">
+    <div class="bb-project-card__media"><img src="…" alt="…" /></div>
+    <div class="bb-project-card__meta"><p class="bb-project-card__role">HOFF · товарный ролик</p></div>
+  </a>
+</div>
+```
+
+**Витрина** — `/_kit` (`_kit.html`), все компоненты на тёмном фоне рядом с
+названием кадра брендбука для сверки. `noindex`, вне `sitemap.xml`, вне
+`navigation.data.ts` — `tests/kit-page.test.ts` проверяет все три гарантии.
+
+**Пилот заново** — `/video-dlya-marketpleysov` (PROMPT-30 §4) собран из
+компонентов выше, текст не менялся ни на букву (менялись разметка и классы);
+шапка/подвал переведены с «вшитых» цветов на токены, пункты меню — по-прежнему
+из `navigation.data.ts` (все шесть обязательных ссылок уже в разметке —
+`scripts/staticShellTemplate.ts` их не дублирует).
+
+**В коде (сопоставление токенов IMPLEMENTATION MAP → `--ds-*`):**
+
+| Брендбук | Значение | `--ds-*` |
+|---|---|---|
+| `--bg` | `#F2F1EC` | `--ds-bg` (светлая) |
+| `--ink` | `#0A0A0A` | `--ds-text` (светлая) / `--ds-bg` (тёмная) |
+| `--violet` | `#8A5CF6` | `--ds-violet` |
+| `--orange` | `#FF6422` | `--ds-orange` / `--ds-accent` |
+| `--line` | `#D9D7D1` | совпадает с `--ds-fog`, но роль «линейка 1px» уже закрыта тематизированным `--ds-border` — новый токен не заводили |
+| `--glass-light`/`--glass-dark` | `rgba(255,255,255,.52-.58)` / `rgba(17,17,17,.38-.46)` | `--ds-glass-bg` (переопределяется в `:root[data-theme="dark"]`) |
+| `--glass-blur` | 28px | `--ds-glass-blur` |
+| `--glow-blur` | 80px | `--ds-glow-blur` |
+| `--stroke` | 1px | `--ds-stroke` |
+| `--radius-shell` | 24px | `--ds-radius-shell` |
+| `--space-base` | 8px | уже было — `--ds-s1` (0.25rem) шагает от той же базы, отдельный токен не заводили |
+| `--grid` | 12 колонок | уже было — `.ds-grid`/сетки brandbook-компонентов используют ту же логику |
+
+`--ds-accent-text` (аудит qwen/site §6.1: токен использовался, но нигде не
+был объявлен) — определён как `var(--ds-accent-text-legacy)`, без отдельного
+значения: на светлой это `#c83227` (4.5:1 на PAPER, PROMPT-20), на тёмной —
+через уже существующий override того же `--ds-accent-text-legacy` в
+`:root[data-theme="dark"]` это SIGNAL ORANGE (`#ff6422`, проходит контраст
+на INK/GRAPHITE — `scripts/contrast.ts`). Тест: `tests/seo.test.ts`,
+«every var(--ds-*) referenced in CSS/HTML is defined somewhere».
+
+---
+
 ## Очередь промптов
 
 1) ~~Закрыть фазу 4 — навигация.~~ Сделано.
@@ -321,10 +421,23 @@ cyrillic/cyrillic-ext/latin/latin-ext, лицензия OFL рядом), Mono �
    из `navigation.data.ts`, «Войти»/`/account` убран из публичной шапки.
 7) ~~«PROMPT-29-temnaya-tema-pilot»~~ — сделано: механизм + пилот
    `/video-dlya-marketpleysov`, хвост фазы 3 (вес H1/H2). Дальше — перевод
-   остальных 10 статических + 48 V3-страниц по инструкции выше, возможно
-   второй моделью в `qwen/site`. Когда все переведены — тёмная тема
-   становится умолчанием, светлые значения и `--ds-accent-text-legacy`
-   удаляются (отдельная задача, не эта фаза).
+   остальных 69 страниц по инструкции выше, возможно второй моделью в
+   `qwen/site`. Когда все переведены — тёмная тема становится умолчанием,
+   светлые значения и `--ds-accent-text-legacy` удаляются (отдельная задача,
+   не эта фаза).
+8) ~~«PROMPT-30-brendbuk-komponenty»~~ — сделано: набор компонентов брендбука
+   (`public/bb-components.css`, см. «Компоненты брендбука» выше), Roboto Mono
+   self-hosted, витрина `/_kit`, пилот `/video-dlya-marketpleysov` собран
+   заново на компонентах. Влит `7e422ed` (qwen/site, инвентаризация фазы 5) —
+   `--ds-accent-text` определён, «~47» исправлено на 69. Багфиксы по всему
+   сайту (владелец, iPhone, §9.1): пилюля фильтров портфолио упиралась в край
+   экрана на мобильном (`.v3-filters`, `design-system.css`) — поле теперь
+   16px; «Услуги»/«Портфолио» в мобильном меню были светлым по светлому до
+   нажатия (`.nav-dropdown-mobile-group summary` не имел своего цвета в
+   `@media (max-width: 900px)`) — исправлено. Остальное из §9.2 (шапка V3 →
+   `bb-nav`, фильтры → `bb-filter`, карточка проекта, подвал на всех
+   страницах) — в `/_kit` как превью, на живые страницы не выкатывалось,
+   ждёт «да» владельца.
 
 ## Осталось — по приоритету
 
@@ -354,9 +467,13 @@ cyrillic/cyrillic-ext/latin/latin-ext, лицензия OFL рядом), Mono �
 
 ### 2. Перевод на тёмную тему
 Механизм и пилот `/video-dlya-marketpleysov` сделаны (PROMPT-29). Осталось:
-~47 светлых страниц (10 статических + все V3), постранично, отдельным
-коммитом на страницу, по инструкции в «Тёмная тема: как перевести следующую
-страницу» выше. Главная не переведена — тёмная, но до токенов, отдельный заход.
+**69** светлых страниц (11 статических минус пилот = 10 + 48 V3 + 2 Layout +
+8 юридических + 1 калькулятор), постранично, отдельным коммитом на страницу,
+по инструкции в «Тёмная тема: как перевести следующую страницу» выше. Число
+исправлено с прежних «~47» по инвентаризации qwen/site (`docs/audit/dark-theme-inventory.md`
+§6.5, PROMPT-30 §8.4) — «~47» не сходилось ни с одной комбинацией групп из
+таблицы «Шесть систем шапки и подвала» ниже. Главная не переведена — тёмная,
+но до токенов, отдельный заход.
 Сюда же переписывание `src/legal/legal.css`: он живёт со своим `:root`
 вне системы токенов, это переписывание, а не подмена значений (шрифтовые
 токены уже продублированы в PROMPT-28, цветовые — при переводе на тёмное).

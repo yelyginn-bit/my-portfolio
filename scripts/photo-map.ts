@@ -50,6 +50,11 @@ const PORTFOLIO_DIR = "фото_портфолио";
  * (`--source`), `path.join` разворачивает `..`. Разрешение на публикацию —
  * организатора и людей в кадре — подтверждено владельцем. */
 const BROADCAST_DIR = "../НОТДЕЙЛИ/New";
+/** Репортаж и бэкстейдж с игры 10-го сезона официальной лиги КВН
+ * (15.09.2026, Нижний Новгород) — тоже соседняя папка, не внутри архива.
+ * Разрешение на публикацию в портфолио подтверждено владельцем; детей в
+ * кадрах нет (проверено владельцем). PROMPT-22. */
+const KVN_DIR = "../КВН/Обработано";
 
 export const COLOR_PAIRS: readonly ColorPairSource[] = [
   { rawId: "korona-01-raw", rawSource: `${KORONA_DIR}/raw/Still 2026-08-07 201039_1.31.1.png`, colorId: "korona-01-color", colorSource: `${KORONA_DIR}/color/Still 2026-08-07 200944_1.31.1.png` },
@@ -124,6 +129,14 @@ export const SINGLE_PHOTOS: readonly SinglePhotoSource[] = [
   ]),
   ...sequential(`${PORTFOLIO_DIR}/Софа`, "sofa", [
     "Photo Album 1 - 00000062.jpg", "Photo Album 1 - 00000063.jpg", "Photo Album 1 - 00000118.jpg",
+  ]),
+
+  // Репортаж и бэкстейдж КВН — блок «Репортаж и бэкстейдж: КВН» на /photo.
+  // Порядок = сюжет вечера (PROMPT-22 §3), не порядок съёмки.
+  ...sequential(KVN_DIR, "kvn", [
+    "DSC_7872.png", "DSC_7831.png", "DSC_8115.png", "DSC_7902.png",
+    "DSC_8333.png", "DSC_8206.png", "DSC_8042.png", "DSC_7938.png",
+    "DSC_8310.png", "DSC_8345.png", "DSC_8411.png", "DSC_8153.png",
   ]),
 
   // Бэкстейдж прямой трансляции автофестиваля — для страницы /pryamye-translyacii.

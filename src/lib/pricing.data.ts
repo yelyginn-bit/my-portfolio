@@ -14,6 +14,9 @@ export type PublicPriceItem = {
   href: string;
   portfolioHref: string;
   featured?: boolean;
+  /** Необязательная ссылка «пример работы» рядом с ценой — секция/страница
+   * с доказательством услуги (PROMPT-22 §5). У остальных позиций не задана. */
+  exampleHref?: string;
 };
 
 export const PUBLIC_PRICES: PublicPriceItem[] = [
@@ -22,7 +25,7 @@ export const PUBLIC_PRICES: PublicPriceItem[] = [
   { id: "reels-block", category: "Съёмка", title: "Съёмочный блок Reels", price: "от 22 000 ₽", description: "До трёх часов организованной съёмки по готовому плану.", includes: ["Камера", "Базовый свет", "Запись звука"], limitations: "Монтаж роликов не входит.", timeline: "Одна съёмочная дата", href: "/reels", portfolioHref: "/portfolio/reels" },
   { id: "reels-package", category: "Съёмка", title: "Reels для бизнеса", price: "от 22 000 ₽", description: "Съёмочный блок до 3 часов.", includes: ["Камера", "Базовый свет", "Запись звука"], limitations: "Монтаж роликов не входит.", timeline: "Одна съёмочная дата", href: "/reels", portfolioHref: "/portfolio/reels", featured: true },
   { id: "event", category: "Съёмка", title: "Видеосъёмка мероприятия", price: "от 25 000 ₽", description: "Работа видеографа на событии, минимум три часа.", includes: ["Репортажная съёмка", "Камера", "Базовый звук"], limitations: "Aftermovie и экспресс-монтаж считаются отдельно.", timeline: "От одной даты", href: "/event-video", portfolioHref: "/portfolio/events" },
-  { id: "photo", category: "Фото", title: "Репортажная фотосъёмка", price: "от 6 000 ₽/час", description: "События, команды и рабочие процессы для бизнеса.", includes: ["Съёмка", "Отбор", "Базовая обработка"], limitations: "Минимальный заказ — два часа.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
+  { id: "photo", category: "Фото", title: "Репортажная фотосъёмка", price: "от 6 000 ₽/час", description: "События, команды и рабочие процессы для бизнеса.", includes: ["Съёмка", "Отбор", "Базовая обработка"], limitations: "Минимальный заказ — два часа.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo", exampleHref: "/photo#reportazh" },
   { id: "photo-studio", category: "Фото", title: "Студийная фотосъёмка", price: "от 8 000 ₽/час", description: "Портретная или контентная съёмка с подготовкой и ретушью; аренда студии включена.", includes: ["Подготовка", "Съёмка до 1 часа", "Ретушь 10 кадров", "Аренда студии"], limitations: "Стилист оплачивается отдельно.", timeline: "Обычно 5–7 рабочих дней", href: "/photo", portfolioHref: "/portfolio/photo" },
   { id: "photo-product", category: "Фото", title: "Предметная съёмка", price: "от 1 500 ₽/кадр", description: "Каталожная или имиджевая. Чистый фон или композиция.", includes: ["Съёмка", "Обработка", "Ретушь"], limitations: "Минимальное количество кадров уточняется в брифе.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
   { id: "photo-video-combo", category: "Фото", title: "Фото + Видео", price: "−15%", description: "Заказываете фото и видео в одну смену — скидка на весь проект. Один продакшен, единый стиль.", includes: ["Единая съёмочная смена", "Фото и видео"], limitations: "Действует при заказе в одну смену.", timeline: "По расписанию основной съёмки", href: "/photo", portfolioHref: "/portfolio/photo" },

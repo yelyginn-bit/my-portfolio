@@ -97,6 +97,15 @@
       .gallery-grid .gallery-item img { height: auto; }
       .gallery-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,0.1); padding: clamp(20px, 4vw, 32px); margin-top: 32px; }
       .gallery-cta p { color: var(--ds-text); font-size: 0.95rem; max-width: 44ch; }
+      /* Репортаж и бэкстейдж: КВН (PROMPT-22). Только var(--ds-*) — не
+         локальные --red/--black/--white/--gray этой страницы, чтобы блок
+         пережил перевод /photo на тёмную тему в фазе 5 без правок. */
+      .kvn-lead { color: var(--ds-text-secondary); max-width: 62ch; margin-bottom: 28px; font-size: 0.95rem; }
+      .kvn-full { margin-bottom: 8px; }
+      .kvn-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+      @media (max-width: 640px) { .kvn-grid-2col { grid-template-columns: 1fr; } }
+      .kvn-stats { margin: 20px 0 28px; color: var(--ds-text-secondary); font-size: 0.85rem; letter-spacing: 0.02em; }
+      .kvn-cta { margin-top: 8px; }
       /* Lightbox */
       .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 200; padding: 40px; }
       .lightbox.is-open { display: flex; }
@@ -400,6 +409,64 @@
             Полное портфолио и кейсы — в <a href="/portfolio" style="color:var(--red);">разделе работ</a>
             или по запросу в Telegram под вашу нишу.
           </p>
+        </div>
+      </section>
+
+      <section id="reportazh" aria-label="Репортаж и бэкстейдж: КВН">
+        <div class="wrap">
+          <h2>Репортаж и <span>бэкстейдж: КВН</span></h2>
+          <p class="kvn-lead">Бэкстейдж команды трансляции и зал — игра 10-го сезона официальной лиги КВН, Нижний Новгород</p>
+
+          <div class="kvn-full">
+            <button class="gallery-item" type="button" data-index="41">
+              <img src="/portfolio-photos/kvn-01.webp" srcset="/portfolio-photos/kvn-01-480w.webp 480w, /portfolio-photos/kvn-01-960w.webp 960w, /portfolio-photos/kvn-01.webp 1600w" sizes="100vw" width="1600" height="1065" alt="Полный зал на игре официальной лиги КВН в Нижнем Новгороде в сиреневом свете сцены" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <div class="kvn-grid-2col">
+            <button class="gallery-item" type="button" data-index="42">
+              <img src="/portfolio-photos/kvn-02.webp" srcset="/portfolio-photos/kvn-02-480w.webp 480w, /portfolio-photos/kvn-02-960w.webp 960w, /portfolio-photos/kvn-02.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Мониторы режиссёрского пульта трансляции с заставкой КВН перед началом игры" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="43">
+              <img src="/portfolio-photos/kvn-03.webp" srcset="/portfolio-photos/kvn-03-480w.webp 480w, /portfolio-photos/kvn-03-960w.webp 960w, /portfolio-photos/kvn-03.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Оператор трансляции с плечевой камерой снимает сцену, чёрно-белый кадр" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="44">
+              <img src="/portfolio-photos/kvn-04.webp" srcset="/portfolio-photos/kvn-04-480w.webp 480w, /portfolio-photos/kvn-04-960w.webp 960w, /portfolio-photos/kvn-04.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Ведущий в светлом кардигане приветствует зал поднятой рукой" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="45">
+              <img src="/portfolio-photos/kvn-05.webp" srcset="/portfolio-photos/kvn-05-480w.webp 480w, /portfolio-photos/kvn-05-960w.webp 960w, /portfolio-photos/kvn-05.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Команда в чёрных костюмах и тёмных очках выступает с микрофонами" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="46">
+              <img src="/portfolio-photos/kvn-06.webp" srcset="/portfolio-photos/kvn-06-480w.webp 480w, /portfolio-photos/kvn-06-960w.webp 960w, /portfolio-photos/kvn-06.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Жюри за столом одновременно поднимает оценки пять, четыре и три" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="47">
+              <img src="/portfolio-photos/kvn-07.webp" srcset="/portfolio-photos/kvn-07-480w.webp 480w, /portfolio-photos/kvn-07-960w.webp 960w, /portfolio-photos/kvn-07.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Участник в фуражке пожимает руку смеющемуся члену жюри через стол" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="48">
+              <img src="/portfolio-photos/kvn-08.webp" srcset="/portfolio-photos/kvn-08-480w.webp 480w, /portfolio-photos/kvn-08-960w.webp 960w, /portfolio-photos/kvn-08.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Член жюри улыбается, подперев щёку рукой" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="49">
+              <img src="/portfolio-photos/kvn-09.webp" srcset="/portfolio-photos/kvn-09-480w.webp 480w, /portfolio-photos/kvn-09-960w.webp 960w, /portfolio-photos/kvn-09.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Номер в античных костюмах на фоне яркого экрана с дворцом" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="50">
+              <img src="/portfolio-photos/kvn-10.webp" srcset="/portfolio-photos/kvn-10-480w.webp 480w, /portfolio-photos/kvn-10-960w.webp 960w, /portfolio-photos/kvn-10.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Зрители смеются и аплодируют в креслах зала" loading="lazy" decoding="async" />
+            </button>
+            <button class="gallery-item" type="button" data-index="51">
+              <img src="/portfolio-photos/kvn-11.webp" srcset="/portfolio-photos/kvn-11-480w.webp 480w, /portfolio-photos/kvn-11-960w.webp 960w, /portfolio-photos/kvn-11.webp 1600w" sizes="(min-width: 640px) 50vw, 100vw" width="1600" height="1065" alt="Команда в чёрных костюмах с галстуками аплодирует на сцене" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <div class="kvn-full">
+            <button class="gallery-item" type="button" data-index="52">
+              <img src="/portfolio-photos/kvn-12.webp" srcset="/portfolio-photos/kvn-12-480w.webp 480w, /portfolio-photos/kvn-12-960w.webp 960w, /portfolio-photos/kvn-12.webp 1600w" sizes="100vw" width="1600" height="900" alt="Финальное построение команд на сцене перед экраном десятого сезона КВН" loading="lazy" decoding="async" />
+            </button>
+          </div>
+
+          <p class="kvn-stats">2,5 часа съёмки · 629 кадров · 133 в обработке · обработка — три вечера</p>
+
+          <div class="kvn-cta">
+            <a href="/calculator" class="cta">Фотограф на ваше мероприятие</a>
+          </div>
         </div>
       </section>
 

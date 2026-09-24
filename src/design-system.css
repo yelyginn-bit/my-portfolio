@@ -887,13 +887,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-marquee > div { animation: none; }
   .v3-project-card img, .v3-button { transition: none; }
 }
-
-/* ── V3.1 HOME ESCALATION / PRODUCT MONITOR ─────────────────────────────
-   The source-confirmed showreel is the product: oversized, illuminated and
-   surrounded by a truthful interface rather than contained in a card. */
-
-/* Hero-to-work narrative: orange signal strip, then a near-black OPEN-like edit. */
-
 .v32-work-proof { position: relative; isolation: isolate; overflow: hidden; background: #080808; }
 .v32-work-proof::before { content: ""; position: absolute; z-index: 0; inset: 0; background: linear-gradient(158deg, #080808 0%, #101016 25%, #171116 47%, #0e1119 72%, #080808 100%); pointer-events: none; }
 .v32-work-proof > * { position: relative; z-index: 1; }
@@ -901,37 +894,14 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v32-work-proof .v3-work::before, .v32-work-proof .v32-proof::before { background: none; }
 
 /* Фон меняет положение вместе с разделом, а не крутится сам по себе. */
-@supports (animation-timeline: view()) {
-
-}
 @keyframes v3-work-gradient-on-scroll {
   from { transform: translate3d(-5%, -9%, 0) scale(1.08); }
   to { transform: translate3d(6%, 12%, 0) scale(1.12); }
 }
 
-.v31-home .v3-work .v3-project-card--metro-concerts h3 span,
-.v31-home .v3-work .v3-project-card--sber-architecture h3 span,
 
-@keyframes v31-type-in { from { opacity: 0; transform: translateY(48px) scaleX(.94); } }
-@keyframes v31-core-in { from { opacity: 0; transform: translateY(70px) scale(.92); } }
-@keyframes v31-screen-reveal { from { clip-path: inset(0 100% 0 0); } }
-@keyframes v31-light-in { from { opacity: 0; transform: scale(.7); } }
 
-@media (max-width: 1100px) and (min-width: 768px) {
 
-}
-
-@media (max-width: 900px) {
-
-}
-
-@media (max-width: 767px) {
-
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-}
 
 /* ── Финальный проход: геометрия публичных страниц ───────────────────────
    В проекте есть несколько исторических слоёв CSS. Этот компактный слой

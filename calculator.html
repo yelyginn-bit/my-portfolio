@@ -45,6 +45,15 @@
       .calc-nav { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
       .calc-back { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); transition: color 0.2s; }
       .calc-back:hover { color: var(--white); }
+      /* Выпадающее «Услуги» в шапке — details/summary, тот же приём, что уже
+         используют мобильные меню V3/Layout (nav-dropdown-mobile-group) для
+         выпадающих пунктов, просто в цветах этой страницы. */
+      .calc-nav-dropdown { position: relative; }
+      .calc-nav-dropdown summary { list-style: none; cursor: pointer; }
+      .calc-nav-dropdown summary::-webkit-details-marker { display: none; }
+      .calc-nav-dropdown-panel { position: absolute; top: calc(100% + 10px); left: 0; z-index: 20; display: grid; gap: 2px; min-width: 220px; padding: 8px; border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; background: #111; box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+      .calc-nav-dropdown-panel a { padding: 8px 10px; border-radius: 5px; font-size: 12px; letter-spacing: 0.04em; text-transform: none; color: rgba(255,255,255,0.78); }
+      .calc-nav-dropdown-panel a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
 
       /* Footer — карта сайта (PROMPT-21 §4), раньше отсутствовала вообще */
       .calc-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }

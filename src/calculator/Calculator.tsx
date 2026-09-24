@@ -15,7 +15,7 @@ import { secureFetch } from "../lib/api";
 import { LEGAL } from "../config/legal";
 import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
-import { ABOUT_LINK, BLOG_LINK, FOOTER_GROUPS, PHOTO_LINK, PORTFOLIO_OVERVIEW_LINK, PRICES_LINK } from "../lib/navigation.data";
+import { FOOTER_GROUPS, PRIMARY_NAV } from "../lib/navigation.data";
 
 const store = getStore();
 
@@ -219,12 +219,17 @@ export default function Calculator() {
       <div className="calc-top">
         <a className="calc-logo" href="/">YELYG<span>I</span>NN</a>
         <nav className="calc-nav" aria-label="Основная навигация">
-          <a className="calc-back" href={PORTFOLIO_OVERVIEW_LINK.href}>{PORTFOLIO_OVERVIEW_LINK.label}</a>
-          <a className="calc-back" href={PHOTO_LINK.href}>{PHOTO_LINK.label}</a>
-          <a className="calc-back" href={PRICES_LINK.href}>{PRICES_LINK.label}</a>
-          <a className="calc-back" href={BLOG_LINK.href}>{BLOG_LINK.label}</a>
-          <a className="calc-back" href={ABOUT_LINK.href}>{ABOUT_LINK.label}</a>
-          <a className="calc-back" href="/account">{session ? "Кабинет" : "Войти"}</a>
+          {PRIMARY_NAV.map((entry) => entry.kind === "dropdown" ? (
+            <details key={entry.label} className="calc-nav-dropdown">
+              <summary className="calc-back">{entry.label}</summary>
+              <div className="calc-nav-dropdown-panel">
+                {entry.href && <a href={entry.href}>Все — {entry.label.toLowerCase()}</a>}
+                {entry.items.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+              </div>
+            </details>
+          ) : (
+            <a key={entry.href} className="calc-back" href={entry.href}>{entry.label}</a>
+          ))}
         </nav>
       </div>
 

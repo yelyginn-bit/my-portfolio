@@ -226,7 +226,21 @@ const seeds: readonly ProjectSeed[] = [
   { id: "yango-arabic", slug: "yango-arabic-15", title: "Yango. Арабская версия 15 секунд", client: "Yango", sourceCategory: "презентационные", range: [85, 85], roles: ["edit", "color"], formats: ["commercial", "presentation"], responsibilities: ["Монтаж", "Адаптация версии", "Локальная работа с цветом"], featured: false, description: "Пятнадцатисекундная арабская версия ролика Yango. Я сделал монтаж, адаптацию и локальную работу с цветом." },
   { id: "teraflex", slug: "teraflex-presentation", title: "Teraflex. Презентация", client: "Teraflex", sourceCategory: "презентационные", range: [86, 86], roles: ["edit", "graphics"], formats: ["presentation", "commercial"], responsibilities: ["Тритмент", "Черновой и чистовой монтаж", "Черновая инфографика", "Анимирование раскадровок", "Черновая нейроозвучка"], featured: true, description: "Презентационный ролик для инвесторов, собранный поэтапно от тритмента до чистового монтажа." },
   { id: "caprigo-presentation", slug: "caprigo-presentation", title: "Caprigo. Презентация производства", client: "Caprigo", sourceCategory: "презентационные", range: [87, 87], roles: ["edit", "color", "sound"], formats: ["presentation", "product", "commercial"], responsibilities: ["Монтаж", "Цвет", "Звук"], featured: true, description: "Презентационное видео о производстве Caprigo. Я сделал монтаж, цвет и звук." },
-  { id: "korona-factory", slug: "korona-production", title: "KORONA. Производство", client: "KORONA", sourceCategory: "заводы / производства", range: [88, 88], roles: ["edit", "color", "graphics"], formats: ["factory", "presentation", "commercial"], responsibilities: ["Монтаж", "Цвет", "Подбор музыки", "Поиск визуальной концепции", "Инфографика"], featured: true, description: "Презентационное видео о производстве сельскохозяйственной техники." },
+  {
+    id: "korona-factory", slug: "korona-production", title: "KORONA: отчётный ролик о производстве", client: "KORONA",
+    sourceCategory: "заводы / производства", range: [88, 88],
+    roles: ["edit", "color", "graphics"], formats: ["factory", "presentation", "commercial"],
+    responsibilities: ["Монтаж", "Цвет", "Подбор музыки", "Поиск визуальной концепции", "Инфографика"], featured: true,
+    // Вводная (PROMPT-26 §1) — дословно, не старое короткое description.
+    description: "Производственный ролик для KORONA — компании, которая выпускает мотоблоки и другую технику. Моя часть — весь постпродакшн.",
+    caseStudy: {
+      task: "Собрать из съёмки на производстве отчётный ролик о компании.",
+      role: "Монтаж, инфографика, цветокоррекция и звук.",
+      method: "Материал снят на Sony FX3 с оптикой G-Master 16–35, 24–70 и 70–200 и с дрона DJI Inspire 3. Из него — монтаж, инфографика поверх кадра, цвет и звук. Пары «до / после» по цвету с этого проекта стоят на странице цветокоррекции.",
+      result: "Отчётный ролик о производстве KORONA.",
+      relatedServiceHrefs: ["/cvetokorrekciya"],
+    },
+  },
   { id: "gorky-war", slug: "gorky-v-teni-voyny", title: "Горький в тени войны", sourceCategory: "спектакли", range: [89, 89], roles: ["operator", "edit", "multicam", "color", "sound"], formats: ["theatre", "event", "broadcast"], responsibilities: ["Оператор", "Режиссура монтажа", "Мультикамерный монтаж", "Цвет", "Работа со звуком", "Интеграция готовых титров и логотипов"], featured: true, description: "Мультикамерная запись спектакля в Нижегородском театре юного зрителя." },
   { id: "social-uchastkovy", slug: "socialnyy-uchastkovyy", title: "Губернский проект — Социальный участковый", sourceCategory: "интервью", range: [90, 90], roles: ["light"], formats: ["interview"], responsibilities: ["Свет для интервью"], featured: false, description: "Работал по свету: ставил свет на интервью с героями проекта.", evidenceSource: "со слов владельца, 17.09.2026" },
 ] as const;

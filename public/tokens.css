@@ -43,15 +43,51 @@
   --ds-s10: 6rem;
   --ds-s11: 8rem;
   --ds-s12: 10rem;
-  --ds-display: clamp(4.5rem, 9vw, 8.5rem);
-  --ds-h1: clamp(3.5rem, 7.5vw, 7rem);
-  --ds-h2: clamp(2.75rem, 5.5vw, 5rem);
-  --ds-h3: clamp(1.5rem, 2.3vw, 2.25rem);
-  --ds-lead: clamp(1.125rem, 1.65vw, 1.5rem);
-  --ds-body-lg: clamp(1.0625rem, 1.2vw, 1.25rem);
-  --ds-body: clamp(1rem, 1vw, 1.125rem);
+  /* ── Типографика (PROMPT-28, фаза 3): Figma «02 / TYPOGRAPHY», фрейм
+     p3IBlfFFdnA03s3U7UiarF. Display и Body — одно семейство (Inter), чтобы
+     не тащить второй гротеск. Mono — уже был системным стеком для подписей
+     сайта (ui-monospace…), решение владельца: оставить как есть, новый
+     моноширинный не выбирали. Шкала 104/72/48/32/20/16/12/11 — фиксированные
+     шаги; --ds-h1..--ds-h3 ниже клампятся МЕЖДУ шагами шкалы, не произвольными
+     числами. */
+  --ds-font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --ds-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --ds-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ds-fs-104: 6.5rem;
+  --ds-fs-72: 4.5rem;
+  --ds-fs-48: 3rem;
+  --ds-fs-32: 2rem;
+  --ds-fs-20: 1.25rem;
+  --ds-fs-16: 1rem;
+  --ds-fs-12: 0.75rem;
+  --ds-fs-11: 0.6875rem;
+  /* Узкий трекинг — только у крупного (§2.4 промпта): одно значение для
+     дисплея, одно для H2. У текста и мелкого — по умолчанию 0, нигде не
+     объявляем отдельно. */
+  --ds-track-display: -0.035em;
+  --ds-track-h2: -0.025em;
+  --ds-display: clamp(var(--ds-fs-48), 8vw, var(--ds-fs-104));
+  --ds-h1: clamp(var(--ds-fs-32), 6vw, var(--ds-fs-72));
+  --ds-h2: clamp(var(--ds-fs-20), 4vw, var(--ds-fs-48));
+  --ds-h3: var(--ds-fs-32);
+  --ds-lead: var(--ds-fs-20);
+  --ds-body-lg: var(--ds-fs-20);
+  --ds-body: var(--ds-fs-16);
   --ds-grid-max: 1720px;
   --ds-grid-gap: clamp(10px, 1.15vw, 20px);
   --ds-header-z: 120;
   color-scheme: light;
 }
+
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-400-cyrillic-ext.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/inter/inter-500-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/inter/inter-500-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/inter/inter-500-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/inter/inter-500-cyrillic-ext.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-cyrillic-ext.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }

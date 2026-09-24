@@ -17,12 +17,6 @@
     "fontFamily": 0,
     "total": 10
   },
-  "src/public-polish.css": {
-    "color": 17,
-    "radius": 0,
-    "fontFamily": 0,
-    "total": 17
-  },
   "src/v3-polish.css": {
     "color": 77,
     "radius": 28,

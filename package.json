@@ -13,7 +13,7 @@
     "lint": "tsc --noEmit",
     "test": "node --test tests/*.test.js",
     "test:integration": "node --test tests/integration/*.test.js",
-    "test:portfolio": "tsx --test tests/portfolio-registry.test.ts tests/portfolio-image.test.ts tests/v3.test.ts tests/seo.test.ts tests/palette.test.ts tests/navigation.test.ts tests/typography.test.ts tests/theme.test.ts tests/docs-not-in-dist.test.ts tests/bb-components.test.ts tests/kit-page.test.ts tests/production-routes.test.ts",
+    "test:portfolio": "tsx --test tests/portfolio-registry.test.ts tests/portfolio-image.test.ts tests/v3.test.ts tests/seo.test.ts tests/palette.test.ts tests/navigation.test.ts tests/typography.test.ts tests/theme.test.ts tests/docs-not-in-dist.test.ts tests/bb-components.test.ts tests/kit-page.test.ts tests/production-routes.test.ts tests/css-literals.test.ts",
     "check": "npm run lint && npm test && npm run test:integration && npm run build && npm run test:portfolio && npm run check:budget",
     "check:budget": "node scripts/check-build-budget.mjs",
     "smoke:production": "node scripts/smoke-production.mjs"

@@ -389,6 +389,10 @@ body:has(.v3-editorial-page) {
 .v3-about-page h2 { margin: 0 0 2rem; font: 800 clamp(2.8rem, 5vw, 5.5rem)/.87 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.05em; }
 .v3-about-page p { color: rgba(244,244,239,.68); line-height: 1.55; }
 .v3-about-page .v3-button { align-self: flex-start; margin-top: 1.5rem; }
+.v3-about-teaching { max-width: 62ch; padding-bottom: clamp(2rem, 5vw, 5rem); }
+.v3-about-teaching h2 { margin: 0 0 1.25rem; font: 800 clamp(1.4rem, 2.4vw, 1.9rem)/1.2 "Helvetica Neue", Arial, sans-serif; letter-spacing: -.02em; }
+.v3-about-teaching p { margin: 0 0 1rem; color: rgba(244,244,239,.68); line-height: 1.6; }
+.v3-about-teaching p:last-child { margin-bottom: 0; }
 .v3-contact-page { padding-bottom: var(--v3-module-gap); }
 .v3-contact-page .v3-contact { border-radius: 24px; }
 .v3-redirect { min-height: 100svh; display: grid; place-content: center; gap: 1rem; color: #f4f4ef; background: #080808; text-align: center; }

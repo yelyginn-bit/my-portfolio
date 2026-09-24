@@ -38,7 +38,7 @@ const PROBES: ReadonlyArray<{ label: string; selector: string }> = [
   { label: "шапка", selector: "header" },
   { label: "подвал", selector: "footer" },
   { label: "h1", selector: "h1" },
-  { label: "kickер/.eyebrow", selector: ".eyebrow, .v3-kicker, .ds-eyebrow, .calc-eyebrow, [class*='kicker']" },
+  { label: "кер/.eyebrow", selector: ".eyebrow, .v3-kicker, .ds-eyebrow, .calc-eyebrow, [class*='kicker']" },
   { label: "кнопка", selector: "button, .cta, .v3-button, .calc-cta, .site-static-header__cta, a[href='/contact']" },
 ];
 
@@ -122,6 +122,8 @@ export function rgbStringsMatch(a: string, b: string): boolean {
   return ha !== null && ha === hb;
 }
 
+/** Что снято с одного элемента. Набор свойств — под §3 «снимок до/после»:
+ * цвет, фон, шрифт, размер, скругление, отступы. */
 interface ProbeSample {
   label: string;
   selector: string;
@@ -129,6 +131,22 @@ interface ProbeSample {
   color: string;
   background: string;
   backgroundImage: string;
+  fontFamily: string;
+  fontSize: string;
+  fontWeight: string;
+  borderRadius: string;
+  padding: string;
+  margin: string;
+  contrast: number | null;
+}
+
+/** Состояние :hover / :focus-visible одного интерактивного элемента. */
+export interface StateSample {
+  what: string;
+  color: string;
+  background: string;
+  outline: string;
+  opacity: string;
   contrast: number | null;
 }
 
@@ -141,6 +159,7 @@ export interface RouteAudit {
   clientWidth: number;
   offscreen: Array<{ tag: string; cls: string; left: number; right: number }>;
   menuItems: Array<{ text: string; color: string; background: string; contrast: number | null }> | null;
+  states: Array<{ label: string; states: Record<string, StateSample> }>;
   probes: ProbeSample[];
 }
 
@@ -151,8 +170,27 @@ interface PageLike {
   goto(url: string, options?: Record<string, unknown>): Promise<unknown>;
   evaluate<T>(fn: (...args: never[]) => T, ...args: unknown[]): Promise<T>;
   click(selector: string): Promise<void>;
+  hover(selector: string): Promise<void>;
+  focus(selector: string): Promise<void>;
   $$eval<R>(selector: string, fn: (els: never[]) => R): Promise<R>;
 }
+
+interface StateRead {
+  color: string;
+  background: string;
+  outline: string;
+  opacity: string;
+  focusVisible: boolean;
+}
+
+/** Снимаем :hover и :focus-visible у немногих интерактивных элементов —
+ * полного покрытия 70 маршрутов он не требует, а ловит как раз то, что
+ * в QWEN-02 осталось за кадром (§6 «что осталось непроверенным»). */
+const STATE_TARGETS: ReadonlyArray<{ label: string; selector: string }> = [
+  { label: "ссылка навигации", selector: "header nav a, .site-static-nav > a, .ds-nav a, .v3-nav__links a, .calc-nav a, nav a" },
+  { label: "кнопка/CTA", selector: ".cta, .v3-button, .calc-cta, .site-static-header__cta, .ds-header-cta, button" },
+  { label: "ссылка футера", selector: "footer a, .site-static-footer a, .ds-footer a, .calc-footer a, .v3-footer a" },
+];
 
 interface GeometryResult {
   bodyBackgroundImage: string;
@@ -182,9 +220,10 @@ export async function auditPage(
 
   const probes = await page.evaluate((labels: typeof PROBES) => labels.map((p) => {
     const el = document.querySelector(p.selector);
-    if (!el) return { label: p.label, selector: p.selector, found: false, color: "", background: "", backgroundImage: "", contrast: null };
+    const empty = { label: p.label, selector: p.selector, found: false, color: "", background: "", backgroundImage: "", fontFamily: "", fontSize: "", fontWeight: "", borderRadius: "", padding: "", margin: "", contrast: null };
+    if (!el) return empty;
     const cs = getComputedStyle(el);
-    return { label: p.label, selector: p.selector, found: true, color: cs.color, background: cs.backgroundColor, backgroundImage: cs.backgroundImage, contrast: null };
+    return { label: p.label, selector: p.selector, found: true, color: cs.color, background: cs.backgroundColor, backgroundImage: cs.backgroundImage, fontFamily: cs.fontFamily.slice(0, 40), fontSize: cs.fontSize, fontWeight: cs.fontWeight, borderRadius: cs.borderRadius, padding: cs.padding, margin: cs.margin, contrast: null };
   }), PROBES);
 
   const geometry = await page.evaluate((): GeometryResult => ({
@@ -215,6 +254,33 @@ export async function auditPage(
     }
   }
 
+  const states: RouteAudit["states"] = [];
+  for (const target of STATE_TARGETS) {
+    const exists = await page.evaluate((selector: string) => Boolean(document.querySelector(selector)), target.selector);
+    if (!exists) continue;
+    const read = () => page.evaluate((selector: string): StateRead | null => {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      const cs = getComputedStyle(el);
+      let focusVisible = false;
+      try { focusVisible = el.matches(":focus-visible"); } catch { focusVisible = false; }
+      return { color: cs.color, background: cs.backgroundColor, outline: `${cs.outlineWidth} ${cs.outlineStyle} ${cs.outlineColor}`, opacity: cs.opacity, focusVisible };
+    }, target.selector);
+
+    const found: Record<string, StateSample> = {};
+    const keep = (name: string, r: StateRead | null) => {
+      if (!r) return;
+      const fg = toHex(r.color);
+      const bg = toHex(r.background);
+      found[name] = { what: target.label, color: r.color, background: r.background, outline: r.outline, opacity: r.opacity, contrast: fg && bg ? Number(contrastRatio(fg, bg).toFixed(2)) : null };
+    };
+
+    keep("обычное", await read());
+    try { await page.hover(target.selector); keep("hover", await read()); } catch { /* элемент мог быть перекрыт — не повод ронять прогон */ }
+    try { await page.focus(target.selector); const r = await read(); keep(r?.focusVisible ? "focus-visible" : "focus (не visible)", r); } catch { /* то же */ }
+    if (Object.keys(found).length) states.push({ label: target.label, states: found });
+  }
+
   return {
     route,
     width,
@@ -224,6 +290,7 @@ export async function auditPage(
     clientWidth: geometry.clientWidth,
     offscreen: width === 390 ? geometry.offscreen : [],
     menuItems,
+    states,
     probes: (probes as ProbeSample[]).map((p) => {
       const bg = toHex(p.background);
       const fg = toHex(p.color);
@@ -287,6 +354,27 @@ function renderMarkdown(audits: RouteAudit[]): string {
   for (const a of overflow) {
     lines.push(`- \`${a.route}\` @${a.width}: scrollWidth ${a.scrollWidth} против clientWidth ${a.clientWidth}`);
     for (const o of a.offscreen.slice(0, 6)) lines.push(`    · <${o.tag} class="${o.cls}"> left=${o.left} right=${o.right}`);
+  }
+
+  lines.push("", "## Открытое мобильное меню (390px)", "", "| маршрут | пункт | цвет | фон | контраст |", "|---|---|---|---|---|");
+  const menuRows = audits.filter((a) => a.menuItems?.length);
+  if (!menuRows.length) lines.push("| — | ни на одном маршруте не нашлось кнопки меню | | | |");
+  for (const a of menuRows) {
+    for (const m of a.menuItems ?? []) {
+      lines.push(`| \`${a.route}\` | ${m.text} | ${m.color} | ${m.background} | ${m.contrast ?? "—"} |`);
+    }
+  }
+
+  lines.push("", "## Состояния :hover и :focus-visible", "",
+    "| маршрут | px | элемент | состояние | цвет | фон | outline | контраст |", "|---|---|---|---|---|---|---|---|");
+  const stateRows = audits.filter((a) => a.states.length);
+  if (!stateRows.length) lines.push("| — | — | состояний не снято | | | | | |");
+  for (const a of stateRows) {
+    for (const s of a.states) {
+      for (const [name, v] of Object.entries(s.states)) {
+        lines.push(`| \`${a.route}\` | ${a.width} | ${s.label} | ${name} | ${v.color} | ${v.background} | ${v.outline} | ${v.contrast ?? "—"} |`);
+      }
+    }
   }
   return `${lines.join("\n")}\n`;
 }

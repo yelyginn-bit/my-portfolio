@@ -164,15 +164,22 @@ export interface RouteAudit {
 }
 
 /** Минимальный профиль страницы Playwright, нужный этому скрипту. Держится
- * структурным типом, а не `import type` — модуля playwright в проекте нет. */
+ * структурным типом, а не `import type` — чтобы скрипт оставался запускаемым
+ * там, где playwright не установлен (в CI без бинаря браузера). */
 interface PageLike {
   setViewportSize(options: { width: number; height: number }): Promise<void>;
   goto(url: string, options?: Record<string, unknown>): Promise<unknown>;
+  waitForFunction(
+    fn: () => boolean,
+    arg?: unknown,
+    options?: Record<string, unknown>,
+  ): Promise<unknown>;
   evaluate<T>(fn: (...args: never[]) => T, ...args: unknown[]): Promise<T>;
   click(selector: string): Promise<void>;
   hover(selector: string): Promise<void>;
   focus(selector: string): Promise<void>;
   $$eval<R>(selector: string, fn: (els: never[]) => R): Promise<R>;
+  mouse: { move(x: number, y: number): Promise<void> };
 }
 
 interface StateRead {
@@ -208,6 +215,28 @@ interface MenuLinkResult {
 const MENU_BUTTON_SELECTOR = ".ds-menu-button, .site-static-menu-button, .v3-nav__menu, button[aria-controls*='menu' i], button[aria-label*='меню' i]";
 const MENU_LINKS_SELECTOR = "#site-mobile-menu a, .ds-mobile-menu a, .v3-mobile-menu a, [id*='mobile-menu' i] a, [class*='mobile-menu' i] a";
 
+/** Условие «страница в покое»: ни одной конечной во времени анимации,
+ * играющей сейчас. Бесконечные (бегущая строка) и scroll-driven (градиент
+ * `.v3-work` на главной) не ждём — они не заканчиваются, а их текущий кадр и
+ * есть обычное состояние. */
+const isSettled = () =>
+  (document.getAnimations ? document.getAnimations() : []).every(
+    (a) =>
+      a.playState !== "running" ||
+      a.timeline !== document.timeline ||
+      (a.effect && a.effect.getTiming().iterations === Infinity),
+  );
+
+/** Снимок сразу после «load» — это середина перехода. На /content-day в момент
+ * load играёт 33 анимации, и getComputedStyle отдал стартовое значение
+ * rgba(10,10,10,.72) вместо итогового --site-muted (#5f5f59), хотя класс
+ * body.site-static уже висел. Разница между двумя прогонами выглядела как
+ * регрессия правки, а была замером тайминга — отсюда это ожидание. Timeout не
+ * роняет прогон: страница с вечно играющей анимацией просто измерится как есть. */
+async function waitForSettled(page: PageLike) {
+  await page.waitForFunction(isSettled, null, { timeout: 2500 }).catch(() => {});
+}
+
 /** Один проход по маршруту в контексте страницы Playwright. */
 export async function auditPage(
   page: PageLike,
@@ -217,6 +246,7 @@ export async function auditPage(
 ): Promise<RouteAudit> {
   await page.setViewportSize({ width, height: 900 });
   await page.goto(`${origin}${route}`, { waitUntil: "load" });
+  await waitForSettled(page);
 
   const probes = await page.evaluate((labels: typeof PROBES) => labels.map((p) => {
     const el = document.querySelector(p.selector);
@@ -242,6 +272,7 @@ export async function auditPage(
     const hasMenuButton = await page.evaluate((selector: string) => Boolean(document.querySelector(selector)), MENU_BUTTON_SELECTOR);
     if (hasMenuButton) {
       await page.click(MENU_BUTTON_SELECTOR);
+      await waitForSettled(page);
       const links = await page.$$eval(MENU_LINKS_SELECTOR, (els: never[]) => (els as HTMLAnchorElement[]).map((a): MenuLinkResult => {
         const cs = getComputedStyle(a);
         return { text: a.textContent?.trim().slice(0, 24) ?? "", color: cs.color, background: cs.backgroundColor };
@@ -258,14 +289,23 @@ export async function auditPage(
   for (const target of STATE_TARGETS) {
     const exists = await page.evaluate((selector: string) => Boolean(document.querySelector(selector)), target.selector);
     if (!exists) continue;
-    const read = () => page.evaluate((selector: string): StateRead | null => {
-      const el = document.querySelector(selector);
-      if (!el) return null;
-      const cs = getComputedStyle(el);
-      let focusVisible = false;
-      try { focusVisible = el.matches(":focus-visible"); } catch { focusVisible = false; }
-      return { color: cs.color, background: cs.backgroundColor, outline: `${cs.outlineWidth} ${cs.outlineStyle} ${cs.outlineColor}`, opacity: cs.opacity, focusVisible };
-    }, target.selector);
+    // Ждём дозавершения перехода перед каждой меркой, иначе снимается середина
+    // анимации цвета.
+    const read = async (): Promise<StateRead | null> => {
+      await waitForSettled(page);
+      return page.evaluate((selector: string): StateRead | null => {
+        const el = document.querySelector(selector);
+        if (!el) return null;
+        const cs = getComputedStyle(el);
+        let focusVisible = false;
+        try { focusVisible = el.matches(":focus-visible"); } catch { focusVisible = false; }
+        return { color: cs.color, background: cs.backgroundColor, outline: `${cs.outlineWidth} ${cs.outlineStyle} ${cs.outlineColor}`, opacity: cs.opacity, focusVisible };
+      }, target.selector);
+    };
+    // Курсор остаётся на элементе после page.hover(), поэтому перед меркой
+    // «обычное» следующей цели мышь уводится — иначе обычный_state читался бы в
+    // :hover. Для hover/focus этот шаг наоборот запрещён.
+    const away = () => page.mouse.move(0, 0);
 
     const found: Record<string, StateSample> = {};
     const keep = (name: string, r: StateRead | null) => {
@@ -275,6 +315,7 @@ export async function auditPage(
       found[name] = { what: target.label, color: r.color, background: r.background, outline: r.outline, opacity: r.opacity, contrast: fg && bg ? Number(contrastRatio(fg, bg).toFixed(2)) : null };
     };
 
+    await away();
     keep("обычное", await read());
     try { await page.hover(target.selector); keep("hover", await read()); } catch { /* элемент мог быть перекрыт — не повод ронять прогон */ }
     try { await page.focus(target.selector); const r = await read(); keep(r?.focusVisible ? "focus-visible" : "focus (не visible)", r); } catch { /* то же */ }
@@ -396,7 +437,12 @@ if (process.argv[1] && path.resolve(process.argv[1]).endsWith("computed-style-au
   };
   const page = await browser.newPage();
   const audits: RouteAudit[] = [];
-  for (const route of INDEXABLE_ROUTES.map((r) => r.path)) {
+  // --only <подстрока> — прогон части маршрутов: точечная перепроверка после
+  // правки одной страницы, а не всех 70 (полный прогон занимает ~30 минут).
+  const at = process.argv.indexOf("--only");
+  const only = at !== -1 ? process.argv[at + 1] : undefined;
+  const routes = INDEXABLE_ROUTES.map((r) => r.path).filter((r) => !only || r.includes(only));
+  for (const route of routes) {
     for (const width of WIDTHS) {
       try {
         audits.push(await auditPage(page, origin, route, width));

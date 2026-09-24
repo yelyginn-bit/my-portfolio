@@ -5,7 +5,7 @@
  * сейчас — он не даёт ему расти. Базлайн фиксирует фактическое состояние на
  * 25.09.2026 03:5x, новые провалы красные.
  *
- * Зачем оба: docs/audit/computed-style.md (А1) measureно нашёл на 390px
+ * Зачем оба: замеры А1 (docs/audit/computed-style.md) нашли на 390px
  * 12 маршрутов с горизонтальным скроллом (три статьи блога — +390px, то есть
  * страница вдвое шире экрана) и провалы контраста; без теста это молча
  * размножается.
@@ -50,8 +50,14 @@ function readBaseline(): Record<string, RouteBaseline> {
   return JSON.parse(fs.readFileSync(file, "utf8")) as Record<string, RouteBaseline>;
 }
 
-/** Считает всё внутри страницы — one round-trip per route. */
-const AUDIT_FN = `(width) => {
+/** Считает всё внутри страницы — one round-trip per route.
+ * Асинхронность нужна не для самой математики, а для ожидания в начале:
+ * сразу после «load» на странице играются анимации появления, и
+ * getComputedStyle отдаёт стартовые значения перехода (на /content-day в
+ * момент load их 33). Без ожидания baseline зависел бы от тайминга запуска.
+ * Бесконечные анимации не ждём — они не заканчиваются. */
+const AUDIT_FN = `async (width) => {
+  await (document.getAnimations ? document.getAnimations() : []).filter((a) => a.playState === "running" && (!a.effect || a.effect.getTiming().iterations !== Infinity) && a.timeline === document.timeline).map((a) => a.finished.catch(() => {}));
   const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (m) { const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; } return null; };
   const composite = (layers) => { const L = layers.slice().reverse(); let o = [255, 255, 255]; for (const [r, g, b, a] of L) o = [Math.round(r * a + o[0] * (1 - a)), Math.round(g * a + o[1] * (1 - a)), Math.round(b * a + o[2] * (1 - a))]; return o; };
   const effBg = (el) => { const layers = []; let n = el;

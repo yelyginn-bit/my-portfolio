@@ -371,14 +371,14 @@ body:has(.v3-editorial-page) {
 
 .v3-editorial-page { min-height: 100svh; padding-top: clamp(6.8rem, 8vw, 8.5rem); color: #f4f4ef; background: #080808; }
 .v3-editorial-hero { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--v3-module-gap); align-items: end; padding-bottom: clamp(2rem, 4vw, 4rem); border-bottom: 1px solid rgba(255,255,255,.24); }
-.v3-editorial-hero h1 { margin: 0; font: 800 clamp(4.2rem, 8.5vw, 9rem)/.82 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-wrap: balance; }
+.v3-editorial-hero h1 { margin: 0; font: 700 clamp(4.2rem, 8.5vw, 9rem)/.82 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-wrap: balance; }
 .v3-editorial-hero h1 i { color: var(--ds-orange); font-family: Georgia, serif; font-weight: 400; }
 .v3-editorial-hero > p:last-child { margin: 0; color: rgba(244,244,239,.64); line-height: 1.55; }
 .v3-blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem) clamp(6rem, 10vw, 10rem); }
 .v3-blog-grid > a { position: relative; min-height: clamp(300px, 36vw, 520px); display: flex; flex-direction: column; padding: clamp(1.25rem, 2.6vw, 2.5rem); border: 1px solid rgba(255,255,255,.22); border-radius: 20px; color: inherit; background: #141414; text-decoration: none; overflow: hidden; }
 .v3-blog-grid > a:nth-child(1), .v3-blog-grid > a:nth-child(4) { background: #21140f; }
 .v3-blog-grid span { color: var(--ds-orange); font: 700 .56rem/1 var(--ds-font-mono); letter-spacing: .08em; }
-.v3-blog-grid h2 { margin: auto 0 1rem; font: 800 clamp(2.1rem, 4.3vw, 5rem)/.88 var(--ds-font-display); letter-spacing: var(--ds-track-h2); text-transform: uppercase; text-wrap: balance; }
+.v3-blog-grid h2 { margin: auto 0 1rem; font: 700 clamp(2.1rem, 4.3vw, 5rem)/.88 var(--ds-font-display); letter-spacing: var(--ds-track-h2); text-transform: uppercase; text-wrap: balance; }
 .v3-blog-grid p { max-width: 36ch; margin: 0; color: rgba(244,244,239,.62); line-height: 1.5; }
 .v3-blog-grid svg { position: absolute; top: 1.25rem; right: 1.25rem; width: 20px; }
 .v3-about-page { display: grid; grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr); gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem); }
@@ -386,11 +386,11 @@ body:has(.v3-editorial-page) {
 .v3-about-page figure img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .v3-about-page figcaption { position: absolute; right: 0; bottom: 0; left: 0; padding: .7rem; background: #101010; font: 650 .54rem/1 var(--ds-font-mono); }
 .v3-about-page > div { display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.4rem, 3vw, 3rem); border-radius: 20px; background: #171717; }
-.v3-about-page h2 { margin: 0 0 2rem; font: 800 clamp(2.8rem, 5vw, 5.5rem)/.87 var(--ds-font-display); letter-spacing: -.05em; }
+.v3-about-page h2 { margin: 0 0 2rem; font: 700 clamp(2.8rem, 5vw, 5.5rem)/.87 var(--ds-font-display); letter-spacing: -.05em; }
 .v3-about-page p { color: rgba(244,244,239,.68); line-height: 1.55; }
 .v3-about-page .v3-button { align-self: flex-start; margin-top: 1.5rem; }
 .v3-about-teaching { max-width: 62ch; padding-bottom: clamp(2rem, 5vw, 5rem); }
-.v3-about-teaching h2 { margin: 0 0 1.25rem; font: 800 clamp(1.4rem, 2.4vw, 1.9rem)/1.2 var(--ds-font-display); letter-spacing: -.02em; }
+.v3-about-teaching h2 { margin: 0 0 1.25rem; font: 700 clamp(1.4rem, 2.4vw, 1.9rem)/1.2 var(--ds-font-display); letter-spacing: -.02em; }
 .v3-about-teaching p { margin: 0 0 1rem; color: rgba(244,244,239,.68); line-height: 1.6; }
 .v3-about-teaching p:last-child { margin-bottom: 0; }
 .v3-contact-page { padding-bottom: var(--v3-module-gap); }

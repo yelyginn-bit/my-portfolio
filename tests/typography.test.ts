@@ -87,3 +87,26 @@ test("no ch-based max-width narrows H1/H2/H3 in the scanned files (PROMPT-28 §5
     assert.deepEqual(violations, [], `${file}: h1/h2/h3 still narrowed by a ch-based max-width — the container should limit the column, not the heading`);
   }
 });
+
+// PROMPT-29 §1: брендбук называет "Inter Bold" (=700), не "чем жирнее тем
+// заметнее" — до этой правки H1/H2 несли на себе десяток разных хардкодов
+// (750/760/800/820/850/860/900) плюс места, которые вообще не задавали свой
+// вес и наследовали 400 от body через Tailwind Preflight (h1..h6 → inherit),
+// это и было "/ceny съехал шрифт" в части веса.
+test("every explicit H1/H2 font-weight in the scanned files is exactly 700 (PROMPT-29 §1)", () => {
+  const files = [...SCANNED_FILES, "src/legal/legal.css"];
+  for (const file of files) {
+    const css = read(file);
+    const violations: string[] = [];
+    // Only match rules where h1/h2 is the LAST token of one of its
+    // comma-separated selectors (immediately followed by "," or "{") — this
+    // excludes child selectors like "h1 i" (the deliberate Georgia-italic
+    // accent, kept at weight 400) which are a different element entirely.
+    for (const m of css.matchAll(/(?:^|[\s,.>{])(h1|h2)\s*(?=[,{])[^{]*\{([^}]*)\}/gmu)) {
+      const [, tag, body] = m;
+      const weightMatch = body.match(/font-weight:\s*(\d+)/u) ?? body.match(/font:\s*(\d+)\s/u);
+      if (weightMatch && weightMatch[1] !== "700") violations.push(`${tag} { ${body.trim().slice(0, 80)} }`);
+    }
+    assert.deepEqual(violations, [], `${file}: h1/h2 with a non-700 font-weight`);
+  }
+});

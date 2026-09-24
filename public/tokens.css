@@ -53,6 +53,9 @@
   --ds-font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --ds-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --ds-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* PROMPT-29 §1: брендбук — «Inter Bold» = 700, не «чем жирнее тем лучше».
+     У всех H1/H2 вычисленный вес обязан быть 700 ровно. */
+  --ds-fw-display: 700;
   --ds-fs-104: 6.5rem;
   --ds-fs-72: 4.5rem;
   --ds-fs-48: 3rem;

@@ -104,7 +104,8 @@ body.site-menu-open { overflow: hidden; }
 .site-static-mobile-menu nav a { display: flex; min-height: 52px; align-items: center; color: var(--site-text) !important; border-bottom: 1px solid var(--site-border); font-size: clamp(1.35rem, 7vw, 2.5rem) !important; font-weight: 650; letter-spacing: 0 !important; text-transform: none; }
 .site-static-mobile-menu > div { display: flex; gap: 1.5rem; margin-top: 2rem; color: var(--site-accent); }
 
-.site-static :is(.wrap, .price-shell, .c-wrap, .j-wrap) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
+.site-static :is(.wrap, .price-shell) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
+.site-static :is(.c-wrap, .j-wrap) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
 .site-static main > section { padding-block: var(--site-section) !important; border-bottom: 1px solid var(--site-border) !important; }
 .site-static main > .hero { padding-top: clamp(5rem, 10vw, 9rem) !important; padding-bottom: clamp(4rem, 8vw, 7rem) !important; }
 .site-static .hero .wrap, .site-static .price-hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--site-gap); align-items: end; }
@@ -274,7 +275,9 @@ select {
   font: inherit;
 }
 
-.wrap,
+.wrap {
+  width: min(1240px, calc(100% - 32px)) !important;
+}
 .calc-wrap,
 .acc-wrap,
 .adm-wrap,
@@ -322,7 +325,9 @@ select {
   padding-top: clamp(22px, 4vw, 42px) !important;
 }
 
-header,
+header {
+  border-bottom: 1px solid var(--line-soft) !important;
+}
 .calc-top,
 .acc-top,
 .adm-top,
@@ -340,7 +345,9 @@ header {
   backdrop-filter: blur(14px);
 }
 
-header .inner,
+header .inner {
+  min-height: 64px;
+}
 .calc-top,
 .acc-top,
 .adm-top,
@@ -351,11 +358,13 @@ header .inner,
 }
 
 nav,
+.links-row,
+.ctas {
+  gap: 10px !important;
+}
 .c-nav,
 .j-nav,
 .adm-tabs,
-.links-row,
-.ctas,
 .c-cta,
 .j-cta {
   gap: 10px !important;

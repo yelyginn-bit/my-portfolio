@@ -4,8 +4,29 @@ import path from 'path';
 import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
 import {extractPriceLikeNumbers} from './scripts/priceGuard';
 import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
-import {augmentStaticHeader, augmentStaticFooter, STATIC_SHELL_FILES} from './scripts/staticShellTemplate';
+import {augmentStaticHeader, augmentStaticFooter, STATIC_SHELL_FILES, replaceWithV3Chrome, type V3ChromeActive} from './scripts/staticShellTemplate';
 import {augmentServiceRelatedWork, augmentBlogContext, BLOG_SERVICE} from './scripts/relatedWork';
+
+/**
+ * Файлы, где шапка/подвал заменяются целиком на общий V3-компонент
+ * (PROMPT-33 §Б, группа 1) вместо достройки старой рукописной шапки.
+ * active — какой пункт навигации подсвечивать текущим на этой странице;
+ * у статей блога нарочно пусто — тот же React SiteHeader тоже не подсвечивает
+ * "Блог" на отдельной статье (isNavEntryActive сверяет href точным
+ * совпадением, у ссылки-пункта нет "начинается с").
+ */
+const V3_CHROME_FILES: Readonly<Record<string, V3ChromeActive>> = {
+  'reels.html': {serviceHref: '/reels'},
+  'event-video.html': {serviceHref: '/event-video'},
+  'reklamnye-roliki.html': {serviceHref: '/reklamnye-roliki'},
+  'content-day.html': {serviceHref: '/content-day'},
+  'pryamye-translyacii.html': {serviceHref: '/pryamye-translyacii'},
+  'photo.html': {topLevelHref: '/photo'},
+  'blog/kak-snimat-reels-dlya-biznesa.html': {},
+  'blog/skolko-stoit-snyat-reklamnyy-rolik.html': {},
+  'blog/video-dlya-kartochek-wildberries.html': {},
+  'blog/videosemka-meropriyatiy-nn.html': {},
+};
 
 /**
  * Достраивает шапку/подвал 11 статических страниц (7 услуг + 4 статьи блога)
@@ -22,7 +43,9 @@ const bakeStaticShellNav = () => ({
   transformIndexHtml(html: string, ctx: {filename: string}) {
     const relativePath = path.relative(process.cwd(), ctx.filename).split(path.sep).join('/');
     if (!STATIC_SHELL_FILES.includes(relativePath)) return html;
-    const withShell = augmentStaticFooter(augmentStaticHeader(html, relativePath), relativePath);
+    const withShell = relativePath in V3_CHROME_FILES
+      ? replaceWithV3Chrome(html, relativePath, V3_CHROME_FILES[relativePath])
+      : augmentStaticFooter(augmentStaticHeader(html, relativePath), relativePath);
     const withRelatedWork = augmentServiceRelatedWork(withShell, relativePath);
     if (relativePath in BLOG_SERVICE) return augmentBlogContext(withRelatedWork, relativePath);
     return withRelatedWork;

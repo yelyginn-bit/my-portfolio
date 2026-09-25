@@ -31,22 +31,22 @@
   },
   "/content-day": {
     "overflowPx": 0,
-    "contrastFails": 5,
+    "contrastFails": 4,
     "indeterminate": 0
   },
   "/reklamnye-roliki": {
     "overflowPx": 0,
-    "contrastFails": 8,
+    "contrastFails": 7,
     "indeterminate": 2
   },
   "/event-video": {
     "overflowPx": 0,
-    "contrastFails": 7,
+    "contrastFails": 6,
     "indeterminate": 2
   },
   "/reels": {
     "overflowPx": 0,
-    "contrastFails": 8,
+    "contrastFails": 7,
     "indeterminate": 2
   },
   "/cvetokorrekciya": {
@@ -55,7 +55,7 @@
     "indeterminate": 0
   },
   "/video-dlya-marketpleysov": {
-    "overflowPx": 17,
+    "overflowPx": 16,
     "contrastFails": 1,
     "indeterminate": 0
   },
@@ -71,7 +71,7 @@
   },
   "/photo": {
     "overflowPx": 0,
-    "contrastFails": 15,
+    "contrastFails": 14,
     "indeterminate": 2
   },
   "/privacy-policy": {
@@ -116,22 +116,22 @@
   },
   "/blog/skolko-stoit-snyat-reklamnyy-rolik": {
     "overflowPx": 0,
-    "contrastFails": 7,
+    "contrastFails": 5,
     "indeterminate": 0
   },
   "/blog/kak-snimat-reels-dlya-biznesa": {
     "overflowPx": 0,
-    "contrastFails": 9,
+    "contrastFails": 7,
     "indeterminate": 0
   },
   "/blog/video-dlya-kartochek-wildberries": {
     "overflowPx": 0,
-    "contrastFails": 7,
+    "contrastFails": 5,
     "indeterminate": 0
   },
   "/blog/videosemka-meropriyatiy-nn": {
     "overflowPx": 0,
-    "contrastFails": 10,
+    "contrastFails": 8,
     "indeterminate": 0
   },
   "/portfolio/camera": {

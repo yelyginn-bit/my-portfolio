@@ -38,12 +38,6 @@
       body { background: var(--black); color: var(--white); font-family: var(--ds-font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
       a { color: inherit; text-decoration: none; }
       .wrap { width: min(1100px, 100% - 40px); margin: 0 auto; }
-      header { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
-      header .inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-      .logo { font-size: 13px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; }
-      .logo span { color: var(--red); }
-      nav { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6); flex-wrap: wrap; }
-      nav a:hover { color: var(--white); }
       .hero { padding: 72px 0 60px; border-bottom: 1px solid rgba(255,255,255,0.06); }
       .eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
       h1 { font-family: var(--ds-font-display); font-size: clamp(2.4rem, 6vw, 5.2rem); font-weight: 800; line-height: 0.92; letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
@@ -149,30 +143,15 @@
       .cta-band h2 { margin-bottom: 16px; }
       .cta-band p { color: rgba(255,255,255,0.6); max-width: 52ch; margin: 0 auto 28px; }
       footer { padding: 40px 0; }
-      .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-      .foot-copy { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
     </style>
     <link rel="stylesheet" href="/tokens.css" />
     <link rel="stylesheet" href="/site-skin.css" />
+    <link rel="stylesheet" href="/src/design-system.css" />
+    <link rel="stylesheet" href="/src/v3-polish.css" />
 
   </head>
   <body>
-    <header>
-      <div class="wrap">
-        <div class="inner">
-          <a href="/" class="logo">YELYGINN <span>·</span> ФОТО</a>
-          <nav>
-            <a href="/">Главная</a>
-            <a href="/#all-sections">Все разделы</a>
-            <a href="/portfolio">Портфолио</a>
-            <a href="/calculator">Калькулятор</a>
-            <a href="/ceny">Цены</a>
-            <a href="/account">Кабинет</a>
-            <a href="/#contact">Контакт</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <header></header>
 
     <main>
       <div class="hero">
@@ -606,14 +585,7 @@
       </section>
     </main>
 
-    <footer>
-      <div class="wrap">
-        <div class="foot">
-          <p class="foot-copy">© 2026 Yelyginn — фото и видеопродакшн в Нижнем Новгороде</p>
-          <a href="https://t.me/YuriElygin" class="cta" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
-        </div>
-      </div>
-    </footer>
+    <footer></footer>
 
     <script>
       (function () {

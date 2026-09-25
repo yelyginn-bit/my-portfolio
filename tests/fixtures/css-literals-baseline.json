@@ -31,9 +31,9 @@
   },
   "public/site-skin.css": {
     "color": 58,
-    "radius": 12,
+    "radius": 11,
     "fontFamily": 1,
-    "total": 71
+    "total": 70
   },
   "public/tokens.css": {
     "color": 0,
@@ -72,22 +72,22 @@
     "total": 35
   },
   "content-day.html <style>": {
-    "color": 12,
+    "color": 10,
     "radius": 4,
     "fontFamily": 1,
-    "total": 17
+    "total": 15
   },
   "event-video.html <style>": {
-    "color": 18,
+    "color": 16,
     "radius": 4,
     "fontFamily": 1,
-    "total": 23
+    "total": 21
   },
   "photo.html <style>": {
-    "color": 28,
+    "color": 26,
     "radius": 6,
     "fontFamily": 0,
-    "total": 34
+    "total": 32
   },
   "pryamye-translyacii.html <style>": {
     "color": 0,
@@ -96,16 +96,16 @@
     "total": 1
   },
   "reels.html <style>": {
+    "color": 16,
+    "radius": 4,
+    "fontFamily": 1,
+    "total": 21
+  },
+  "reklamnye-roliki.html <style>": {
     "color": 18,
     "radius": 4,
     "fontFamily": 1,
     "total": 23
-  },
-  "reklamnye-roliki.html <style>": {
-    "color": 20,
-    "radius": 4,
-    "fontFamily": 1,
-    "total": 25
   },
   "video-dlya-marketpleysov.html <style>": {
     "color": 0,
@@ -114,27 +114,27 @@
     "total": 0
   },
   "blog/kak-snimat-reels-dlya-biznesa.html <style>": {
+    "color": 13,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 14
+  },
+  "blog/skolko-stoit-snyat-reklamnyy-rolik.html <style>": {
     "color": 15,
     "radius": 0,
     "fontFamily": 1,
     "total": 16
   },
-  "blog/skolko-stoit-snyat-reklamnyy-rolik.html <style>": {
-    "color": 17,
-    "radius": 0,
-    "fontFamily": 1,
-    "total": 18
-  },
   "blog/video-dlya-kartochek-wildberries.html <style>": {
-    "color": 20,
-    "radius": 0,
-    "fontFamily": 1,
-    "total": 21
-  },
-  "blog/videosemka-meropriyatiy-nn.html <style>": {
     "color": 18,
     "radius": 0,
     "fontFamily": 1,
     "total": 19
+  },
+  "blog/videosemka-meropriyatiy-nn.html <style>": {
+    "color": 16,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 17
   }
 }

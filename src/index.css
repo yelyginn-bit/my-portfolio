@@ -26,7 +26,7 @@
   }
 
   body {
-    @apply bg-nothing-white text-nothing-black font-sans antialiased selection:bg-nothing-red selection:text-white transition-colors duration-700;
+    @apply bg-nothing-white text-nothing-black font-sans antialiased transition-colors duration-700;
   }
 }
 
@@ -34,6 +34,16 @@
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Выделение текста. Раньше было `selection:bg-nothing-red selection:text-white`
+   из @apply: фон разворачивался в var(--color-nothing-red), а он переопределён
+   ниже в #fe2c1f — легаси-красный вне брендбука, и поверх него белый. Пара
+   «светлое на красном/оранжевом» запрещена §0.1, поэтому здесь явно:
+   SIGNAL ORANGE + подпись INK (6.69). */
+::selection {
+  background: var(--ds-accent);
+  color: var(--ds-on-accent);
 }
 
 /* Yelyginn unified production skin.

@@ -327,31 +327,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .editorial-service-copy svg { grid-column: 2; grid-row: 2; }.site-home .process-section > .site-shell > div:last-child > div + div { padding-left: clamp(1rem, 2vw, 2rem); border-left: 1px solid var(--ds-border); }.site-home .faq-section > .site-shell { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--ds-grid-gap); }
 .site-home .faq-section > .site-shell > div:first-child { grid-column: 1 / span 5; }
 .site-home .faq-section > .site-shell > div:nth-child(2),
-.site-home .faq-section > .site-shell > div:nth-child(3) { grid-column: 7 / -1; }.direction-page { background: var(--ds-bg); }
-.direction-hero { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--ds-grid-gap); padding-top: clamp(8rem, 12vw, 11rem); padding-bottom: clamp(4rem, 7vw, 7rem); }
-.direction-hero > div:first-child { grid-column: 1 / span 8; }
-.direction-hero > p, .direction-hero > div:last-child:not(:first-child) { grid-column: 9 / -1; align-self: end; }
-.direction-hero h1 { font-size: var(--ds-h1); line-height: .9; letter-spacing: var(--ds-track-display); text-transform: none; text-wrap: balance; }
-.direction-category-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: clamp(2rem, 4vw, 4rem) var(--ds-grid-gap); }
-.direction-category-card { grid-column: span 6; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
-.direction-category-card:nth-child(3n + 1) { grid-column: span 8; }
-.direction-category-card:nth-child(3n + 2) { grid-column: span 4; align-self: end; }
-.direction-category-copy { padding: 1rem 0 0; }
-.direction-filter { display: flex; gap: .5rem; overflow-x: auto; margin-bottom: clamp(2rem, 4vw, 3.5rem); padding-bottom: .5rem; scrollbar-width: none; }
-.direction-filter button { min-height: 44px; padding: 0 1rem; white-space: nowrap; color: var(--ds-text-secondary); background: transparent; border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); cursor: pointer; }
-.direction-filter button[aria-pressed="true"] { color: var(--ds-bg); background: var(--ds-text); border-color: var(--ds-text); }
-.direction-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: clamp(2.5rem, 5vw, 5rem) var(--ds-grid-gap); }
-.direction-card { grid-column: span 4; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
-.direction-card--layout-0 { grid-column: span 8; }
-.direction-card--layout-1 { grid-column: span 4; align-self: end; }
-.direction-card--layout-2, .direction-card--layout-3 { grid-column: span 6; }
-.direction-card-media { border-radius: var(--ds-radius-sm); }
-.direction-card-body { padding: 1rem 0 0; }
-.direction-card h2 { font-size: var(--ds-h3); text-transform: none; }
-.direction-card:hover { box-shadow: none; transform: none; }
-.direction-cta { color: var(--ds-text); background: var(--ds-surface); }
-
-@media (max-width: 1023px) {
+.site-home .faq-section > .site-shell > div:nth-child(3) { grid-column: 7 / -1; }@media (max-width: 1023px) {
   .site-home .process-section > .site-shell > div:last-child > div { grid-column: span 6; border-bottom: 1px solid var(--ds-border); }
 }
 
@@ -359,11 +335,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
   .editorial-service { min-height: 25rem; }
   .site-home .process-section > .site-shell > div:last-child > div { padding: 1.5rem 0; border-left: 0 !important; }
   .site-home .faq-section > .site-shell { display: block; }
-  .site-home .faq-section > .site-shell > div:nth-child(2) { margin-top: 2rem; }  .direction-hero { grid-template-columns: repeat(4, minmax(0,1fr)); }
-  .direction-hero > div:first-child, .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { grid-column: 1 / -1; }
-  .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { margin-top: 1.5rem; }
-  .direction-category-copy, .direction-card-body { padding-top: .875rem; }
-}
+  .site-home .faq-section > .site-shell > div:nth-child(2) { margin-top: 2rem; }}
 
 /* ── Цветокоррекция: страница /cvetokorrekciya и слайдер «до/после» ───────── */
 

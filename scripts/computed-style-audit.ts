@@ -432,10 +432,31 @@ if (process.argv[1] && path.resolve(process.argv[1]).endsWith("computed-style-au
 
   const { chromium } = await loadPlaywright();
   const browser = await chromium.launch({ headless: true }) as {
-    newPage: () => Promise<Parameters<typeof auditPage>[0]>;
+    newContext: (o: Record<string, unknown>) => Promise<{
+      newPage: () => Promise<Parameters<typeof auditPage>[0]>;
+    }>;
     close: () => Promise<void>;
   };
-  const page = await browser.newPage();
+  // PROMPT-31 §2.2: без isMobile/hasTouch Playwright резервирует под
+  // вертикальный скроллбар классический десктопный жёлоб (~17px) — на любой
+  // странице выше вьюпорта window.innerWidth оказывается на эту величину
+  // шире document.documentElement.clientWidth, и position:fixed;inset:0
+  // элементы (например .yel-cookie) ложатся по innerWidth, создавая мнимое
+  // горизонтальное переполнение, которого на настоящем телефоне нет —
+  // у мобильных браузеров скроллбар оверлейный, места не занимает. Проверено
+  // живьём: тот же билд, тот же маршрут — overflow-x:hidden на html/body
+  // (без реального контента шире вьюпорта) убирает «переполнение» целиком,
+  // а innerWidth падает до 390 сам. Два разных контекста ниже: 1440 —
+  // обычный десктоп (эта величина скроллбара ожидаема и не в счёт), 390 —
+  // настоящая мобильная эмуляция, как видит её живой iPhone.
+  const desktopPage = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+  const mobilePage = await (await browser.newContext({
+    viewport: { width: 390, height: 900 },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 3,
+  })).newPage();
+  const pageFor = (width: number) => (width === 390 ? mobilePage : desktopPage);
   const audits: RouteAudit[] = [];
   // --only <подстрока> — прогон части маршрутов: точечная перепроверка после
   // правки одной страницы, а не всех 70 (полный прогон занимает ~30 минут).
@@ -445,7 +466,7 @@ if (process.argv[1] && path.resolve(process.argv[1]).endsWith("computed-style-au
   for (const route of routes) {
     for (const width of WIDTHS) {
       try {
-        audits.push(await auditPage(page, origin, route, width));
+        audits.push(await auditPage(pageFor(width), origin, route, width));
         process.stdout.write(".");
       } catch (error) {
         console.warn(`\n${route} @${width}: ${error instanceof Error ? error.message : error}`);

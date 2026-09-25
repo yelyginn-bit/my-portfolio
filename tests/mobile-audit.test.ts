@@ -55,9 +55,16 @@ function readBaseline(): Record<string, RouteBaseline> {
  * сразу после «load» на странице играются анимации появления, и
  * getComputedStyle отдаёт стартовые значения перехода (на /content-day в
  * момент load их 33). Без ожидания baseline зависел бы от тайминга запуска.
- * Бесконечные анимации не ждём — они не заканчиваются. */
+ * Бесконечные анимации не ждём — они не заканчиваются.
+ *
+ * PROMPT-31 §2.5: `.map(...)` без `Promise.all(...)` не ждёт ничего — await
+ * массива промисов возвращает массив сразу, не дожидаясь элементов. Тест
+ * потому был тихо флаки (тот же класс бага, что computed-style-audit.ts уже
+ * ловил в f6f2370, «мерка середины перехода, а не итога») — три подряд
+ * прогона одного и того же кода давали 730/799/802 узлов ниже порога.
+ * Проверено после фикса: три прогона подряд — одно и то же число. */
 const AUDIT_FN = `async (width) => {
-  await (document.getAnimations ? document.getAnimations() : []).filter((a) => a.playState === "running" && (!a.effect || a.effect.getTiming().iterations !== Infinity) && a.timeline === document.timeline).map((a) => a.finished.catch(() => {}));
+  await Promise.all((document.getAnimations ? document.getAnimations() : []).filter((a) => a.playState === "running" && (!a.effect || a.effect.getTiming().iterations !== Infinity) && a.timeline === document.timeline).map((a) => a.finished.catch(() => {})));
   const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (m) { const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; } return null; };
   const composite = (layers) => { const L = layers.slice().reverse(); let o = [255, 255, 255]; for (const [r, g, b, a] of L) o = [Math.round(r * a + o[0] * (1 - a)), Math.round(g * a + o[1] * (1 - a)), Math.round(b * a + o[2] * (1 - a))]; return o; };
   const effBg = (el) => { const layers = []; let n = el;
@@ -112,8 +119,22 @@ const run = async () => {
   const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
   const { server, origin } = await startLocalServer();
   const { INDEXABLE_ROUTES } = await import("../src/public/routeManifest.ts");
-  const page = await browser.newPage();
-  await page.setViewportSize({ width: WIDTH, height: 844 });
+  // PROMPT-31 §2.2: без isMobile/hasTouch Playwright резервирует классический
+  // десктопный жёлоб под вертикальный скроллбар (~17px) — window.innerWidth
+  // оказывается на эту величину шире document.documentElement.clientWidth на
+  // любой странице выше вьюпорта, и position:fixed;inset:0 элементы ложатся
+  // по нему, создавая мнимое горизонтальное переполнение. На настоящем
+  // телефоне скроллбар оверлейный и места не занимает — тот же баг, что
+  // почти на всех 12 маршрутов из §2.4/А1, оказался измерением, не версткой
+  // (см. scripts/computed-style-audit.ts, тот же фикс). Контекст, а не
+  // просто newPage — isMobile нельзя переключить после создания страницы.
+  const context = await browser.newContext({
+    viewport: { width: WIDTH, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 3,
+  });
+  const page = await context.newPage();
   const out: Record<string, RouteBaseline & { offenders: string[] }> = {};
   for (const route of INDEXABLE_ROUTES) {
     try {

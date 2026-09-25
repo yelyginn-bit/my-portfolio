@@ -5,9 +5,10 @@
  * текст литералами светлой палитры (`section { color:#111 }`, `.card p {#595953}`,
  * `td {rgba(10,10,10,.7)}` …). Пока это так, перевод статической страницы на
  * `data-theme="dark"` даёт невидимые места — замер ночной смены: 28 узлов ниже
- * порога на `/pryamye-translyacii` сразу после метки. Проверено на двух
- * страницах из десяти: `/pryamye-translyacii` (обычная) и `/reels` (с услугами
- * и прайсом). Метку в HTML тест НЕ ставит — подменяет тему на лету, чтобы
+ * порога на `/pryamye-translyacii` сразу после метки. Проверено на трёх
+ * страницах: `/pryamye-translyacii`, `/reels` и `/calculator` (у последнего
+ * нет `<main>`, поэтому мерка падает на `body`, и именно на нём видны поля
+ * формы). Метку в HTML тест НЕ ставит — подменяет тему на лету, чтобы
  * страница в репозитории оставалась светлой до решения владельца.
  *
  * Шапку и подвал статических страниц не считаем: это фиксированный хром, его
@@ -27,7 +28,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ROUTES = ["/pryamye-translyacii", "/reels"];
+const ROUTES = ["/pryamye-translyacii", "/reels", "/calculator"];
 const THRESHOLD_TEXT = 4.5;
 const THRESHOLD_LARGE = 3;
 
@@ -41,17 +42,36 @@ async function loadPlaywright() {
   }
 }
 
-/** Мерка контраста каждого текстового узла внутри `main`: цвет/фон с
- * компаундом полупрозрачности по цепочке предков; фон-картинка или градиент
- * считаются «не определено», а не провалом. */
+/** Мерка контраста каждого текстового узла содержимого (main, а где его нет —
+ * body) плюс отдельно узлов формы: цвет/фон с компаундом полупрозрачности по
+ * цепочке предков; фон-картинка или градиент считаются «не определено». */
 const AUDIT = `(function(){
   const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (!m) return null;
     const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; };
   const lum = (c) => { const v = c.map((x) => { const s = x / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); });
     return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
   const ratio = (a, b) => { const l1 = lum(a), l2 = lum(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); };
-  const main = document.querySelector("main");
-  if (!main) return { total: 0, fails: [], note: "нет <main>" };
+  /** Фон элемента — компаунд полупрозрачности по цепочке предков. null = фон
+   * рисованный (картинка/градиент), одноцветным не описывается. */
+  const bgOf = (el) => {
+    const layers = [];
+    let node = el;
+    while (node && node !== document.documentElement.parentNode) {
+      const cs = getComputedStyle(node);
+      if (cs.backgroundImage && cs.backgroundImage !== "none") return null;
+      const c = rgba(cs.backgroundColor);
+      if (c && c[3] > 0) layers.push(c);
+      if (c && c[3] >= 1) break;
+      node = node.parentElement;
+    }
+    let o = [255, 255, 255];
+    for (const [cr, cg, cb, ca] of layers.slice().reverse()) o = [cr * ca + o[0] * (1 - ca), cg * ca + o[1] * (1 - ca), cb * ca + o[2] * (1 - ca)];
+    return o.map(Math.round);
+  };
+  // <main> есть не на всех проверяемых страницах (у калькулятора его нет) —
+  // тогда меряем body целиком: поля и текст относятся к содержимому.
+  const main = document.querySelector("main") || document.body;
+  if (!main) return { total: 0, fields: 0, fails: [], worst: 99, note: "нет ни <main>, ни <body>" };
   const fails = [];
   let total = 0, indeterminate = 0, worst = 99;
   for (const el of main.querySelectorAll("*")) {
@@ -63,20 +83,8 @@ const AUDIT = `(function(){
     if (s.visibility === "hidden" || s.opacity === "0" || s.display === "none") continue;
     const fg = rgba(s.color);
     if (!fg || fg[3] === 0) continue;
-    const layers = [];
-    let bg = null, node = el, paintedByImage = false;
-    while (node && node !== document.documentElement.parentNode) {
-      const cs = getComputedStyle(node);
-      if (cs.backgroundImage && cs.backgroundImage !== "none") { paintedByImage = true; break; }
-      const c = rgba(cs.backgroundColor);
-      if (c && c[3] > 0) layers.push(c);
-      if (c && c[3] >= 1) break;
-      node = node.parentElement;
-    }
-    if (paintedByImage) { indeterminate++; continue; }
-    let o = [255, 255, 255];
-    for (const [cr, cg, cb, ca] of layers.slice().reverse()) o = [cr * ca + o[0] * (1 - ca), cg * ca + o[1] * (1 - ca), cb * ca + o[2] * (1 - ca)];
-    bg = o.map(Math.round);
+    const bg = bgOf(el);
+    if (!bg) { indeterminate++; continue; }
     const px = parseFloat(s.fontSize), bold = parseInt(s.fontWeight, 10) >= 700;
     const need = (px >= 24 || (px >= 18.66 && bold)) ? ${THRESHOLD_LARGE} : ${THRESHOLD_TEXT};
     const got = ratio([fg[0], fg[1], fg[2]], bg);
@@ -87,10 +95,30 @@ const AUDIT = `(function(){
         s.color + " на rgb(" + bg.join(",") + ") = " + got.toFixed(2));
     }
   }
-  return { total, indeterminate, fails, worst: Number(worst.toFixed(2)) };
+  /** Узлы формы проверяются отдельно: у input/textarea нет textContent, и
+   * текстовый обход их не видит, а именно поля (color:#111 в слое) при тёмной
+   * теме становились невидимыми на /calculator. */
+  let fields = 0;
+  for (const el of document.querySelectorAll("input, textarea, select")) {
+    const r = el.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) continue;
+    const s = getComputedStyle(el);
+    if (s.visibility === "hidden" || s.display === "none") continue;
+    const fg = rgba(s.color);
+    const bg = bgOf(el);
+    if (!fg || !bg) continue;
+    fields++;
+    const got = ratio(fg.slice(0, 3), bg);
+    worst = Math.min(worst, got);
+    if (got < ${THRESHOLD_TEXT} && fails.length < 40) {
+      fails.push("поле " + el.tagName.toLowerCase() + (el.className ? "." + String(el.className).split(" ")[0] : "") +
+        " " + s.color + " на rgb(" + bg.join(",") + ") = " + got.toFixed(2));
+    }
+  }
+  return { total: total + fields, fields, indeterminate, fails, worst: Number(worst.toFixed(2)) };
 })()`;
 
-test("статическая страница в тёмной теме: текст в main читается", async (t) => {
+test("тёмная тема: текст и поля содержимого читаются", async (t) => {
   const pw = await loadPlaywright();
   if (!pw) { t.skip("Playwright не установлен — мерка вычисленных стилей недоступна"); return; }
   let browser;
@@ -128,9 +156,9 @@ test("статическая страница в тёмной теме: текс
       // иначе «ноль провалов» могло дать светлое состояние страницы.
       const bodyBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
       assert.match(bodyBg, /rgb\(10, 10, 10\)/, `${route}: корпус не перекрасился (${bodyBg}) — тема не применилась`);
-      const res = await page.evaluate(AUDIT) as { total: number; indeterminate?: number; fails: string[]; note?: string };
-      assert.ok(res.total >= 20, `${route}: найдено всего ${res.total} текстовых узлов в main (${res.note ?? ""}) — тест не должен проходить «впустую»`);
-      seen.push(`${route}: узлов ${res.total}, неопределённого фона ${res.indeterminate ?? 0}, ниже порога ${res.fails.length}`);
+      const res = await page.evaluate(AUDIT) as { total: number; fields?: number; indeterminate?: number; fails: string[]; worst?: number; note?: string };
+      assert.ok(res.total >= 20, `${route}: измерено всего ${res.total} узлов (${res.note ?? ""}) — тест не должен проходить «впустую»`);
+      seen.push(`${route}: узлов ${res.total} (полей ${res.fields ?? 0}), неопределённого фона ${res.indeterminate ?? 0}, ниже порога ${res.fails.length}`);
       assert.deepEqual(res.fails, [], `${route}: в тёмной теме текст ниже порога AA:\n  ${res.fails.join("\n  ")}`);
     }
     t.diagnostic(seen.join(" | "));
@@ -156,7 +184,7 @@ test("статическая страница в тёмной теме: текс
     assert.ok(back.worst < 1.5,
       `отрицательный контроль сработал косо: худший контраст ${back.worst}, а не <1.5 — значит возвращённое ` +
       "правило #111 перестало быть невидимым в тёмной теме, и тест сторожит не его");
-    t.diagnostic(`отрицательный контроль: с литералом #111 слой даёт ${back.fails.length}+ провалов, худший ${back.worst} (${back.fails[0]})`);
+    t.diagnostic(`отрицательный контроль: с литералом #111 слой даёт ${back.fails.length} провалов, худший ${back.worst} (${back.fails[0]})`);
   } finally {
     await browser.close();
     server.close();

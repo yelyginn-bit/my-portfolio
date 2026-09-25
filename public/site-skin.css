@@ -443,7 +443,7 @@ h3,
 .acc-hint,
 .adm-hint,
 .adm-note {
-  color: rgba(10, 10, 10, 0.68) !important;
+  color: color-mix(in srgb, var(--ds-text) 68%, transparent) !important;
 }
 
 .card,
@@ -457,7 +457,7 @@ h3,
 .gal-item,
 .gal-tile,
 .g-cell {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: color-mix(in srgb, var(--ds-surface) 92%, transparent) !important;
   border: 1px solid var(--line-soft) !important;
   border-radius: var(--radius) !important;
   box-shadow: var(--shadow);
@@ -538,9 +538,9 @@ h3,
 .gal-mini-btn.ghost,
 .c-btn.ghost,
 .j-btn.ghost {
-  background: rgba(10, 10, 10, 0.035) !important;
+  background: color-mix(in srgb, var(--ds-text) 3.5%, transparent) !important;
   border: 1px solid var(--line) !important;
-  color: rgba(10, 10, 10, 0.84) !important;
+  color: color-mix(in srgb, var(--ds-text) 84%, transparent) !important;
   min-height: 48px;
   font-size: 13px !important;
   font-weight: 700;
@@ -565,7 +565,7 @@ h3,
 .calc-type,
 .calc-row,
 .calc-toggle {
-  color: rgba(10, 10, 10, 0.78) !important;
+  color: color-mix(in srgb, var(--ds-text) 78%, transparent) !important;
 }
 
 .calc-type:hover,
@@ -988,9 +988,9 @@ blockquote,
 .adm-tab,
 .adm-pill,
 .gal-drop {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
   border-color: var(--line) !important;
-  color: #111 !important;
+  color: var(--ds-text) !important;
 }
 
 .calc-range,
@@ -1013,7 +1013,7 @@ input,
 textarea,
 select,
 .g-input {
-  color: #111 !important;
+  color: var(--ds-text) !important;
 }
 
 input::placeholder,

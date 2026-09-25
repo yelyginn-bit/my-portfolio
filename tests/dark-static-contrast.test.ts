@@ -28,7 +28,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-/* Все одиннадцать статических страниц плюс калькулятор: QWEN-05 §3 Г. Манифест не
+/* Все одиннадцать статических страниц плюс калькулятор: QWEN-05 §3 Г.
+ * QWEN-07 §5 доводит список до 24: сюда добавлены `/ceny`, `/cvetokorrekciya`,
+ * `/404`, восемь юридических и `/about` с `/contact` — те страницы, которые
+ * владелец собирается переводить на тёмную тему следующими. Манифест не
  * трогаем — тему тест включает сам, страницы в репозитории остаются светлыми.
  *
  * Пилот /video-dlya-marketpleysov — единственная страница сайта, уже тёмная
@@ -43,9 +46,14 @@ const ROUTES = [
   "/pryamye-translyacii", "/video-dlya-marketpleysov", "/calculator",
   "/blog/kak-snimat-reels-dlya-biznesa", "/blog/skolko-stoit-snyat-reklamnyy-rolik",
   "/blog/video-dlya-kartochek-wildberries", "/blog/videosemka-meropriyatiy-nn",
+  "/ceny", "/cvetokorrekciya", "/404", "/about", "/contact",
+  "/terms", "/privacy-policy", "/cookie-policy", "/data-request",
+  "/cancellation-refund", "/payment-terms", "/gallery-terms", "/personal-data-consent",
 ];
 const THRESHOLD_TEXT = 4.5;
 const THRESHOLD_LARGE = 3;
+/* Минимум измеренных узлов по коротким страницам — см. использование. */
+const MIN_NODES: Record<string, number> = { "/404": 10, "/contact": 12 };
 
 async function loadPlaywright() {
   const name = "playwright";
@@ -158,6 +166,17 @@ test("тёмная тема: текст и поля содержимого чи�
       // (после load атрибут читался null), поэтому ставим после навигации и
       // ждём завершения переходов — CSS-токены пересчитываются сразу.
       await page.evaluate(() => document.documentElement.setAttribute("data-theme", "dark"));
+      /* Переходы гасятся, а не «ждём дольше»: у body на /ceny и
+       /cvetokorrekciya стоит `transition-colors duration-700` из @layer base
+       в index.css, и мерка через 250 мс снимала середину перехода — фон
+       rgb(62,62,61) вместо rgb(10,10,10), а вместе с ним и «5 провалов» там,
+       где их нет. Отрицательный контроль в конце файла от этого не страдает:
+       он подменяет цвет слоем, а не ждёт анимации. */
+      await page.evaluate(() => {
+        const st = document.createElement("style");
+        st.textContent = "*,*::before,*::after{transition:none !important;animation:none !important}";
+        document.head.appendChild(st);
+      });
       await page.waitForFunction(
         () => (document.getAnimations ? document.getAnimations() : []).every(
           (a: Animation) => a.playState !== "running" || a.timeline !== document.timeline ||
@@ -172,7 +191,14 @@ test("тёмная тема: текст и поля содержимого чи�
       const bodyBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
       assert.match(bodyBg, /rgb\(10, 10, 10\)/, `${route}: корпус не перекрасился (${bodyBg}) — тема не применилась`);
       const res = await page.evaluate(AUDIT) as { total: number; fields?: number; indeterminate?: number; fails: string[]; worst?: number; note?: string };
-      assert.ok(res.total >= 20, `${route}: измерено всего ${res.total} узлов (${res.note ?? ""}) — тест не должен проходить «впустую»`);
+      /* Пол «сколько узлов измерено» не может быть один на всех: он обязан быть
+       ниже фактического числа на каждой странице, иначе тест краснеет на
+       короткой странице вместо того, чтобы краснеть на поломке. Числа справа —
+       результат замера этой же мерки (24.09, сборка f66d2b9+): /404 — 12 узлов,
+       /contact — 13 (форма считается одним полем на метку). Для всех
+       остальных 20 — это «не прошёл впустую», а не «прошёл». */
+      const minNodes = MIN_NODES[route] ?? 20;
+      assert.ok(res.total >= minNodes, `${route}: измерено всего ${res.total} узлов (ожидание ≥${minNodes}, ${res.note ?? ""}) — тест не должен проходить «впустую»`);
       seen.push(`${route}: узлов ${res.total} (полей ${res.fields ?? 0}), неопределённого фона ${res.indeterminate ?? 0}, ниже порога ${res.fails.length}`);
       assert.deepEqual(res.fails, [], `${route}: в тёмной теме текст ниже порога AA:\n  ${res.fails.join("\n  ")}`);
     }

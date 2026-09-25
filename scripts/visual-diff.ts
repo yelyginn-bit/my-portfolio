@@ -52,7 +52,7 @@ async function capture(label: string, only?: string) {
   const dir = path.join(BASE, label);
   await mkdir(dir, { recursive: true });
   const browser = await pw.chromium.launch({ headless: true });
-  const masks: Record<string, number[][]> = {};
+  let masks: Record<string, number[][]> = {};
   try {
     for (const width of WIDTHS) {
       const context = await browser.newContext({
@@ -104,7 +104,18 @@ async function capture(label: string, only?: string) {
     await browser.close();
     server.close();
   }
-  await writeFile(path.join(dir, "masks.json"), JSON.stringify(masks));
+  // Дописываем, а не перезаписываем: `capture --label X --only a` затем
+  // `capture --label X --only b` иначе теряет маски первой выборки, и сравнение
+  // начинает считать изменёнными пикселями картинки, которые должны быть
+  // замазаны (проверено на 88 кадрах портфолио: ложные 40 % вместо 0).
+  const masksFile = path.join(dir, "masks.json");
+  if (existsSync(masksFile)) {
+    try {
+      const prev = JSON.parse(await readFile(masksFile, "utf8")) as Record<string, number[][]>;
+      masks = { ...prev, ...masks };
+    } catch { /* повреждённый файл маски — не повод ронять съёмку */ }
+  }
+  await writeFile(masksFile, JSON.stringify(masks));
   console.log(`\nкадры «${label}»: ${Object.keys(masks).length} страниц × ширин, папка ${path.relative(ROOT, dir)}`);
 }
 

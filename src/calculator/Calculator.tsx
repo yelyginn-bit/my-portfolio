@@ -429,7 +429,7 @@ export default function Calculator() {
                   )}
                   {!session && (
                     <div className="calc-hint">
-                      Постоянный клиент? <a href="/account" style={{ color: "var(--red)" }}>Войдите</a> — скидка подтянется.
+                      Постоянный клиент? <a href="/account" className="calc-hint__link">Войдите</a> — скидка подтянется.
                     </div>
                   )}
                   {!session && phone.length > 0 && !phoneValid && (

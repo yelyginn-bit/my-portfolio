@@ -1,0 +1,352 @@
+{
+  "/": {
+    "overflowPx": 0,
+    "contrastFails": 5,
+    "indeterminate": 6
+  },
+  "/portfolio": {
+    "overflowPx": 4,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/blog": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/about": {
+    "overflowPx": 0,
+    "contrastFails": 4,
+    "indeterminate": 6
+  },
+  "/contact": {
+    "overflowPx": 0,
+    "contrastFails": 4,
+    "indeterminate": 6
+  },
+  "/calculator": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/content-day": {
+    "overflowPx": 0,
+    "contrastFails": 41,
+    "indeterminate": 0
+  },
+  "/reklamnye-roliki": {
+    "overflowPx": 0,
+    "contrastFails": 44,
+    "indeterminate": 2
+  },
+  "/event-video": {
+    "overflowPx": 0,
+    "contrastFails": 43,
+    "indeterminate": 2
+  },
+  "/reels": {
+    "overflowPx": 0,
+    "contrastFails": 44,
+    "indeterminate": 2
+  },
+  "/cvetokorrekciya": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/video-dlya-marketpleysov": {
+    "overflowPx": 17,
+    "contrastFails": 7,
+    "indeterminate": 0
+  },
+  "/pryamye-translyacii": {
+    "overflowPx": 0,
+    "contrastFails": 46,
+    "indeterminate": 0
+  },
+  "/ceny": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/photo": {
+    "overflowPx": 0,
+    "contrastFails": 51,
+    "indeterminate": 2
+  },
+  "/privacy-policy": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/personal-data-consent": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/cookie-policy": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/terms": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/payment-terms": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/cancellation-refund": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/gallery-terms": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/data-request": {
+    "overflowPx": 0,
+    "contrastFails": 1,
+    "indeterminate": 0
+  },
+  "/blog/skolko-stoit-snyat-reklamnyy-rolik": {
+    "overflowPx": 390,
+    "contrastFails": 43,
+    "indeterminate": 0
+  },
+  "/blog/kak-snimat-reels-dlya-biznesa": {
+    "overflowPx": 0,
+    "contrastFails": 45,
+    "indeterminate": 0
+  },
+  "/blog/video-dlya-kartochek-wildberries": {
+    "overflowPx": 390,
+    "contrastFails": 43,
+    "indeterminate": 0
+  },
+  "/blog/videosemka-meropriyatiy-nn": {
+    "overflowPx": 390,
+    "contrastFails": 46,
+    "indeterminate": 0
+  },
+  "/portfolio/camera": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/commercial": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/events": {
+    "overflowPx": 4,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/reels": {
+    "overflowPx": 4,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/concerts": {
+    "overflowPx": 2,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/interviews": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/post": {
+    "overflowPx": 4,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/color": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/broadcast": {
+    "overflowPx": 4,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/product": {
+    "overflowPx": 0,
+    "contrastFails": 0,
+    "indeterminate": 0
+  },
+  "/portfolio/gorky-stranicy-pamyati": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/metro-gorkovskaya-concerts": {
+    "overflowPx": 0,
+    "contrastFails": 12,
+    "indeterminate": 0
+  },
+  "/portfolio/sber-arhitektura": {
+    "overflowPx": 0,
+    "contrastFails": 13,
+    "indeterminate": 0
+  },
+  "/portfolio/zhenshchiny-sibura": {
+    "overflowPx": 0,
+    "contrastFails": 15,
+    "indeterminate": 0
+  },
+  "/portfolio/uchenye-nizhnego": {
+    "overflowPx": 0,
+    "contrastFails": 10,
+    "indeterminate": 0
+  },
+  "/portfolio/horosho-teaser": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/zhenshchiny-sibura-teaser": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/sber-arhitektura-teaser": {
+    "overflowPx": 2,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/barier-instrukcii": {
+    "overflowPx": 0,
+    "contrastFails": 10,
+    "indeterminate": 0
+  },
+  "/portfolio/caprigo-obuchenie": {
+    "overflowPx": 0,
+    "contrastFails": 15,
+    "indeterminate": 0
+  },
+  "/portfolio/become-legendary-architecture": {
+    "overflowPx": 0,
+    "contrastFails": 11,
+    "indeterminate": 0
+  },
+  "/portfolio/egovtsev-podcast-reels": {
+    "overflowPx": 0,
+    "contrastFails": 12,
+    "indeterminate": 0
+  },
+  "/portfolio/metro-gorkovskaya-reels": {
+    "overflowPx": 83,
+    "contrastFails": 9,
+    "indeterminate": 0
+  },
+  "/portfolio/yango-campaign": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/osnova-report-reels": {
+    "overflowPx": 0,
+    "contrastFails": 12,
+    "indeterminate": 0
+  },
+  "/portfolio/hoff-product-cards": {
+    "overflowPx": 0,
+    "contrastFails": 21,
+    "indeterminate": 0
+  },
+  "/portfolio/caprigo-product-catalog": {
+    "overflowPx": 0,
+    "contrastFails": 17,
+    "indeterminate": 0
+  },
+  "/portfolio/cartier-product-video": {
+    "overflowPx": 0,
+    "contrastFails": 9,
+    "indeterminate": 0
+  },
+  "/portfolio/showreel-site": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/jetlag-showreel": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/showreel-presentation": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/chistotop-awards": {
+    "overflowPx": 0,
+    "contrastFails": 9,
+    "indeterminate": 0
+  },
+  "/portfolio/osnova-trainer": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/osnova-den-materi": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/forum-malaya-rodina": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/skrf-hockey": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/banya-fest": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/yango-arabic-15": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/teraflex-presentation": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/caprigo-presentation": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/korona-production": {
+    "overflowPx": 0,
+    "contrastFails": 12,
+    "indeterminate": 0
+  },
+  "/portfolio/gorky-v-teni-voyny": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  },
+  "/portfolio/socialnyy-uchastkovyy": {
+    "overflowPx": 0,
+    "contrastFails": 8,
+    "indeterminate": 0
+  }
+}

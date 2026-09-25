@@ -1,0 +1,140 @@
+{
+  "src/design-system.css": {
+    "color": 262,
+    "radius": 44,
+    "fontFamily": 4,
+    "total": 310
+  },
+  "src/index.css": {
+    "color": 54,
+    "radius": 20,
+    "fontFamily": 17,
+    "total": 91
+  },
+  "src/legal/legal.css": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "src/v3-polish.css": {
+    "color": 75,
+    "radius": 28,
+    "fontFamily": 3,
+    "total": 106
+  },
+  "public/bb-components.css": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "public/site-skin.css": {
+    "color": 58,
+    "radius": 12,
+    "fontFamily": 1,
+    "total": 71
+  },
+  "public/tokens.css": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "index.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "ceny.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "cvetokorrekciya.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "legal.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "calculator.html <style>": {
+    "color": 17,
+    "radius": 16,
+    "fontFamily": 2,
+    "total": 35
+  },
+  "content-day.html <style>": {
+    "color": 12,
+    "radius": 4,
+    "fontFamily": 1,
+    "total": 17
+  },
+  "event-video.html <style>": {
+    "color": 18,
+    "radius": 4,
+    "fontFamily": 1,
+    "total": 23
+  },
+  "photo.html <style>": {
+    "color": 28,
+    "radius": 6,
+    "fontFamily": 0,
+    "total": 34
+  },
+  "pryamye-translyacii.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 1
+  },
+  "reels.html <style>": {
+    "color": 18,
+    "radius": 4,
+    "fontFamily": 1,
+    "total": 23
+  },
+  "reklamnye-roliki.html <style>": {
+    "color": 20,
+    "radius": 4,
+    "fontFamily": 1,
+    "total": 25
+  },
+  "video-dlya-marketpleysov.html <style>": {
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
+  },
+  "blog/kak-snimat-reels-dlya-biznesa.html <style>": {
+    "color": 15,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 16
+  },
+  "blog/skolko-stoit-snyat-reklamnyy-rolik.html <style>": {
+    "color": 17,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 18
+  },
+  "blog/video-dlya-kartochek-wildberries.html <style>": {
+    "color": 20,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 21
+  },
+  "blog/videosemka-meropriyatiy-nn.html <style>": {
+    "color": 18,
+    "radius": 0,
+    "fontFamily": 1,
+    "total": 19
+  }
+}

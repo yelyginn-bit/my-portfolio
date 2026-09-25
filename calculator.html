@@ -13,23 +13,19 @@
     <meta property="og:description" content="Соберите смету под свой проект за минуту и отправьте заявку." />
     <meta property="og:locale" content="ru_RU" />
     <style>
-      :root {
-        --red: #fe2c1f;
-        --black: #0a0a0a;
-        --panel: #121212;
-        --panel-2: #181818;
-        --white: #f5f5f4;
-        --gray: #8e8e8c;
-        --line: rgba(255, 255, 255, 0.1);
-        --line-soft: rgba(255, 255, 255, 0.06);
-        color-scheme: dark;
-      }
+      /* QWEN-03 Б1: локальный :root с --red/--black/--panel/--white/--gray/--line
+         и color-scheme: dark убран. Замер getComputedStyle показал, что он не
+         доживал до рендера: site-skin.css подключён позже и при равной
+         специфичности переопределяет все восемь имён на --ds-*, а color-scheme
+         перебивался tokens.css (--ds светлая тема). Страница уже жила на общих
+         токенах — теперь это записано явно, а не через слой недействительных
+         объявлений. */
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
       body {
-        background: var(--black);
-        color: var(--white);
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--ds-bg);
+        color: var(--ds-text);
+        font-family: var(--ds-font-body);
         line-height: 1.55;
         -webkit-font-smoothing: antialiased;
         min-height: 100vh;
@@ -55,12 +51,17 @@
       .calc-nav-dropdown-panel a { padding: 8px 10px; border-radius: 5px; font-size: 12px; letter-spacing: 0.04em; text-transform: none; color: rgba(255,255,255,0.78); }
       .calc-nav-dropdown-panel a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
 
-      /* Footer — карта сайта (PROMPT-21 §4), раньше отсутствовала вообще */
-      .calc-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+      /* Footer — карта сайта (PROMPT-21 §4), раньше отсутствовала вообще.
+         QWEN-03 Б1: был прозрачным на светлом корпусе, а ссылки — литералом
+         rgba(255,255,255,0.7): 36 ссылок с контрастом 1.07, то есть карта сайта
+         была невидима. Теперь тёмная полоса, как у остальных страниц, и цвета
+         только из токенов, одинаковых в обеих темах (--ds-charcoal GRAPHITE,
+         --ds-fog FOG): FOG на GRAPHITE = 12.46. */
+      .calc-footer { margin-top: 64px; padding: 40px max(16px, calc((100% - 1180px) / 2)) 48px; background: var(--ds-charcoal); color: var(--ds-fog); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
       .calc-footer nav { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-      .calc-footer nav strong { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
-      .calc-footer nav a { font-size: 12.5px; color: rgba(255,255,255,0.7); overflow-wrap: anywhere; }
-      .calc-footer nav a:hover { color: var(--white); }
+      .calc-footer nav strong { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ds-fog); margin-bottom: 4px; }
+      .calc-footer nav a { font-size: 12.5px; color: var(--ds-fog); overflow-wrap: anywhere; }
+      .calc-footer nav a:hover { color: var(--ds-orange); }
       @media (max-width: 767px) { .calc-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
       /* Header */
@@ -144,6 +145,11 @@
         .calc-input, .calc-textarea { font-size: 16px; }
       }
       .calc-hint { font-size: 11.5px; color: var(--gray); margin-top: 6px; }
+      /* QWEN-03 Б1: ссылка была var(--red) — оранжевый на светлом фоне давал 2.62
+         (замер ORANGE на PAPER). Текст стал INK (17.51), оранжевый остался
+         меткой — подчёркиванием, как разрешено промптом. */
+      .calc-hint__link { color: var(--ds-text); text-decoration: none; border-bottom: 1px solid var(--ds-orange); }
+      .calc-hint__link:hover { border-bottom-color: var(--ds-text); }
 
       /* Discount badge */
       .calc-disc { margin-top: 10px; padding: 12px 14px; border-radius: 9px; background: color-mix(in srgb, var(--ds-orange) 8%, transparent); border: 1px solid color-mix(in srgb, var(--ds-orange) 30%, transparent); font-size: 13px; display: none; }

@@ -1014,8 +1014,6 @@ td {
    .site-static-nav > a. Других <nav> в кодовой базе, которым нужен был бы
    именно этот тёмный цвет, нет. .c-nav/.j-nav — другие классы (страницы
    кейсов/журнала), их этот список по-прежнему красит без изменений. */
-.c-nav,
-.j-nav,
 .breadcrumb,
 .meta,
 .foot-copy,
@@ -1023,6 +1021,20 @@ td {
 .client-tag,
 .platform,
 .spec-note,
+/* QWEN-04: полупрозрачные чернила слоя теперь записаны через `color-mix` от
+   тематического токена, а не литералом rgba(10,10,10,…). Значение на светлой
+   теме побитово то же (микс от INK идёт в premultiplied srgb), но на тёмной
+   теме оно становится PAPER той же плотности — то есть читаемым. Идиома уже
+   используется в брендбуке: public/bb-components.css:145. */
+article p,
+article li,
+.price-table td,
+td,
+blockquote p {
+  color: color-mix(in srgb, var(--ds-text) 70%, transparent) !important;
+}
+.c-nav,
+.j-nav,
 .calc-back,
 .acc-back,
 .adm-link,
@@ -1034,23 +1046,13 @@ td {
 .calc-row-name,
 .calc-row-price,
 .calc-sum-line span:first-child,
-/* QWEN-04: полупрозрачные чернила слоя теперь записаны через `color-mix` от
-   тематического токена, а не литералом rgba(10,10,10,…). Значение на светлой
-   теме побитово то же (микс от INK идёт в premultiplied srgb), но на тёмной
-   теме оно становится PAPER той же плотности — то есть читаемым. Идиома уже
-   используется в брендбуке: public/bb-components.css:145. */
 .acc-progress-txt,
 .adm-pill,
 .j-card p,
 .j-article p,
 .j-article li,
 .j-article h3,
-.c-block p,
-article p,
-article li,
-.price-table td,
-td,
-blockquote p {
+.c-block p {
   color: color-mix(in srgb, var(--ds-text) 70%, transparent) !important;
 }
 
@@ -1062,13 +1064,17 @@ blockquote p {
 
 .article-card,
 .spec-box,
-blockquote,
+blockquote {
+  background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
+  border-color: var(--line);
+  color: var(--ds-text);
+}
 .calc-summary,
 .acc-stat,
 .acc-order,
 .adm-tab,
 .adm-pill,
-.gal-drop {
+.gal-drop  {
   background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
   border-color: var(--line);
   color: var(--ds-text);
@@ -1092,8 +1098,10 @@ blockquote,
 
 input,
 textarea,
-select,
-.g-input {
+select {
+  color: var(--ds-text) !important;
+}
+.g-input  {
   color: var(--ds-text) !important;
 }
 
@@ -1102,12 +1110,16 @@ textarea::placeholder {
   color: color-mix(in srgb, var(--ds-text) 42%, transparent) !important;
 }
 
-.cta-ghost:hover,
+.cta-ghost:hover {
+  background: var(--ds-bg) !important;
+  border-color: var(--ds-bg) !important;
+  color: var(--ds-text) !important;
+}
 .calc-cta-ghost:hover,
 .acc-btn-ghost:hover,
 .gal-mini-btn.ghost:hover,
 .c-btn.ghost:hover,
-.j-btn.ghost:hover {
+.j-btn.ghost:hover  {
   background: var(--ds-bg) !important;
   border-color: var(--ds-bg) !important;
   color: var(--ds-text) !important;
@@ -1232,12 +1244,14 @@ main > .articles {
 .grid-3,
 .price-row,
 .grid,
-.cc-grid,
+.cc-grid {
+  gap: var(--site-gap) !important;
+}
 .calc-grid,
 .acc-stats,
 .gal-layout,
 .gal-grid,
-.c-blocks {
+.c-blocks  {
   gap: var(--site-gap) !important;
 }
 

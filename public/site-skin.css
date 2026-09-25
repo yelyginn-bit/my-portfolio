@@ -132,14 +132,20 @@ body.site-menu-open { overflow: hidden; }
 /* Тот же дефицит, что чинили для .card-num: --site-muted (#5f5f59) на
    подложке карточки (~#d4d4d0) даёт 4.33:1, ниже AA. Только .card p —
    .price-card p не трогаем, там не измеряли. !important обязателен по
-   той же причине, что и ниже для .card-num. */
-.site-static .card p { color: #595953 !important; }
+   той же причине, что и ниже для .card-num.
+   QWEN-04: #595953 → `color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg))`.
+   Микс НЕ через transparent: #595953 был непрозрачным, и прозрачная замена
+   давала бы разный тон над карточкой (#d4d4d0) и над PAPER — сдвиг до 12 по
+   каналу. Смесь INK/PAPER остаётся непрозрачной: на светлой теме это
+   rgb(86,86,83) против rgb(89,89,83) — сдвиг 3, в допуске, и контраст даже
+   лучше (тон темнее); на тёмной — rgb(165,164,161), то есть читаемый. */
+.site-static .card p { color: color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg)) !important; }
 /* .card-num — это <p>, поэтому правило выше (рассчитанное на абзацы текста)
    тоже его ловит и красит в --site-muted (#5f5f59) — на подложке карточки
    (~#d4d4d0) это даёт 4.3:1, ниже AA. Нужна !important: правило выше уже
    important, обычная специфичность его не перебьёт. #595953 — тот же
    нейтральный тон на волосок темнее, 4.74:1. */
-.site-static .card p.card-num { color: #595953 !important; }
+.site-static .card p.card-num { color: color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg)) !important; }
 .site-static .price-card[data-featured="true"] p, .site-static .price-card.featured p { color: var(--site-muted) !important; }
 .site-static .price-card strong, .site-static .price-tag { color: var(--site-accent) !important; }
 .site-static .faq { max-width: 900px; margin-left: auto; border-top: 1px solid var(--site-border); }
@@ -370,7 +376,7 @@ header nav a {
   display: inline-flex;
   min-height: 40px;
   align-items: center;
-  color: rgba(10, 10, 10, 0.72) !important;
+  color: color-mix(in srgb, var(--ds-text) 72%, transparent) !important;
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0 !important;
@@ -882,13 +888,29 @@ select:focus-visible {
   }
 }
 
-/* Light theme compatibility for legacy pages with embedded dark-theme CSS. */
+/* Light theme compatibility for legacy pages with embedded dark-theme CSS.
+   QWEN-04: был `color: #111` — единственная причина, по которой любая
+   статическая страница при data-theme="dark" получала невидимый текст
+   (замер ночной смены: 28 узлов ниже порога на /pryamye-translyacii).
+   #111 → var(--ds-text) — сдвиг 7 по каждому каналу (17 → 10): на волосок
+   за допуск «не больше 6» из QWEN-04 §2.1, и это осознанный выбор — с
+   литералом §2.2 недостижим. Перечислено в журнале.
+
+   `header` из списка убран отдельным правилом: шапка статических страниц —
+   фиксированно СВЕТЛАЯ пилюля (`background: #f1f0ea`, темой не управляется), и
+   на единственной тёмной странице сайта (пилот) тематический --ds-text дал
+   PAPER по PAPER — замер 1.01 против 16.54 до правки. Чернила хрома поэтому
+   берутся из theme-стабильного GRAPHITE (#171717): это те же #111, что были,
+   плюс 6 по каналу, и одинаково в обеих темах. */
 body,
-header,
 main,
 footer,
 section {
-  color: #111 !important;
+  color: var(--ds-text) !important;
+}
+
+header {
+  color: var(--ds-charcoal) !important;
 }
 
 header,
@@ -931,6 +953,11 @@ td {
 .calc-row-name,
 .calc-row-price,
 .calc-sum-line span:first-child,
+/* QWEN-04: полупрозрачные чернила слоя теперь записаны через `color-mix` от
+   тематического токена, а не литералом rgba(10,10,10,…). Значение на светлой
+   теме побитово то же (микс от INK идёт в premultiplied srgb), но на тёмной
+   теме оно становится PAPER той же плотности — то есть читаемым. Идиома уже
+   используется в брендбуке: public/bb-components.css:145. */
 .acc-progress-txt,
 .adm-pill,
 .j-card p,
@@ -943,7 +970,7 @@ article li,
 .price-table td,
 td,
 blockquote p {
-  color: rgba(10, 10, 10, 0.7) !important;
+  color: color-mix(in srgb, var(--ds-text) 70%, transparent) !important;
 }
 
 .grid-3,
@@ -991,7 +1018,7 @@ select,
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(10, 10, 10, 0.42) !important;
+  color: color-mix(in srgb, var(--ds-text) 42%, transparent) !important;
 }
 
 .cta-ghost:hover,
@@ -1009,7 +1036,7 @@ textarea::placeholder {
 .client-tag,
 .platform {
   border-color: var(--line) !important;
-  color: rgba(10, 10, 10, 0.62) !important;
+  color: color-mix(in srgb, var(--ds-text) 62%, transparent) !important;
 }
 
 .tag:hover {
@@ -1022,9 +1049,16 @@ textarea::placeholder {
   color: var(--ds-text) !important;
 }
 
+/* Единственное правило, которое всё ещё лечит инлайн-стили старых страниц:
+   на /reels, /photo, /event-video, /reklamnye-roliki осталось 8 абзацев вида
+   `style="… color:rgba(255,255,255,.4…)"` — белёсый текст прежней тёмной
+   палитры. Без этого правила они невидимы на PAPER (проверено снятием
+   `!important` только в этой строке: rgba(10,10,10,.62) → rgba(255,255,255,.45)).
+   Инлайн-стили править нельзя (QWEN-04 §0.3), поэтому правило остаётся, но
+   чернила берутся из токена. */
 [style*="color:rgba(255"],
 [style*="color: rgba(255"] {
-  color: rgba(10, 10, 10, 0.62) !important;
+  color: color-mix(in srgb, var(--ds-text) 62%, transparent) !important;
 }
 
 /* Shared grid for service pages, blog, calculator and private tools. */

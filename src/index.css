@@ -59,11 +59,6 @@
   --shadow-soft: 0 24px 70px -52px rgba(0, 0, 0, 0.7);
 }
 
-body {
-  background: radial-gradient(circle at 12% -12%, rgba(254, 44, 31, 0.06), transparent 34rem),
-    var(--ds-bg);
-}
-
 body,
 .site-home {
   color: var(--ink);
@@ -78,11 +73,14 @@ body,
   --section-space: clamp(72px, 8vw, 128px);
 }
 
-body,
-.site-home {
-  background: var(--ds-bg) !important;
-}
-
+/* QWEN-07 §2.3: здесь были ещё `body { background: radial-gradient(
+   rgba(254,44,31,.06) …), var(--ds-bg) }` и `body, .site-home { background:
+   var(--ds-bg) !important }`. Красное свечение вне брендбука, а `!important`
+   держал его ровно в том месте, где оно должно было быть незаметно: пока он
+   есть, вычисленный background-image у body — none, уберёшь одно без другого —
+   свечение возвращается. Убраны обе: фон красит design-system.css:176 тем же
+   var(--ds-bg). Проверено вычисленными стилями на /ceny и /cvetokorrekciya
+   (bg rgb(242,241,236), image none) и попиксельно. */
 @media (max-width: 640px) {
   :root {
     --site-gutter: var(--ds-gutter);

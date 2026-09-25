@@ -1257,24 +1257,28 @@ main > .articles {
 
 .card,
 .price-card,
-.article-card,
+.article-card {
+  padding: clamp(22px, 2.2vw, 34px) !important;
+}
 .calc-card,
 .acc-card,
 .adm-card,
 .adm-login,
 .j-card,
-.c-case {
+.c-case  {
   padding: clamp(22px, 2.2vw, 34px) !important;
 }
 
 .cta,
-.cta-ghost,
+.cta-ghost {
+  min-height: 48px;
+}
 .calc-cta,
 .acc-btn,
 .adm-btn,
 .g-btn,
 .c-btn,
-.j-btn {
+.j-btn  {
   min-height: 48px;
 }
 
@@ -1338,9 +1342,11 @@ main > .articles {
     padding-block: 14px !important;
   }
 
-  header nav,
+  header nav {
+    justify-content: flex-start;
+  }
   .c-nav,
-  .j-nav {
+.j-nav  {
     justify-content: flex-start;
   }
 
@@ -1360,13 +1366,15 @@ main > .articles {
 
   .card,
   .price-card,
-  .article-card,
+  .article-card {
+    padding: 20px !important;
+  }
   .calc-card,
-  .acc-card,
-  .adm-card,
-  .adm-login,
-  .j-card,
-  .c-case {
+.acc-card,
+.adm-card,
+.adm-login,
+.j-card,
+.c-case  {
     padding: 20px !important;
   }
 }

@@ -16,6 +16,7 @@ import {augmentServiceRelatedWork, augmentBlogContext, BLOG_SERVICE} from './scr
  * совпадением, у ссылки-пункта нет "начинается с").
  */
 const V3_CHROME_FILES: Readonly<Record<string, V3ChromeActive>> = {
+  '404.html': {},
   'reels.html': {serviceHref: '/reels'},
   'event-video.html': {serviceHref: '/event-video'},
   'reklamnye-roliki.html': {serviceHref: '/reklamnye-roliki'},

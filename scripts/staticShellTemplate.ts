@@ -67,6 +67,7 @@ export function augmentStaticFooter(html: string, fileLabel: string): string {
 
 /** Файл → человекочитаемая метка для сообщений об ошибках сборки. */
 export const STATIC_SHELL_FILES: readonly string[] = [
+  "404.html",
   "content-day.html",
   "event-video.html",
   "photo.html",

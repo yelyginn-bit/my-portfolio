@@ -548,7 +548,16 @@ h3,
   border-radius: var(--radius) !important;
 }
 
-.cta,
+.cta {
+  background: var(--red) !important;
+  border-color: var(--red) !important;
+  color: var(--ds-on-accent) !important;
+  min-height: 48px;
+  font-size: 13px !important;
+  font-weight: 700;
+  letter-spacing: 0 !important;
+  text-transform: none;
+}
 .calc-cta,
 .acc-btn,
 .adm-btn,
@@ -566,7 +575,16 @@ h3,
   text-transform: none;
 }
 
-.cta-ghost,
+.cta-ghost {
+  background: color-mix(in srgb, var(--ds-text) 3.5%, transparent) !important;
+  border: 1px solid var(--line) !important;
+  color: color-mix(in srgb, var(--ds-text) 84%, transparent) !important;
+  min-height: 48px;
+  font-size: 13px !important;
+  font-weight: 700;
+  letter-spacing: 0 !important;
+  text-transform: none;
+}
 .calc-cta-ghost,
 .acc-btn-ghost,
 .gal-mini-btn.ghost,
@@ -744,8 +762,10 @@ select:focus-visible {
 }
 
 @media (max-width: 820px) {
-  .wrap,
-  .calc-wrap,
+  .wrap {
+    width: min(100% - 24px, 1240px) !important;
+  }
+.calc-wrap,
   .acc-wrap,
   .adm-wrap,
   .g-wrap,
@@ -755,13 +775,17 @@ select:focus-visible {
   }
 
   header .inner,
-  .calc-top,
+  .foot {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 14px !important;
+  }
+.calc-top,
   .acc-top,
   .adm-top,
   .g-top,
   .c-top,
-  .j-top,
-  .foot {
+  .j-top {
     align-items: flex-start !important;
     flex-direction: column;
     gap: 14px !important;
@@ -777,11 +801,17 @@ select:focus-visible {
   }
 
   nav,
-  .c-nav,
-  .j-nav,
-  .adm-tabs,
   .links-row,
   .ctas {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+.c-nav,
+  .j-nav,
+  .adm-tabs {
     width: 100%;
     display: flex;
     overflow-x: auto;

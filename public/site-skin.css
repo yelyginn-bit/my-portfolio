@@ -41,7 +41,14 @@
 
 body.site-static { margin: 0; overflow-x: clip; background: var(--site-bg) !important; color: var(--site-text); }
 body.site-menu-open { overflow: hidden; }
-.site-static a { color: inherit; text-decoration: none; }
+/* PROMPT-31 §2.1 (найдено QWEN-03, night-log.md «Решить владельцу» п.8):
+   этот безусловный `color: inherit` (0,1,1) перебивал `.bb-btn { color:
+   var(--ds-on-accent) }` (0,1,0) на пилоте — подпись на ORANGE наследовала
+   цвет корпуса (PAPER на ORANGE = 2.62 вместо INK на ORANGE = 6.69).
+   `:not([class*="bb-"])` — единственный способ исключить компоненты
+   брендбука, не трогая остальные 10 статических страниц, где bb-* классов
+   нет вообще (там селектор матчит те же элементы, что и раньше). */
+.site-static a:not([class*="bb-"]) { color: inherit; text-decoration: none; }
 .site-static :is(a, button, input, textarea, select):focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 
 /* Карта сайта в подвале (PROMPT-21 §4/§4.3): раньше футер этих 11 страниц

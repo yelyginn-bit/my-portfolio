@@ -314,7 +314,7 @@ body:has(.v3-editorial-page) {
 .v3-blog-grid p { max-width: 36ch; margin: 0; color: rgba(244,244,239,.62); line-height: 1.5; }
 .v3-blog-grid svg { position: absolute; top: 1.25rem; right: 1.25rem; width: 20px; }
 .v3-about-page { display: grid; grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr); gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem); }
-.v3-about-page figure { position: relative; min-height: 600px; margin: 0; overflow: hidden; border-radius: 20px; background: #121212; }
+.v3-about-page figure { position: relative; min-height: 600px; margin: 0; overflow: hidden; border-radius: 20px; background: var(--ds-charcoal); }
 .v3-about-page figure img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .v3-about-page figcaption { position: absolute; right: 0; bottom: 0; left: 0; padding: .7rem; background: #0a0a0a; font: 650 .54rem/1 var(--ds-font-mono); }
 .v3-about-page > div { display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.4rem, 3vw, 3rem); border-radius: 20px; background: var(--ds-charcoal); }

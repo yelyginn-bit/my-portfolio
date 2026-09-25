@@ -3,17 +3,17 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
-    "offscreen": 2,
-    "checked": 139
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 251
   },
   "/portfolio@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
-    "offscreen": 2,
-    "checked": 71
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 213
   },
   "/blog@1440": {
     "lines": 0,
@@ -45,7 +45,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 123
+    "checked": 114
   },
   "/content-day@1440": {
     "lines": 0,
@@ -53,7 +53,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 88
+    "checked": 94
   },
   "/reklamnye-roliki@1440": {
     "lines": 0,
@@ -61,7 +61,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 89
+    "checked": 154
   },
   "/event-video@1440": {
     "lines": 0,
@@ -69,7 +69,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 84
+    "checked": 142
   },
   "/reels@1440": {
     "lines": 0,
@@ -77,7 +77,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 83
+    "checked": 148
   },
   "/cvetokorrekciya@1440": {
     "lines": 0,
@@ -85,7 +85,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 44
+    "checked": 171
   },
   "/video-dlya-marketpleysov@1440": {
     "lines": 0,
@@ -93,7 +93,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 85
+    "checked": 154
   },
   "/pryamye-translyacii@1440": {
     "lines": 0,
@@ -101,7 +101,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 64
+    "checked": 145
   },
   "/ceny@1440": {
     "lines": 0,
@@ -109,7 +109,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 162
+    "checked": 212
   },
   "/photo@1440": {
     "lines": 0,
@@ -117,7 +117,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 71
+    "checked": 165
   },
   "/privacy-policy@1440": {
     "lines": 0,
@@ -125,7 +125,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 111
+    "checked": 127
   },
   "/personal-data-consent@1440": {
     "lines": 0,
@@ -133,7 +133,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 79
+    "checked": 95
   },
   "/cookie-policy@1440": {
     "lines": 0,
@@ -141,7 +141,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 89
+    "checked": 105
   },
   "/terms@1440": {
     "lines": 0,
@@ -149,7 +149,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 75
+    "checked": 91
   },
   "/payment-terms@1440": {
     "lines": 0,
@@ -157,7 +157,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 74
+    "checked": 90
   },
   "/cancellation-refund@1440": {
     "lines": 0,
@@ -165,7 +165,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 71
+    "checked": 87
   },
   "/gallery-terms@1440": {
     "lines": 0,
@@ -173,7 +173,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 73
+    "checked": 89
   },
   "/data-request@1440": {
     "lines": 0,
@@ -181,7 +181,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 75
+    "checked": 91
   },
   "/blog/skolko-stoit-snyat-reklamnyy-rolik@1440": {
     "lines": 0,
@@ -189,7 +189,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 107
+    "checked": 155
   },
   "/blog/kak-snimat-reels-dlya-biznesa@1440": {
     "lines": 0,
@@ -197,7 +197,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 90
+    "checked": 127
   },
   "/blog/video-dlya-kartochek-wildberries@1440": {
     "lines": 0,
@@ -205,7 +205,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 102
+    "checked": 154
   },
   "/blog/videosemka-meropriyatiy-nn@1440": {
     "lines": 0,
@@ -213,7 +213,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 99
+    "checked": 160
   },
   "/portfolio/camera@1440": {
     "lines": 0,
@@ -227,17 +227,17 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 76
+    "checked": 125
   },
   "/portfolio/events@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
-    "offscreen": 2,
-    "checked": 68
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 116
   },
   "/portfolio/reels@1440": {
     "lines": 0,
@@ -252,14 +252,14 @@
     "overlap": 0,
     "clipX": 0,
     "clipY": 0,
-    "offscreen": 2,
+    "offscreen": 0,
     "checked": 81
   },
   "/portfolio/interviews@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
     "checked": 97
   },
@@ -267,31 +267,31 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
-    "offscreen": 2,
-    "checked": 71
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 205
   },
   "/portfolio/color@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 73
+    "checked": 137
   },
   "/portfolio/broadcast@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
-    "offscreen": 2,
-    "checked": 64
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 112
   },
   "/portfolio/product@1440": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
     "checked": 102
   },
@@ -309,7 +309,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 43
+    "checked": 104
   },
   "/portfolio/sber-arhitektura@1440": {
     "lines": 0,
@@ -317,7 +317,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 45
+    "checked": 109
   },
   "/portfolio/zhenshchiny-sibura@1440": {
     "lines": 0,
@@ -325,7 +325,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 46
+    "checked": 119
   },
   "/portfolio/uchenye-nizhnego@1440": {
     "lines": 0,
@@ -333,7 +333,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 65
+    "checked": 101
   },
   "/portfolio/horosho-teaser@1440": {
     "lines": 0,
@@ -341,7 +341,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 80
+    "checked": 92
   },
   "/portfolio/zhenshchiny-sibura-teaser@1440": {
     "lines": 0,
@@ -365,7 +365,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 62
+    "checked": 102
   },
   "/portfolio/caprigo-obuchenie@1440": {
     "lines": 0,
@@ -373,7 +373,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 46
+    "checked": 117
   },
   "/portfolio/become-legendary-architecture@1440": {
     "lines": 0,
@@ -381,7 +381,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 55
+    "checked": 105
   },
   "/portfolio/egovtsev-podcast-reels@1440": {
     "lines": 0,
@@ -389,7 +389,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 31
+    "checked": 107
   },
   "/portfolio/metro-gorkovskaya-reels@1440": {
     "lines": 0,
@@ -397,7 +397,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 32
+    "checked": 95
   },
   "/portfolio/yango-campaign@1440": {
     "lines": 0,
@@ -405,7 +405,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 61
+    "checked": 95
   },
   "/portfolio/osnova-report-reels@1440": {
     "lines": 0,
@@ -413,7 +413,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 33
+    "checked": 108
   },
   "/portfolio/hoff-product-cards@1440": {
     "lines": 0,
@@ -421,7 +421,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 51
+    "checked": 132
   },
   "/portfolio/caprigo-product-catalog@1440": {
     "lines": 0,
@@ -429,7 +429,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 46
+    "checked": 123
   },
   "/portfolio/cartier-product-video@1440": {
     "lines": 0,
@@ -453,7 +453,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 92
+    "checked": 93
   },
   "/portfolio/showreel-presentation@1440": {
     "lines": 0,
@@ -477,7 +477,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 92
+    "checked": 93
   },
   "/portfolio/osnova-den-materi@1440": {
     "lines": 0,
@@ -485,7 +485,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 92
+    "checked": 93
   },
   "/portfolio/forum-malaya-rodina@1440": {
     "lines": 0,
@@ -493,7 +493,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 95
+    "checked": 96
   },
   "/portfolio/skrf-hockey@1440": {
     "lines": 0,
@@ -525,7 +525,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 96
+    "checked": 97
   },
   "/portfolio/caprigo-presentation@1440": {
     "lines": 0,
@@ -565,15 +565,15 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 115
+    "checked": 243
   },
   "/portfolio@390": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 63
+    "checked": 201
   },
   "/blog@390": {
     "lines": 0,
@@ -605,7 +605,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 123
+    "checked": 106
   },
   "/content-day@390": {
     "lines": 0,
@@ -613,7 +613,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 88
+    "checked": 86
   },
   "/reklamnye-roliki@390": {
     "lines": 0,
@@ -621,7 +621,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 79
+    "checked": 146
   },
   "/event-video@390": {
     "lines": 0,
@@ -629,7 +629,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 73
+    "checked": 134
   },
   "/reels@390": {
     "lines": 0,
@@ -637,7 +637,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 73
+    "checked": 140
   },
   "/cvetokorrekciya@390": {
     "lines": 0,
@@ -645,7 +645,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 56
+    "checked": 163
   },
   "/video-dlya-marketpleysov@390": {
     "lines": 0,
@@ -653,7 +653,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 64
+    "checked": 146
   },
   "/pryamye-translyacii@390": {
     "lines": 0,
@@ -661,7 +661,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 64
+    "checked": 137
   },
   "/ceny@390": {
     "lines": 0,
@@ -669,7 +669,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 94
+    "checked": 204
   },
   "/photo@390": {
     "lines": 0,
@@ -677,7 +677,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 71
+    "checked": 157
   },
   "/privacy-policy@390": {
     "lines": 0,
@@ -685,7 +685,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 63
+    "checked": 119
   },
   "/personal-data-consent@390": {
     "lines": 0,
@@ -693,7 +693,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 79
+    "checked": 87
   },
   "/cookie-policy@390": {
     "lines": 0,
@@ -701,7 +701,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 89
+    "checked": 97
   },
   "/terms@390": {
     "lines": 0,
@@ -709,7 +709,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 75
+    "checked": 83
   },
   "/payment-terms@390": {
     "lines": 0,
@@ -717,7 +717,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 74
+    "checked": 82
   },
   "/cancellation-refund@390": {
     "lines": 0,
@@ -725,7 +725,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 71
+    "checked": 79
   },
   "/gallery-terms@390": {
     "lines": 0,
@@ -733,7 +733,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 73
+    "checked": 81
   },
   "/data-request@390": {
     "lines": 0,
@@ -741,7 +741,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 75
+    "checked": 83
   },
   "/blog/skolko-stoit-snyat-reklamnyy-rolik@390": {
     "lines": 0,
@@ -749,7 +749,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 107
+    "checked": 147
   },
   "/blog/kak-snimat-reels-dlya-biznesa@390": {
     "lines": 0,
@@ -757,7 +757,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 86
+    "checked": 119
   },
   "/blog/video-dlya-kartochek-wildberries@390": {
     "lines": 0,
@@ -765,7 +765,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 92
+    "checked": 146
   },
   "/blog/videosemka-meropriyatiy-nn@390": {
     "lines": 0,
@@ -773,7 +773,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 95
+    "checked": 152
   },
   "/portfolio/camera@390": {
     "lines": 0,
@@ -787,17 +787,17 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 61
+    "checked": 115
   },
   "/portfolio/events@390": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 79
+    "checked": 106
   },
   "/portfolio/reels@390": {
     "lines": 0,
@@ -819,7 +819,7 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
     "checked": 89
   },
@@ -827,31 +827,31 @@
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 2,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 62
+    "checked": 193
   },
   "/portfolio/color@390": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 63
+    "checked": 125
   },
   "/portfolio/broadcast@390": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
-    "checked": 71
+    "checked": 102
   },
   "/portfolio/product@390": {
     "lines": 0,
     "overlap": 0,
     "clipX": 0,
-    "clipY": 1,
+    "clipY": 0,
     "offscreen": 0,
     "checked": 94
   },
@@ -869,7 +869,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 95
+    "checked": 96
   },
   "/portfolio/sber-arhitektura@390": {
     "lines": 0,
@@ -877,7 +877,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 100
+    "checked": 101
   },
   "/portfolio/zhenshchiny-sibura@390": {
     "lines": 0,
@@ -885,7 +885,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 60
+    "checked": 111
   },
   "/portfolio/uchenye-nizhnego@390": {
     "lines": 0,
@@ -933,7 +933,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 82
+    "checked": 109
   },
   "/portfolio/become-legendary-architecture@390": {
     "lines": 0,
@@ -941,7 +941,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 95
+    "checked": 97
   },
   "/portfolio/egovtsev-podcast-reels@390": {
     "lines": 0,
@@ -949,7 +949,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 40
+    "checked": 99
   },
   "/portfolio/metro-gorkovskaya-reels@390": {
     "lines": 0,
@@ -973,7 +973,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 41
+    "checked": 100
   },
   "/portfolio/hoff-product-cards@390": {
     "lines": 0,
@@ -981,7 +981,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 66
+    "checked": 124
   },
   "/portfolio/caprigo-product-catalog@390": {
     "lines": 0,
@@ -989,7 +989,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 66
+    "checked": 115
   },
   "/portfolio/cartier-product-video@390": {
     "lines": 0,
@@ -1005,7 +1005,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 83
+    "checked": 82
   },
   "/portfolio/jetlag-showreel@390": {
     "lines": 0,
@@ -1013,7 +1013,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 84
+    "checked": 85
   },
   "/portfolio/showreel-presentation@390": {
     "lines": 0,
@@ -1021,7 +1021,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 82
+    "checked": 83
   },
   "/portfolio/chistotop-awards@390": {
     "lines": 0,
@@ -1029,7 +1029,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 84
+    "checked": 86
   },
   "/portfolio/osnova-trainer@390": {
     "lines": 0,
@@ -1053,7 +1053,7 @@
     "clipX": 0,
     "clipY": 0,
     "offscreen": 0,
-    "checked": 87
+    "checked": 88
   },
   "/portfolio/skrf-hockey@390": {
     "lines": 0,

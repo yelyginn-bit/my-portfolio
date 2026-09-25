@@ -7,6 +7,18 @@ import {
 } from "../portfolio/v3PortfolioData";
 import { PROJECT_STILLS, type ProjectStill } from "./v3Content";
 
+/** Обрезка по слову для .portfolio-mosaic__item p (PROMPT-34 §2.1) — до 3
+    строк / .75rem/1.35 в колонке max-width:42ch (src/v3-polish.css) укладывают
+    примерно 170 символов; -webkit-line-clamp:3 остаётся как страховка на
+    случай, если оценка занижена (самое длинное текущее описание — 159
+    символов и укладывается без обрезки). */
+function truncateAtWord(text: string, maxChars = 170) {
+  if (text.length <= maxChars) return text;
+  const cut = text.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
+}
+
 const roleLabels: Record<string, string> = {
   camera: "камера",
   operator: "оператор",
@@ -164,7 +176,7 @@ export function ModularMosaic({ projects, allProjects }: { projects: Project[]; 
             <div>
               <span>{projectNumber(allProjects, project)}</span>
               <h3>{project.title}</h3>
-              {project.description && <p>{project.description}</p>}
+              {project.description && <p>{truncateAtWord(project.description)}</p>}
               <small>{projectRoles(project)}</small>
             </div>
           </a>

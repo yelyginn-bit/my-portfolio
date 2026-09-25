@@ -86,7 +86,7 @@ const AUDIT_FN = `async (width) => {
     const r = el.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) return null;
     if (s.visibility === "hidden" || s.display === "none" || s.opacity === "0") return null;
-    if (r.bottom < -2 || r.top > innerHeight + 4000) return null;
+    if (r.bottom < -2) return null;
     return { s, r };
   };
 
@@ -141,8 +141,15 @@ const AUDIT_FN = `async (width) => {
     const hiddenX = s.overflowX === "hidden" || s.overflowX === "clip";
     const hiddenY = s.overflowY === "hidden" || s.overflowY === "clip";
     const ellipsis = s.textOverflow === "ellipsis" || s.textOverflow === "clip";
+    // -webkit-line-clamp — намеренная обрезка в N строк (PROMPT-34 §2.3), не
+    // случайная: у неё тоже overflow-y:hidden + scrollHeight>clientHeight, но
+    // это дизайн (.portfolio-mosaic__item p и т.п.), а не баг. computed
+    // display у -webkit-box с line-clamp в текущем Chromium — "flow-root", не
+    // "-webkit-box" (проверено вживую), поэтому единственный надёжный сигнал —
+    // сам webkitLineClamp.
+    const lineClamped = s.webkitLineClamp && s.webkitLineClamp !== "none";
     if (hiddenX && !ellipsis && el.scrollWidth > el.clientWidth + 1) { clipX++; note("обрезан по горизонтали", el, el.scrollWidth + "→" + el.clientWidth); }
-    if (hiddenY && el.scrollHeight > el.clientHeight + 1) { clipY++; note("обрезан по вертикали", el, el.scrollHeight + "→" + el.clientHeight); }
+    if (hiddenY && !lineClamped && el.scrollHeight > el.clientHeight + 1) { clipY++; note("обрезан по вертикали", el, el.scrollHeight + "→" + el.clientHeight); }
 
     // 3) за краем вьюпорта
     if (s.position !== "fixed" && (r.right > innerWidth + 1 || r.left < -1) && !inTicker(el) && !clippedByAncestor(el, r.right > innerWidth + 1)) { offscreen++; note("за краем экрана", el, Math.round(r.left) + ".." + Math.round(r.right)); }

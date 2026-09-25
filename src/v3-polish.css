@@ -251,7 +251,7 @@ body:has(.v3-editorial-page) {
 .portfolio-row--text-only > .portfolio-project-info { min-height: clamp(270px, 28vw, 390px); }
 .portfolio-mosaic__item > div { grid-template-rows: auto auto auto auto; }
 .portfolio-mosaic__item span { grid-row: span 4; }
-.portfolio-mosaic__item p { max-width: 42ch; display: -webkit-box; margin: 0; overflow: hidden; color: rgba(244,244,239,.7); font: 400 .75rem/1.35 var(--ds-font-mono); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.portfolio-mosaic__item p { max-width: 42ch; display: -webkit-box; margin: 0; overflow: hidden; color: rgba(244,244,239,.7); font: 400 .75rem/1.35 var(--ds-font-mono); -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .portfolio-text-project {
   min-height: clamp(270px, 28vw, 390px);
   display: block;

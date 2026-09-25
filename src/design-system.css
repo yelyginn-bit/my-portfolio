@@ -1426,7 +1426,7 @@ body.v3-menu-open { overflow: hidden; }
    Горьковская»», 3-4 строки) поздние строки съезжали друг на друга и
    зрительно обрезали последние буквы/закрывающую кавычку — тот же класс
    бага, что у .v3-section-head h2 и .v3-contact__intro. */
-.portfolio-project-info h3 { margin: 3rem 0 .85rem; font: 800 clamp(2rem, 4vw, 5rem)/1 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
+.portfolio-project-info h3 { margin: 3rem 0 .85rem; font: 800 clamp(2rem, 4vw, 5rem)/1 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; overflow-wrap: anywhere; }
 .portfolio-project-info p { max-width: 38ch; margin: 0 0 1.2rem; color: rgba(244,244,239,.7); font: 400 clamp(.88rem, 1.1vw, 1rem)/1.5 var(--ds-font-mono); }
 .portfolio-project-info small { display: block; color: rgba(244,244,239,.6); font: 650 .56rem/1.4 var(--ds-font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .portfolio-project-info > svg { width: 20px; margin-top: 1.5rem; }

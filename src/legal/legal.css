@@ -24,13 +24,10 @@
 body { margin: 0; }
 a { color: inherit; text-underline-offset: 3px; }
 
-header, main, footer { width: min(960px, calc(100% - 32px)); margin: auto; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--ds-border); }
-header > a { font-weight: 800; text-decoration: none; font-size: 20px; }
-header span { color: var(--ds-orange); }
-nav { display: flex; gap: 18px; flex-wrap: wrap; }
-
-main { padding: 64px 0; }
+/* header/footer больше не свои — <SiteHeader/>/<SiteFooter/> из src/public/V3App.tsx
+   (PROMPT-33 §Б.4), стили у них в design-system.css/v3-polish.css. Здесь
+   остаётся только контейнер контента и добавочный блок реквизитов. */
+main { width: min(960px, calc(100% - 32px)); margin: auto; padding: 64px 0; }
 .eyebrow, .meta { font-size: 13px; color: var(--ds-text-secondary); }
 .eyebrow { text-transform: uppercase; letter-spacing: .12em; }
 h1 { font-family: var(--ds-font-display); font-size: var(--ds-h1); font-weight: 700; line-height: 1.02; letter-spacing: var(--ds-track-display); margin: 12px 0 20px; text-wrap: balance; }
@@ -42,19 +39,13 @@ h2 { font-family: var(--ds-font-display); font-size: var(--ds-h2); font-weight: 
 p, li { font-size: 16px; }
 li + li { margin-top: 8px; }
 
-footer { border-top: 1px solid var(--ds-border); padding: 32px 0 56px; }
-footer nav { margin: 22px 0; }
-footer button { border: 1px solid var(--ds-border-strong); background: transparent; padding: 12px 16px; cursor: pointer; }
-
-.legal-footer-groups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 22px 0; padding-top: 22px; border-top: 1px solid var(--ds-border); }
-.legal-footer-groups nav { display: flex; flex-direction: column; gap: 6px; margin: 0; }
-.legal-footer-groups nav strong { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
-.legal-footer-groups nav a { font-size: 13px; color: var(--ds-text); }
-.legal-footer-groups nav a:hover { color: var(--ds-orange); }
+.legal-info { border-top: 1px solid var(--ds-border); padding: 32px 0 0; margin-top: 28px; }
+.legal-info p { font-size: 14px; color: var(--ds-text-secondary); }
+.legal-info nav { display: flex; gap: 18px; flex-wrap: wrap; margin: 22px 0 0; }
+.legal-info nav a { font-size: 13px; color: var(--ds-text); }
+.legal-info nav a:hover { color: var(--ds-orange); }
 
 @media (max-width: 640px) {
-  header { align-items: flex-start; gap: 18px; flex-direction: column; }
   main { padding: 40px 0; }
-  footer nav { display: grid; gap: 10px; }
-  .legal-footer-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .legal-info nav { display: grid; gap: 10px; }
 }

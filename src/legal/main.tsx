@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import LegalApp from "./LegalApp";
+import "../design-system.css";
+import "../v3-polish.css";
 import "./legal.css";
 
 const root = document.getElementById("root")!;

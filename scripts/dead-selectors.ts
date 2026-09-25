@@ -69,7 +69,11 @@ function parseRules(cssText: string): Rule[] {
             walk(body, off + i + 1, selector.startsWith("@media") ? selector : media);
           }
         } else if (selector && !selector.split(",").every((s) => /^(from|to|[0-9.]+%)$/.test(s.trim()))) {
-          rules.push({ selector, line: clean.slice(0, Math.max(0, off + i - buf.length)).split("\n").length, media });
+          // buf начинается сразу после предыдущей «}» и потому включает пустые
+          // строки и комментарий над правилом: без сдвига на первый не-пробел
+          // номер строки уезжал на 2–3 строки вперёд.
+          const lead = buf.length - buf.replace(/^\s+/, "").length;
+          rules.push({ selector, line: clean.slice(0, Math.max(0, off + i - buf.length + lead)).split("\n").length, media });
         }
         buf = ""; i = j; continue;
       }

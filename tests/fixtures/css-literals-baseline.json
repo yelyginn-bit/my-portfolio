@@ -1,9 +1,9 @@
 {
   "src/design-system.css": {
-    "color": 262,
-    "radius": 44,
-    "fontFamily": 4,
-    "total": 310
+    "color": 266,
+    "radius": 45,
+    "fontFamily": 0,
+    "total": 311
   },
   "src/index.css": {
     "color": 54,
@@ -20,8 +20,8 @@
   "src/v3-polish.css": {
     "color": 75,
     "radius": 28,
-    "fontFamily": 3,
-    "total": 106
+    "fontFamily": 0,
+    "total": 103
   },
   "public/bb-components.css": {
     "color": 0,

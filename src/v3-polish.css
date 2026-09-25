@@ -10,9 +10,15 @@ body:has(.v3-editorial-page) {
   background: #0a0a0a;
 }
 
-/* Six public links, one flexible utility cell and one closing CTA. */
+/* Six public links, one flexible utility cell and one closing CTA — правило
+   верное для 9 треков/8 элементов, но с добавлением calc-button (PROMPT-32
+   §1.1.1) элементов стало 10 (лого + 6 ссылок + calc-button + status + cta),
+   а трек как был девятым, так и остался — этот файл грузится ПОСЛЕ
+   design-system.css (src/main.tsx), поэтому именно эта копия побеждала.
+   Десятый трек — под calc-button; justify-self:end у .nav-calc-button (там
+   же) не даёт ему растянуться на весь гибкий трек minmax(). */
 .v3-nav {
-  grid-template-columns: 50px repeat(6, max-content) minmax(118px, 1fr) max-content !important;
+  grid-template-columns: 50px repeat(6, max-content) minmax(70px, 1fr) max-content max-content !important;
 }
 
 /* The MP4 is progressive enhancement: the poster is always present underneath. */
@@ -324,7 +330,13 @@ body:has(.v3-editorial-page) {
   border-radius: 20px;
   background: radial-gradient(circle at 10% 12%, rgba(255,90,31,.35), transparent 34%), radial-gradient(circle at 78% 70%, rgba(124,92,255,.23), transparent 52%), #15131c;
 }
-.v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3.2rem, 4.8vw, 5rem); line-height: .86; }
+/* PROMPT-32 §1.1.3: 0.86 — меньше единицы, строка короче своего собственного
+   кегля. На «ЕСТЬ ЗАДАЧА? / РАССКАЖИТЕ» (перенос на две строки, курсив на
+   своей строке) это давало настоящее наложение строк, не связанное с
+   курсивом как таковым — Inter Italic теперь честный (см. @font-face
+   design-system.css), но межстрочный это не чинил. 1.0 — граница, ниже
+   которой соседние строки гарантированно не касаются. */
+.v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3.2rem, 4.8vw, 5rem); line-height: 1; }
 .v3-contact__intro :is(h1, h2) i { color: var(--ds-orange); font-family: var(--ds-font-display); font-weight: 400; }
 .v3-social-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: auto !important; padding-top: 2rem; }
 .v3-social {
@@ -366,8 +378,6 @@ body:has(.v3-editorial-page) {
   text-transform: uppercase;
 }
 .v3-footer__socials svg { width: 15px; }
-.v3-footer__wordmark { padding: clamp(3rem, 6vw, 6rem) 1rem 0; font-size: clamp(5rem, 17.3vw, 19rem); letter-spacing: -.055em; line-height: .72; }
-.v3-footer__wordmark span { display: block; transform: scaleX(.985); transform-origin: left bottom; }
 
 .v3-editorial-page { min-height: 100svh; padding-top: clamp(6.8rem, 8vw, 8.5rem); color: #f4f4ef; background: #0a0a0a; }
 .v3-editorial-hero { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--v3-module-gap); align-items: end; padding-bottom: clamp(2rem, 4vw, 4rem); border-bottom: 1px solid rgba(255,255,255,.24); }
@@ -475,7 +485,6 @@ body:has(.v3-editorial-page) {
   .v3-contact__intro { min-height: 0; }
   .v3-social-grid { grid-template-columns: 1fr 1fr; }
   .v3-social--instagram, .v3-social--telegram { grid-column: 1 / -1; }
-  .v3-footer__wordmark { font-size: 19vw; letter-spacing: -.045em; }
   .v3-editorial-page { padding-top: 6.3rem; }
   .v3-editorial-hero h1 { font-size: clamp(4rem, 20vw, 6.5rem); }
   .v3-blog-grid { grid-template-columns: 1fr; }

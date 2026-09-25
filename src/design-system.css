@@ -146,6 +146,15 @@
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter/inter-700-cyrillic-ext.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+/* PROMPT-32 §1.1.3: курсивный акцент (h1 i/h2 i) синтетическим наклоном
+   Inter без файла italic съезжал по высоте строки и накладывался на соседнюю
+   строку («ЕСТЬ ЗАДАЧА? / РАССКАЖИТЕ» на 390px). Настоящий Inter Italic —
+   тот же self-hosted набор, только для weight 400, subset latin/latin-ext/
+   cyrillic/cyrillic-ext, лицензия та же public/fonts/inter/OFL.txt. */
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-italic-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-italic-400-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-italic-400-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("/fonts/inter/inter-italic-400-cyrillic-ext.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
 
 /* Roboto Mono, self-hosted (PROMPT-30 §3.1) — та же четвёрка подмножеств,
    что у Inter выше: latin/latin-ext/cyrillic/cyrillic-ext, 400/500/700,
@@ -685,7 +694,10 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 @keyframes v3-marquee { to { transform: translateX(-50%); } }
 .v3-work { padding-block: clamp(6rem, 10vw, 11rem); }
 .v3-section-head { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--ds-grid-gap); align-items: end; margin-bottom: 4rem; }
-.v3-section-head h2 { margin: 0; font: 700 clamp(3rem, 6.7vw, 7.4rem)/.86 var(--ds-font-display); letter-spacing: -.065em; }
+/* PROMPT-32 §1.1.3: 0.86 на принудительном переносе (<br/> перед курсивом
+   «РАБОТЫ») — вторая строка начиналась на ~15px раньше, чем кончалась первая.
+   Тот же класс бага, что у .v3-contact__intro. */
+.v3-section-head h2 { margin: 0; font: 700 clamp(3rem, 6.7vw, 7.4rem)/1 var(--ds-font-display); letter-spacing: -.065em; }
 .v3-section-head > a { justify-self: end; display: inline-flex; align-items: center; gap: .5rem; padding-bottom: .5rem; border-bottom: 1px solid; font: 680 .68rem/1 var(--ds-font-mono); }
 .v3-project-grid, .v3-catalog__list { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
 .v3-project-card { position: relative; grid-column: span 6; display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 5fr); min-height: 370px; border: 1px solid var(--ds-text); background: var(--ds-surface); color: var(--ds-text); overflow: hidden; }
@@ -721,8 +733,20 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-broadcast h2 { grid-column: 1; margin: 1rem 0 0; font: 700 clamp(6rem, 17vw, 18rem)/.7 var(--ds-font-display); letter-spacing: -.085em; }
 .v3-broadcast > .v3-shell > p:not(.v3-kicker) { grid-column: 2; max-width: 28rem; margin-bottom: 2rem; color: rgba(255,255,255,.72); font-size: 1.05rem; line-height: 1.55; }
 .v3-broadcast .v3-button { grid-column: 2; justify-self: start; }
-.v3-about { padding-block: clamp(6rem, 12vw, 12rem); display: grid; grid-template-columns: 3fr 6fr 3fr; gap: var(--ds-grid-gap); border-bottom: 1px solid var(--ds-text); }
+/* PROMPT-32 §1.2.9: было 6-12rem паддинга на кикер + два коротких абзаца —
+   ~70% блока пустое. Уплотнили паддинг и добавили реальные факты (роли,
+   преподавание, клиенты) — источники: /about и та же бегущая строка клиентов
+   на этой странице, ничего не выдумано. */
+.v3-about { padding-block: clamp(4rem, 8vw, 8rem); display: grid; grid-template-columns: 3fr 6fr 3fr; gap: var(--ds-grid-gap); border-bottom: 1px solid var(--ds-text); }
 .v3-about h2 { margin: 0; font: 700 clamp(3rem, 6vw, 6.8rem)/.88 var(--ds-font-display); letter-spacing: -.06em; }
+/* .v3-about > div ниже (специфичность класс+тег выше класса-модификатора)
+   иначе перебивает display/align-content и список ролей уезжает вниз. */
+.v3-about > .v3-about__roles { display: flex; flex-direction: column; gap: 1.4rem; align-content: start; }
+.v3-about__roles ul { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+/* var(--ds-text-secondary) здесь резолвится в светлый #5f5f59 (нет
+   data-theme="dark" на этом маршруте) — 3.08 на #0a0a0a, ниже порога;
+   rgba(244,244,239,.68) — тот же приём, что у .v32-services__card p рядом. */
+.v3-about__roles li { color: rgba(244,244,239,.68); font: 650 .74rem/1.3 var(--ds-font-mono); letter-spacing: .03em; text-transform: uppercase; }
 .v3-about > div { display: grid; gap: 1.3rem; align-content: end; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-about > div p { margin: 0; }
 .v3-contact { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 7vw, 9rem); padding-block: clamp(6rem, 10vw, 10rem); }
@@ -756,7 +780,15 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-footer__frame h2 { margin: 1rem 0 0; font: 700 clamp(4rem, 10vw, 10rem)/.78 var(--ds-font-display); letter-spacing: -.07em; }
 .v3-footer__frame h2 i { font-family: var(--ds-font-display); font-weight: 400; }
 .v3-footer__frame .v3-button { justify-self: end; }
-.v3-footer__wordmark { padding: 2rem 1rem 0; overflow: hidden; font: 900 clamp(5rem, 18vw, 20rem)/.68 var(--ds-font-display); letter-spacing: -.08em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.35); }
+/* PROMPT-32 §1.1.6: было -webkit-text-stroke на HTML-тексте — псевдо-обводка
+   (несколько смещённых копий заливки), на острых внутренних углах Y и N
+   копии не гасят друг друга и остаётся видимый треугольник; плюс line-height
+   < 1 с overflow:hidden срезали низ буквы. Настоящая SVG-обводка (stroke
+   векторного контура, а не копии заливки) даёт чистый контур без артефактов,
+   viewBox по замеру getBBox — без обрезки. */
+.v3-footer__wordmark { padding: clamp(3rem, 6vw, 6rem) 1rem 2rem; }
+.v3-footer__wordmark svg { display: block; width: 100%; max-width: 1800px; height: auto; overflow: visible; }
+.v3-footer__wordmark text { font: 900 1000px var(--ds-font-display); letter-spacing: -.045em; fill: none; stroke: rgba(255,255,255,.35); stroke-width: 1.25px; paint-order: stroke; vector-effect: non-scaling-stroke; }
 .v3-footer__meta { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; padding: 2rem 1rem; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.62); font: 550 .62rem/1.4 var(--ds-font-mono); }
 .v3-footer__meta nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
 .v3-footer__meta span:last-child { text-align: right; }
@@ -865,12 +897,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-footer__frame { min-height: 520px; grid-template-columns: 1fr; }
   .v3-footer__frame h2 { max-width: 100%; font-size: 2.5rem; overflow-wrap: anywhere; }
   .v3-footer__frame .v3-button { justify-self: start; }
-  /* 19vw, не 23vw: не смог воспроизвести обрезку в этом инструменте
-     (Chromium), но она видна на реальном iPhone (Safari) — шрифт
-     "Arial Narrow" реально не установлен на macOS/iOS, замена браузером
-     может быть шире расчёта. Запас по ширине защищает от разницы
-     в фолбэк-шрифте между движками, которую здесь не измерить. */
-  .v3-footer__wordmark { font-size: 19vw; }
   .v3-footer__meta { grid-template-columns: 1fr; }
   .v3-footer__meta nav { justify-content: flex-start; }
   .v3-footer__meta nav a, .v3-footer__meta button { min-height: 44px; display: inline-flex; align-items: center; }
@@ -1311,8 +1337,10 @@ body.v3-menu-open { overflow: hidden; }
   /* Без анимации строка стоит на первом кадре и режет имя на границе
      контейнера (на 390px — уже третье, «БАРЬЕР» — видно только «БАРЬ»).
      Мягкое затухание вместо жёсткого обреза — реального имени не
-     дочитать в статике в любом случае, так честнее, чем ровный срез. */
-  .v3-marquee { -webkit-mask-image: linear-gradient(to right, #000 90%, transparent); mask-image: linear-gradient(to right, #000 90%, transparent); }
+     дочитать в статике в любом случае, так честнее, чем ровный срез.
+     PROMPT-32 §1.1.5: было только с правого края — с левого точно так же
+     обрезано первое имя, симметрично. */
+  .v3-marquee { -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); }
 }
 
 /* The non-V3 public mounts use the same information architecture. */
@@ -1327,7 +1355,12 @@ body.v3-menu-open { overflow: hidden; }
 /* ── V3 visual repair: progressive media, TP-7 navigation, editorial portfolio ── */
 .v3-nav {
   box-sizing: border-box;
-  grid-template-columns: 50px repeat(6, max-content) minmax(118px, 1fr) max-content !important;
+  /* grid-template-columns здесь не объявляется — v3-polish.css грузится
+     после этого файла (src/main.tsx) и держит свою копию с тем же
+     селектором и !important, она и побеждала. PROMPT-32 §1.1.1: было ДВЕ
+     копии одного правила в двух файлах, девять треков на десять элементов
+     грида (лого + 6 пунктов + calc-button + status + cta) — так и родилась
+     двухэтажная шапка. Значение и разбор — v3-polish.css, у .v3-nav. */
   gap: 4px;
   min-height: 60px;
   padding: 5px;
@@ -1386,19 +1419,28 @@ body.v3-menu-open { overflow: hidden; }
 .v32-home .v3-work .v3-section-head > a { color: #f4f4ef; }
 
 .v32-services { padding-block: clamp(4rem, 7vw, 7rem); color: #f4f4ef; }
-.v32-services__head { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--ds-grid-gap); align-items: end; margin-bottom: clamp(2rem, 4vw, 4rem); padding-bottom: 1.4rem; border-bottom: 1px solid rgba(255,255,255,.24); }
+/* PROMPT-32 §1.1.2: было 2fr 7fr 3fr — три трека, а дети адресуют линии
+   1/3, 3/13, 3/10, как будто грид на 12 колонок (см. .v32-services__grid
+   рядом). Лишние линии грид создавал implicit-колонками auto-ширины — h1
+   попадал в узкую implicit-колонку вместо честной доли, при 79px шрифта это
+   и давало обрезанный по буквам заголовок у правого края. */
+.v32-services__head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); align-items: end; margin-bottom: clamp(2rem, 4vw, 4rem); padding-bottom: 1.4rem; border-bottom: 1px solid rgba(255,255,255,.24); }
 .v32-services__head > p { grid-column: 1 / 3; }
-.v32-services__head h1 { grid-column: 3 / 13; margin: 0; font: 700 clamp(2.6rem, 5.5vw, 6rem)/.92 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
-.v32-services__head h2 { grid-column: 3 / 10; margin: .7rem 0 0; color: rgba(244,244,239,.7); font: 700 clamp(1rem, 1.5vw, 1.25rem)/1.35 var(--ds-font-display); }
+.v32-services__head h1 { grid-column: 3 / 13; margin: 0; font-family: var(--ds-font-display); font-weight: 700; font-size: var(--ds-h2); line-height: .92; letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
+.v32-services__head h2 { grid-column: 3 / 10; margin: .7rem 0 0; color: rgba(244,244,239,.7); font: 400 clamp(1rem, 1.5vw, 1.25rem)/1.35 var(--ds-font-display); }
 .v32-services__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(.75rem, 1.35vw, 1.25rem); }
 .v32-services__card { grid-column: span 4; display: flex; min-height: 250px; flex-direction: column; padding: clamp(1.15rem, 2vw, 1.8rem); border: 1px solid rgba(255,255,255,.26); border-radius: 20px; background: rgba(255,255,255,.035); }
 .v32-services__card > p:first-child { margin: 0 0 auto; color: var(--ds-orange); font: 700 .6rem/1 var(--ds-font-mono); letter-spacing: .1em; }
 .v32-services__card h3 { margin: 2rem 0 .75rem; font: 750 clamp(1.45rem, 2vw, 2.1rem)/.95 var(--ds-font-display); letter-spacing: -.03em; text-transform: uppercase; }
 .v32-services__card > p:not(:first-child) { margin: 0; color: rgba(244,244,239,.68); font-size: .96rem; line-height: 1.5; }
-.v32-services__card a, .v32-services__links a { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding-top: 1.25rem; color: inherit; font: 700 .62rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
-.v32-services__card a:hover, .v32-services__links a:hover { color: var(--ds-orange); }
-.v32-services__links { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1.25rem; }
-.v32-services__links a { margin: 0; padding: 0; }
+.v32-services__card a { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding-top: 1.25rem; color: inherit; font: 700 .62rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
+.v32-services__card a:hover { color: var(--ds-orange); }
+/* PROMPT-32 §1.2.7: раньше та же лёгкая текстовая ссылка, что у карточек —
+   на тёмном фоне почти не видна. Кнопка в системе карточек над блоком:
+   рамка, моно капс, min-height как у .v3-button. */
+.v32-services__links { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 1.25rem; }
+.v32-services__links a { display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; padding: .8rem 1.4rem; border: 1px solid rgba(255,255,255,.35); border-radius: 2px; color: inherit; font: 720 .72rem/1 var(--ds-font-mono); letter-spacing: .09em; text-transform: uppercase; text-decoration: none; transition: transform .22s ease, border-color .22s ease, color .22s ease; }
+.v32-services__links a:hover { transform: translateY(-2px); border-color: var(--ds-orange); color: var(--ds-orange); }
 
 .v3-catalog { min-height: 100svh; padding: 0 0 clamp(5rem, 8vw, 9rem); color: #f4f4ef; background: #0a0a0a; }
 .v3-catalog > .v3-catalog__hero { padding-top: clamp(7rem, 9vw, 9rem); }
@@ -1427,7 +1469,11 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-project-info { min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(1rem, 2.4vw, 2.25rem); color: #f4f4ef; }
 .portfolio-project-info__meta { width: 100%; display: flex; justify-content: space-between; gap: 1rem; color: var(--ds-orange); font: 700 .7rem/1 var(--ds-font-mono); letter-spacing: .09em; text-transform: uppercase; }
 .portfolio-project-info > div:nth-child(2) { margin-top: auto; }
-.portfolio-project-info h3 { margin: 3rem 0 .85rem; font: 800 clamp(2rem, 4vw, 5rem)/.88 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
+/* PROMPT-32 §1.1.4: 0.88 — на длинных заголовках («Концерты «Станции метро
+   Горьковская»», 3-4 строки) поздние строки съезжали друг на друга и
+   зрительно обрезали последние буквы/закрывающую кавычку — тот же класс
+   бага, что у .v3-section-head h2 и .v3-contact__intro. */
+.portfolio-project-info h3 { margin: 3rem 0 .85rem; font: 800 clamp(2rem, 4vw, 5rem)/1 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
 .portfolio-project-info p { max-width: 38ch; margin: 0 0 1.2rem; color: rgba(244,244,239,.7); font: 400 clamp(.88rem, 1.1vw, 1rem)/1.5 var(--ds-font-mono); }
 .portfolio-project-info small { display: block; color: rgba(244,244,239,.6); font: 650 .56rem/1.4 var(--ds-font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .portfolio-project-info > svg { width: 20px; margin-top: 1.5rem; }
@@ -1603,7 +1649,10 @@ body.v3-menu-open { overflow: hidden; }
 .nav-dropdown-menu a { display: flex; min-height: 40px; align-items: center; padding-inline: .75rem; border-radius: 9px; color: var(--ds-text); font: 650 .68rem/1.2 var(--ds-font-mono); letter-spacing: .02em; text-transform: none; white-space: normal; }
 .nav-dropdown-menu a:hover { background: rgba(10,10,10,.06); }
 .nav-dropdown-menu a[aria-current="page"] { color: var(--ds-accent-text-legacy); }
-.nav-calc-button { display: inline-flex; align-items: center; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 14px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
+/* justify-self: no-op вне грида (используется и в .ds-header, flex) — внутри
+   .v3-nav не даёт кнопке растянуться на весь гибкий трек, см. комментарий у
+   .v3-nav grid-template-columns выше. */
+.nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 14px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
 .nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-accent-text-legacy); }
 .nav-mobile-calc-button { display: flex; min-height: 52px; align-items: center; justify-content: center; margin-bottom: .5rem; padding: 1rem; color: #0a0a0a; background: var(--ds-orange); border-radius: 12px; font: 700 .85rem/1 var(--ds-font-mono); letter-spacing: .04em; text-transform: uppercase; }
 .nav-dropdown-mobile-group summary { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,.12); color: #fff; font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; cursor: pointer; list-style: none; }

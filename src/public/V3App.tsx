@@ -352,6 +352,15 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const submittingRef = useRef(false);
+
+  // PROMPT-32 §15: клик по карточке тарифа на /video-dlya-marketpleysov ведёт
+  // сюда с ?tariff=... — подставляем название тарифа началом сообщения,
+  // дальше человек дописывает сам. Только при первом монтаже, не перетирает
+  // то, что уже начали печатать.
+  useEffect(() => {
+    const tariff = new URLSearchParams(window.location.search).get("tariff");
+    if (tariff) setMessage((current) => current || `Тариф: ${tariff}\n`);
+  }, []);
   const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
   const Heading = pageHeading ? "h1" : "h2";
 

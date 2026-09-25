@@ -33,6 +33,13 @@
     <link rel="stylesheet" href="/tokens.css" />
     <link rel="stylesheet" href="/bb-components.css" />
     <link rel="stylesheet" href="/site-skin.css" />
+    <!-- PROMPT-32 §10-11: шапка и подвал — общий V3-компонент (та же
+         разметка и тот же CSS, что у SiteHeader/SiteFooter в
+         src/public/V3App.tsx), а не копия классов. Прямая ссылка на
+         исходники, а не публичная копия — один источник правды, эта
+         страница не может разойтись с design-system.css/v3-polish.css. -->
+    <link rel="stylesheet" href="/src/design-system.css" />
+    <link rel="stylesheet" href="/src/v3-polish.css" />
     <style>
       /* PROMPT-30 — пилот заново на компонентах брендбука (docs/brandbook/).
          Общие атомы/компоненты — /bb-components.css; здесь только то, что
@@ -77,11 +84,18 @@
       h2 { font-family: var(--ds-font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 40px; }
       h2 span { color: var(--ds-orange); }
 
-      .platforms { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+      /* PROMPT-32 §14: было под заголовком — справа от него, на одной
+         строке на широких экранах (перенос на свою строку на узких). */
+      .mk-platforms-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 40px; }
+      .mk-platforms-head h2 { margin-bottom: 0; }
+      .platforms { display: flex; gap: 16px; flex-wrap: wrap; }
       .mk-platform { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 20px; border: var(--ds-stroke) solid var(--ds-border-strong); color: var(--ds-text-secondary); }
 
       .mk-price-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-      .mk-price-card { border: var(--ds-stroke) solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; }
+      /* PROMPT-32 §15: карточка теперь <a> — кликабельна целиком, ведёт на
+         заявку с подставленным тарифом (ContactSection читает ?tariff=). */
+      .mk-price-card { display: block; border: var(--ds-stroke) solid var(--ds-border-strong); padding: 28px 24px; border-radius: 0; cursor: pointer; transition: border-color .2s ease, transform .2s ease; }
+      .mk-price-card:hover, .mk-price-card:focus-visible { border-color: var(--ds-orange); transform: translateY(-2px); }
       .mk-price-card.featured { border-color: var(--ds-orange); }
       .price-tag { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; margin: 8px 0 4px; }
       .mk-price-label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 4px; }
@@ -89,11 +103,19 @@
       .price-note { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ds-text-secondary); margin-bottom: 20px; }
       .price-footnote { font-size: 0.85rem; color: var(--ds-text-muted); margin-top: 20px; }
 
-      .faq { display: grid; gap: 0; }
-      .faq-item { padding: 24px 0; border-top: var(--ds-stroke) solid var(--ds-border); }
-      .faq-item:last-child { border-bottom: var(--ds-stroke) solid var(--ds-border); }
+      .mk-video-card { display: grid; gap: .75rem; }
+      .mk-video-card .bb-project-card__role a { color: inherit; }
+      .mk-video-card .bb-project-card__role a:hover { color: var(--ds-orange); }
+
+      /* PROMPT-32 §16: было одной колонкой на всю ширину .wrap (1100px) —
+         короткие вопрос/ответ тонут в пустом месте справа. Две колонки,
+         по сетке брендбука. */
+      .faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+      .faq-item { padding: 20px 0; border-top: var(--ds-stroke) solid var(--ds-border); }
+      .faq-item:nth-last-child(-n+2) { border-bottom: var(--ds-stroke) solid var(--ds-border); }
       .faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
       .mk-faq-a { font-size: 0.9rem; color: var(--ds-text-secondary); line-height: 1.65; }
+      @media (max-width: 767px) { .faq { grid-template-columns: 1fr; } .faq-item:nth-last-child(-n+2) { border-bottom: 0; } .faq-item:last-child { border-bottom: var(--ds-stroke) solid var(--ds-border); } }
 
       .links-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
       .mk-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ds-text-secondary); border: var(--ds-stroke) solid var(--ds-border); padding: 6px 14px; border-radius: 0; }
@@ -110,20 +132,85 @@
     </style>
   </head>
   <body id="page-marketplace">
-    <header>
-      <div class="bb-nav">
-        <a class="bb-nav__logo" href="/">YELYGINN</a>
-        <nav class="bb-nav__links" aria-label="Основная навигация">
-          <a href="/portfolio">Портфолио</a>
+    <header class="v3-header">
+      <nav class="v3-nav" aria-label="Основная навигация">
+        <a class="v3-nav__brand" href="/" aria-label="YELYGINN — главная">Y</a>
+        <div class="v3-nav__links">
+          <div class="nav-dropdown">
+            <button type="button" aria-expanded="false" data-active="true">Услуги</button>
+            <div class="nav-dropdown-menu">
+              <a href="/reklamnye-roliki">Рекламные ролики</a>
+              <a href="/event-video">Видеосъёмка мероприятий</a>
+              <a href="/reels">Reels для бизнеса</a>
+              <a href="/video-dlya-marketpleysov" aria-current="page">Видео для маркетплейсов</a>
+              <a href="/content-day">Контент-день</a>
+              <a href="/pryamye-translyacii">Прямые трансляции</a>
+              <a href="/cvetokorrekciya">Цветокоррекция</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <button type="button" aria-expanded="false">Портфолио</button>
+            <div class="nav-dropdown-menu">
+              <a href="/portfolio">Всё портфолио</a>
+              <a href="/portfolio/camera">Операторская работа</a>
+              <a href="/portfolio/commercial">Коммерческие проекты</a>
+              <a href="/portfolio/events">События и SDE</a>
+              <a href="/portfolio/reels">Вертикальные работы</a>
+              <a href="/portfolio/concerts">Концерты</a>
+              <a href="/portfolio/interviews">Интервью и спецпроекты</a>
+              <a href="/portfolio/post">Монтаж и постпродакшн</a>
+              <a href="/portfolio/color">Цвет</a>
+              <a href="/portfolio/broadcast">Прямая трансляция</a>
+              <a href="/portfolio/product">Продуктовое видео</a>
+            </div>
+          </div>
           <a href="/photo">Фото</a>
           <a href="/ceny">Цены</a>
           <a href="/blog">Блог</a>
           <a href="/about">Обо мне</a>
-          <a href="/calculator">Рассчитать стоимость</a>
-        </nav>
-        <a class="bb-btn bb-nav__cta" href="/contact">Обсудить проект</a>
-      </div>
+        </div>
+        <a class="nav-calc-button" href="/calculator">Рассчитать стоимость</a>
+        <span class="v3-nav__status">CORE // READY</span>
+        <a class="v3-nav__cta" href="/contact"><span class="v3-nav__cta-full">ОБСУДИТЬ ПРОЕКТ</span><span class="v3-nav__cta-short">ОБСУДИТЬ</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>
+        <button class="v3-nav__menu" type="button" aria-expanded="false" aria-controls="v3-mobile-menu" aria-label="Открыть меню"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button>
+      </nav>
     </header>
+    <div id="v3-mobile-menu" class="v3-mobile-menu" hidden>
+      <a class="v3-mobile-menu__calc" href="/calculator">Рассчитать стоимость</a>
+      <details class="nav-dropdown-mobile-group">
+        <summary aria-current="page">Услуги</summary>
+        <a href="/reklamnye-roliki">Рекламные ролики</a>
+        <a href="/event-video">Видеосъёмка мероприятий</a>
+        <a href="/reels">Reels для бизнеса</a>
+        <a href="/video-dlya-marketpleysov" aria-current="page">Видео для маркетплейсов</a>
+        <a href="/content-day">Контент-день</a>
+        <a href="/pryamye-translyacii">Прямые трансляции</a>
+        <a href="/cvetokorrekciya">Цветокоррекция</a>
+      </details>
+      <details class="nav-dropdown-mobile-group">
+        <summary>Портфолио</summary>
+        <a href="/portfolio">Все — портфолио</a>
+        <a href="/portfolio/camera">Операторская работа</a>
+        <a href="/portfolio/commercial">Коммерческие проекты</a>
+        <a href="/portfolio/events">События и SDE</a>
+        <a href="/portfolio/reels">Вертикальные работы</a>
+        <a href="/portfolio/concerts">Концерты</a>
+        <a href="/portfolio/interviews">Интервью и спецпроекты</a>
+        <a href="/portfolio/post">Монтаж и постпродакшн</a>
+        <a href="/portfolio/color">Цвет</a>
+        <a href="/portfolio/broadcast">Прямая трансляция</a>
+        <a href="/portfolio/product">Продуктовое видео</a>
+      </details>
+      <a href="/photo">Фото</a>
+      <a href="/ceny">Цены</a>
+      <a href="/blog">Блог</a>
+      <a href="/about">Обо мне</a>
+      <a href="/contact">Обсудить проект <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>
+      <div class="v3-mobile-menu__contacts">
+        <a href="https://t.me/YuriElygin">Telegram</a>
+        <a href="mailto:y.elyginn@gmail.com">Email</a>
+      </div>
+    </div>
 
     <main>
       <section class="bb-hero wrap">
@@ -152,13 +239,15 @@
 
       <section>
         <div class="wrap">
-          <h2>Работаю с <span>платформами</span></h2>
-          <div class="platforms">
-            <span class="mk-platform">Wildberries</span>
-            <span class="mk-platform">Ozon</span>
-            <span class="mk-platform">Яндекс.Маркет</span>
-            <span class="mk-platform">AliExpress</span>
-            <span class="mk-platform">Мегамаркет</span>
+          <div class="mk-platforms-head">
+            <h2>Работаю с <span>платформами</span></h2>
+            <div class="platforms">
+              <span class="mk-platform">Wildberries</span>
+              <span class="mk-platform">Ozon</span>
+              <span class="mk-platform">Яндекс.Маркет</span>
+              <span class="mk-platform">AliExpress</span>
+              <span class="mk-platform">Мегамаркет</span>
+            </div>
           </div>
           <ol class="bb-steps">
             <li class="bb-step">
@@ -193,15 +282,37 @@
 
       <section aria-label="Примеры товарного видео">
         <div class="wrap">
+          <!-- PROMPT-32 §12-13: было два <img> на несуществующий формат URL
+               Kinescope (kinescope.io/{id}/poster/{size}.webp — такого пути
+               у Kinescope нет, отсюда битые картинки). Реальные ролики этих
+               же проектов из v3PortfolioData.ts (assetsForProject), постеры —
+               те же локальные файлы public/v3-assets/posters/, что и в
+               остальном портфолио. Плеер — тот же ленивый клик-по-постеру,
+               что в KinescopeEmbed (src/components/media/KinescopeEmbed.tsx):
+               iframe не грузится, пока не нажали. -->
           <div class="bb-work-grid bb-work-grid--2">
-            <a href="/portfolio" class="bb-project-card">
-              <div class="bb-project-card__media"><img src="https://kinescope.io/vFFSNV1fcvUEAPjk5gGMV7/poster/lg.webp" alt="Кадр из товарного ролика HOFF" loading="lazy" width="1280" height="720" /></div>
-              <div class="bb-project-card__meta"><p class="bb-project-card__role">HOFF · товарный ролик</p></div>
-            </a>
-            <a href="/portfolio" class="bb-project-card">
-              <div class="bb-project-card__media"><img src="https://kinescope.io/6cL2AVoFUHmKCTZSbXsNWR/poster/md.webp" alt="Кадр из товарного ролика Caprigo" loading="lazy" width="720" height="960" /></div>
-              <div class="bb-project-card__meta"><p class="bb-project-card__role">Caprigo · новая коллекция</p></div>
-            </a>
+            <div class="mk-video-card">
+              <div class="kinescope-embed" data-orientation="16:9" data-kinescope-id="oesfViYTJW9KWuKo4rpFxq" style="padding-top: 56.25%;">
+                <button type="button" class="kinescope-embed-placeholder" aria-label="Воспроизвести видео: HOFF — Франция">
+                  <img class="kinescope-embed-poster" src="/v3-assets/posters/oesfViYTJW9KWuKo4rpFxq.webp" alt="" loading="lazy" decoding="async" />
+                  <span class="kinescope-embed-scrim" aria-hidden="true"></span>
+                  <span class="kinescope-embed-play" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></span>
+                  <span class="kinescope-embed-label">HOFF — Франция</span>
+                </button>
+              </div>
+              <p class="bb-project-card__role"><a href="/portfolio/hoff-product-cards">HOFF · карточки товара</a></p>
+            </div>
+            <div class="mk-video-card">
+              <div class="kinescope-embed" data-orientation="16:9" data-kinescope-id="a5xv428qM8GECjN197KwFx" style="padding-top: 56.25%;">
+                <button type="button" class="kinescope-embed-placeholder" aria-label="Воспроизвести видео: Caprigo — каталог продукции">
+                  <img class="kinescope-embed-poster" src="/v3-assets/posters/a5xv428qM8GECjN197KwFx.webp" alt="" loading="lazy" decoding="async" />
+                  <span class="kinescope-embed-scrim" aria-hidden="true"></span>
+                  <span class="kinescope-embed-play" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></span>
+                  <span class="kinescope-embed-label">Caprigo — каталог продукции</span>
+                </button>
+              </div>
+              <p class="bb-project-card__role"><a href="/portfolio/caprigo-product-catalog">Caprigo · каталог продукции</a></p>
+            </div>
           </div>
         </div>
       </section>
@@ -213,38 +324,38 @@
           <h2>Стоимость видео для <span>маркетплейсов</span></h2>
           <p class="price-note">Съёмка и монтаж одного товара — от 35 000 ₽</p>
           <div class="mk-price-row">
-            <div class="mk-price-card">
+            <a class="mk-price-card" href="/?tariff=%D0%9C%D0%BE%D0%BD%D1%82%D0%B0%D0%B6%20%E2%80%94%20%D0%B1%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9#contact">
               <p class="mk-price-label">Монтаж — базовый</p>
               <p class="price-tag">от 10 000 ₽/ролик</p>
               <p class="mk-price-desc">Нарезка, синхронизация аудио, титры, LUT-коррекция. Формат под требования платформы.</p>
-            </div>
-            <div class="mk-price-card featured">
+            </a>
+            <a class="mk-price-card featured" href="/?tariff=%D0%9C%D0%BE%D0%BD%D1%82%D0%B0%D0%B6%20%E2%80%94%20%D1%81%D1%82%D0%B0%D0%BD%D0%B4%D0%B0%D1%80%D1%82#contact">
               <p class="mk-price-label">Монтаж — стандарт</p>
               <p class="price-tag">от 18 000 ₽/ролик</p>
               <p class="mk-price-desc">Динамика, моушн-графика, стабилизация, инфографика. Оптимально для конкурентных карточек.</p>
-            </div>
-            <div class="mk-price-card">
+            </a>
+            <a class="mk-price-card" href="/?tariff=%D0%A1%D0%B5%D1%80%D0%B8%D1%8F%20%D1%81%20%D0%B8%D0%BD%D1%84%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D0%BA%D0%BE%D0%B9#contact">
               <p class="mk-price-label">Серия с инфографикой</p>
               <p class="price-tag">от 70 000 ₽</p>
               <p class="mk-price-desc">Комплект динамичных роликов с инфографикой под ключ. Для продвижения всего каталога.</p>
-            </div>
+            </a>
           </div>
           <div class="mk-price-row" style="margin-top:12px;">
-            <div class="mk-price-card">
+            <a class="mk-price-card" href="/?tariff=%D0%90%D0%B4%D0%B0%D0%BF%D1%82%D0%B0%D1%86%D0%B8%D1%8F%20%D0%BF%D0%BE%D0%B4%20%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%BA%D0%B8#contact">
               <p class="mk-price-label">Адаптация под площадки</p>
               <p class="price-tag">от 5 000 ₽</p>
               <p class="mk-price-desc">Версии под требования Wildberries, Ozon, Яндекс Маркета и социальных сетей.</p>
-            </div>
-            <div class="mk-price-card">
+            </a>
+            <a class="mk-price-card" href="/?tariff=%D0%A0%D0%B5%D1%82%D1%83%D1%88%D1%8C%20%D0%B8%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%B8%D0%BD%D0%B3#contact">
               <p class="mk-price-label">Ретушь и композитинг</p>
               <p class="price-tag">от 8 000 ₽</p>
               <p class="mk-price-desc">Удаление дефектов, чистка кадра и аккуратная работа с фоном.</p>
-            </div>
-            <div class="mk-price-card">
+            </a>
+            <a class="mk-price-card" href="/?tariff=%D0%A1%D0%BA%D0%B8%D0%B4%D0%BA%D0%B0%20%D0%BE%D1%82%205%20%D1%80%D0%BE%D0%BB%D0%B8%D0%BA%D0%BE%D0%B2#contact">
               <p class="mk-price-label">Скидка от 5 роликов</p>
               <p class="price-tag">−10%</p>
               <p class="mk-price-desc">При заказе 5 и более роликов одного типа — скидка 10% на монтаж.</p>
-            </div>
+            </a>
           </div>
           <p class="price-footnote">Реквизит, модель, локация и сложная инфографика рассчитываются отдельно. Точная стоимость — после брифа и списка товаров.</p>
         </div>
@@ -280,34 +391,42 @@
 
       <section>
         <div class="wrap">
-          <h2>Другие <span>услуги</span></h2>
-          <div class="links-row">
+          <div class="mk-platforms-head">
+            <h2>Другие <span>услуги</span></h2>
+            <div class="links-row">
             <a href="/reklamnye-roliki" class="mk-tag">Рекламные ролики</a>
             <a href="/reels" class="mk-tag">Reels для бизнеса</a>
             <a href="/event-video" class="mk-tag">Event-видео</a>
             <a href="/photo" class="mk-tag">Фотосъёмка</a>
             <a href="/ceny" class="mk-tag">Все цены</a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section>
-        <div class="wrap">
-          <div class="bb-signal">
-            <h2 class="bb-display bb-signal__title" style="font-size: var(--ds-fs-48);">Видео для маркетплейсов</h2>
-            <a href="/#contact" class="bb-btn">Заказать съёмку</a>
-          </div>
-        </div>
-      </section>
     </main>
 
-    <footer>
-      <div class="wrap">
-        <div class="foot">
-          <p class="mk-foot-copy">© 2026 Yelyginn — видеопродакшн в Нижнем Новгороде</p>
-          <a href="https://t.me/YuriElygin" class="bb-btn" style="font-size:11px; padding:12px 24px;">Написать в Telegram</a>
-        </div>
+    <footer class="v3-footer">
+      <div class="v3-footer__wordmark" aria-label="YELYGINN">
+        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true">
+          <text x="0" y="0">YELYGINN</text>
+        </svg>
+      </div>
+      <div class="v3-footer__groups">
+        <nav aria-label="Услуги"><strong>Услуги</strong><a href="/reklamnye-roliki">Рекламные ролики</a><a href="/event-video">Видеосъёмка мероприятий</a><a href="/reels">Reels для бизнеса</a><a href="/video-dlya-marketpleysov" aria-current="page">Видео для маркетплейсов</a><a href="/content-day">Контент-день</a><a href="/pryamye-translyacii">Прямые трансляции</a><a href="/cvetokorrekciya">Цветокоррекция</a></nav>
+        <nav aria-label="Работы"><strong>Работы</strong><a href="/portfolio">Портфолио</a><a href="/portfolio/camera">Операторская работа</a><a href="/portfolio/commercial">Коммерческие проекты</a><a href="/portfolio/events">События и SDE</a><a href="/portfolio/reels">Вертикальные работы</a><a href="/portfolio/concerts">Концерты</a><a href="/portfolio/interviews">Интервью и спецпроекты</a><a href="/portfolio/post">Монтаж и постпродакшн</a><a href="/portfolio/color">Цвет</a><a href="/portfolio/broadcast">Прямая трансляция</a><a href="/portfolio/product">Продуктовое видео</a><a href="/photo">Фото</a></nav>
+        <nav aria-label="Цены и расчёт"><strong>Цены и расчёт</strong><a href="/ceny">Цены</a><a href="/calculator">Рассчитать стоимость</a></nav>
+        <nav aria-label="Блог"><strong>Блог</strong><a href="/blog">Блог</a><a href="/blog/skolko-stoit-snyat-reklamnyy-rolik">Сколько стоит рекламный ролик</a><a href="/blog/kak-snimat-reels-dlya-biznesa">Как подготовить Reels для бизнеса</a><a href="/blog/video-dlya-kartochek-wildberries">Видео для карточек товара</a><a href="/blog/videosemka-meropriyatiy-nn">Видеосъёмка мероприятий в НН</a></nav>
+        <nav aria-label="О себе и контакты"><strong>О себе и контакты</strong><a href="/about">Обо мне</a><a href="/contact">Контакты</a></nav>
+        <nav aria-label="Документы"><strong>Документы</strong><a href="/privacy-policy">Политика обработки данных</a><a href="/personal-data-consent">Согласие на обработку данных</a><a href="/cookie-policy">Cookies</a><a href="/terms">Условия использования</a><a href="/payment-terms">Условия оплаты</a><a href="/cancellation-refund">Отмена и возврат</a><a href="/gallery-terms">Условия доступа к галереям</a><a href="/data-request">Запрос данных</a></nav>
+      </div>
+      <div class="v3-footer__meta">
+        <span>© 2026 YELYGINN</span>
+        <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>
+        <span>НИЖНИЙ НОВГОРОД // РОССИЯ</span>
       </div>
     </footer>
+    <script src="/v3-header-behavior.js" defer></script>
+    <script src="/kinescope-embed-behavior.js" defer></script>
   </body>
 </html>

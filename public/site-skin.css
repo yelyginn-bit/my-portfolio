@@ -148,12 +148,24 @@ body.site-menu-open { overflow: hidden; }
 .site-static .faq-a { max-width: 62ch; margin-top: .75rem; color: var(--site-muted) !important; font-size: 1rem; line-height: 1.6; }
 .site-static .links-row { display: flex; flex-wrap: wrap; gap: .5rem !important; }
 
-/* Похожие работы (PROMPT-21 §5) — карточки берутся из projectsForCategory на
-   сборке (scripts/relatedWork.ts), не прописаны руками. */
-.site-static .related-work-list { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem !important; margin-bottom: 1.25rem; }
-.site-static .related-work-card { display: flex; min-height: 64px; align-items: center; padding: 1rem !important; color: var(--site-text) !important; background: var(--ds-surface); border: 1px solid var(--site-border); border-radius: 3px; font-size: .92rem; font-weight: 650; }
-.site-static .related-work-card:hover { border-color: var(--site-accent); }
-@media (max-width: 767px) { .site-static .related-work-list { grid-template-columns: 1fr; } }
+/* Похожие работы (PROMPT-21 §5, разметка карточек — PROMPT-32 §19):
+   карточки берутся из projectsForCategory на сборке (scripts/relatedWork.ts),
+   не прописаны руками. Карточка — те же классы bb-project-card, что в
+   портфолио, но свои правила: только 1 из 6 файлов, что зовут
+   relatedWorkHtml(), грузит bb-components.css (пилот, PROMPT-32 §10) —
+   на остальных пяти без этих правил картинка рендерится в родных
+   width/height (640×360/853) и вылезает на 390px (было заметно на
+   mobile-audit: +268px горизонтального скролла на четырёх файлах). */
+.site-static .related-work-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-stroke) var(--ds-stroke); background: var(--site-border); border: var(--ds-stroke) solid var(--site-border); margin-bottom: 1.25rem; }
+.site-static .related-work-list .bb-project-card { position: relative; display: flex; flex-direction: column; background: var(--site-bg); color: inherit; text-decoration: none; }
+.site-static .related-work-list .bb-project-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--site-bg-alt); }
+.site-static .related-work-list .bb-project-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.site-static .related-work-list .bb-project-card:hover .bb-project-card__media img { transform: scale(1.03); }
+.site-static .related-work-list .bb-project-card__meta { display: grid; gap: .35rem; padding: 1rem 1.1rem 1.2rem; }
+.site-static .related-work-list .bb-project-card__title { margin: 0; color: var(--site-text) !important; font-weight: 700; font-size: .95rem; letter-spacing: -.01em; text-transform: uppercase; }
+.site-static .related-work-list .bb-project-card__role { margin: 0; color: var(--site-muted) !important; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 900px) { .site-static .related-work-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .site-static .related-work-list { grid-template-columns: 1fr; } }
 .site-static .tag, .site-static :is(.cta, .cta-ghost, .price-button) { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 1rem !important; color: var(--site-text) !important; background: transparent !important; border: 1px solid var(--site-border) !important; border-radius: 3px !important; font-size: .82rem !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none; }
 .site-static :is(.cta, .price-button--primary) { color: var(--ds-on-accent) !important; background: var(--site-accent) !important; border-color: var(--site-accent) !important; }
 .site-static .cta-band { color: var(--site-text); background: var(--ds-surface); }
@@ -1262,12 +1274,18 @@ body.site-static :is(.logo, .site-static-brand) {
   color: var(--site-text) !important;
 }
 
-body.site-static header nav a {
+/* :not(.v3-header) — PROMPT-32 §10: тот же V3-компонент шапки (.v3-header/
+   .v3-nav) теперь и на статических страницах (пока только на пилоте), а его
+   собственные цвета для Y-бренда/CTA (.v3-nav__brand и т.д.) заданы через
+   var(--ds-bg)/var(--ds-text) с !important — эта общая для body.site-static
+   строка специфичнее (тип+класс+тип+тип+тип против одного класса) и
+   перебивала их светлым на светлом (1.27:1 на 390px). */
+body.site-static header:not(.v3-header) nav a {
   color: var(--site-muted) !important;
 }
 
-body.site-static header nav a:hover,
-body.site-static header nav a[aria-current="page"] {
+body.site-static header:not(.v3-header) nav a:hover,
+body.site-static header:not(.v3-header) nav a[aria-current="page"] {
   color: var(--site-text) !important;
 }
 

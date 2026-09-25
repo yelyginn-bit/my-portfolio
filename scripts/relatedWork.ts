@@ -2,7 +2,7 @@
 // 2–3 работы из портфолио той же категории + цены + калькулятор. Связи
 // берутся из данных (projectsForCategory), а не прописываются руками —
 // иначе появится ещё одна копия, которая разойдётся с остальными.
-import { CATEGORY_META, projectsForCategory, type PortfolioCategory } from "../src/portfolio/v3PortfolioData";
+import { assetsForProject, CATEGORY_META, posterUrl, projectsForCategory, type PortfolioCategory } from "../src/portfolio/v3PortfolioData";
 import { CALCULATOR_LINK, PRICES_LINK, SERVICE_LINKS } from "../src/lib/navigation.data";
 
 const escapeHtml = (value: string) =>
@@ -25,16 +25,27 @@ function pickProjects(category: PortfolioCategory, count: number) {
   return [...featured, ...rest].slice(0, count);
 }
 
+/** Карточка с превью (PROMPT-32 §19) — тот же bb-project-card, что и на
+ * главной странице у «Выбранных работ», первый реальный кадр проекта
+ * (assetsForProject/posterUrl — те же источники, что и у остальных превью
+ * портфолио), а не серая плашка с одним текстом. */
 export function relatedWorkHtml(category: PortfolioCategory): string {
   const projects = pickProjects(category, 3);
   const cards = projects
-    .map((project) => `<a class="related-work-card" href="/portfolio/${project.slug}">${escapeHtml(project.title)}</a>`)
+    .map((project) => {
+      const asset = assetsForProject(project.id)[0];
+      const media = asset
+        ? `<div class="bb-project-card__media"><img src="${posterUrl(asset.kinescopeId, "md")}" alt="" loading="lazy" decoding="async" width="640" height="${asset.orientation === "portrait" ? 853 : 360}" /></div>`
+        : "";
+      const role = project.client ? escapeHtml(project.client) : escapeHtml(CATEGORY_META[category].title);
+      return `<a class="bb-project-card" href="/portfolio/${project.slug}">${media}<div class="bb-project-card__meta"><p class="bb-project-card__title">${escapeHtml(project.title)}</p><p class="bb-project-card__role">${role}</p></div></a>`;
+    })
     .join("\n            ");
   return `
       <section class="related-work" aria-label="Похожие работы">
         <div class="wrap">
           <h2>Похожие <span>работы</span></h2>
-          <div class="related-work-list">
+          <div class="bb-work-grid bb-work-grid--3 related-work-list">
             ${cards}
           </div>
           <div class="links-row related-work-actions">

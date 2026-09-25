@@ -18,7 +18,12 @@
   document.body.classList.add("site-static");
 
   const header = document.querySelector("body > header");
-  if (header) {
+  // PROMPT-32 §10: .v3-header (тот же общий компонент, что на V3-страницах —
+  // src/public/V3App.tsx) сюда не попадает — className безусловно заменялся
+  // на site-static-header, снимая класс v3-header в рантайме, из-за чего CSS
+  // не мог отличить эту шапку от старой и накладывал светлый цвет на светлый
+  // (PROMPT-32: контраст 1.27:1 на Y-бренде и CTA на 390px).
+  if (header && !header.classList.contains("v3-header")) {
     header.className = "site-static-header";
 
     // На 11 страницах (7 услуг + 4 статьи блога) навигация теперь впекается

@@ -26,7 +26,7 @@ function missingLinks(headerHtml: string): NavLink[] {
  * ссылка на соседнюю услугу и порядок остальных пунктов сохраняются.
  */
 export function augmentStaticHeader(html: string, fileLabel: string): string {
-  const headerMatch = html.match(/<header>[\s\S]*?<\/header>/u);
+  const headerMatch = html.match(/<header[^>]*>[\s\S]*?<\/header>/u);
   if (!headerMatch) throw new Error(`augmentStaticHeader: <header> not found in ${fileLabel}`);
   const headerHtml = headerMatch[0];
   const navCloseIndex = headerHtml.lastIndexOf("</nav>");
@@ -46,10 +46,12 @@ export function augmentStaticHeader(html: string, fileLabel: string): string {
  * Telegram — их не убирает.
  */
 export function augmentStaticFooter(html: string, fileLabel: string): string {
-  const footerMatch = html.match(/<footer>[\s\S]*?<\/footer>/u);
+  const footerMatch = html.match(/<footer[^>]*>[\s\S]*?<\/footer>/u);
   if (!footerMatch) throw new Error(`augmentStaticFooter: <footer> not found in ${fileLabel}`);
   const footerHtml = footerMatch[0];
-  if (footerHtml.includes('class="site-static-footer-nav"')) return html;
+  // v3-footer (PROMPT-32 §11) уже несёт полную карту сайта в своей
+  // разметке — второй подвал поверх него не нужен.
+  if (footerHtml.includes('class="site-static-footer-nav"') || footerHtml.includes('class="v3-footer"')) return html;
 
   const groupsHtml = FOOTER_GROUPS.map((group) => {
     const links = group.links.map((item) => `<a href="${item.href}">${item.label}</a>`).join("");

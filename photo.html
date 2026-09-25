@@ -81,7 +81,16 @@
       /* Gallery (block 6, "Примеры работ") */
       .gallery-intro { color: var(--ds-text); max-width: 62ch; margin-bottom: 32px; font-size: 0.95rem; }
       .gallery-item { display: block; width: 100%; border: 0; background: none; padding: 0; cursor: zoom-in; overflow: hidden; border-radius: 2px; }
-      .gallery-item img { display: block; width: 100%; transition: opacity 0.2s; }
+      /* height:auto обязателен явно (PROMPT-33 §А): без него CSS Grid
+         (.kvn-grid-2col/.masterklass-grid-2col — обычные 2-колоночные grid,
+         не multicol, как .gallery-grid) считает высоту трека по "голосу"
+         каждого элемента в незакреплённой ширине — до того, как колонка
+         сузит img до её настоящей ширины — и трек застывает на высоте по
+         HTML-атрибуту height. Дальше object-fit по умолчанию fill растягивает
+         кадр под неправильную высоту трека. .gallery-hero ниже намеренно
+         переопределяет (height:100%+object-fit:cover — это единственное
+         место, где обрезка входит в план дизайна). */
+      .gallery-item img { display: block; width: 100%; height: auto; transition: opacity 0.2s; }
       .gallery-item:hover img, .gallery-item:focus-visible img { opacity: 0.85; }
       .gallery-item:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
       .gallery-hero { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 8px; }
@@ -104,14 +113,14 @@
          пережил перевод /photo на тёмную тему в фазе 5 без правок. */
       .kvn-lead { color: var(--ds-text-secondary); max-width: 62ch; margin-bottom: 28px; font-size: 0.95rem; }
       .kvn-full { margin-bottom: 8px; }
-      .kvn-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+      .kvn-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; gap: 8px; margin-bottom: 8px; }
       @media (max-width: 640px) { .kvn-grid-2col { grid-template-columns: 1fr; } }
       .kvn-stats { margin: 20px 0 28px; color: var(--ds-text-secondary); font-size: 0.85rem; letter-spacing: 0.02em; }
       /* Мастер-класс: Школа джазовых блогеров (PROMPT-24). Не трогает блок
          КВН — отдельные классы, идентичные по стилю (только var(--ds-*)). */
       .masterklass-lead { color: var(--ds-text-secondary); max-width: 62ch; margin-bottom: 28px; font-size: 0.95rem; }
       .masterklass-full { margin-bottom: 8px; }
-      .masterklass-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+      .masterklass-grid-2col { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; gap: 8px; margin-bottom: 8px; }
       @media (max-width: 640px) { .masterklass-grid-2col { grid-template-columns: 1fr; } }
       .masterklass-stats { margin: 20px 0 28px; color: var(--ds-text-secondary); font-size: 0.85rem; letter-spacing: 0.02em; }
       .masterklass-cta { margin-top: 8px; }

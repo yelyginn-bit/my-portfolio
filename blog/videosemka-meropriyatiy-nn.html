@@ -65,6 +65,8 @@
       .spec-box h3 { margin-top: 0; margin-bottom: 16px; }
       .spec-box ul { margin-bottom: 0; }
       table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+      /* PROMPT-31 §2.3: таблица цен шире 390 на телефоне (белый список не помещается без переноса) — оборачивающий контейнер со своим горизонтальным скроллом, текст таблицы не менялся. */
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       th { text-align: left; padding: 12px 16px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); border-bottom: 1px solid rgba(255,255,255,0.1); }
       td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
       td:last-child { color: var(--white); font-weight: 600; }
@@ -170,7 +172,7 @@
           </ul>
 
           <h2>Сроки и <span>стоимость</span></h2>
-          <table>
+          <div class="table-scroll"><table>
             <thead>
               <tr><th>Формат</th><th>Стоимость</th></tr>
             </thead>
@@ -181,7 +183,7 @@
               <tr><td>Монтаж полного видео (60–90 мин)</td><td>от 30 000 ₽</td></tr>
               <tr><td>Интервью со спикерами</td><td>от 20 000 ₽</td></tr>
             </tbody>
-          </table>
+          </table></div>
           <p>Сроки монтажа: aftermovie — 3–5 рабочих дней, полное видео — 7–14 дней. Если нужно срочно — обсуждается отдельно.</p>
 
           <h2>Чек-лист <span>организатора</span></h2>

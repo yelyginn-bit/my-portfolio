@@ -57,6 +57,8 @@
       article ul, article ol { padding-left: 20px; margin-bottom: 20px; }
       article li { font-size: 0.95rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.6; }
       .price-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+      /* PROMPT-31 §2.3: таблица цен шире 390 на телефоне (белый список не помещается без переноса) — оборачивающий контейнер со своим горизонтальным скроллом, текст таблицы не менялся. */
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .price-table th { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); text-align: left; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .price-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.75); }
       .price-table td:last-child { font-weight: 700; color: var(--white); white-space: nowrap; }
@@ -114,7 +116,7 @@
 
           <h3>Съёмка (Production)</h3>
           <p>Стоимость оператора зависит от типа работы:</p>
-          <table class="price-table">
+          <div class="table-scroll"><table class="price-table">
             <thead><tr><th>Тип работы</th><th>Ставка</th></tr></thead>
             <tbody>
               <tr><td>Видео для одного товара маркетплейса</td><td>от 25 000 ₽/проект</td></tr>
@@ -122,11 +124,11 @@
               <tr><td>Видеосъёмка мероприятия до 3 часов</td><td>от 18 000 ₽</td></tr>
               <tr class="hot"><td>Оператор с комплектом камеры, света и звука</td><td>от 30 000 ₽/смена</td></tr>
             </tbody>
-          </table>
+          </table></div>
           <p>Минимальный заказ для почасовых ставок — 3 часа. То есть минимальная стоимость съёмки Reels: 2 500 × 3 = <strong>7 500 ₽</strong>.</p>
 
           <h3>Монтаж (Post-Production)</h3>
-          <table class="price-table">
+          <div class="table-scroll"><table class="price-table">
             <thead><tr><th>Тип контента</th><th>Стоимость</th></tr></thead>
             <tbody>
               <tr><td>Монтаж Reels / Shorts</td><td>от 4 000 ₽</td></tr>
@@ -136,7 +138,7 @@
               <tr><td>Каждая следующая минута</td><td>+1 000 ₽</td></tr>
               <tr><td>Имиджевый фильм 3–7 мин</td><td>35 000 – 150 000 ₽</td></tr>
             </tbody>
-          </table>
+          </table></div>
 
           <h2>Расчётные <span>бюджеты</span></h2>
 
@@ -177,7 +179,7 @@
           </blockquote>
 
           <h2>Итог: <span>ориентировочные</span> бюджеты</h2>
-          <table class="price-table">
+          <div class="table-scroll"><table class="price-table">
             <thead><tr><th>Задача</th><th>Минимальный бюджет</th></tr></thead>
             <tbody>
               <tr><td>1 Reels для соцсетей (съёмка + монтаж)</td><td>от 9 500 ₽</td></tr>
@@ -186,7 +188,7 @@
               <tr><td>Корпоративный имиджевый фильм</td><td>от 80 000 ₽</td></tr>
               <tr><td>Видео для карточки маркетплейса</td><td>от 25 000 ₽</td></tr>
             </tbody>
-          </table>
+          </table></div>
 
           <div class="cta-block">
             <p>Нужна точная смета под конкретный проект? Расскажите задачу — рассчитаю бесплатно и быстро.</p>

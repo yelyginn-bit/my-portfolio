@@ -54,6 +54,8 @@
       article ul, article ol { padding-left: 20px; margin-bottom: 20px; }
       article li { font-size: 0.95rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.6; }
       .price-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+      /* PROMPT-31 §2.3: таблица цен шире 390 на телефоне (белый список не помещается без переноса) — оборачивающий контейнер со своим горизонтальным скроллом, текст таблицы не менялся. */
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .price-table th { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); text-align: left; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .price-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.75); }
       .price-table td:last-child { font-weight: 700; color: var(--white); }
@@ -151,7 +153,7 @@
           <p>Сравниваете товар с аналогами, показываете уникальные характеристики крупным планом. Помогает в высококонкурентных категориях выделиться среди похожих предложений.</p>
 
           <h2>Сколько стоит снять видео для <span>маркетплейса</span></h2>
-          <table class="price-table">
+          <div class="table-scroll"><table class="price-table">
             <thead><tr><th>Формат</th><th>Стоимость</th></tr></thead>
             <tbody>
               <tr><td>Предметная съёмка и монтаж, 1 товар</td><td>от 25 000 ₽</td></tr>
@@ -160,7 +162,7 @@
               <tr><td>Пакет: 5+ товаров (один день)</td><td>от 4 000 ₽/шт</td></tr>
               <tr><td>Серия с инфографикой под ключ</td><td>от 55 000 ₽</td></tr>
             </tbody>
-          </table>
+          </table></div>
 
           <blockquote>
             <p>Самый выгодный вариант для больших каталогов — пакетная съёмка. За один день снимаем 8–10 товаров, стоимость одного падает в 2–3 раза относительно отдельного заказа.</p>

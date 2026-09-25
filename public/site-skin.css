@@ -820,11 +820,13 @@ select:focus-visible {
   }
 
   nav::-webkit-scrollbar,
-  .c-nav::-webkit-scrollbar,
-  .j-nav::-webkit-scrollbar,
-  .adm-tabs::-webkit-scrollbar,
   .links-row::-webkit-scrollbar,
   .ctas::-webkit-scrollbar {
+    display: none;
+  }
+.c-nav::-webkit-scrollbar,
+  .j-nav::-webkit-scrollbar,
+  .adm-tabs::-webkit-scrollbar {
     display: none;
   }
 
@@ -833,8 +835,10 @@ select:focus-visible {
   }
 
   .price-row,
-  .grid-3,
-  .calc-grid,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+.calc-grid,
   .acc-stats,
   .gal-layout,
   .c-blocks {
@@ -889,8 +893,15 @@ select:focus-visible {
 }
 
 @media (max-width: 520px) {
-  header nav,
-  .c-nav,
+  header nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    column-gap: 18px !important;
+    row-gap: 0 !important;
+    font-size: 12px !important;
+    line-height: 1.45;
+  }
+.c-nav,
   .j-nav {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -923,8 +934,12 @@ select:focus-visible {
   }
 
   .cta,
-  .cta-ghost,
-  .c-btn,
+  .cta-ghost {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+.c-btn,
   .j-btn,
   .calc-cta,
   .acc-btn,
@@ -934,8 +949,10 @@ select:focus-visible {
     text-align: center;
   }
 
-  h1,
-  .calc-title,
+  h1 {
+    font-size: clamp(2rem, 13vw, 3.6rem) !important;
+  }
+.calc-title,
   .acc-title,
   .adm-title,
   .c-title,

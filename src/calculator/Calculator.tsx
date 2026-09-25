@@ -219,6 +219,7 @@ export default function Calculator() {
     <div className="calc-wrap">
       <SiteHeader />
 
+      <main>
       <p className="calc-eyebrow">Калькулятор сметы</p>
       <h1 className="calc-title">Соберите <span>смету</span> под проект</h1>
       <p className="calc-lead">
@@ -465,6 +466,7 @@ export default function Calculator() {
           )}
         </div>
       </div>
+      </main>
       <SiteFooter />
     </div>
     </RoutePathContext.Provider>

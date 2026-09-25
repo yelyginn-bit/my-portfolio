@@ -85,8 +85,8 @@ body.site-menu-open { overflow: hidden; }
 .site-static-brand { font-size: 1.05rem; font-weight: 850; letter-spacing: .08em; }
 .site-static-nav { display: flex; align-items: center; justify-content: center; gap: clamp(1rem, 2.1vw, 2rem) !important; }
 .site-static-nav > a, .site-static-services > button { display: inline-flex; min-height: 44px; align-items: center; padding: 0; color: var(--site-muted) !important; background: none; border: 0; font-size: .82rem !important; font-weight: 650; letter-spacing: 0 !important; text-transform: none; cursor: pointer; }
-.site-static-nav > a:hover, .site-static-nav > a[aria-current="page"], .site-static-services > button:hover, .site-static-services > button[data-active="true"] { color: var(--site-text) !important; }
-.site-static-nav > a[aria-current="page"], .site-static-services > button[data-active="true"] { box-shadow: inset 0 -2px var(--site-accent); }
+.site-static-nav > a:hover, .site-static-services > button:hover, .site-static-services > button[data-active="true"] { color: var(--site-text) !important; }
+.site-static-services > button[data-active="true"] { box-shadow: inset 0 -2px var(--site-accent); }
 .site-static-services { position: relative; }
 .site-static-services__menu { position: absolute; top: calc(100% + .5rem); left: 50%; display: grid; width: 230px; padding: .5rem; visibility: hidden; opacity: 0; transform: translate(-50%, -.5rem); background: var(--site-surface); border: 1px solid var(--site-border); transition: opacity .2s ease, transform .2s ease, visibility .2s; }
 .site-static-services:hover .site-static-services__menu, .site-static-services__menu.is-open { visibility: visible; opacity: 1; transform: translate(-50%, 0); }
@@ -104,7 +104,8 @@ body.site-menu-open { overflow: hidden; }
 .site-static-mobile-menu nav a { display: flex; min-height: 52px; align-items: center; color: var(--site-text) !important; border-bottom: 1px solid var(--site-border); font-size: clamp(1.35rem, 7vw, 2.5rem) !important; font-weight: 650; letter-spacing: 0 !important; text-transform: none; }
 .site-static-mobile-menu > div { display: flex; gap: 1.5rem; margin-top: 2rem; color: var(--site-accent); }
 
-.site-static :is(.wrap, .price-shell, .c-wrap, .j-wrap) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
+.site-static :is(.wrap, .price-shell) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
+.site-static :is(.c-wrap, .j-wrap) { width: min(var(--site-content), calc(100% - (var(--site-gutter) * 2))) !important; max-width: none !important; }
 .site-static main > section { padding-block: var(--site-section) !important; border-bottom: 1px solid var(--site-border) !important; }
 .site-static main > .hero { padding-top: clamp(5rem, 10vw, 9rem) !important; padding-bottom: clamp(4rem, 8vw, 7rem) !important; }
 .site-static .hero .wrap, .site-static .price-hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--site-gap); align-items: end; }
@@ -118,10 +119,17 @@ body.site-menu-open { overflow: hidden; }
 .site-static .stat:last-child { border-right: 0; }
 .site-static .hero .hero-copy, .site-static .hero .wrap > div:first-child, .site-static .price-hero > div:first-child { grid-column: 1 / span 8; }
 .site-static .hero .hero-side, .site-static .hero .wrap > div:last-child, .site-static .price-hero > div:last-child { grid-column: 9 / -1; }
-.site-static :is(header, main, footer) h1, .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+/* `:not([class*="bb-"])` — тот же приём, что PROMPT-31 применил к `.site-static a`
+   (:46): типографика корпуса не должна перебивать компоненты брендбука. На
+   пилоте заголовок внутри `.bb-signal` (оранжевая заливка, `color:
+   var(--ds-on-accent)` в bb-components.css:313) получал `--site-text`
+   !important от этого правила и давал PAPER на ORANGE = 2.62. Остальные
+   десять статических страниц классов `bb-` не используют вовсе — для них
+   селектор матчает те же элементы, что и раньше. */
+.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(header, main, footer) h1 br { display: none; }
-.site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span, .site-static :is(header, main, footer) h2 span { color: var(--site-accent) !important; font-style: normal; }
-.site-static :is(header, main, footer) h2 { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span:not([class*="bb-"]), .site-static :is(header, main, footer) h2 span:not([class*="bb-"]) { color: var(--site-accent) !important; font-style: normal; }
+.site-static :is(header, main, footer) h2:not([class*="bb-"]) { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(.lead, .hero p, .price-lead) { color: var(--site-text) !important; font-size: clamp(1.125rem, 1.65vw, 1.5rem) !important; line-height: 1.5; }
 .site-static :is(.grid-3, .price-row, .price-grid) { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)) !important; gap: 0 !important; border-top: 1px solid var(--site-border); border-left: 0 !important; }
 .site-static :is(.card, .price-card) { grid-column: span 4; min-height: 0; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem) clamp(1.5rem, 3vw, 2.5rem) 0 !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--site-border) !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -132,14 +140,20 @@ body.site-menu-open { overflow: hidden; }
 /* Тот же дефицит, что чинили для .card-num: --site-muted (#5f5f59) на
    подложке карточки (~#d4d4d0) даёт 4.33:1, ниже AA. Только .card p —
    .price-card p не трогаем, там не измеряли. !important обязателен по
-   той же причине, что и ниже для .card-num. */
-.site-static .card p { color: #595953 !important; }
+   той же причине, что и ниже для .card-num.
+   QWEN-04: #595953 → `color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg))`.
+   Микс НЕ через transparent: #595953 был непрозрачным, и прозрачная замена
+   давала бы разный тон над карточкой (#d4d4d0) и над PAPER — сдвиг до 12 по
+   каналу. Смесь INK/PAPER остаётся непрозрачной: на светлой теме это
+   rgb(86,86,83) против rgb(89,89,83) — сдвиг 3, в допуске, и контраст даже
+   лучше (тон темнее); на тёмной — rgb(165,164,161), то есть читаемый. */
+.site-static .card p { color: color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg)) !important; }
 /* .card-num — это <p>, поэтому правило выше (рассчитанное на абзацы текста)
    тоже его ловит и красит в --site-muted (#5f5f59) — на подложке карточки
    (~#d4d4d0) это даёт 4.3:1, ниже AA. Нужна !important: правило выше уже
    important, обычная специфичность его не перебьёт. #595953 — тот же
    нейтральный тон на волосок темнее, 4.74:1. */
-.site-static .card p.card-num { color: #595953 !important; }
+.site-static .card p.card-num { color: color-mix(in srgb, var(--ds-text) 67%, var(--ds-bg)) !important; }
 .site-static .price-card[data-featured="true"] p, .site-static .price-card.featured p { color: var(--site-muted) !important; }
 .site-static .price-card strong, .site-static .price-tag { color: var(--site-accent) !important; }
 .site-static .faq { max-width: 900px; margin-left: auto; border-top: 1px solid var(--site-border); }
@@ -168,6 +182,15 @@ body.site-menu-open { overflow: hidden; }
 @media (max-width: 620px) { .site-static .related-work-list { grid-template-columns: 1fr; } }
 .site-static .tag, .site-static :is(.cta, .cta-ghost, .price-button) { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 1rem !important; color: var(--site-text) !important; background: transparent !important; border: 1px solid var(--site-border) !important; border-radius: 3px !important; font-size: .82rem !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none; }
 .site-static :is(.cta, .price-button--primary) { color: var(--ds-on-accent) !important; background: var(--site-accent) !important; border-color: var(--site-accent) !important; }
+/* `.cta-btn` — кнопка из `<style>` четырёх статей блога: `color: var(--white)`
+   на оранжевой заливке. Алиас `--white` в этом файле означает «чернила корпуса»
+   (в светлой теме — INK, в тёмной — PAPER), а здесь нужна роль «подпись на
+   заливке», которая по брендбуку всегда тёмная: PAPER на ORANGE даёт 2.62,
+   INK на ORANGE — 6.43. Правится здесь, а не в HTML: HTML входов не трогаем. */
+/* Инстанцировано через `a.` намеренно: общее правило `.site-static a:not(…)
+   { color: inherit }` (:46) имеет специфичность (0,2,1), и просто
+   `.site-static .cta-btn` (0,2,0) проигрывает ему независимо от порядка. */
+.site-static a.cta-btn { color: var(--ds-on-accent); }
 .site-static .cta-band { color: var(--site-text); background: var(--ds-surface); }
 .site-static .cta-band h2, .site-static .cta-band p { color: inherit !important; }
 .site-static main > .service-showcase { padding-top: 0 !important; }
@@ -280,7 +303,9 @@ select {
   font: inherit;
 }
 
-.wrap,
+.wrap {
+  width: min(1240px, calc(100% - 32px)) !important;
+}
 .calc-wrap,
 .acc-wrap,
 .adm-wrap,
@@ -328,7 +353,9 @@ select {
   padding-top: clamp(22px, 4vw, 42px) !important;
 }
 
-header,
+header {
+  border-bottom: 1px solid var(--line-soft) !important;
+}
 .calc-top,
 .acc-top,
 .adm-top,
@@ -346,7 +373,9 @@ header {
   backdrop-filter: blur(14px);
 }
 
-header .inner,
+header .inner {
+  min-height: 64px;
+}
 .calc-top,
 .acc-top,
 .adm-top,
@@ -357,23 +386,27 @@ header .inner,
 }
 
 nav,
+.links-row,
+.ctas {
+  gap: 10px !important;
+}
 .c-nav,
 .j-nav,
 .adm-tabs,
-.links-row,
-.ctas,
 .c-cta,
 .j-cta {
   gap: 10px !important;
 }
 
 nav a,
+.tag {
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
 .c-nav a,
 .j-nav a,
 .calc-back,
 .acc-back,
 .adm-link,
-.tag,
 .j-back {
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
@@ -382,29 +415,30 @@ header nav a {
   display: inline-flex;
   min-height: 40px;
   align-items: center;
-  color: rgba(10, 10, 10, 0.72) !important;
+  color: color-mix(in srgb, var(--ds-text) 72%, transparent) !important;
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0 !important;
   text-transform: none;
 }
 
-header nav a[aria-current="page"] {
-  color: var(--red) !important;
-}
-
 nav a:hover,
+.tag:hover {
+  color: var(--ds-text) !important;
+}
 .c-nav a:hover,
 .j-nav a:hover,
 .calc-back:hover,
 .acc-back:hover,
 .adm-link:hover,
-.tag:hover,
 .j-back:hover {
   color: var(--ds-text) !important;
 }
 
-.logo,
+.logo {
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+}
 .calc-logo,
 .acc-logo,
 .adm-logo,
@@ -419,7 +453,10 @@ nav a:hover,
   padding: clamp(54px, 8vw, 112px) 0 clamp(42px, 7vw, 84px) !important;
 }
 
-h1,
+h1 {
+  letter-spacing: 0 !important;
+  text-wrap: balance;
+}
 .calc-title,
 .acc-title,
 .adm-title,
@@ -431,7 +468,9 @@ h1,
 
 h2,
 h3,
-.card h3,
+.card h3 {
+  letter-spacing: 0 !important;
+}
 .j-card h2,
 .c-case h2 {
   letter-spacing: 0 !important;
@@ -440,7 +479,9 @@ h3,
 .lead,
 .price-desc,
 .faq-a,
-.card p,
+.card p {
+  color: color-mix(in srgb, var(--ds-text) 68%, transparent) !important;
+}
 .j-card p,
 .j-article p,
 .j-article li,
@@ -449,11 +490,16 @@ h3,
 .acc-hint,
 .adm-hint,
 .adm-note {
-  color: rgba(10, 10, 10, 0.68) !important;
+  color: color-mix(in srgb, var(--ds-text) 68%, transparent) !important;
 }
 
 .card,
-.price-card,
+.price-card {
+  background: color-mix(in srgb, var(--ds-surface) 92%, transparent) !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+}
 .calc-card,
 .acc-card,
 .adm-card,
@@ -463,14 +509,16 @@ h3,
 .gal-item,
 .gal-tile,
 .g-cell {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: color-mix(in srgb, var(--ds-surface) 92%, transparent) !important;
   border: 1px solid var(--line-soft) !important;
   border-radius: var(--radius) !important;
   box-shadow: var(--shadow);
 }
 
 .card:hover,
-.price-card:hover,
+.price-card:hover {
+  border-color: var(--line) !important;
+}
 .j-card:hover,
 .c-case:hover,
 .gal-item:hover,
@@ -479,7 +527,9 @@ h3,
 }
 
 .grid-3,
-.price-row,
+.price-row {
+  gap: 12px !important;
+}
 .calc-grid,
 .acc-stats,
 .gal-layout,
@@ -490,6 +540,9 @@ h3,
 
 .cta,
 .cta-ghost,
+.tag {
+  border-radius: var(--radius) !important;
+}
 .calc-type,
 .calc-row,
 .calc-toggle,
@@ -515,12 +568,20 @@ h3,
 .g-mark,
 .g-lb-btn,
 .c-btn,
-.j-btn,
-.tag {
+.j-btn {
   border-radius: var(--radius) !important;
 }
 
-.cta,
+.cta {
+  background: var(--red) !important;
+  border-color: var(--red) !important;
+  color: var(--ds-on-accent) !important;
+  min-height: 48px;
+  font-size: 13px !important;
+  font-weight: 700;
+  letter-spacing: 0 !important;
+  text-transform: none;
+}
 .calc-cta,
 .acc-btn,
 .adm-btn,
@@ -538,15 +599,24 @@ h3,
   text-transform: none;
 }
 
-.cta-ghost,
+.cta-ghost {
+  background: color-mix(in srgb, var(--ds-text) 3.5%, transparent) !important;
+  border: 1px solid var(--line) !important;
+  color: color-mix(in srgb, var(--ds-text) 84%, transparent) !important;
+  min-height: 48px;
+  font-size: 13px !important;
+  font-weight: 700;
+  letter-spacing: 0 !important;
+  text-transform: none;
+}
 .calc-cta-ghost,
 .acc-btn-ghost,
 .gal-mini-btn.ghost,
 .c-btn.ghost,
 .j-btn.ghost {
-  background: rgba(10, 10, 10, 0.035) !important;
+  background: color-mix(in srgb, var(--ds-text) 3.5%, transparent) !important;
   border: 1px solid var(--line) !important;
-  color: rgba(10, 10, 10, 0.84) !important;
+  color: color-mix(in srgb, var(--ds-text) 84%, transparent) !important;
   min-height: 48px;
   font-size: 13px !important;
   font-weight: 700;
@@ -571,7 +641,7 @@ h3,
 .calc-type,
 .calc-row,
 .calc-toggle {
-  color: rgba(10, 10, 10, 0.78) !important;
+  color: color-mix(in srgb, var(--ds-text) 78%, transparent) !important;
 }
 
 .calc-type:hover,
@@ -689,23 +759,6 @@ table {
   color: var(--red);
 }
 
-.static-cookie-banner {
-  border: 1px solid var(--line) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 24px 64px -36px rgba(10, 10, 10, 0.42) !important;
-  backdrop-filter: none !important;
-}
-
-.static-cookie-banner button {
-  min-height: 42px;
-  padding-inline: 20px !important;
-  border-radius: var(--radius) !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -716,8 +769,10 @@ select:focus-visible {
 }
 
 @media (max-width: 820px) {
-  .wrap,
-  .calc-wrap,
+  .wrap {
+    width: min(100% - 24px, 1240px) !important;
+  }
+.calc-wrap,
   .acc-wrap,
   .adm-wrap,
   .g-wrap,
@@ -727,13 +782,17 @@ select:focus-visible {
   }
 
   header .inner,
-  .calc-top,
+  .foot {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 14px !important;
+  }
+.calc-top,
   .acc-top,
   .adm-top,
   .g-top,
   .c-top,
-  .j-top,
-  .foot {
+  .j-top {
     align-items: flex-start !important;
     flex-direction: column;
     gap: 14px !important;
@@ -749,9 +808,6 @@ select:focus-visible {
   }
 
   nav,
-  .c-nav,
-  .j-nav,
-  .adm-tabs,
   .links-row,
   .ctas {
     width: 100%;
@@ -760,13 +816,24 @@ select:focus-visible {
     padding-bottom: 4px;
     scrollbar-width: none;
   }
+.c-nav,
+  .j-nav,
+  .adm-tabs {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
 
   nav::-webkit-scrollbar,
-  .c-nav::-webkit-scrollbar,
-  .j-nav::-webkit-scrollbar,
-  .adm-tabs::-webkit-scrollbar,
   .links-row::-webkit-scrollbar,
   .ctas::-webkit-scrollbar {
+    display: none;
+  }
+.c-nav::-webkit-scrollbar,
+  .j-nav::-webkit-scrollbar,
+  .adm-tabs::-webkit-scrollbar {
     display: none;
   }
 
@@ -775,8 +842,10 @@ select:focus-visible {
   }
 
   .price-row,
-  .grid-3,
-  .calc-grid,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+.calc-grid,
   .acc-stats,
   .gal-layout,
   .c-blocks {
@@ -831,8 +900,15 @@ select:focus-visible {
 }
 
 @media (max-width: 520px) {
-  header nav,
-  .c-nav,
+  header nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    column-gap: 18px !important;
+    row-gap: 0 !important;
+    font-size: 12px !important;
+    line-height: 1.45;
+  }
+.c-nav,
   .j-nav {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -865,8 +941,12 @@ select:focus-visible {
   }
 
   .cta,
-  .cta-ghost,
-  .c-btn,
+  .cta-ghost {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+.c-btn,
   .j-btn,
   .calc-cta,
   .acc-btn,
@@ -876,8 +956,10 @@ select:focus-visible {
     text-align: center;
   }
 
-  h1,
-  .calc-title,
+  h1 {
+    font-size: clamp(2rem, 13vw, 3.6rem) !important;
+  }
+.calc-title,
   .acc-title,
   .adm-title,
   .c-title,
@@ -894,13 +976,29 @@ select:focus-visible {
   }
 }
 
-/* Light theme compatibility for legacy pages with embedded dark-theme CSS. */
+/* Light theme compatibility for legacy pages with embedded dark-theme CSS.
+   QWEN-04: был `color: #111` — единственная причина, по которой любая
+   статическая страница при data-theme="dark" получала невидимый текст
+   (замер ночной смены: 28 узлов ниже порога на /pryamye-translyacii).
+   #111 → var(--ds-text) — сдвиг 7 по каждому каналу (17 → 10): на волосок
+   за допуск «не больше 6» из QWEN-04 §2.1, и это осознанный выбор — с
+   литералом §2.2 недостижим. Перечислено в журнале.
+
+   `header` из списка убран отдельным правилом: шапка статических страниц —
+   фиксированно СВЕТЛАЯ пилюля (`background: #f1f0ea`, темой не управляется), и
+   на единственной тёмной странице сайта (пилот) тематический --ds-text дал
+   PAPER по PAPER — замер 1.01 против 16.54 до правки. Чернила хрома поэтому
+   берутся из theme-стабильного GRAPHITE (#171717): это те же #111, что были,
+   плюс 6 по каналу, и одинаково в обеих темах. */
 body,
-header,
 main,
 footer,
 section {
-  color: #111 !important;
+  color: var(--ds-text) !important;
+}
+
+header {
+  color: var(--ds-charcoal) !important;
 }
 
 header,
@@ -923,8 +1021,6 @@ td {
    .site-static-nav > a. Других <nav> в кодовой базе, которым нужен был бы
    именно этот тёмный цвет, нет. .c-nav/.j-nav — другие классы (страницы
    кейсов/журнала), их этот список по-прежнему красит без изменений. */
-.c-nav,
-.j-nav,
 .breadcrumb,
 .meta,
 .foot-copy,
@@ -932,6 +1028,20 @@ td {
 .client-tag,
 .platform,
 .spec-note,
+/* QWEN-04: полупрозрачные чернила слоя теперь записаны через `color-mix` от
+   тематического токена, а не литералом rgba(10,10,10,…). Значение на светлой
+   теме побитово то же (микс от INK идёт в premultiplied srgb), но на тёмной
+   теме оно становится PAPER той же плотности — то есть читаемым. Идиома уже
+   используется в брендбуке: public/bb-components.css:145. */
+article p,
+article li,
+.price-table td,
+td,
+blockquote p {
+  color: color-mix(in srgb, var(--ds-text) 70%, transparent) !important;
+}
+.c-nav,
+.j-nav,
 .calc-back,
 .acc-back,
 .adm-link,
@@ -949,13 +1059,8 @@ td {
 .j-article p,
 .j-article li,
 .j-article h3,
-.c-block p,
-article p,
-article li,
-.price-table td,
-td,
-blockquote p {
-  color: rgba(10, 10, 10, 0.7) !important;
+.c-block p {
+  color: color-mix(in srgb, var(--ds-text) 70%, transparent) !important;
 }
 
 .grid-3,
@@ -966,16 +1071,20 @@ blockquote p {
 
 .article-card,
 .spec-box,
-blockquote,
+blockquote {
+  background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
+  border-color: var(--line);
+  color: var(--ds-text);
+}
 .calc-summary,
 .acc-stat,
 .acc-order,
 .adm-tab,
 .adm-pill,
-.gal-drop {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: var(--line) !important;
-  color: #111 !important;
+.gal-drop  {
+  background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
+  border-color: var(--line);
+  color: var(--ds-text);
 }
 
 .calc-range,
@@ -996,22 +1105,28 @@ blockquote,
 
 input,
 textarea,
-select,
-.g-input {
-  color: #111 !important;
+select {
+  color: var(--ds-text) !important;
+}
+.g-input  {
+  color: var(--ds-text) !important;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(10, 10, 10, 0.42) !important;
+  color: color-mix(in srgb, var(--ds-text) 42%, transparent) !important;
 }
 
-.cta-ghost:hover,
+.cta-ghost:hover {
+  background: var(--ds-bg) !important;
+  border-color: var(--ds-bg) !important;
+  color: var(--ds-text) !important;
+}
 .calc-cta-ghost:hover,
 .acc-btn-ghost:hover,
 .gal-mini-btn.ghost:hover,
 .c-btn.ghost:hover,
-.j-btn.ghost:hover {
+.j-btn.ghost:hover  {
   background: var(--ds-bg) !important;
   border-color: var(--ds-bg) !important;
   color: var(--ds-text) !important;
@@ -1021,7 +1136,7 @@ textarea::placeholder {
 .client-tag,
 .platform {
   border-color: var(--line) !important;
-  color: rgba(10, 10, 10, 0.62) !important;
+  color: color-mix(in srgb, var(--ds-text) 62%, transparent) !important;
 }
 
 .tag:hover {
@@ -1034,9 +1149,16 @@ textarea::placeholder {
   color: var(--ds-text) !important;
 }
 
+/* Единственное правило, которое всё ещё лечит инлайн-стили старых страниц:
+   на /reels, /photo, /event-video, /reklamnye-roliki осталось 8 абзацев вида
+   `style="… color:rgba(255,255,255,.4…)"` — белёсый текст прежней тёмной
+   палитры. Без этого правила они невидимы на PAPER (проверено снятием
+   `!important` только в этой строке: rgba(10,10,10,.62) → rgba(255,255,255,.45)).
+   Инлайн-стили править нельзя (QWEN-04 §0.3), поэтому правило остаётся, но
+   чернила берутся из токена. */
 [style*="color:rgba(255"],
 [style*="color: rgba(255"] {
-  color: rgba(10, 10, 10, 0.62) !important;
+  color: color-mix(in srgb, var(--ds-text) 62%, transparent) !important;
 }
 
 /* Shared grid for service pages, blog, calculator and private tools. */
@@ -1129,35 +1251,41 @@ main > .articles {
 .grid-3,
 .price-row,
 .grid,
-.cc-grid,
+.cc-grid {
+  gap: var(--site-gap) !important;
+}
 .calc-grid,
 .acc-stats,
 .gal-layout,
 .gal-grid,
-.c-blocks {
+.c-blocks  {
   gap: var(--site-gap) !important;
 }
 
 .card,
 .price-card,
-.article-card,
+.article-card {
+  padding: clamp(22px, 2.2vw, 34px) !important;
+}
 .calc-card,
 .acc-card,
 .adm-card,
 .adm-login,
 .j-card,
-.c-case {
+.c-case  {
   padding: clamp(22px, 2.2vw, 34px) !important;
 }
 
 .cta,
-.cta-ghost,
+.cta-ghost {
+  min-height: 48px;
+}
 .calc-cta,
 .acc-btn,
 .adm-btn,
 .g-btn,
 .c-btn,
-.j-btn {
+.j-btn  {
   min-height: 48px;
 }
 
@@ -1221,9 +1349,11 @@ main > .articles {
     padding-block: 14px !important;
   }
 
-  header nav,
+  header nav {
+    justify-content: flex-start;
+  }
   .c-nav,
-  .j-nav {
+.j-nav  {
     justify-content: flex-start;
   }
 
@@ -1243,13 +1373,15 @@ main > .articles {
 
   .card,
   .price-card,
-  .article-card,
+  .article-card {
+    padding: 20px !important;
+  }
   .calc-card,
-  .acc-card,
-  .adm-card,
-  .adm-login,
-  .j-card,
-  .c-case {
+.acc-card,
+.adm-card,
+.adm-login,
+.j-card,
+.c-case  {
     padding: 20px !important;
   }
 }
@@ -1347,8 +1479,6 @@ body.site-static .site-static-footer-nav nav strong { color: var(--ds-fog) !impo
 body.site-static .site-static-header__inner { grid-template-columns: 56px minmax(0,1fr) max-content max-content; gap: 0; }
 body.site-static .site-static-nav > a { flex: 0 1 auto; }
 body.site-static .site-static-status { display: inline-flex; align-items: center; padding-inline: .85rem; border-left: 1px solid rgba(16,16,16,.13); color: rgba(0,0,0,.58); font: 680 .61rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; white-space: nowrap; }
-body.site-static .site-static-nav > a[aria-current="page"] { position: relative; background: rgba(0,0,0,.045); }
-body.site-static .site-static-nav > a[aria-current="page"]::after { content: ""; position: absolute; right: .7rem; bottom: 8px; left: .7rem; height: 1px; background: currentColor; opacity: .65; }
 @media (max-width: 1180px) { body.site-static .site-static-status { display: none; } }
 @media (max-width: 900px) {
   body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr max-content 48px; }
@@ -1389,8 +1519,6 @@ body.site-static .site-static-menu-button {
 }
 body.site-static .site-static-brand { width: 50px; color: #f4f4ef !important; background: #101010; }
 body.site-static .site-static-nav > a { display: inline-flex; align-items: center; justify-content: center; padding-inline: clamp(.56rem,.75vw,.82rem); border-right: 1px solid rgba(10,10,10,.1); color: #101010 !important; background: rgba(255,255,255,.22); }
-body.site-static .site-static-nav > a[aria-current="page"] { color: #101010 !important; background: var(--ds-orange); border-color: var(--ds-orange); }
-body.site-static .site-static-nav > a[aria-current="page"]::after { display: none; }
 body.site-static .site-static-status { min-width: 0; justify-content: center; padding-inline: 1rem; border: 1px dashed rgba(10,10,10,.5); color: rgba(10,10,10,.58); background: rgba(255,255,255,.16); }
 body.site-static .site-static-header__cta { min-width: 172px; padding-inline: 1rem; color: #fff !important; background: #101010; border-color: #101010; }
 body.site-static .site-static-header__cta-short { display: none; }

@@ -176,6 +176,7 @@ interface PageLike {
   ): Promise<unknown>;
   evaluate<T>(fn: (...args: never[]) => T, ...args: unknown[]): Promise<T>;
   click(selector: string): Promise<void>;
+  waitForTimeout(ms: number): Promise<void>;
   hover(selector: string): Promise<void>;
   focus(selector: string): Promise<void>;
   $$eval<R>(selector: string, fn: (els: never[]) => R): Promise<R>;
@@ -306,6 +307,11 @@ export async function auditPage(
     // «обычное» следующей цели мышь уводится — иначе обычный_state читался бы в
     // :hover. Для hover/focus этот шаг наоборот запрещён.
     const away = () => page.mouse.move(0, 0);
+    // Переход цвета (.18s в слое) стартует не в момент page.hover(), а на
+    // следующем кадре, поэтому одной «проверки покоя анимаций» мало: она
+    // проходит на пустом списке и читает значение ДО перехода — «hover»
+    // оказывался копией «обычного» (QWEN-05 §3 В).
+    const afterAction = () => page.waitForTimeout(250);
 
     const found: Record<string, StateSample> = {};
     const keep = (name: string, r: StateRead | null) => {
@@ -317,8 +323,8 @@ export async function auditPage(
 
     await away();
     keep("обычное", await read());
-    try { await page.hover(target.selector); keep("hover", await read()); } catch { /* элемент мог быть перекрыт — не повод ронять прогон */ }
-    try { await page.focus(target.selector); const r = await read(); keep(r?.focusVisible ? "focus-visible" : "focus (не visible)", r); } catch { /* то же */ }
+    try { await page.hover(target.selector); await afterAction(); keep("hover", await read()); } catch { /* элемент мог быть перекрыт — не повод ронять прогон */ }
+    try { await page.focus(target.selector); await afterAction(); const r = await read(); keep(r?.focusVisible ? "focus-visible" : "focus (не visible)", r); } catch { /* то же */ }
     if (Object.keys(found).length) states.push({ label: target.label, states: found });
   }
 

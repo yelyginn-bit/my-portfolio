@@ -15,7 +15,7 @@ import { secureFetch } from "../lib/api";
 import { LEGAL } from "../config/legal";
 import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
-import { FOOTER_GROUPS, PRIMARY_NAV } from "../lib/navigation.data";
+import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
 
 const store = getStore();
 
@@ -215,23 +215,9 @@ export default function Calculator() {
   )}`;
 
   return (
+    <RoutePathContext.Provider value="/calculator">
     <div className="calc-wrap">
-      <div className="calc-top">
-        <a className="calc-logo" href="/">YELYG<span>I</span>NN</a>
-        <nav className="calc-nav" aria-label="Основная навигация">
-          {PRIMARY_NAV.map((entry) => entry.kind === "dropdown" ? (
-            <details key={entry.label} className="calc-nav-dropdown">
-              <summary className="calc-back">{entry.label}</summary>
-              <div className="calc-nav-dropdown-panel">
-                {entry.href && <a href={entry.href}>Все — {entry.label.toLowerCase()}</a>}
-                {entry.items.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
-              </div>
-            </details>
-          ) : (
-            <a key={entry.href} className="calc-back" href={entry.href}>{entry.label}</a>
-          ))}
-        </nav>
-      </div>
+      <SiteHeader />
 
       <p className="calc-eyebrow">Калькулятор сметы</p>
       <h1 className="calc-title">Соберите <span>смету</span> под проект</h1>
@@ -479,14 +465,8 @@ export default function Calculator() {
           )}
         </div>
       </div>
-      <footer className="calc-footer">
-        {FOOTER_GROUPS.map((group) => (
-          <nav key={group.title} aria-label={group.title}>
-            <strong>{group.title}</strong>
-            {group.links.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
-          </nav>
-        ))}
-      </footer>
+      <SiteFooter />
     </div>
+    </RoutePathContext.Provider>
   );
 }

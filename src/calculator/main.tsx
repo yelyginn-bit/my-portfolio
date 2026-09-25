@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import Calculator from "./Calculator";
 import { initAnalytics } from "../lib/analytics";
+import "../design-system.css";
+import "../v3-polish.css";
 
 initAnalytics();
 

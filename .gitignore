@@ -9,3 +9,5 @@ coverage/
 !.env.example
 .vercel
 public/sitemap.xml
+.night-shots/
+docs/audit/computed-style.auto.md

@@ -5,7 +5,7 @@
     "indeterminate": 6
   },
   "/portfolio": {
-    "overflowPx": 4,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },
@@ -31,22 +31,22 @@
   },
   "/content-day": {
     "overflowPx": 0,
-    "contrastFails": 41,
+    "contrastFails": 5,
     "indeterminate": 0
   },
   "/reklamnye-roliki": {
     "overflowPx": 0,
-    "contrastFails": 44,
+    "contrastFails": 8,
     "indeterminate": 2
   },
   "/event-video": {
     "overflowPx": 0,
-    "contrastFails": 43,
+    "contrastFails": 7,
     "indeterminate": 2
   },
   "/reels": {
     "overflowPx": 0,
-    "contrastFails": 44,
+    "contrastFails": 8,
     "indeterminate": 2
   },
   "/cvetokorrekciya": {
@@ -56,12 +56,12 @@
   },
   "/video-dlya-marketpleysov": {
     "overflowPx": 17,
-    "contrastFails": 7,
+    "contrastFails": 1,
     "indeterminate": 0
   },
   "/pryamye-translyacii": {
     "overflowPx": 0,
-    "contrastFails": 46,
+    "contrastFails": 10,
     "indeterminate": 0
   },
   "/ceny": {
@@ -71,7 +71,7 @@
   },
   "/photo": {
     "overflowPx": 0,
-    "contrastFails": 51,
+    "contrastFails": 15,
     "indeterminate": 2
   },
   "/privacy-policy": {
@@ -115,23 +115,23 @@
     "indeterminate": 0
   },
   "/blog/skolko-stoit-snyat-reklamnyy-rolik": {
-    "overflowPx": 390,
-    "contrastFails": 43,
+    "overflowPx": 0,
+    "contrastFails": 7,
     "indeterminate": 0
   },
   "/blog/kak-snimat-reels-dlya-biznesa": {
     "overflowPx": 0,
-    "contrastFails": 45,
+    "contrastFails": 9,
     "indeterminate": 0
   },
   "/blog/video-dlya-kartochek-wildberries": {
-    "overflowPx": 390,
-    "contrastFails": 43,
+    "overflowPx": 0,
+    "contrastFails": 7,
     "indeterminate": 0
   },
   "/blog/videosemka-meropriyatiy-nn": {
-    "overflowPx": 390,
-    "contrastFails": 46,
+    "overflowPx": 0,
+    "contrastFails": 10,
     "indeterminate": 0
   },
   "/portfolio/camera": {
@@ -145,12 +145,12 @@
     "indeterminate": 0
   },
   "/portfolio/events": {
-    "overflowPx": 4,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },
   "/portfolio/reels": {
-    "overflowPx": 4,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },
@@ -165,7 +165,7 @@
     "indeterminate": 0
   },
   "/portfolio/post": {
-    "overflowPx": 4,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },
@@ -175,7 +175,7 @@
     "indeterminate": 0
   },
   "/portfolio/broadcast": {
-    "overflowPx": 4,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },
@@ -245,7 +245,7 @@
     "indeterminate": 0
   },
   "/portfolio/metro-gorkovskaya-reels": {
-    "overflowPx": 83,
+    "overflowPx": 0,
     "contrastFails": 9,
     "indeterminate": 0
   },

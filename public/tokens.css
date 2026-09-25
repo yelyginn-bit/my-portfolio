@@ -29,7 +29,7 @@
   --ds-violet: #8a5cf6;
   --ds-charcoal: #171717;
   --ds-fog: #d9d7d1;
-  --ds-on-accent: #101010;
+  --ds-on-accent: #0a0a0a;
   --ds-success: #4ade80;
   --ds-error: #ff6b5e;
   --ds-radius-sm: 3px;
@@ -122,7 +122,7 @@
   --ds-violet: #8a5cf6;
   --ds-charcoal: #171717;
   --ds-fog: #d9d7d1;
-  --ds-on-accent: #101010;
+  --ds-on-accent: #0a0a0a;
   --ds-glass-bg: rgba(17, 17, 17, 0.42);
   --ds-glass-border: rgba(255, 255, 255, 0.16);
   color-scheme: dark;

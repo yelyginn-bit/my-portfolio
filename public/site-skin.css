@@ -371,12 +371,14 @@ nav,
 }
 
 nav a,
+.tag {
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
 .c-nav a,
 .j-nav a,
 .calc-back,
 .acc-back,
 .adm-link,
-.tag,
 .j-back {
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
@@ -397,17 +399,22 @@ header nav a[aria-current="page"] {
 }
 
 nav a:hover,
+.tag:hover {
+  color: var(--ds-text) !important;
+}
 .c-nav a:hover,
 .j-nav a:hover,
 .calc-back:hover,
 .acc-back:hover,
 .adm-link:hover,
-.tag:hover,
 .j-back:hover {
   color: var(--ds-text) !important;
 }
 
-.logo,
+.logo {
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+}
 .calc-logo,
 .acc-logo,
 .adm-logo,
@@ -422,7 +429,10 @@ nav a:hover,
   padding: clamp(54px, 8vw, 112px) 0 clamp(42px, 7vw, 84px) !important;
 }
 
-h1,
+h1 {
+  letter-spacing: 0 !important;
+  text-wrap: balance;
+}
 .calc-title,
 .acc-title,
 .adm-title,
@@ -434,7 +444,9 @@ h1,
 
 h2,
 h3,
-.card h3,
+.card h3 {
+  letter-spacing: 0 !important;
+}
 .j-card h2,
 .c-case h2 {
   letter-spacing: 0 !important;

@@ -455,7 +455,9 @@ h3,
 .lead,
 .price-desc,
 .faq-a,
-.card p,
+.card p {
+  color: color-mix(in srgb, var(--ds-text) 68%, transparent) !important;
+}
 .j-card p,
 .j-article p,
 .j-article li,
@@ -468,7 +470,12 @@ h3,
 }
 
 .card,
-.price-card,
+.price-card {
+  background: color-mix(in srgb, var(--ds-surface) 92%, transparent) !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+}
 .calc-card,
 .acc-card,
 .adm-card,
@@ -485,7 +492,9 @@ h3,
 }
 
 .card:hover,
-.price-card:hover,
+.price-card:hover {
+  border-color: var(--line) !important;
+}
 .j-card:hover,
 .c-case:hover,
 .gal-item:hover,
@@ -494,7 +503,9 @@ h3,
 }
 
 .grid-3,
-.price-row,
+.price-row {
+  gap: 12px !important;
+}
 .calc-grid,
 .acc-stats,
 .gal-layout,
@@ -505,6 +516,9 @@ h3,
 
 .cta,
 .cta-ghost,
+.tag {
+  border-radius: var(--radius) !important;
+}
 .calc-type,
 .calc-row,
 .calc-toggle,
@@ -530,8 +544,7 @@ h3,
 .g-mark,
 .g-lb-btn,
 .c-btn,
-.j-btn,
-.tag {
+.j-btn {
   border-radius: var(--radius) !important;
 }
 

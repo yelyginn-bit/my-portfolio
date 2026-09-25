@@ -10,7 +10,8 @@
  * Запуск:
  *   npm run build
  *   npx tsx scripts/dead-selectors.ts --css src/design-system.css
- *   npx tsx scripts/dead-selectors.ts --css src/index.css --widths 1440
+ *   npx tsx scripts/dead-selectors.ts --css src/index.css --routes /ceny,/cvetokorrekciya
+ *   npx tsx scripts/dead-selectors.ts --css src/v3-polish.css --widths 1440
  *
  * Выход: таблица в stdout + полный TSV в .night-shots/dead-<имя>.tsv.
  * Ничего не удаляет: решение о правке — за тем, кто читает отчёт.
@@ -144,7 +145,15 @@ if (!chromium) { console.error("нет playwright — npx playwright install chr
 
 const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
 const { ROUTE_MANIFEST } = await import("../src/public/routeManifest.ts");
-const routes = ROUTE_MANIFEST.filter((r: { render: string }) => r.render !== "redirect");
+/** --routes /a,/b — ограничить список страниц. Нужно для файлов, которые
+ * грузятся не везде: `src/index.css` подключён только к `/ceny` и
+ * `/cvetokorrekciya`, и мерить его по всем 75 маршрутам было бы слишком
+ * щедро — селектор, живущий на чужой странице, этому файлу ничего не должен. */
+const only = arg("routes", "");
+const wanted = only ? new Set(only.split(",").map((s: string) => s.trim())) : null;
+const routes = ROUTE_MANIFEST.filter((r: { render: string }) => r.render !== "redirect")
+  .filter((r: { path: string }) => !wanted || wanted.has(r.path));
+if (!routes.length) { console.error(`--routes не совпал ни с одним маршрутом: ${only}`); process.exit(1); }
 
 const { server, origin } = await startLocalServer();
 const browser = await chromium.launch({ headless: true });

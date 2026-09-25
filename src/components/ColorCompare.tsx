@@ -48,12 +48,31 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
 
   useEffect(() => {
     if (!dragging) return;
-    const onMove = (event: PointerEvent) => setFromClientX(event.clientX);
+    // PROMPT-32 §1.2.8: setFromClientX на каждый "raw" pointermove гонит React
+    // ре-рендер чаще, чем успевает перекраситься clip-path на полноразмерной
+    // картинке (>16мс) — события копятся в очереди, ручка обновляется рывками,
+    // догоняя пачками. Схлопываем в один setState на кадр — ручка и линия
+    // раздела берутся из одного и того же React-состояния, так что расходиться
+    // им всё равно некуда, но обновление идёт не чаще отрисовки экрана.
+    let rafId: number | null = null;
+    let pendingX: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (pendingX !== null) {
+        setFromClientX(pendingX);
+        pendingX = null;
+      }
+    };
+    const onMove = (event: PointerEvent) => {
+      pendingX = event.clientX;
+      if (rafId === null) rafId = requestAnimationFrame(flush);
+    };
     const onUp = () => setDragging(false);
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
     return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);

@@ -28,7 +28,22 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ROUTES = ["/pryamye-translyacii", "/reels", "/calculator"];
+/* Все одиннадцать статических страниц плюс калькулятор: QWEN-05 §3 Г. Манифест не
+ * трогаем — тему тест включает сам, страницы в репозитории остаются светлыми.
+ *
+ * Пилот /video-dlya-marketpleysov — единственная страница сайта, уже тёмная
+ * (поле theme: "dark" в манифесте), поэтому он в списке с самого начала: на нём
+ * было видно, что заголовок внутри .bb-signal (оранжевая заливка, color: var
+ * (--ds-on-accent) в bb-components.css:313) перебивался типографикой корпуса и
+ * давал PAPER на ORANGE = 2.62. Слой skin-правил теперь обходит классы bb-*
+ * (тот же приём, что PROMPT-31 применил к .site-static a) — сам файл
+ * bb-components.css не тронут. */
+const ROUTES = [
+  "/reels", "/photo", "/event-video", "/reklamnye-roliki", "/content-day",
+  "/pryamye-translyacii", "/video-dlya-marketpleysov", "/calculator",
+  "/blog/kak-snimat-reels-dlya-biznesa", "/blog/skolko-stoit-snyat-reklamnyy-rolik",
+  "/blog/video-dlya-kartochek-wildberries", "/blog/videosemka-meropriyatiy-nn",
+];
 const THRESHOLD_TEXT = 4.5;
 const THRESHOLD_LARGE = 3;
 

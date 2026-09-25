@@ -119,10 +119,17 @@ body.site-menu-open { overflow: hidden; }
 .site-static .stat:last-child { border-right: 0; }
 .site-static .hero .hero-copy, .site-static .hero .wrap > div:first-child, .site-static .price-hero > div:first-child { grid-column: 1 / span 8; }
 .site-static .hero .hero-side, .site-static .hero .wrap > div:last-child, .site-static .price-hero > div:last-child { grid-column: 9 / -1; }
-.site-static :is(header, main, footer) h1, .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+/* `:not([class*="bb-"])` — тот же приём, что PROMPT-31 применил к `.site-static a`
+   (:46): типографика корпуса не должна перебивать компоненты брендбука. На
+   пилоте заголовок внутри `.bb-signal` (оранжевая заливка, `color:
+   var(--ds-on-accent)` в bb-components.css:313) получал `--site-text`
+   !important от этого правила и давал PAPER на ORANGE = 2.62. Остальные
+   десять статических страниц классов `bb-` не используют вовсе — для них
+   селектор матчает те же элементы, что и раньше. */
+.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(header, main, footer) h1 br { display: none; }
-.site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span, .site-static :is(header, main, footer) h2 span { color: var(--site-accent) !important; font-style: normal; }
-.site-static :is(header, main, footer) h2 { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span:not([class*="bb-"]), .site-static :is(header, main, footer) h2 span:not([class*="bb-"]) { color: var(--site-accent) !important; font-style: normal; }
+.site-static :is(header, main, footer) h2:not([class*="bb-"]) { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(.lead, .hero p, .price-lead) { color: var(--site-text) !important; font-size: clamp(1.125rem, 1.65vw, 1.5rem) !important; line-height: 1.5; }
 .site-static :is(.grid-3, .price-row, .price-grid) { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)) !important; gap: 0 !important; border-top: 1px solid var(--site-border); border-left: 0 !important; }
 .site-static :is(.card, .price-card) { grid-column: span 4; min-height: 0; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem) clamp(1.5rem, 3vw, 2.5rem) 0 !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--site-border) !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -163,6 +170,15 @@ body.site-menu-open { overflow: hidden; }
 @media (max-width: 767px) { .site-static .related-work-list { grid-template-columns: 1fr; } }
 .site-static .tag, .site-static :is(.cta, .cta-ghost, .price-button) { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 1rem !important; color: var(--site-text) !important; background: transparent !important; border: 1px solid var(--site-border) !important; border-radius: 3px !important; font-size: .82rem !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none; }
 .site-static :is(.cta, .price-button--primary) { color: var(--ds-on-accent) !important; background: var(--site-accent) !important; border-color: var(--site-accent) !important; }
+/* `.cta-btn` — кнопка из `<style>` четырёх статей блога: `color: var(--white)`
+   на оранжевой заливке. Алиас `--white` в этом файле означает «чернила корпуса»
+   (в светлой теме — INK, в тёмной — PAPER), а здесь нужна роль «подпись на
+   заливке», которая по брендбуку всегда тёмная: PAPER на ORANGE даёт 2.62,
+   INK на ORANGE — 6.43. Правится здесь, а не в HTML: HTML входов не трогаем. */
+/* Инстанцировано через `a.` намеренно: общее правило `.site-static a:not(…)
+   { color: inherit }` (:46) имеет специфичность (0,2,1), и просто
+   `.site-static .cta-btn` (0,2,0) проигрывает ему независимо от порядка. */
+.site-static a.cta-btn { color: var(--ds-on-accent); }
 .site-static .cta-band { color: var(--site-text); background: var(--ds-surface); }
 .site-static .cta-band h2, .site-static .cta-band p { color: inherit !important; }
 .site-static main > .service-showcase { padding-top: 0 !important; }

@@ -98,3 +98,30 @@ test:portfolio` 50 тестов зелёный
 
 Итог по строкам: 1401 → 1538 (+137, за счёт переноса тел), крупнейший CSS 103 KiB
 — без изменений (site-skin не упирается в лимит 120 KiB).
+
+18:3x · **Б: мёртвые селекторы удалены** · этот коммит · Доказательство
+(а не «не матчится в одном прогоне»): `document.querySelectorAll("[aria-current]")`
+на всех 18 страницах, грузящих skin (11 статических + `/calculator` + `/404` +
+четыре служебные), на 390 и 1440, после полного выполнения `site-shell.js`
+(defer) — **0 элементов в 36 замерах**; в запечённом HTML атрибута нет ни разу,
+генерирует его только legacy-ветка `site-shell.js:16`, которая на этих
+страницах не запускается. React-страницы `aria-current` ставят
+(`Layout.tsx:97`, `NavMenu.tsx:48`, `V3App.tsx:60`), но skin не грузят, а их
+стили — в `design-system.css`, там всё живое и не тронуто.
+`.static-cookie-banner`: совпадений нет нигде, кроме самого `site-skin.css`
+(поиск по `src/`, `public/`, `scripts/`, `server/`, всем HTML в `dist/`); живой
+баннер — `.yel-cookie` из `cookie-consent.js`.
+
+Удалено 7 правил целиком: два `.static-cookie-banner`, одно
+`header nav a[aria-current="page"] { color: var(--red) !important }` (это ещё и
+легаси-красный, вне брендбука) и четыре `body.site-static
+.site-static-nav > a[aria-current="page"]` (+ их `::after`) из блока legacy-шапки, который живёт только на /404. В трёх местах `aria-current` был мёртвой **ветвью** живого
+составного правила (рядом `:hover`, `[data-active="true"]`) — ветвь убрана,
+правило осталось: `.site-static-nav > a:hover …`,
+`.site-static-services > button[data-active="true"]`,
+`body.site-static header nav a:hover`.
+
+Проверка: отпечаток стилей против состояния после задачи А — 72 замера,
+12 636 узлов, 0 расхождений; в `site-skin.css` не осталось ни одного
+`aria-current`; сборка без предупреждений; `npm run check` зелёный
+(50 тестов), крупнейший CSS 103 KiB.

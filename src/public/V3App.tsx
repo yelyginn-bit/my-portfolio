@@ -61,7 +61,7 @@ function SiteHeader() {
               </Fragment>
             ))}
           </div>
-          <a className="v3-nav__calc" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
+          <a className="nav-calc-button" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
           <span className="v3-nav__status">CORE // READY</span>
           <a className="v3-nav__cta" href={CONTACT_LINK.href}><span className="v3-nav__cta-full">{CONTACT_LINK.label.toUpperCase()}</span><span className="v3-nav__cta-short">ОБСУДИТЬ</span><ArrowUpRight size={14} /></a>
           <button className="v3-nav__menu" type="button" aria-expanded={open} aria-controls="v3-mobile-menu" aria-label={open ? "Закрыть меню" : "Открыть меню"} onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
@@ -91,7 +91,11 @@ function SiteHeader() {
 function SiteFooter() {
   return (
     <footer className="v3-footer">
-      <div className="v3-footer__wordmark" aria-label="YELYGINN"><span>YELYGINN</span></div>
+      <div className="v3-footer__wordmark" aria-label="YELYGINN">
+        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true">
+          <text x="0" y="0">YELYGINN</text>
+        </svg>
+      </div>
       <div className="v3-footer__groups">
         {FOOTER_GROUPS.map((group) => (
           <nav key={group.title} aria-label={group.title}>
@@ -412,7 +416,24 @@ function HomePage() {
           <section className="v3-work"><div className="v3-shell"><header className="v3-section-head"><p className="v3-kicker">ОТОБРАННЫЕ // ПРОЕКТЫ</p><h2>ВЫБРАННЫЕ<br /><i>РАБОТЫ</i></h2><a href="/portfolio">ВСЕ РАБОТЫ <ArrowUpRight /></a></header><PortfolioSystem projects={selectedWorkProjects} /></div></section>
           <ProductionProof />
         </div>
-        <section id="about" className="v3-about v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2><div><p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p><p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p><a href="/about">ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a></div></section>
+        <section id="about" className="v3-about v3-shell">
+          <div className="v3-about__roles">
+            <p className="v3-kicker">ОБО МНЕ</p>
+            <ul>
+              <li>Оператор</li>
+              <li>Режиссёр монтажа</li>
+              <li>Колорист</li>
+            </ul>
+          </div>
+          <h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2>
+          <div>
+            <p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p>
+            <p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p>
+            <p>Преподаю видеопроизводство на Медиафоруме молодых журналистов в ВДЦ «Смена», стажировался на ГТРК «Нижний Новгород».</p>
+            <p>Среди клиентов — Сберуниверситет, СИБУР, Cartier, HOFF, Caprigo.</p>
+            <a href="/about">ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a>
+          </div>
+        </section>
         <ContactSection />
       </main>
       <SiteFooter />

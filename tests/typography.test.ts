@@ -104,6 +104,12 @@ test("every explicit H1/H2 font-weight in the scanned files is exactly 700 (PROM
     // accent, kept at weight 400) which are a different element entirely.
     for (const m of css.matchAll(/(?:^|[\s,.>{])(h1|h2)\s*(?=[,{])[^{]*\{([^}]*)\}/gmu)) {
       const [, tag, body] = m;
+      // PROMPT-32 §1.1.2: владелец явно попросил подзаголовок "Услуги видеосъёмки
+      // в Нижнем Новгороде" — Inter Regular, а не Bold, это описательный текст
+      // под H1, а не второй дисплейный заголовок. Точечное, задокументированное
+      // исключение, не отмена правила PROMPT-29 §1.
+      const context = css.slice(Math.max(0, m.index - 40), m.index);
+      if (context.includes(".v32-services__head")) continue;
       const weightMatch = body.match(/font-weight:\s*(\d+)/u) ?? body.match(/font:\s*(\d+)\s/u);
       if (weightMatch && weightMatch[1] !== "700") violations.push(`${tag} { ${body.trim().slice(0, 80)} }`);
     }

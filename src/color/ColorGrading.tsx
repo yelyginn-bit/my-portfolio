@@ -13,7 +13,8 @@
  * Нижняя граница стоимости подтверждена владельцем: от 5 000 ₽.
  */
 import { ArrowUpRight } from "lucide-react";
-import { PageContainer, Section, SectionHeader, SiteFooter, SiteHeader } from "../components/site/Layout";
+import { PageContainer, Section, SectionHeader } from "../components/site/Layout";
+import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
 import { ColorCompare } from "../components/ColorCompare";
 import { COLOR_COMPARE_GROUP_INTROS, COLOR_COMPARE_GROUP_LABELS, COLOR_COMPARE_GROUP_ORDER, COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
 import { SITE } from "../config/site";
@@ -81,8 +82,8 @@ export default function ColorGrading() {
   const hasProof = COLOR_COMPARE_PAIRS.length > 0;
 
   return (
-    <>
-      <SiteHeader path="/cvetokorrekciya" />
+    <RoutePathContext.Provider value="/cvetokorrekciya">
+      <SiteHeader />
 
       <main id="main">
         <Section className="color-hero">
@@ -221,6 +222,6 @@ export default function ColorGrading() {
       </main>
 
       <SiteFooter />
-    </>
+    </RoutePathContext.Provider>
   );
 }

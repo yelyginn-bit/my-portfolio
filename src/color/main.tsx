@@ -4,6 +4,7 @@ import ColorGrading from "./ColorGrading";
 import { initAnalytics } from "../lib/analytics";
 import "../index.css";
 import "../design-system.css";
+import "../v3-polish.css";
 
 initAnalytics();
 

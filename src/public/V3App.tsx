@@ -26,7 +26,10 @@ import { CALCULATOR_LINK, CATEGORY_TO_SERVICE, CONTACT_LINK, FOOTER_GROUPS, PRIC
 import { isNavEntryActive, NavDropdownMenu } from "../components/site/NavMenu";
 import { KinescopeEmbed } from "../components/media/KinescopeEmbed";
 
-const RoutePathContext = createContext("/");
+// Экспортируются для Prices.tsx/ColorGrading.tsx (PROMPT-33 §Б.2) — общая
+// шапка/подвал не копия классов, а тот же компонент, обёрнутый в свой Provider
+// с известным path (у V3-страниц path приходит из RouteSwitch ниже).
+export const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
   camera: "камера", operator: "оператор", edit: "монтаж", multicam: "мультикам",
   color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE", light: "свет",
@@ -40,7 +43,7 @@ const formatLabels: Record<string, string> = {
 const contactServices = ["Съёмка // оператор", "Рекламный ролик", "Событие", "Reels", "Прямая трансляция", "Монтаж", "Цветокоррекция", "SDE // отчётное видео", "Интервью // подкаст", "Другая задача"];
 const selectedWorkProjectIds = ["metro-concerts", "sibur-women", "scientists-nn", "sber-architecture"] as const;
 
-function SiteHeader() {
+export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const path = useContext(RoutePathContext);
   useEffect(() => {
@@ -88,7 +91,7 @@ function SiteHeader() {
   );
 }
 
-function SiteFooter() {
+export function SiteFooter() {
   return (
     <footer className="v3-footer">
       <div className="v3-footer__wordmark" aria-label="YELYGINN">

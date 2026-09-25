@@ -4,6 +4,7 @@ import Prices from "./Prices";
 import { initAnalytics } from "../lib/analytics";
 import "../index.css";
 import "../design-system.css";
+import "../v3-polish.css";
 
 // Корень раньше назывался price-root — vite.config.ts узнаёт React-страницы
 // по буквальной подстроке `<div id="root"`, и price-root под неё не подходил.

@@ -193,7 +193,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
    .direction-page и .project-page, поэтому шапка, подвал и страницы на
    ds-сетке оставались без индикатора фокуса — это нарушение WCAG 2.4.7.
    Здесь правило привязано к самим ds-компонентам, а не к странице. */
-:is(.ds-header, .ds-footer, .ds-section, .price-page) :is(a, button, input, select, textarea):focus-visible {
+:is(.ds-section, .price-page) :is(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--ds-text);
   outline-offset: 3px;
   border-radius: var(--ds-radius-sm);
@@ -213,32 +213,6 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .ds-section-header h2 { grid-column: 3 / span 7; margin: 0; font-size: var(--ds-h2); line-height: 0.94; letter-spacing: var(--ds-track-h2); text-wrap: balance; }
 .ds-section-header > p { grid-column: 10 / -1; margin: 0; color: var(--ds-text-secondary); font-size: var(--ds-body); line-height: 1.55; }
 
-.ds-footer { padding-block: clamp(4rem, 7vw, 7rem) 1.5rem; color: #f6f6f3; background: #0a0a0a; }
-.ds-footer-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); padding-bottom: clamp(3rem, 6vw, 6rem); }
-.ds-footer-brand { grid-column: 1 / span 6; }
-.ds-footer-brand > a { display: inline-block; color: inherit; font-size: clamp(2.8rem, 6vw, 6rem); font-weight: 800; line-height: 0.9; }
-.ds-footer-brand p { max-width: 31rem; margin: var(--ds-s5) 0 0; color: rgba(246, 246, 243, 0.68); font-size: var(--ds-body); line-height: 1.55; }
-.ds-footer nav { grid-column: 8 / span 2; display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-.ds-footer-contact { grid-column: 10 / -1; display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-/* Был a:first-child — Telegram и email заданы в JSX напрямую, не из
-   массива, но позиция всё равно не смысл. Явный класс. */
-.ds-footer-contact__primary { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--ds-accent-text-legacy); }
-.ds-footer-contact span { color: rgba(246, 246, 243, 0.55); font-size: 0.78rem; line-height: 1.45; }
-.ds-footer-legal { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(246, 246, 243, 0.18); color: rgba(246, 246, 243, 0.58); font-size: 0.75rem; }
-.ds-footer-legal button { padding: 0; color: inherit; background: none; border: 0; cursor: pointer; }
-.ds-header { position: sticky; top: 0; z-index: 90; background: rgba(246,246,243,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--ds-border); }
-.ds-header-inner { display: grid; grid-template-columns: minmax(150px,3fr) minmax(0,6fr) minmax(180px,3fr); gap: var(--ds-grid-gap); align-items: center; min-height: 72px; }
-.ds-brand { font-size: 1.05rem; font-weight: 850; letter-spacing: .08em; }
-.ds-nav { display: flex; align-items: center; justify-content: center; gap: clamp(1rem,2.1vw,2rem); }
-.ds-nav a { display: inline-flex; min-height: 44px; align-items: center; color: var(--ds-text-secondary); font-size: .82rem; font-weight: 650; }
-.ds-nav a:hover, .ds-nav a[aria-current="page"] { color: var(--ds-text); }
-.ds-nav a[aria-current="page"] { box-shadow: inset 0 -2px var(--ds-accent-text-legacy); }
-.ds-header-cta { justify-self: end; display: inline-flex; min-height: 44px; align-items: center; padding: 0 1rem; color: var(--ds-bg); background: var(--ds-text); border-radius: var(--ds-radius-sm); font-size: .8rem; font-weight: 700; }
-.ds-menu-button { display: none; width: 44px; height: 44px; place-items: center; justify-self: end; padding: 0; background: transparent; border: 1px solid var(--ds-border); }
-.ds-mobile-menu { position: fixed; inset: 72px 0 0; z-index: 89; padding: 1.25rem var(--ds-gutter) 2rem; color: var(--ds-text); background: var(--ds-surface); overflow-y: auto; }
-.ds-mobile-menu nav { display: grid; }
-.ds-mobile-menu nav a { display: flex; min-height: 52px; align-items: center; border-bottom: 1px solid var(--ds-border); font-size: clamp(1.35rem,7vw,2.5rem); }
-.ds-mobile-menu > div { display: flex; gap: 1.5rem; margin-top: 2rem; color: var(--ds-accent-text-legacy); }
 
 .price-static-fallback { display: none !important; }
 .price-page { min-height: 100vh; background: var(--ds-bg); }
@@ -295,14 +269,6 @@ h1, h2 { font-weight: var(--ds-fw-display); }
   .ds-section-header { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.875rem; }
   .ds-section-header .ds-eyebrow, .ds-section-header h2, .ds-section-header > p { grid-column: 1 / -1; }
   .ds-section-header h2 { margin-top: var(--ds-s2); }
-  .ds-footer-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 2.5rem; }
-  .ds-footer-brand, .ds-footer nav, .ds-footer-contact { grid-column: 1 / -1; }
-  .ds-footer-legal { align-items: flex-start; flex-direction: column; }
-  .ds-footer nav a, .ds-footer-legal a, .ds-footer-legal button { min-height: 44px; display: inline-flex; align-items: center; }
-  .ds-header-inner { grid-template-columns: 1fr auto; min-height: 64px; }
-  .ds-nav, .ds-header-cta { display: none; }
-  .ds-menu-button { display: grid; }
-  .ds-mobile-menu { inset-block-start: 64px; }
   .price-page-hero { grid-template-columns: repeat(4,minmax(0,1fr)); padding-top: 5rem; }
   .price-page-hero > div:first-child, .price-page-hero > div:last-child { grid-column: 1 / -1; }
   .price-page-hero > div:last-child { margin-top: 2rem; }
@@ -982,10 +948,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   color: #f6f6f3 !important;
 }
 
-.ds-header-cta {
-  color: #f6f6f3 !important;
-}
-
 /* На телефоне сохраняем ритм пяти строк, но не позволяем заголовку съедать
    область CTA и край следующей секции. */
 @media (max-width: 767px) {
@@ -1343,15 +1305,6 @@ body.v3-menu-open { overflow: hidden; }
   .v3-marquee { -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); }
 }
 
-/* The non-V3 public mounts use the same information architecture. */
-.ds-header-inner { grid-template-columns: 54px minmax(0,1fr) max-content max-content; gap: 0; }
-.ds-brand { width: 54px; height: 54px; display: grid; place-items: center; color: #f4f4ef; background: #0a0a0a; border-radius: 0; font: 900 1rem/1 var(--ds-font-display); }
-.ds-nav { justify-content: stretch; gap: 0; }
-.ds-nav a { flex: 1; min-height: 54px; display: inline-flex; align-items: center; justify-content: center; padding-inline: .8rem; border-right: 1px solid var(--ds-border); font: 700 .62rem/1 var(--ds-font-mono); letter-spacing: .06em; text-transform: uppercase; }
-.ds-header-status { display: inline-flex; align-items: center; padding-inline: .85rem; color: var(--ds-text-secondary); font: 700 .58rem/1 var(--ds-font-mono); letter-spacing: .06em; white-space: nowrap; }
-.ds-header-cta { border-radius: 0; min-height: 54px; }
-@media (max-width: 1100px) { .ds-header-status { display: none; } }
-
 /* ── V3 visual repair: progressive media, TP-7 navigation, editorial portfolio ── */
 .v3-nav {
   box-sizing: border-box;
@@ -1524,31 +1477,19 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-posters small { color: rgba(244,244,239,.58); font: 650 .5rem/1.35 var(--ds-font-mono); text-transform: uppercase; }
 .portfolio-posters a:hover img { transform: scale(1.018); }
 
-/* Matching TP-7 composition for the shared React shell. */
-.ds-header { padding: 9px 0; border: 0; background: transparent; backdrop-filter: none; }
-.ds-header-inner { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; grid-template-columns: 50px repeat(6, max-content) minmax(118px,1fr) max-content; gap: 4px; padding: 5px; border: 1px solid rgba(10,10,10,.44); border-radius: 22px; background: #f1f0ea; box-shadow: 0 14px 34px rgba(0,0,0,.12); }
-.ds-brand { width: 50px; height: 48px; border-radius: 14px; }
-.ds-nav { display: contents; }
-.ds-nav a, .ds-header-status, .ds-header-cta { box-sizing: border-box; min-height: 48px; justify-content: center; padding-inline: clamp(.56rem,.75vw,.82rem); border: 1px solid rgba(10,10,10,.1); border-radius: 14px; color: #0a0a0a; background: rgba(255,255,255,.22); font: 720 .58rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; }
-.ds-nav a[aria-current="page"] { color: #0a0a0a; background: var(--ds-orange); box-shadow: none; border-color: var(--ds-orange); }
-.ds-header-status { display: inline-flex; border-style: dashed; color: rgba(10,10,10,.58); }
-.ds-header-cta { min-width: 172px; color: #fff; background: #0a0a0a; border-color: #0a0a0a; }
-.ds-header-cta-short { display: none; }
-
 @media (max-width: 1080px) and (min-width: 821px) {
-  .v3-nav, .ds-header-inner { width: calc(100% - 12px); grid-template-columns: 48px repeat(6, max-content) minmax(86px,1fr) max-content !important; gap: 3px; }
-  .v3-nav__brand, .ds-brand { width: 48px; }
-  .v3-nav__links a, .ds-nav a { padding-inline: .48rem; font-size: .52rem; }
-  .v3-nav__status, .ds-header-status { padding-inline: .55rem; font-size: .5rem; }
-  .v3-nav__cta, .ds-header-cta { min-width: 145px; padding-inline: .7rem !important; font-size: .8125rem; }
+  .v3-nav { width: calc(100% - 12px); grid-template-columns: 48px repeat(6, max-content) minmax(86px,1fr) max-content !important; gap: 3px; }
+  .v3-nav__brand { width: 48px; }
+  .v3-nav__links a { padding-inline: .48rem; font-size: .52rem; }
+  .v3-nav__status { padding-inline: .55rem; font-size: .5rem; }
+  .v3-nav__cta { min-width: 145px; padding-inline: .7rem !important; font-size: .8125rem; }
   /* .v3-nav > a (специфичность 0,1,1) стоит выше голого .v3-nav__cta (0,1,0)
      и без этой строки молча откатывал бы его font-size обратно к своим
      .68rem — до этой правки так и было на обоих брейкпоинтах CTA. Селектор
-     ниже перебивает его честной специфичностью (0,2,1), без !important.
-     .ds-header-cta такого конкурента не имеет — ему хватает правила выше. */
+     ниже перебивает его честной специфичностью (0,2,1), без !important. */
   .v3-nav > a.v3-nav__cta { font-size: .8125rem; }
-  .v3-nav__cta-full, .ds-header-cta-full { display: none; }
-  .v3-nav__cta-short, .ds-header-cta-short { display: inline; }
+  .v3-nav__cta-full { display: none; }
+  .v3-nav__cta-short { display: inline; }
 }
 
 @media (max-width: 820px) {
@@ -1561,14 +1502,6 @@ body.v3-menu-open { overflow: hidden; }
   .v3-nav__cta-full { display: none; }
   .v3-nav__cta-short { display: inline; }
   .v3-mobile-menu { top: 74px; }
-
-  .ds-header-inner { width: calc(100% - 12px); grid-template-columns: 48px 1fr max-content 48px; gap: 3px; min-height: 58px; }
-  .ds-nav, .ds-header-status { display: none; }
-  .ds-brand { width: 48px; height: 46px; }
-  .ds-header-cta { min-width: 0; min-height: 46px; padding-inline: .7rem; font-size: .8125rem; }
-  .ds-header-cta-full { display: none; }
-  .ds-header-cta-short { display: inline; }
-  .ds-menu-button { width: 48px; height: 46px; display: grid; border: 1px solid rgba(10,10,10,.1); border-radius: 14px; }
 
   .v32-home .v3-work .v3-section-head, .v3-catalog__hero { grid-template-columns: 1fr; align-items: start; }
   .v32-home .v3-work .v3-section-head h2, .v3-catalog__hero h1 { font-size: clamp(2.8rem, 11vw, 5rem); }
@@ -1655,17 +1588,14 @@ body.v3-menu-open { overflow: hidden; }
 .nav-dropdown-menu a { display: flex; min-height: 40px; align-items: center; padding-inline: .75rem; border-radius: 9px; color: var(--ds-text); font: 650 .68rem/1.2 var(--ds-font-mono); letter-spacing: .02em; text-transform: none; white-space: normal; }
 .nav-dropdown-menu a:hover { background: rgba(10,10,10,.06); }
 .nav-dropdown-menu a[aria-current="page"] { color: var(--ds-accent-text-legacy); }
-/* justify-self: no-op вне грида (используется и в .ds-header, flex) — внутри
-   .v3-nav не даёт кнопке растянуться на весь гибкий трек, см. комментарий у
-   .v3-nav grid-template-columns выше. */
+/* justify-self: no-op вне грида — внутри .v3-nav не даёт кнопке растянуться
+   на весь гибкий трек, см. комментарий у .v3-nav grid-template-columns выше. */
 .nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 14px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
 .nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-accent-text-legacy); }
-.nav-mobile-calc-button { display: flex; min-height: 52px; align-items: center; justify-content: center; margin-bottom: .5rem; padding: 1rem; color: #0a0a0a; background: var(--ds-orange); border-radius: 12px; font: 700 .85rem/1 var(--ds-font-mono); letter-spacing: .04em; text-transform: uppercase; }
 .nav-dropdown-mobile-group summary { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,.12); color: #fff; font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; cursor: pointer; list-style: none; }
 .nav-dropdown-mobile-group summary::-webkit-details-marker { display: none; }
 .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
 .nav-dropdown-mobile-group a { padding-left: 2.5rem; font-size: .82rem !important; }
-@media (min-width: 1024px) { .nav-mobile-calc-button { display: none; } }
 
 /* Подвал — карта сайта (PROMPT-21 §4): шесть групп, вместо одной строки
    юридических ссылок, чтобы любая публичная страница была достижима из

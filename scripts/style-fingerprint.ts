@@ -35,6 +35,10 @@ const PROPS = [
   "color", "backgroundColor", "backgroundImage", "borderTopColor", "borderRightColor",
   "borderBottomColor", "borderLeftColor", "borderTopWidth", "borderBottomWidth",
   "opacity", "outlineColor", "textDecorationLine", "boxShadow",
+  // Ритм текста. Без них «снимок до/после» (§2 смены QWEN-05) ловил только
+  // цвета: правка line-height на заголовке контактов прошла бы проверку молча —
+  // доказано 25.09, когда временно возвращённый .86 не дал ни одного расхождения.
+  "fontSize", "lineHeight", "letterSpacing",
 ];
 
 /** Страницы, которые грузят site-skin.css: их и сравниваем. */

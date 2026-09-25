@@ -30,10 +30,10 @@
     "total": 0
   },
   "public/site-skin.css": {
-    "color": 58,
+    "color": 42,
     "radius": 12,
     "fontFamily": 1,
-    "total": 71
+    "total": 55
   },
   "public/tokens.css": {
     "color": 0,

@@ -989,8 +989,8 @@ blockquote,
 .adm-pill,
 .gal-drop {
   background: color-mix(in srgb, var(--ds-surface) 88%, transparent) !important;
-  border-color: var(--line) !important;
-  color: var(--ds-text) !important;
+  border-color: var(--line);
+  color: var(--ds-text);
 }
 
 .calc-range,

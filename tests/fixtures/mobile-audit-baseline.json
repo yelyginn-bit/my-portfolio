@@ -26,7 +26,7 @@
   },
   "/calculator": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/content-day": {
@@ -76,42 +76,42 @@
   },
   "/privacy-policy": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/personal-data-consent": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/cookie-policy": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/terms": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/payment-terms": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/cancellation-refund": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/gallery-terms": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/data-request": {
     "overflowPx": 0,
-    "contrastFails": 1,
+    "contrastFails": 0,
     "indeterminate": 0
   },
   "/blog/skolko-stoit-snyat-reklamnyy-rolik": {
@@ -155,7 +155,7 @@
     "indeterminate": 0
   },
   "/portfolio/concerts": {
-    "overflowPx": 2,
+    "overflowPx": 0,
     "contrastFails": 0,
     "indeterminate": 0
   },

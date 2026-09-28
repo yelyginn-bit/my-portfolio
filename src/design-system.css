@@ -18,7 +18,13 @@
      ссылается на уже тематизированный --ds-accent-text-legacy (#c83227 на
      PAPER — 4.5:1, прошёл контраст в PROMPT-20; на тёмной теме этот же токен
      переопределён в SIGNAL ORANGE ниже, #ff6422 на INK/GRAPHITE тоже проходит,
-     scripts/contrast.ts), так что не нужен отдельный override в :root[data-theme="dark"]. */
+     scripts/contrast.ts), так что не нужен отдельный override в :root[data-theme="dark"].
+     PROMPT-35 §4: весь публичный сайт теперь тёмный (§1) — 9 правил
+     публичных страниц, которые читали этот токен, переведены на
+     var(--ds-orange) напрямую (docs/audit/brandbook-compliance.md).
+     Определение здесь не удалено: приватные account.html/admin.html/
+     journal.html остаются светлыми (вне области PROMPT-35), делят этот
+     бандл и не проверены на отсутствие непрямых ссылок на --ds-accent-text. */
   --ds-accent-text: var(--ds-accent-text-legacy);
   --ds-orange: #ff6422;
   --ds-violet: #8a5cf6;
@@ -206,7 +212,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .ds-stack { display: flex; flex-direction: column; gap: var(--ds-s5); }
 .ds-cluster { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ds-s4); }
 .ds-divider { width: 100%; margin: 0; border: 0; border-top: 1px solid var(--ds-border); }
-.ds-eyebrow { margin: 0; color: var(--ds-accent-text-legacy); font-size: 0.75rem; font-weight: 700; line-height: 1.3; text-transform: uppercase; }
+.ds-eyebrow { margin: 0; color: var(--ds-orange); font-size: 0.75rem; font-weight: 700; line-height: 1.3; text-transform: uppercase; }
 .ds-section-header { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); align-items: end; margin-bottom: clamp(2rem, 4.5vw, 3.5rem); }
 .ds-section-header .ds-eyebrow { grid-column: 1 / span 2; }
 .ds-section-header h2 { grid-column: 3 / span 7; margin: 0; font-size: var(--ds-h2); line-height: 0.94; letter-spacing: var(--ds-track-h2); text-wrap: balance; }
@@ -214,7 +220,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .price-page-hero { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: var(--ds-grid-gap); align-items: end; padding-block: clamp(6rem,11vw,11rem) clamp(4rem,7vw,7rem); border-bottom: 1px solid var(--ds-border); }
 .price-page-hero > div:first-child { grid-column: 1 / span 8; }
 .price-page-hero > div:last-child { grid-column: 9 / -1; }
-.price-page-hero > div:first-child > p, .price-page-catalog > header > p { margin: 0 0 1.5rem; color: var(--ds-accent-text-legacy); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
+.price-page-hero > div:first-child > p, .price-page-catalog > header > p { margin: 0 0 1.5rem; color: var(--ds-orange); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
 .price-page-hero h1 { margin: 0; font-size: var(--ds-h1); line-height: .9; letter-spacing: var(--ds-track-display); text-wrap: balance; }
 .price-page-hero > div:last-child > p { margin: 0; font-size: var(--ds-lead); line-height: 1.45; }
 .price-page-hero small { display: block; margin-top: 1.5rem; color: var(--ds-text-secondary); font-size: .9rem; line-height: 1.55; }
@@ -226,11 +232,11 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .price-page-list article { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: var(--ds-grid-gap); align-items: start; padding-block: clamp(1.5rem,3vw,2.5rem); border-bottom: 1px solid var(--ds-border); }
 .price-page-index { grid-column: 1; color: var(--ds-text-secondary); font-size: .75rem; }
 .price-page-name { grid-column: 2 / span 3; }
-.price-page-name span { color: var(--ds-accent-text-legacy); font-size: .72rem; font-weight: 700; text-transform: uppercase; }
+.price-page-name span { color: var(--ds-orange); font-size: .72rem; font-weight: 700; text-transform: uppercase; }
 .price-page-name h3 { margin: .5rem 0; font-size: clamp(1.25rem,2vw,2rem); line-height: 1; }
 .price-page-name p, .price-page-details p, .price-page-details small { color: var(--ds-text-secondary); line-height: 1.5; }
 .price-page-price { grid-column: 5 / span 2; display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; }
-.price-page-price strong { color: var(--ds-accent-text-legacy); font-size: clamp(1.45rem,2.4vw,2.5rem); line-height: 1; }
+.price-page-price strong { color: var(--ds-orange); font-size: clamp(1.45rem,2.4vw,2.5rem); line-height: 1; }
 .price-page-example { color: var(--ds-text-secondary); font-size: .78rem; text-decoration: underline; text-underline-offset: 2px; }
 .price-page-example:hover { color: var(--ds-text); }
 .price-page-details { grid-column: 7 / span 4; }
@@ -331,7 +337,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .color-tier-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); border-top: 1px solid var(--ds-border); }
 .color-tier { padding: clamp(1.5rem, 2.5vw, 2.25rem) 0 0; border-top: 2px solid var(--ds-text); }
 .color-tier h3 { margin: 0 0 .75rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.15; }
-.color-tier strong { display: block; color: var(--ds-accent-text-legacy); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; }
+.color-tier strong { display: block; color: var(--ds-orange); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; }
 .color-tier span { display: block; margin-top: .3rem; color: var(--ds-text-secondary); font-size: .78rem; }
 .color-tier p { margin: 1rem 0 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
 .color-note { max-width: 60ch; margin: clamp(2rem, 3.5vw, 3rem) 0 0; color: var(--ds-text-secondary); font-size: .875rem; line-height: 1.55; }
@@ -339,7 +345,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .color-process { border-bottom: 1px solid var(--ds-border); }
 .color-process-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin: 0; padding: 0; list-style: none; }
 .color-process-list li { padding-top: 1.25rem; border-top: 1px solid var(--ds-border); }
-.color-process-list li > span { display: block; margin-bottom: .75rem; color: var(--ds-accent-text-legacy); font-size: .75rem; font-weight: 700; }
+.color-process-list li > span { display: block; margin-bottom: .75rem; color: var(--ds-orange); font-size: .75rem; font-weight: 700; }
 .color-process-list h3 { margin: 0 0 .6rem; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.2; }
 .color-process-list p { margin: 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
 
@@ -594,7 +600,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-project__related-list { display: grid; gap: .6rem; margin-bottom: 1.25rem; }
 .v3-project__related-list a { display: flex; min-height: 52px; align-items: center; padding: 0 1.1rem; color: var(--ds-text); background: var(--ds-surface); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); font-size: .95rem; font-weight: 650; }
 .v3-project__related-list a:hover { border-color: var(--ds-orange); }
-.v3-project__related-service { display: inline-flex; align-items: center; gap: .4rem; color: var(--ds-accent-text-legacy); font-size: .9rem; font-weight: 700; }
+.v3-project__related-service { display: inline-flex; align-items: center; gap: .4rem; color: var(--ds-orange); font-size: .9rem; font-weight: 700; }
 .v3-project__calculator-row { margin-top: 1.5rem; }
 /* PROMPT-35 §1: фон — var(--ds-text), намеренно инверсия относительно
    страницы (всегда контрастен var(--ds-bg)); текст поэтому тоже должен
@@ -1178,11 +1184,11 @@ body.v3-menu-open { overflow: hidden; }
 .nav-dropdown-menu.is-open { display: grid; }
 .nav-dropdown-menu a { display: flex; min-height: 40px; align-items: center; padding-inline: .75rem; border-radius: 9px; color: var(--ds-text); font: 650 .68rem/1.2 var(--ds-font-mono); letter-spacing: .02em; text-transform: none; white-space: normal; }
 .nav-dropdown-menu a:hover { background: rgba(10,10,10,.06); }
-.nav-dropdown-menu a[aria-current="page"] { color: var(--ds-accent-text-legacy); }
+.nav-dropdown-menu a[aria-current="page"] { color: var(--ds-orange); }
 /* justify-self: no-op вне грида — внутри .v3-nav не даёт кнопке растянуться
    на весь гибкий трек, см. комментарий у .v3-nav grid-template-columns выше. */
 .nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 12px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
-.nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-accent-text-legacy); }
+.nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-orange); }
 .nav-dropdown-mobile-group summary { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 12%, transparent); color: #fff; font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; cursor: pointer; list-style: none; }
 .nav-dropdown-mobile-group summary::-webkit-details-marker { display: none; }
 .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }

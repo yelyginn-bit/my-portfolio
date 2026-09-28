@@ -23,7 +23,13 @@
      ссылается на уже тематизированный --ds-accent-text-legacy (#c83227 на
      PAPER — 4.5:1, прошёл контраст в PROMPT-20; на тёмной теме этот же токен
      переопределён в SIGNAL ORANGE ниже, #ff6422 на INK/GRAPHITE тоже проходит,
-     scripts/contrast.ts), так что не нужен отдельный override в :root[data-theme="dark"]. */
+     scripts/contrast.ts), так что не нужен отдельный override в :root[data-theme="dark"].
+     PROMPT-35 §4: весь публичный сайт теперь тёмный (§1) — 9 правил
+     публичных страниц, которые читали этот токен, переведены на
+     var(--ds-orange) напрямую (docs/audit/brandbook-compliance.md).
+     Определение здесь не удалено: приватные account.html/admin.html/
+     journal.html остаются светлыми (вне области PROMPT-35), делят этот
+     бандл и не проверены на отсутствие непрямых ссылок на --ds-accent-text. */
   --ds-accent-text: var(--ds-accent-text-legacy);
   --ds-orange: #ff6422;
   --ds-violet: #8a5cf6;

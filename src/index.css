@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
+/* PROMPT-35 §5: font-sans/font-mono/font-display здесь были системные
+   стеки как ОСНОВНОЙ шрифт, не страховка после брендбукового — реальное
+   нарушение §4 промпта. На практике безвредно (design-system.css:192
+   `body { font-family: var(--ds-font-body) }` не обёрнут в @layer и уже
+   побеждал этот @layer base — Cascade Layers: неслоёное всегда старше
+   слоёного при равной специфичности), но защититься от будущего порядка
+   подключения дешевле, чем полагаться на это неявно. */
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", ui-monospace, monospace;
-  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  
-  --color-nothing-red: #FF0000;
-  --color-nothing-black: #0A0A0A;
-  --color-nothing-white: #F5F5F4; /* Cloud Dancer equivalent */
-  --color-mineral-600: #4A4A48;
-  --color-mineral-400: #8E8E8C;
-  --color-mineral-200: #D1D1CF;
+  --font-sans: var(--ds-font-body);
+  --font-mono: var(--ds-font-mono);
+  --font-display: var(--ds-font-display);
 }
 
 @layer base {
@@ -26,7 +26,7 @@
   }
 
   body {
-    @apply bg-nothing-white text-nothing-black font-sans antialiased transition-colors duration-700;
+    @apply font-sans antialiased transition-colors duration-700;
   }
 }
 
@@ -49,12 +49,14 @@
 /* Yelyginn unified production skin.
    Палитра больше не задаётся здесь: имена указывают на общие токены
    из design-system.css, чтобы на сайте была одна тема, а не три.
-   QWEN-07: блок трогать нельзя без проверки — compiled `::selection` читает
-   --color-nothing-red из строки ниже (:root), а `color: var(--ink)` читает
-   --ink здесь. Остальные имена сегодня не читает никто на двух страницах,
-   которые грузят этот файл, но они оставлены: это ровно то, что промпт
-   называет «не трогать, пока не доказано», а доказательство «не читает»
-   слабое место любого замера. */
+   PROMPT-35 §4: --color-nothing-*/--color-mineral-* (@theme выше и
+   --color-nothing-red ниже) удалены — проверено, что compiled CSS их не
+   использует нигде в разметке (grep по *.tsx/*.html), а не только «не
+   доказано, что читает». body { @apply bg-nothing-white text-nothing-black }
+   тоже был скомпилирован в literal-body{} той же специфичности, что
+   design-system.css:176 — проверено вычисленными стилями и попиксельно на
+   /ceny, /cvetokorrekciya: побеждает design-system.css (грузится позже),
+   так что удаление этих двух свойств из @apply не меняет вид. */
 :root {
   --red: var(--ds-accent);
   --black: var(--ds-bg);
@@ -76,7 +78,6 @@ body,
 
 /* Final layout system: one shell, one grid, one vertical rhythm. */
 :root {
-  --color-nothing-red: #fe2c1f;
   --site-max: var(--ds-content);
   --site-gutter: var(--ds-gutter);
   --site-gap: var(--ds-grid-gap);

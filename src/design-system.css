@@ -188,17 +188,6 @@ h1, h2 { font-weight: var(--ds-fw-display); }
   margin-inline: auto;
 }
 
-/* Видимый фокус для всей оболочки дизайн-системы.
-   Глобальное правило в public-polish.css ограничено классами .site-home,
-   .direction-page и .project-page, поэтому шапка, подвал и страницы на
-   ds-сетке оставались без индикатора фокуса — это нарушение WCAG 2.4.7.
-   Здесь правило привязано к самим ds-компонентам, а не к странице. */
-:is(.ds-section, .price-page) :is(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--ds-text);
-  outline-offset: 3px;
-  border-radius: var(--ds-radius-sm);
-}
-
 .ds-section { padding-block: var(--ds-section-space); }
 .ds-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
 .ds-grid-item { min-width: 0; }
@@ -300,72 +289,12 @@ h1, h2 { font-weight: var(--ds-fw-display); }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
-/* Public React pages: final editorial layer. */
-.site-home .site-shell,
-.direction-page .direction-shell,
-.project-page .site-shell {
-  width: min(var(--ds-content), calc(100% - (var(--ds-gutter) * 2)));
-  max-width: none;
-}
-
-.site-home .site-nav,
-.direction-page .site-nav,
-.project-page .site-nav {
-  min-height: 64px;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid currentColor;
-  border-radius: 0;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-.site-home .hero-stage .site-nav { padding-inline: 1rem; color: #f4f2ed; background: rgba(12,12,11,.28); border-color: rgba(244,242,237,.4); }
-.site-home .hero-stage .site-nav :is(a,button) { color: #f4f2ed; }
-.site-home .hero-stage .site-nav-dropdown :is(a,button) { color: var(--ds-text); }
-
 .site-brand-wordmark {
   font-family: var(--font-sans);
   font-size: clamp(0.95rem, 1.4vw, 1.15rem);
   font-weight: 850;
   letter-spacing: 0.08em;
 }
-
-.site-home .hero-stage { min-height: min(900px, 94svh); }
-.site-home .hero-frame { padding-block: 1.5rem clamp(3rem, 7vh, 5.5rem); }
-.site-home .hero-rail { grid-template-columns: 2fr 8fr 2fr; }
-.site-home .hero-layout-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); align-items: end; }
-.site-home .hero-primary { grid-column: 1 / span 9; }
-.site-home .hero-summary { grid-column: 10 / -1; padding: 0 0 0 var(--ds-s5); border-left: 1px solid var(--ds-border-strong); }
-.site-home .hero-headline { max-width: 13ch; font-size: clamp(4.4rem, 7.4vw, 7.5rem) !important; font-weight: 760; line-height: 0.88; letter-spacing: 0; text-transform: none; }
-.site-home .hero-action { min-height: 56px; border-radius: var(--ds-radius-sm); }
-.site-home .hero-action--dark { background: var(--ds-accent); border-color: var(--ds-accent); }
-.site-home .hero-action--ghost { background: transparent; }
-.site-home .marquee { background: var(--ds-surface); color: var(--ds-text); border: 0; }
-
-.site-home .trust-section { padding-block: clamp(2.25rem, 4vw, 4rem); background: var(--ds-bg); }
-.site-home .trust-section > div { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 0; overflow: visible; background: transparent; border: 0; border-radius: 0; }
-.site-home .trust-section > div > div { grid-column: span 3; padding: var(--ds-s5) var(--ds-s5) var(--ds-s5) 0; background: transparent; border-top: 1px solid var(--ds-border); }
-.site-home .trust-section > div > div + div { padding-left: var(--ds-s5); border-left: 1px solid var(--ds-border); }
-
-.site-home .portfolio-section,
-.site-home .contact-section { width: min(var(--ds-content), calc(100% - (var(--ds-gutter) * 2))); max-width: none; padding-inline: 0; }
-.site-home .portfolio-section > div:first-child > div:first-child { grid-column: 1 / span 7; }
-.site-home .portfolio-section > div:first-child > div:last-child { grid-column: 8 / -1; justify-content: flex-end; }
-.site-home .portfolio-card { grid-column: span 4; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
-.site-home .portfolio-card:nth-child(6n + 1) { grid-column: span 8; }
-.site-home .portfolio-card:nth-child(6n + 2) { grid-column: span 4; align-self: end; }
-.site-home .portfolio-card:nth-child(6n + 3),
-.site-home .portfolio-card:nth-child(6n + 4) { grid-column: span 6; }
-.site-home .portfolio-card-media { aspect-ratio: 16 / 10; border-radius: var(--ds-radius-sm); }
-.site-home .portfolio-card:nth-child(6n + 2) .portfolio-card-media { aspect-ratio: 4 / 5; }
-.site-home .portfolio-card-copy { min-height: 0; padding: 1rem 0 0; border: 0; }
-.site-home .portfolio-card-copy h3 { font-size: var(--ds-h3); line-height: 1; text-transform: none; }
-.site-home .portfolio-card-copy p { max-width: 48ch; color: var(--ds-text-secondary); }
-.site-home .portfolio-card:hover { box-shadow: none; transform: none; }
-
-.site-home .services-section { padding-inline: 0; background: var(--ds-bg-alt); }
-.site-home .services-section > .site-shell { width: min(var(--ds-content), calc(100% - (var(--ds-gutter) * 2))); }
 .editorial-services { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
 .editorial-service { position: relative; grid-column: span 4; min-height: 29rem; overflow: hidden; color: var(--ds-text); background: var(--ds-surface); border-radius: var(--ds-radius-sm); }
 .editorial-service--0, .editorial-service--3 { grid-column: span 8; }
@@ -380,17 +309,6 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .editorial-service-copy h3 { margin: 0; font-size: var(--ds-h3); line-height: .98; text-transform: none; }
 .editorial-service-copy p { grid-column: 1 / -1; max-width: 42ch; margin: 0; color: var(--ds-text-secondary); font-size: .95rem; line-height: 1.5; }
 .editorial-service-copy svg { grid-column: 2; grid-row: 2; }
-
-.site-home .process-section { background: var(--ds-bg); }
-.site-home .process-section > .site-shell > div:last-child > div + div { padding-left: clamp(1rem, 2vw, 2rem); border-left: 1px solid var(--ds-border); }
-.site-home .faq-section { background: var(--ds-bg-alt); }
-.site-home .faq-section > .site-shell { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--ds-grid-gap); }
-.site-home .faq-section > .site-shell > div:first-child { grid-column: 1 / span 5; }
-.site-home .faq-section > .site-shell > div:nth-child(2),
-.site-home .faq-section > .site-shell > div:nth-child(3) { grid-column: 7 / -1; }
-.site-home .contact-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--ds-grid-gap); }
-.site-home .contact-copy, .site-home .contact-form { grid-column: span 6; }
-.site-home .contact-form { border-radius: var(--ds-radius); box-shadow: none; }
 
 .direction-page { background: var(--ds-bg); }
 .direction-hero { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--ds-grid-gap); padding-top: clamp(8rem, 12vw, 11rem); padding-bottom: clamp(4rem, 7vw, 7rem); }
@@ -416,44 +334,8 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .direction-card:hover { box-shadow: none; transform: none; }
 .direction-cta { color: var(--ds-text); background: var(--ds-surface); }
 
-@media (max-width: 1023px) {
-  .site-home .hero-headline { font-size: clamp(3.5rem, 8.6vw, 5.5rem) !important; }
-  .site-home .portfolio-section > div:last-child,
-  .editorial-services,
-  .direction-category-grid,
-  .direction-grid { grid-template-columns: repeat(8, minmax(0,1fr)); }
-  .site-home .portfolio-card, .site-home .portfolio-card:nth-child(n),
-  .editorial-service, .editorial-service--0, .editorial-service--1, .editorial-service--2, .editorial-service--3, .editorial-service--4,
-  .direction-card, .direction-card--layout-0, .direction-card--layout-1, .direction-card--layout-2, .direction-card--layout-3,
-  .direction-category-card, .direction-category-card:nth-child(n) { grid-column: span 4; }
-  .site-home .process-section > .site-shell > div:last-child > div { grid-column: span 6; border-bottom: 1px solid var(--ds-border); }
-}
-
 @media (max-width: 767px) {
-  .site-home .site-nav, .direction-page .site-nav, .project-page .site-nav { min-height: 56px; }
-  .site-home .hero-stage { min-height: 760px; }
-  .site-home .hero-headline { max-width: 12ch; font-size: clamp(2.65rem, 13vw, 3.55rem) !important; }
-  .site-home .hero-action { min-height: 52px; }
-  .site-home .trust-section > div { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .site-home .trust-section > div > div { grid-column: span 1; padding: 1.25rem 1rem 1.25rem 0; }
-  .site-home .trust-section > div > div:nth-child(even) { padding-left: 1rem; border-left: 1px solid var(--ds-border); }
-  .site-home .portfolio-section > div:first-child > div:last-child { margin-top: 1.5rem; justify-content: flex-start; }
-  .site-home .portfolio-section > div:last-child,
-  .editorial-services,
-  .direction-category-grid,
-  .direction-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 2.75rem .875rem; }
-  .site-home .portfolio-card, .site-home .portfolio-card:nth-child(n),
-  .editorial-service, .editorial-service--0, .editorial-service--1, .editorial-service--2, .editorial-service--3, .editorial-service--4,
-  .direction-card, .direction-card--layout-0, .direction-card--layout-1, .direction-card--layout-2, .direction-card--layout-3,
-  .direction-category-card, .direction-category-card:nth-child(n) { grid-column: 1 / -1; }
-  .site-home .portfolio-card:nth-child(3n + 2), .direction-card:nth-child(3n + 2) { grid-column: 2 / -1; }
-  .site-home .portfolio-card:nth-child(3n + 3), .direction-card:nth-child(3n + 3) { grid-column: 1 / span 3; }
   .editorial-service { min-height: 25rem; }
-  .site-home .process-section > .site-shell > div:last-child > div { padding: 1.5rem 0; border-left: 0 !important; }
-  .site-home .faq-section > .site-shell { display: block; }
-  .site-home .faq-section > .site-shell > div:nth-child(2) { margin-top: 2rem; }
-  .site-home .contact-grid { display: block; }
-  .site-home .contact-form { margin-top: 2.5rem; }
   .direction-hero { grid-template-columns: repeat(4, minmax(0,1fr)); }
   .direction-hero > div:first-child, .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { grid-column: 1 / -1; }
   .direction-hero > p, .direction-hero > div:last-child:not(:first-child) { margin-top: 1.5rem; }
@@ -900,78 +782,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 @keyframes v3-work-gradient-on-scroll {
   from { transform: translate3d(-5%, -9%, 0) scale(1.08); }
   to { transform: translate3d(6%, 12%, 0) scale(1.12); }
-}
-
-
-
-
-
-/* ── Финальный проход: геометрия публичных страниц ───────────────────────
-   В проекте есть несколько исторических слоёв CSS. Этот компактный слой
-   намеренно находится последним: он возвращает ключевым блокам одну
-   предсказуемую сетку, не меняя содержимое и маршруты. */
-
-/* У трёх элементов верхней рейки уже есть позиционирование по 12 колонкам.
-   Шаблон 2/8/2 создавал неявные нулевые дорожки для колонок 3–12, поэтому
-   навигация сжималась и уходила за правый край. */
-.site-home .hero-rail {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--ds-grid-gap);
-}
-
-.site-home .site-nav-inline {
-  width: 100%;
-  min-width: 0;
-}
-
-.site-home .site-nav-inline > :last-child,
-.site-home .site-nav-inline .site-nav-links {
-  min-width: 0;
-}
-
-/* Главный кадр остаётся выразительным, но текст всегда лежит выше ролика и
-   спокойно читается поверх самых контрастных фрагментов. */
-.site-home .hero-primary {
-  isolation: isolate;
-}
-
-.site-home .hero-headline {
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
-}
-
-/* Навигация остаётся частью тёмного медиакадра, а не светлой страницы под
-   ним: легаси-класс text-nothing-black не должен понижать её контраст. */
-.site-home .hero-stage .site-nav,
-.site-home .hero-stage .site-nav :is(a, button, .text-nothing-black) {
-  color: #f6f6f3 !important;
-}
-
-/* На телефоне сохраняем ритм пяти строк, но не позволяем заголовку съедать
-   область CTA и край следующей секции. */
-@media (max-width: 767px) {
-  .site-home .hero-stage {
-    min-height: max(720px, 100svh);
-  }
-
-  .site-home .hero-frame {
-    padding-bottom: 32px;
-  }
-
-  .site-home .hero-headline {
-    max-width: 10.5ch;
-    font-size: clamp(2.45rem, 12.4vw, 3.3rem) !important;
-    line-height: 0.94;
-  }
-
-  .site-home .hero-headline .text-mask {
-    min-height: 0;
-  }
-
-  .site-home .hero-cta-wrap {
-    margin-top: 20px;
-  }
 }
 
 /* Вторичный текст на тёмной ценовой странице не должен проваливаться в

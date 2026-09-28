@@ -463,7 +463,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
    на видимую раскладку не влияет ни на каком брейкпоинте. */
 #contact, #process, #about, #home-services-title, #davinci-breakdown { scroll-margin-top: clamp(78px, 11vh, 116px); }
 .v3-nav { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; margin-inline: auto; display: grid; grid-template-columns: 56px repeat(8, max-content) minmax(210px, 1fr); align-items: stretch; padding: 5px; border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent); border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 86%, transparent); box-shadow: 0 16px 52px rgba(20,20,18,.1); backdrop-filter: blur(18px) saturate(1.15); pointer-events: auto; }
-.v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); border-radius: 12px; color: var(--ds-text); font: 680 .68rem/1 var(--ds-font-mono); letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
+.v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); border-radius: 12px; color: var(--ds-scrim); font: 680 .68rem/1 var(--ds-font-mono); letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
 .v3-nav > a:hover, .v3-nav > a:focus-visible { background: #fff; }
 .v3-nav__brand { padding: 0 !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; font-size: 1rem !important; font-weight: 900 !important; }.v3-nav__cta { justify-content: space-between !important; padding-inline: 1.25rem !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; border-right: 0 !important; }
 .v3-nav__menu { display: none; border: 0; background: var(--ds-orange); border-radius: 12px; }
@@ -1183,8 +1183,11 @@ body.v3-menu-open { overflow: hidden; }
 .nav-dropdown-menu a:hover { background: rgba(10,10,10,.06); }
 .nav-dropdown-menu a[aria-current="page"] { color: var(--ds-orange); }
 /* justify-self: no-op вне грида — внутри .v3-nav не даёт кнопке растянуться
-   на весь гибкий трек, см. комментарий у .v3-nav grid-template-columns выше. */
-.nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 12px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
+   на весь гибкий трек, см. комментарий у .v3-nav grid-template-columns выше.
+   --ds-scrim, а не --ds-text: панель .v3-nav светлая в ОБОИХ темах
+   (background: color-mix(… var(--ds-on-dark) 86% …)), а --ds-text в тёмной
+   переворачивается в PAPER — подпись кнопки сливалась с самим баром (1.01). */
+.nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-scrim); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 12px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
 .nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-orange); }
 .nav-dropdown-mobile-group summary { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 12%, transparent); color: #fff; font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; cursor: pointer; list-style: none; }
 .nav-dropdown-mobile-group summary::-webkit-details-marker { display: none; }

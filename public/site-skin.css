@@ -398,16 +398,38 @@ nav a,
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
+/* Цвет здесь не задаётся: эта же разметка шапки (.v3-header/.v3-nav) стоит и на
+   светлой в обеих темах панели навбара, и на тёмном выпадающем меню, а
+   `!important` перекрывал и то, и другое одним токеном. После флипа темы на
+   тёмную --ds-text стал PAPER — четыре пункта меню и подпись кнопки стали
+   невидимыми на светлом баре (замер 1.01 против ~17 на живом сайте).
+   Бар красится в design-system.css (он в бандле v3-polish-*.css), а для
+   выпадающего меню нужна явная строка: .site-static a { color: inherit }
+   выше (0,2,1) специфичнее .nav-dropdown-menu a (0,1,1) и тянул бы GRAPHITE
+   шапки на INK-фон меню. */
 header nav a {
   display: inline-flex;
   min-height: 40px;
   align-items: center;
-  color: color-mix(in srgb, var(--ds-text) 72%, transparent) !important;
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0 !important;
   text-transform: none;
 }
+
+/* Пункты навбара и кнопка расчёта сидят на светлой в обеих темах панели
+   .v3-nav, поэтому INK берётся из непереворачиваемого --ds-scrim, а не
+   наследуется от GRAPHITE шапки: на живом сайте эти ссылки #0a0a0a, и без
+   этой строки статические страницы уходили бы на #171717 (тот же компонент —
+   два разных цвета, §4.3 промпта). */
+.site-static .v3-nav > a,
+.site-static .v3-nav__links a { color: var(--ds-scrim); }
+
+/* ПОСЛЕ навбара намеренно: .nav-dropdown-menu вложен в .v3-nav__links, специфичность
+   у них одинаковая (0,2,1), и побеждает та, что ниже в файле. Меню несёт
+   background: var(--ds-bg) — значит текст парный --ds-text, а не чернила бара. */
+.site-static .nav-dropdown-menu a { color: var(--ds-text); }
+.site-static .nav-dropdown-menu a[aria-current="page"] { color: var(--ds-orange); }
 
 nav a:hover,
 .tag:hover {

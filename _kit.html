@@ -52,6 +52,7 @@
         <div class="kit-section__head"><h2>Атомы</h2><span class="kit-section__frame">кадр: BUTTONS + BADGES, TYPOGRAPHY</span></div>
         <div class="kit-swatch">
           <p class="bb-kicker">01 / КИКЕР</p>
+          <p class="bb-kicker bb-kicker--muted">01 / КИКЕР — MUTED</p>
           <h3 class="bb-display" style="font-size: var(--ds-fs-48); margin: 0.5rem 0 1.5rem;">Display</h3>
           <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1.5rem;">
             <a class="bb-btn" href="#signal">Start now</a>
@@ -85,6 +86,11 @@
             <div class="bb-media bb-glass"></div>
           </div>
         </div>
+        <div class="kit-swatch" style="display:flex; flex-wrap:wrap; gap:1.5rem;">
+          <div style="width:220px;"><p class="bb-frame-label">bb-media (16:9, default)</p><div class="bb-media" style="background:var(--ds-charcoal); margin-top:0.5rem;"></div></div>
+          <div style="width:160px;"><p class="bb-frame-label">bb-media--portrait (4:5)</p><div class="bb-media bb-media--portrait" style="background:var(--ds-charcoal); margin-top:0.5rem;"></div></div>
+          <div style="width:160px;"><p class="bb-frame-label">bb-media--square (1:1)</p><div class="bb-media bb-media--square" style="background:var(--ds-charcoal); margin-top:0.5rem;"></div></div>
+        </div>
       </section>
 
       <section class="kit-section" id="work">
@@ -115,6 +121,41 @@
             <span class="bb-project-card__arrow">&#8599;</span>
           </a>
         </div>
+        <p class="bb-frame-label" style="margin-top:1.5rem;">bb-work-grid--4</p>
+        <div class="bb-work-grid bb-work-grid--4" style="margin-top:0.5rem;">
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">04</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">Teraflex</h3>
+              <p class="bb-project-card__role">Presentation</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">05</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">Yango</h3>
+              <p class="bb-project-card__role">Reels / Commercial</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">06</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">SKRF</h3>
+              <p class="bb-project-card__role">SDE / Event</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+          <a class="bb-project-card" href="#work">
+            <div class="bb-project-card__media"><span class="bb-project-card__num">07</span></div>
+            <div class="bb-project-card__meta">
+              <h3 class="bb-project-card__title">Caprigo</h3>
+              <p class="bb-project-card__role">Production</p>
+            </div>
+            <span class="bb-project-card__arrow">&#8599;</span>
+          </a>
+        </div>
       </section>
 
       <section class="kit-section" id="case">
@@ -123,7 +164,7 @@
           <div class="bb-case-hero__top">
             <div>
               <p class="bb-kicker">Project_004</p>
-              <h2 class="bb-display" style="font-size: var(--ds-fs-72); margin-top: 0.5rem;">HOFF</h2>
+              <h2 class="bb-display bb-case-hero__title" style="font-size: var(--ds-fs-72); margin-top: 0.5rem;">HOFF</h2>
             </div>
             <dl class="bb-case-hero__meta">
               <div><dt>Role</dt><dd>Operator</dd></div>
@@ -157,6 +198,12 @@
           <div class="bb-glass" style="padding: 2rem; max-width: 28rem;">
             <p class="bb-kicker">Glass over depth</p>
             <p style="margin: 0.75rem 0 0; color: var(--ds-text-secondary);">Стекло — только над реальной глубиной (фото/градиент), не как самостоятельный фон.</p>
+          </div>
+        </div>
+        <div class="bb-atmosphere bb-atmosphere--violet" style="padding: 3rem; margin-top: 1.5rem; border-radius: var(--ds-radius-shell);">
+          <div class="bb-glass" style="padding: 2rem; max-width: 28rem;">
+            <p class="bb-kicker">bb-atmosphere--violet</p>
+            <p style="margin: 0.75rem 0 0; color: var(--ds-text-secondary);">Цифровое поле (violet) — альтернатива тёплому (orange) для case/интервью.</p>
           </div>
         </div>
       </section>

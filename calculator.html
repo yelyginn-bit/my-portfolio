@@ -42,9 +42,9 @@
          только здесь: осиротевшие site-skin.css-аналоги для /calculator
          (.calc-top/.calc-nav/.calc-footer и т.д.) — файл Qwen, не трогать,
          см. PROMPT-33 §Б.3 отчёт. */
-      .calc-eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--ds-accent-text-legacy); margin-bottom: 14px; }
+      .calc-eyebrow { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--ds-orange); margin-bottom: 14px; }
       .calc-title { font-size: clamp(30px, 5vw, 56px); line-height: 1.0; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 16px; text-transform: uppercase; }
-      .calc-title span { color: var(--ds-accent-text-legacy); }
+      .calc-title span { color: var(--ds-orange); }
       .calc-lead { color: rgba(255,255,255,0.62); max-width: 60ch; font-size: clamp(15px, 1.6vw, 18px); margin: 0 0 36px; }
 
       /* Layout: form + sticky summary */
@@ -131,7 +131,7 @@
       /* Discount badge */
       .calc-disc { margin-top: 10px; padding: 12px 14px; border-radius: 9px; background: color-mix(in srgb, var(--ds-orange) 8%, transparent); border: 1px solid color-mix(in srgb, var(--ds-orange) 30%, transparent); font-size: 13px; display: none; }
       .calc-disc[data-show="true"] { display: block; }
-      .calc-disc b { color: var(--ds-accent-text-legacy); }
+      .calc-disc b { color: var(--ds-orange); }
 
       /* Summary */
       .calc-summary { position: sticky; top: 24px; }
@@ -139,7 +139,7 @@
       .calc-sum-line { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13.5px; }
       .calc-sum-line span:first-child { color: rgba(255,255,255,0.7); }
       .calc-sum-line b { font-variant-numeric: tabular-nums; }
-      .calc-sum-disc b { color: var(--ds-accent-text-legacy); }
+      .calc-sum-disc b { color: var(--ds-orange); }
       .calc-total { margin-top: 18px; }
       .calc-total-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
       .calc-total-val { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-top: 4px; font-variant-numeric: tabular-nums; }

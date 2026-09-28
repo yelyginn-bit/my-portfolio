@@ -793,7 +793,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 /* Обогащённый кейс (PROMPT-23) — Задача/Моя роль/Как сделано/Результат.
    Рендерится только когда у проекта есть project.caseStudy (пока — HOFF). */
 .v3-project__case { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-grid-gap) var(--ds-s7); margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--ds-border); }
-.v3-project__case h2 { margin: 0 0 .6rem; font-size: clamp(1.1rem, 1.6vw, 1.4rem); text-transform: uppercase; letter-spacing: .02em; color: var(--ds-accent-text-legacy); }
+.v3-project__case h2 { margin: 0 0 .6rem; font-size: clamp(1.1rem, 1.6vw, 1.4rem); text-transform: uppercase; letter-spacing: .02em; color: var(--ds-orange); }
 .v3-project__case p { margin: 0; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-project__related-actions { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; }
 .v3-project__credits { display: grid; grid-template-columns: 5fr 7fr; gap: var(--ds-grid-gap); margin-block: 8rem; padding-block: 3rem; border-block: 1px solid var(--ds-text); }

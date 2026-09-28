@@ -516,7 +516,9 @@ body:has(.v3-editorial-page) {
 .v3-project__back,
 .v3-project__head dd,
 .v3-project__credits li,
-.v3-project__media-meta a {
+.v3-project__credits h2,
+.v3-project__media-meta a,
+.v3-project__media-meta span {
   color: #f4f4ef;
 }
 

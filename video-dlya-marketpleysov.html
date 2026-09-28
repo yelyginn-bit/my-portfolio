@@ -76,6 +76,18 @@
          специфичность через #page-marketplace выше, чем у голого `section`. */
       #page-marketplace section { color: var(--ds-text) !important; }
 
+      /* PROMPT-35 §5 item 1: bb-components.css .bb-atmosphere::before
+         (inset:-10%) bleeds a 64px glow past .bb-hero__media's right edge —
+         that's more than the ~60px gutter this hero sits in, so the glow's
+         own edge lands 4px past the viewport (+16px at 390, narrower gutter
+         there). It's fully off-screen either way — nothing beyond x=100vw is
+         ever visible — so clipping exactly at <main>'s own box (== viewport
+         width, no wider) removes the layout overflow the audit measures
+         without touching the glow's visible size or its bleed on every other
+         edge. Scoped to this page only (pilot); .bb-atmosphere itself is
+         unchanged for the rest of the site. */
+      #page-marketplace main { overflow-x: clip; }
+
       .bb-hero { grid-template-columns: repeat(12, minmax(0, 1fr)); }
       .bb-hero em { color: var(--ds-orange); font-style: normal; }
       .bb-hero__proof { display: grid; gap: 1.25rem; padding: 1.75rem; }

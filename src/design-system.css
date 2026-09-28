@@ -1040,6 +1040,15 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-featured__media { min-width: 0; border-radius: 20px; overflow: hidden; }
 .portfolio-featured__media .portfolio-media-cluster { border-radius: inherit; }
 .portfolio-featured__info { min-width: 0; border-radius: 20px; background: #232323; }
+/* PROMPT-35 §0.2/§4: .portfolio-project-info h3's shared clamp(2rem,4vw,5rem)
+   + overflow-wrap:anywhere was tuned for .portfolio-row's wider 5fr column;
+   in .portfolio-featured's narrower 4fr column it let long titles
+   ("Концерты «Станции метро Горьковская»") grow past the point where
+   "ГОРЬКОВСКАЯ" fits whole and fall back to breaking the word mid-letter.
+   Scoped smaller clamp (46px verified to fit) + overflow-wrap:normal (break
+   only at spaces, same text-wrap:balance) — .portfolio-row keeps the
+   original, wider-column-tuned values untouched. */
+.portfolio-featured__info h3 { font-size: clamp(2rem, 3.2vw, 3.4rem); overflow-wrap: normal; }
 .portfolio-featured:hover .portfolio-media-cluster__main img { transform: scale(1.012); }
 
 .portfolio-row { min-height: clamp(430px, 49vw, 690px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(260px, 5fr); border-radius: 20px; background: var(--ds-charcoal); overflow: hidden; }

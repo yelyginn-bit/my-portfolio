@@ -45,7 +45,7 @@
   gap: .65rem;
   padding: .7rem .9rem;
   border: 1px solid color-mix(in srgb, var(--ds-on-dark) 62%, transparent);
-  border-radius: 13px;
+  border-radius: 12px;
   color: #fff;
   background: color-mix(in srgb, var(--ds-scrim) 72%, transparent);
   font: 680 .58rem/1 var(--ds-font-mono);
@@ -59,7 +59,7 @@
 .v32-home .v32-proof,
 .v32-home .v3-broadcast,
 .v32-home .v3-about,
-.v32-home .v3-contact { border-radius: clamp(18px, 2vw, 28px); }
+.v32-home .v3-contact { border-radius: clamp(20px, 2vw, 28px); }
 
 .v32-proof__grid { gap: var(--v3-module-gap); }
 .v32-proof { padding-block: clamp(2.5rem, 4vw, 4rem); }
@@ -281,7 +281,7 @@
   gap: 1rem;
   padding: .8rem 1rem;
   border: 1px solid color-mix(in srgb, var(--ds-on-dark) 30%, transparent);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--ds-on-dark) !important;
   background: color-mix(in srgb, var(--ds-on-dark) 3.5%, transparent);
   font: 700 .58rem/1 var(--ds-font-mono);
@@ -412,7 +412,7 @@
 
 /* QA pass — 2026-08-21: mobile hierarchy, media and a single shape language. */
 :root {
-  --v3-radius-panel: clamp(18px, 2vw, 28px);
+  --v3-radius-panel: clamp(20px, 2vw, 28px);
   --v3-radius-card: clamp(14px, 1.5vw, 20px);
 }
 

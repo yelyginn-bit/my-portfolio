@@ -1394,17 +1394,17 @@ body.site-static .site-static-header {
   margin-inline: auto;
   padding: 5px !important;
   border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent) !important;
-  border-radius: 19px;
+  border-radius: 20px;
   background: color-mix(in srgb, var(--ds-on-dark) 88%, transparent) !important;
   box-shadow: 0 16px 52px rgba(20,20,18,.1);
   backdrop-filter: blur(18px) saturate(1.15);
 }
 body.site-static .site-static-header__inner { min-height: 50px; grid-template-columns: 56px 1fr minmax(190px,auto); gap: 5px; }
-body.site-static .site-static-brand { height: 50px; display: grid; place-items: center; color: var(--ds-bg) !important; background: var(--site-text); border-radius: 13px; font: 900 1rem/1 Arial,sans-serif; }
+body.site-static .site-static-brand { height: 50px; display: grid; place-items: center; color: var(--ds-bg) !important; background: var(--site-text); border-radius: 12px; font: 900 1rem/1 Arial,sans-serif; }
 body.site-static .site-static-nav { height: 50px; gap: 0 !important; justify-content: stretch; }
 body.site-static .site-static-nav > a,
 body.site-static .site-static-services > button { height: 50px; flex: 1; justify-content: center; padding-inline: clamp(.55rem,1vw,1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); color: var(--site-text) !important; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing: .06em !important; text-transform: uppercase; }
-body.site-static .site-static-header__cta { height: 50px; justify-content: center; border-radius: 13px; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; }
+body.site-static .site-static-header__cta { height: 50px; justify-content: center; border-radius: 12px; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; }
 body.site-static .site-static-footer-shell { color: var(--ds-on-dark) !important; background: #080808 !important; }
 body.site-static .site-static-footer__brand > a { color: transparent !important; -webkit-text-stroke: 1px color-mix(in srgb, var(--ds-on-dark) 50%, transparent); font-size: clamp(4rem,10vw,10rem); letter-spacing: -.07em; }
 body.site-static .site-static-footer__brand p,
@@ -1467,7 +1467,7 @@ body.site-static .site-static-menu-button {
   min-height: 48px;
   height: 48px;
   border: 1px solid rgba(10,10,10,.1);
-  border-radius: 14px;
+  border-radius: 12px;
   font: 720 .58rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important;
   letter-spacing: .055em !important;
   text-transform: uppercase;

@@ -463,12 +463,12 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
    в index.css для /ceny и /cvetokorrekciya. Чисто поведение скролла —
    на видимую раскладку не влияет ни на каком брейкпоинте. */
 #contact, #process, #about, #home-services-title, #davinci-breakdown { scroll-margin-top: clamp(78px, 11vh, 116px); }
-.v3-nav { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; margin-inline: auto; display: grid; grid-template-columns: 56px repeat(8, max-content) minmax(210px, 1fr); align-items: stretch; padding: 5px; border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent); border-radius: 19px; background: color-mix(in srgb, var(--ds-on-dark) 86%, transparent); box-shadow: 0 16px 52px rgba(20,20,18,.1); backdrop-filter: blur(18px) saturate(1.15); pointer-events: auto; }
-.v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); border-radius: 13px; color: var(--ds-text); font: 680 .68rem/1 var(--ds-font-mono); letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
+.v3-nav { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; margin-inline: auto; display: grid; grid-template-columns: 56px repeat(8, max-content) minmax(210px, 1fr); align-items: stretch; padding: 5px; border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent); border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 86%, transparent); box-shadow: 0 16px 52px rgba(20,20,18,.1); backdrop-filter: blur(18px) saturate(1.15); pointer-events: auto; }
+.v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); border-radius: 12px; color: var(--ds-text); font: 680 .68rem/1 var(--ds-font-mono); letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
 .v3-nav > a:hover, .v3-nav > a:focus-visible { background: #fff; }
 .v3-nav__brand { padding: 0 !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; font-size: 1rem !important; font-weight: 900 !important; }.v3-nav__cta { justify-content: space-between !important; padding-inline: 1.25rem !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; border-right: 0 !important; }
 .v3-nav__menu { display: none; border: 0; background: var(--ds-orange); border-radius: 12px; }
-.v3-mobile-menu { position: fixed; z-index: calc(var(--ds-header-z) - 1); inset: 82px 8px auto; padding: 12px; border: 1px solid var(--ds-border-strong); border-radius: 18px; background: rgba(11,11,11,.97); color: #fff; box-shadow: 0 24px 90px rgba(0,0,0,.35); }
+.v3-mobile-menu { position: fixed; z-index: calc(var(--ds-header-z) - 1); inset: 82px 8px auto; padding: 12px; border: 1px solid var(--ds-border-strong); border-radius: 20px; background: rgba(11,11,11,.97); color: #fff; box-shadow: 0 24px 90px rgba(0,0,0,.35); }
 .v3-mobile-menu a { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 12%, transparent); font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; }
 .v3-mobile-menu a span { color: var(--ds-orange); font-size: .65rem; }
 .v3-mobile-menu__contacts { display: flex; gap: 1.5rem; margin-top: 1rem; padding: 0 1rem; color: var(--ds-orange); font: 650 .8rem/1.2 var(--ds-font-mono); text-transform: uppercase; }.v3-hero__copy h1 i, .v3-section-head h2 i, .v3-capability h2 i, .v3-broadcast h2 i { font-family: var(--ds-font-display); font-weight: 400; letter-spacing: -.06em; }
@@ -552,7 +552,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-catalog__hero { display: grid; grid-template-columns: 3fr 6fr 3fr; gap: var(--ds-grid-gap); align-items: end; margin-bottom: 4rem; }
 .v3-catalog__hero h1 { margin: 0; font: 700 clamp(4rem, 10vw, 10rem)/.78 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; }
 .v3-catalog__hero > p:last-child { margin: 0; color: var(--ds-text-secondary); line-height: 1.5; }
-.v3-filters { position: sticky; z-index: 70; top: 82px; display: flex; gap: 6px; padding: 7px; margin-bottom: 3rem; overflow-x: auto; border: 1px solid var(--ds-border-strong); border-radius: 15px; background: color-mix(in srgb, var(--ds-on-dark) 91%, transparent); backdrop-filter: blur(15px); scrollbar-width: none; }
+.v3-filters { position: sticky; z-index: 70; top: 82px; display: flex; gap: 6px; padding: 7px; margin-bottom: 3rem; overflow-x: auto; border: 1px solid var(--ds-border-strong); border-radius: 12px; background: color-mix(in srgb, var(--ds-on-dark) 91%, transparent); backdrop-filter: blur(15px); scrollbar-width: none; }
 .v3-filters a { flex: 0 0 auto; padding: .7rem .95rem; border: 1px dashed transparent; border-radius: 9px; font: 650 .64rem/1 var(--ds-font-mono); }
 .v3-filters a[aria-current="page"] { color: #fff; background: var(--ds-text); }
 .v3-project { padding-block: 8rem; }
@@ -616,7 +616,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 @media (max-width: 767px) {
   .v3-shell { width: min(calc(100% - 20px), var(--ds-grid-max)); }
   .v3-header { inset-inline: 0; top: max(6px, env(safe-area-inset-top)); }
-  .v3-nav { width: calc(100% - 12px); min-height: 52px; grid-template-columns: 44px 1fr 44px; border-radius: 15px; }
+  .v3-nav { width: calc(100% - 12px); min-height: 52px; grid-template-columns: 44px 1fr 44px; border-radius: 12px; }
   .v3-nav > a:not(.v3-nav__brand):not(.v3-nav__cta) { display: none; }
   .v3-nav__cta { display: flex !important; min-width: 0; padding-inline: .9rem !important; font-size: .6rem !important; }
   .v3-nav__menu { display: grid; place-items: center; }
@@ -828,7 +828,7 @@ body.v3-menu-open { overflow: hidden; }
   min-height: 56px;
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--ds-scrim) 72%, transparent);
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   background: color-mix(in srgb, var(--ds-on-dark) 94%, transparent);
   box-shadow: 0 10px 34px rgba(0,0,0,.08);
@@ -885,7 +885,7 @@ body.v3-menu-open { overflow: hidden; }
   .v3-nav__links { display: none; }
   .v3-nav__cta { font-size: .5rem; }
   .v3-nav__menu { width: 54px; min-height: 54px; display: inline-grid; place-items: center; border: 0; border-left: 1px solid color-mix(in srgb, var(--ds-scrim) 17%, transparent); color: #0a0a0a; background: transparent; }
-  .v3-mobile-menu { position: fixed; z-index: 150; top: 76px; right: 10px; left: 10px; padding: 10px; border: 1px solid #0a0a0a; border-radius: 18px; background: color-mix(in srgb, var(--ds-on-dark) 98%, transparent); box-shadow: 0 18px 45px rgba(0,0,0,.18); }
+  .v3-mobile-menu { position: fixed; z-index: 150; top: 76px; right: 10px; left: 10px; padding: 10px; border: 1px solid #0a0a0a; border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 98%, transparent); box-shadow: 0 18px 45px rgba(0,0,0,.18); }
   .v3-mobile-menu a { display: flex; align-items: center; gap: 1rem; min-height: 52px; padding: 0 .75rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-scrim) 14%, transparent); color: #0a0a0a; font: 750 .67rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
   .v3-mobile-menu a:last-child { border-bottom: 0; }
   .v3-mobile-menu a span { color: color-mix(in srgb, var(--ds-scrim) 50%, transparent); }
@@ -936,19 +936,19 @@ body.v3-menu-open { overflow: hidden; }
   box-sizing: border-box;
   min-height: 48px;
   border: 1px solid rgba(10, 10, 10, .1);
-  border-radius: 14px;
+  border-radius: 12px;
   font: 720 .58rem/1 var(--ds-font-mono);
   letter-spacing: .055em;
   text-transform: uppercase;
   white-space: nowrap;
 }
-.v3-nav__brand { width: 50px; min-height: 48px; border-radius: 14px; }
+.v3-nav__brand { width: 50px; min-height: 48px; border-radius: 12px; }
 .v3-nav__links a { display: inline-flex; align-items: center; justify-content: center; padding-inline: clamp(.56rem, .75vw, .82rem); color: #0a0a0a; background: color-mix(in srgb, var(--ds-on-dark) 22%, transparent); }
 .v3-nav__links a:hover { background: #fff; }
 .v3-nav__links a[aria-current="page"] { color: #0a0a0a; background: var(--ds-orange); border-color: var(--ds-orange); }
 .v3-nav__links a[aria-current="page"]::after { display: none; }
 .v3-nav__status { min-width: 0; display: inline-flex; align-items: center; justify-content: center; padding-inline: 1rem; color: rgba(10,10,10,.58); border-style: dashed; background: color-mix(in srgb, var(--ds-on-dark) 16%, transparent); }
-.v3-nav__cta { min-width: 172px; justify-content: space-between !important; gap: .65rem; padding-inline: 1rem !important; border-color: #0a0a0a; border-radius: 14px; }
+.v3-nav__cta { min-width: 172px; justify-content: space-between !important; gap: .65rem; padding-inline: 1rem !important; border-color: #0a0a0a; border-radius: 12px; }
 .v3-nav__cta-short { display: none; }
 .v3-nav__menu { display: none; }
 .v32-showreel > iframe { display: none !important; }
@@ -999,7 +999,7 @@ body.v3-menu-open { overflow: hidden; }
 .v3-catalog__hero { grid-template-columns: 2fr 7fr 3fr; align-items: end; gap: var(--ds-grid-gap); margin-bottom: 1.5rem; padding-bottom: clamp(1.5rem, 2.5vw, 2.5rem); border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 24%, transparent); }
 .v3-catalog__hero h1 { color: var(--ds-on-dark); font-size: clamp(3.2rem, 7vw, 7.5rem); line-height: .86; text-wrap: balance; }
 .v3-catalog__hero > p:last-child { max-width: 34rem; color: color-mix(in srgb, var(--ds-on-dark) 66%, transparent); }
-.v3-catalog .v3-filters { position: static; display: flex; gap: 4px; width: max-content; max-width: calc(100% - 24px); margin-block: 0 clamp(1.5rem, 3vw, 2.5rem); padding: 4px; border-color: color-mix(in srgb, var(--ds-on-dark) 30%, transparent); border-radius: 15px; color: var(--ds-on-dark); background: #111; backdrop-filter: none; }
+.v3-catalog .v3-filters { position: static; display: flex; gap: 4px; width: max-content; max-width: calc(100% - 24px); margin-block: 0 clamp(1.5rem, 3vw, 2.5rem); padding: 4px; border-color: color-mix(in srgb, var(--ds-on-dark) 30%, transparent); border-radius: 12px; color: var(--ds-on-dark); background: #111; backdrop-filter: none; }
 .v3-catalog .v3-filters a { border-radius: 11px; color: color-mix(in srgb, var(--ds-on-dark) 68%, transparent); }
 .v3-catalog .v3-filters a[aria-current="page"] { color: #0a0a0a; background: var(--ds-orange); }
 .v3-catalog__list { display: block; }
@@ -1031,12 +1031,12 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-project-info > svg { width: 20px; margin-top: 1.5rem; }
 
 .portfolio-featured { display: grid; grid-template-columns: minmax(0, 8fr) minmax(260px, 4fr); min-height: clamp(520px, 65vw, 850px); padding: 6px; border-radius: 25px; background: var(--ds-charcoal); overflow: hidden; }
-.portfolio-featured__media { min-width: 0; border-radius: 19px; overflow: hidden; }
+.portfolio-featured__media { min-width: 0; border-radius: 20px; overflow: hidden; }
 .portfolio-featured__media .portfolio-media-cluster { border-radius: inherit; }
-.portfolio-featured__info { min-width: 0; border-radius: 19px; background: #232323; }
+.portfolio-featured__info { min-width: 0; border-radius: 20px; background: #232323; }
 .portfolio-featured:hover .portfolio-media-cluster__main img { transform: scale(1.012); }
 
-.portfolio-row { min-height: clamp(430px, 49vw, 690px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(260px, 5fr); border-radius: 19px; background: var(--ds-charcoal); overflow: hidden; }
+.portfolio-row { min-height: clamp(430px, 49vw, 690px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(260px, 5fr); border-radius: 20px; background: var(--ds-charcoal); overflow: hidden; }
 .portfolio-row:nth-of-type(4n) { background: #211712; }
 .portfolio-row__media { min-width: 0; }
 .portfolio-row--reverse { grid-template-columns: minmax(260px, 5fr) minmax(0, 7fr); }
@@ -1045,7 +1045,7 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-row:hover .portfolio-media-cluster__main img { transform: scale(1.015); }
 
 .portfolio-mosaic { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); grid-auto-rows: clamp(210px, 22vw, 360px); gap: clamp(.75rem, 1.35vw, 1.25rem); }
-.portfolio-mosaic__item { position: relative; min-width: 0; overflow: hidden; border-radius: 18px; background: var(--ds-charcoal); }
+.portfolio-mosaic__item { position: relative; min-width: 0; overflow: hidden; border-radius: 20px; background: var(--ds-charcoal); }
 .portfolio-mosaic__item--1 { grid-column: 1 / span 7; grid-row: 1 / span 2; }
 .portfolio-mosaic__item--2 { grid-column: 8 / -1; grid-row: 1; }
 .portfolio-mosaic__item--3 { grid-column: 8 / -1; grid-row: 2; }
@@ -1116,8 +1116,8 @@ body.v3-menu-open { overflow: hidden; }
   .v3-nav__cta { padding-inline: .58rem !important; }
   .v3-nav__cta svg { display: none; }
   .portfolio-system { gap: .85rem; }
-  .portfolio-featured { padding: 4px; border-radius: 18px; }
-  .portfolio-featured__media, .portfolio-featured__info, .portfolio-row, .portfolio-mosaic__item { border-radius: 14px; }
+  .portfolio-featured { padding: 4px; border-radius: 20px; }
+  .portfolio-featured__media, .portfolio-featured__info, .portfolio-row, .portfolio-mosaic__item { border-radius: 12px; }
   .portfolio-featured__info, .portfolio-row .portfolio-project-info { min-height: 230px; }
   .portfolio-media-cluster { grid-template-columns: 1fr; }
   .portfolio-media-cluster__rail { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; min-height: 110px; }
@@ -1157,7 +1157,7 @@ body.v3-menu-open { overflow: hidden; }
   color: #0a0a0a;
   background: color-mix(in srgb, var(--ds-on-dark) 22%, transparent);
   border: 1px solid rgba(10, 10, 10, .1);
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   font: 720 .58rem/1 var(--ds-font-mono);
   letter-spacing: .055em;
@@ -1174,14 +1174,14 @@ body.v3-menu-open { overflow: hidden; }
    is-open), поведение React не меняется. Нужно статическим страницам
    (PROMPT-32 §10): там .nav-dropdown-menu всегда есть в DOM, открытие —
    через класс is-open, без display:none оно было бы видно всегда. */
-.nav-dropdown-menu { display: none; position: fixed; z-index: 130; gap: 2px; width: 240px; max-height: 60vh; overflow-y: auto; padding: .4rem; background: var(--ds-bg); border: 1px solid rgba(10,10,10,.14); border-radius: 14px; box-shadow: 0 18px 40px rgba(0,0,0,.14); }
+.nav-dropdown-menu { display: none; position: fixed; z-index: 130; gap: 2px; width: 240px; max-height: 60vh; overflow-y: auto; padding: .4rem; background: var(--ds-bg); border: 1px solid rgba(10,10,10,.14); border-radius: 12px; box-shadow: 0 18px 40px rgba(0,0,0,.14); }
 .nav-dropdown-menu.is-open { display: grid; }
 .nav-dropdown-menu a { display: flex; min-height: 40px; align-items: center; padding-inline: .75rem; border-radius: 9px; color: var(--ds-text); font: 650 .68rem/1.2 var(--ds-font-mono); letter-spacing: .02em; text-transform: none; white-space: normal; }
 .nav-dropdown-menu a:hover { background: rgba(10,10,10,.06); }
 .nav-dropdown-menu a[aria-current="page"] { color: var(--ds-accent-text-legacy); }
 /* justify-self: no-op вне грида — внутри .v3-nav не даёт кнопке растянуться
    на весь гибкий трек, см. комментарий у .v3-nav grid-template-columns выше. */
-.nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 14px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
+.nav-calc-button { display: inline-flex; align-items: center; justify-self: end; min-height: 48px; padding-inline: .8rem; margin-right: .4rem; color: var(--ds-text); background: transparent; border: 1px solid rgba(10,10,10,.24); border-radius: 12px; font: 720 .56rem/1 var(--ds-font-mono); letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
 .nav-calc-button:hover { border-color: var(--ds-orange); color: var(--ds-accent-text-legacy); }
 .nav-dropdown-mobile-group summary { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 12%, transparent); color: #fff; font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; cursor: pointer; list-style: none; }
 .nav-dropdown-mobile-group summary::-webkit-details-marker { display: none; }

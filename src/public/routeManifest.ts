@@ -29,7 +29,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/blog", render: "v3", indexable: true, priority: 0.75 },
   { path: "/about", render: "v3", indexable: true, priority: 0.75 },
   { path: "/contact", render: "v3", indexable: true, priority: 0.75 },
-  { path: "/calculator", render: "calculator", indexable: true, priority: 0.8 },
+  { path: "/calculator", render: "calculator", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/content-day", render: "static", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/reklamnye-roliki", render: "static", indexable: true, priority: 0.9, theme: "dark" },
   { path: "/event-video", render: "static", indexable: true, priority: 0.85, theme: "dark" },

@@ -51,10 +51,10 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/cancellation-refund", render: "static", indexable: true, priority: 0.2 },
   { path: "/gallery-terms", render: "static", indexable: true, priority: 0.2 },
   { path: "/data-request", render: "static", indexable: true, priority: 0.2 },
-  { path: "/blog/skolko-stoit-snyat-reklamnyy-rolik", render: "static", indexable: true, priority: 0.7 },
-  { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7 },
-  { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7 },
-  { path: "/blog/videosemka-meropriyatiy-nn", render: "static", indexable: true, priority: 0.7 },
+  { path: "/blog/skolko-stoit-snyat-reklamnyy-rolik", render: "static", indexable: true, priority: 0.7, theme: "dark" },
+  { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7, theme: "dark" },
+  { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7, theme: "dark" },
+  { path: "/blog/videosemka-meropriyatiy-nn", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/portfolio/editing", render: "redirect", indexable: false },
   /* PROMPT-30 §3.4: служебная витрина компонентов брендбука — не публичный
    * продукт, не в PRIMARY_NAV/FOOTER_GROUPS, indexable: false держит её вне

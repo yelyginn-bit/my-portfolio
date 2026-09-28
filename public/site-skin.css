@@ -1151,7 +1151,7 @@ body {
   width: min(calc(100% - var(--site-gutter) - var(--site-gutter)), 980px) !important;
 }
 
-header {
+header:not(.v3-header) {
   padding-block: 18px !important;
 }
 header nav {
@@ -1301,7 +1301,7 @@ main > .articles {
     --section-space: 56px;
   }
 
-  header {
+  header:not(.v3-header) {
     padding-block: 14px !important;
   }
 

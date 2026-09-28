@@ -700,7 +700,7 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
   color: var(--ds-on-dark);
   background: #0a0a0a;
 }
-.v32-showreel { position: absolute; z-index: 0; inset: 0; overflow: hidden; background: #0a0a0a; }.v32-showreel > img, .v32-showreel > iframe { position: absolute; inset: -5%; width: 110%; height: 110%; display: block; border: 0; object-fit: cover; }
+.v32-showreel { position: absolute; z-index: 0; inset: 0; overflow: hidden; background: #0a0a0a; }.v32-showreel > img { position: absolute; inset: -5%; width: 110%; height: 110%; display: block; border: 0; object-fit: cover; }
 .v32-showreel > img { filter: saturate(.82) contrast(1.1) brightness(.62); transform: scale(1.025); }.v32-hero__copy { position: absolute; z-index: 7; left: 3vw; bottom: clamp(74px, 8vh, 104px); width: min(65vw, 1080px); }
 .v32-hero__copy > .v3-kicker { color: var(--ds-orange); }
 .v32-hero__copy :is(h1, .v32-hero__title) { margin: .7rem 0 1rem; font: 800 clamp(3.6rem, 7.2vw, 8.3rem)/.92 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-shadow: 0 6px 34px rgba(0,0,0,.42); text-wrap: balance; }
@@ -720,11 +720,7 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
 .v32-hero__actions .v3-button { min-height: 54px; border-color: color-mix(in srgb, var(--ds-on-dark) 72%, transparent); }
 .v32-hero__actions .v3-button--line { color: #fff; background: color-mix(in srgb, var(--ds-scrim) 38%, transparent); backdrop-filter: blur(10px); }
 .v32-showreel-toggle { position: absolute; z-index: 12; right: 4vw; bottom: 7.5vh; min-height: 54px; display: inline-flex; align-items: center; gap: .75rem; padding: .75rem 1rem; border: 1px solid color-mix(in srgb, var(--ds-on-dark) 65%, transparent); color: #fff; background: color-mix(in srgb, var(--ds-scrim) 64%, transparent); backdrop-filter: blur(12px); cursor: pointer; font: 680 .6rem/1 var(--ds-font-mono); letter-spacing: .08em; }
-.v32-showreel-toggle svg { width: 17px; height: 17px; }.v32-hero[data-playing] .v32-showreel { z-index: 20; }
-.v32-hero[data-playing] .v32-showreel::after { opacity: 0; }
-.v32-hero[data-playing] .v32-showreel > iframe { inset: 0; width: 100%; height: 100%; opacity: 1; pointer-events: auto; }
-.v32-hero[data-playing] :is(.v32-reveal-field, .v32-focus-window, .v32-camera, .v32-hero__copy, .v32-hero__rail, .v32-hero__status) { opacity: 0; pointer-events: none; }
-.v32-hero[data-playing] .v32-showreel-toggle { z-index: 22; top: 96px; right: 2vw; bottom: auto; }
+.v32-showreel-toggle svg { width: 17px; height: 17px; }
 
 .v32-proof { position: relative; isolation: isolate; overflow: hidden; padding-block: clamp(3.75rem, 6vw, 6.5rem); color: var(--ds-on-dark); background: transparent; }
 .v32-proof::before { content: ""; position: absolute; z-index: 0; inset: 0; background: radial-gradient(ellipse 48% 46% at 84% 6%, rgba(255,91,35,.3), transparent 72%), radial-gradient(ellipse 56% 48% at 12% 91%, rgba(70,111,255,.3), transparent 72%), radial-gradient(ellipse 34% 32% at 80% 76%, rgba(105,78,205,.16), transparent 75%); pointer-events: none; }
@@ -795,14 +791,14 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
      clamp в v3-polish.css), но новый текст может снова не влезть. */
   h1, h2, h3, .v32-hero__title { hyphens: auto; }
   .v32-hero { min-height: max(840px, 100svh); }
-  .v32-showreel > img, .v32-showreel > iframe { inset: 0; width: 100%; height: 100%; }
+  .v32-showreel > img { inset: 0; width: 100%; height: 100%; }
   .v32-showreel > img { object-position: 58% center; }  .v32-hero__copy { top: 116px; right: 10px; bottom: auto; left: 10px; width: auto; }
   .v32-hero__copy :is(h1, .v32-hero__title) { margin-top: .6rem; font-size: clamp(4.2rem, 18.8vw, 6rem); line-height: .75; }
   .v32-hero__position { width: 100%; align-items: flex-start; flex-direction: column; gap: .25rem; }
   .v32-hero__lead { max-width: 29rem; margin-block: .85rem 1rem; font-size: .9rem; }
   .v32-hero__actions { width: min(100%, 360px); display: grid; }
   .v32-hero__actions .v3-button { min-height: 50px; justify-content: space-between; }
-  .v32-showreel-toggle { right: auto; bottom: 17px; left: 10px; min-height: 48px; }  .v32-hero[data-playing] .v32-showreel-toggle { top: 72px; right: 10px; left: auto; }
+  .v32-showreel-toggle { right: auto; bottom: 17px; left: 10px; min-height: 48px; }
   .v32-proof { padding-block: 4.5rem; }
   .v32-proof__head h2 { font-size: clamp(3rem, 14vw, 4.6rem); }
   .v32-proof__grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
@@ -823,7 +819,7 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .v32-camera, .v32-camera__light, .v32-showreel > iframe, .v32-proof__grid figure img { transition: none; }}
+  .v32-camera, .v32-camera__light, .v32-proof__grid figure img { transition: none; }}
 
 /* Phase 1 — a single calm navigation object and editorial project rhythm. */
 body:has(.v32-home) { overflow-x: clip; }
@@ -957,7 +953,6 @@ body.v3-menu-open { overflow: hidden; }
 .v3-nav__cta { min-width: 172px; justify-content: space-between !important; gap: .65rem; padding-inline: 1rem !important; border-color: #0a0a0a; border-radius: 12px; }
 .v3-nav__cta-short { display: none; }
 .v3-nav__menu { display: none; }
-.v32-showreel > iframe { display: none !important; }
 .v32-showreel > img { opacity: 1 !important; }
 .v32-showreel-toggle { text-decoration: none; }
 

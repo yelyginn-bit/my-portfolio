@@ -28,7 +28,10 @@ const WIDTH = 390;
 
 interface RouteBaseline {
   /** лишние пиксели горизонтального скролла страницы (scrollWidth - clientWidth) */
+  /** px контента правее видимого вьюпорта, НЕ спрятанные внутренним клиппером */
   overflowPx: number;
+  /** px, спрятанные внутренним overflow: hidden/clip — справочно, долгом не считается */
+  clippedPx?: number;
   /** узлов с контрастом ниже порога (4.5 текст, 3 крупный) */
   contrastFails: number;
   /** узлов, фон которых не выводится из цветных слоёв (картинка/градиент) */
@@ -116,8 +119,42 @@ const AUDIT_FN = `async (width) => {
     const got = ratio([fg[0], fg[1], fg[2]], bg);
     if (got < need) { contrastFails++; if (offenders.length < 3) offenders.push(el.tagName.toLowerCase() + '.' + String(el.className || '').split(' ')[0].slice(0, 20) + ' ' + s.color + ' на rgb(' + bg.join(',') + ') = ' + got.toFixed(2)); }
   }
+  /* Что реально вылезает за экран. Ни scrollWidth, ни window.scrollX для этого
+   * не годятся, и вот почему (проверено отрицательным контролем: в /portfolio
+   * добавлен div шириной 430px):
+   *   — scrollWidth − clientWidth даёт и настоящий долг (40px на том div), и
+   *     мнимый: на /portfolio/sber-arhitektura-teaser@390 те же «+2px» оказались
+   *     шириной классического скроллбара, ни один узел не пересекал viewport;
+   *   — scrollWidth − innerWidth ослепляет: в мобильной эмуляции layout viewport
+   *     подстраивается под ширину контента, и на том же div выходит 430−430=0;
+   *   — window.scrollX после scrollTo(9999,0) тоже 0, потому что overflow-x: clip
+   *     на body (носится с PROMPT-30/31) делает страницу нескроллимой.
+   * Мера ниже отвечает на вопрос человека «видно ли обрезанным»: узел считается
+   * переполнением, если он правее видимого вьюпорта И не спрятан внутренним
+   * overflow: hidden/clip/scroll/auto. html и body клипперами не считаются —
+   * именно они и маскируют долг. */
+  const vw = visualViewport ? visualViewport.width : innerWidth;
+  let overflowPx = 0;
+  let clipped = 0;
+  for (const el of document.querySelectorAll('body *')) {
+    const s = getComputedStyle(el);
+    if (s.position === 'fixed') continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) continue;
+    const over = Math.round(r.right - vw);
+    if (over <= 0) continue;
+    let n = el.parentElement, hidden = false;
+    while (n && n !== document.body) {
+      const ox = getComputedStyle(n).overflowX;
+      if (ox === 'hidden' || ox === 'clip' || ox === 'scroll' || ox === 'auto') { hidden = true; break; }
+      n = n.parentElement;
+    }
+    if (hidden) { clipped = Math.max(clipped, over); continue; }
+    overflowPx = Math.max(overflowPx, over);
+  }
   return {
-    overflowPx: Math.max(0, de.scrollWidth - de.clientWidth),
+    overflowPx,
+    clippedPx: clipped,
     contrastFails,
     indeterminate,
     offenders,
@@ -151,15 +188,22 @@ const run = async () => {
     hasTouch: true,
     deviceScaleFactor: 3,
   });
-  const page = await context.newPage();
   const out: Record<string, RouteBaseline & { offenders: string[] }> = {};
+  /* Страница на каждый маршрут. Одна страница на все 70 копила состояние:
+   * мобильный layout viewport, один раз расширившись под широким контентом
+   * предыдущей страницы, обратно не сжимается, и `/portfolio/sber-arhitektura-teaser`
+   * получал «+2px» долга только потому, что до него прогнали ещё 51 маршрут —
+   * на свежей странице тот же замер даёт 0 (проверено и в одну сторону, и в другую). */
   for (const route of INDEXABLE_ROUTES) {
+    const page = await context.newPage();
     try {
       await page.goto(`${origin}${route.path}`, { waitUntil: "load" });
       const r = await page.evaluate(`(${AUDIT_FN})(${WIDTH})`);
-      out[route.path] = { overflowPx: r.overflowPx, contrastFails: r.contrastFails, indeterminate: r.indeterminate, offenders: r.offenders };
+      out[route.path] = { overflowPx: r.overflowPx, clippedPx: r.clippedPx, contrastFails: r.contrastFails, indeterminate: r.indeterminate, offenders: r.offenders };
     } catch (error) {
-      out[route.path] = { overflowPx: 0, contrastFails: 0, indeterminate: 0, offenders: [`НЕ ОТКРЫЛСЯ: ${String(error).slice(0, 60)}`] };
+      out[route.path] = { overflowPx: 0, clippedPx: 0, contrastFails: 0, indeterminate: 0, offenders: [`НЕ ОТКРЫЛСЯ: ${String(error).slice(0, 60)}`] };
+    } finally {
+      await page.close();
     }
   }
   await browser.close();
@@ -185,8 +229,9 @@ test("мобильная геометрия и контраст не хуже б
   // просмотрено маршрутов и что найдено — в диагностику каждого прогона.
   const routes = Object.keys(results);
   const sumOverflow = routes.reduce((s, r) => s + results[r].overflowPx, 0);
+  const sumClipped = routes.reduce((s, r) => s + (results[r].clippedPx || 0), 0);
   const sumFails = routes.reduce((s, r) => s + results[r].contrastFails, 0);
-  t.diagnostic(`измерено маршрутов: ${routes.length} из 70; на 390px суммарно +${sumOverflow}px горизонтального скролла и ${sumFails} узлов с контрастом ниже порога`);
+  t.diagnostic(`измерено маршрутов: ${routes.length} из 70; на 390px впереди вьюпорта ${sumOverflow}px открытого переполнения, ещё ${sumClipped}px спрятано внутренним overflow: hidden/clip; контраст ниже порога: ${sumFails} узлов`);
   assert.ok(routes.length >= 60, `замерено только ${routes.length} маршрутов — сервер или браузер не работают, тест не должен проходить «впустую»`);
   const baseline = readBaseline();
   const worse: string[] = [];

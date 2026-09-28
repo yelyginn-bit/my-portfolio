@@ -118,7 +118,7 @@ body.site-menu-open { overflow: hidden; }
    !important от этого правила и давал PAPER на ORANGE = 2.62. Остальные
    десять статических страниц классов `bb-` не используют вовсе — для них
    селектор матчает те же элементы, что и раньше. */
-.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 760; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 700; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(header, main, footer) h1 br { display: none; }
 .site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span:not([class*="bb-"]), .site-static :is(header, main, footer) h2 span:not([class*="bb-"]) { color: var(--site-accent) !important; font-style: normal; }
 .site-static :is(header, main, footer) h2:not([class*="bb-"]) { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }

@@ -3,13 +3,6 @@
   --module-gap: var(--v3-module-gap);
 }
 
-body:has(.v32-home),
-body:has(.v3-catalog),
-body:has(.v3-project),
-body:has(.v3-editorial-page) {
-  background: #0a0a0a;
-}
-
 /* Six public links, one flexible utility cell and one closing CTA — правило
    верное для 9 треков/8 элементов, но с добавлением calc-button (PROMPT-32
    §1.1.1) элементов стало 10 (лого + 6 ссылок + calc-button + status + cta),

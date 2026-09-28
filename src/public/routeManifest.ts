@@ -9,48 +9,52 @@ import {
   type Project,
 } from "../portfolio/v3PortfolioData";
 
-export type RouteRenderKind = "v3" | "calculator" | "static" | "private" | "redirect";
+export type RouteRenderKind = "v3" | "calculator" | "static" | "legal" | "private" | "redirect";
 
 export interface PublicRouteRecord {
   path: string;
   render: RouteRenderKind;
   indexable: boolean;
   priority?: number;
-  /** PROMPT-29 §5.3: единственное место в коде, откуда берётся
-   * data-theme="dark" на <html> — длина списка страниц с этим полем и есть
-   * прогресс фазы 5. Главная уже тёмная визуально, но собрана до токенов
-   * тёмной темы — сюда пока не заведена (промпт §2.4: не трогать в этой фазе). */
+  /** PROMPT-29 §5.3, PROMPT-35 §0.1: единственное место в коде, откуда
+   * берётся data-theme="dark" на <html> для V3-маршрутов (applyTheme() в
+   * scripts/prerender.ts). Для static/calculator-маршрутов и юридических
+   * страниц (свой injectRoot(), applyTheme() их не касается) это поле —
+   * только сверка тестами; сам атрибут несёт исходный HTML-файл руками.
+   * PROMPT-35: весь публичный сайт тёмный — поле здесь у всех индексируемых
+   * маршрутов, кроме /journal, /admin, /account, /portfolio/photo
+   * (приватные, не публичный продукт). */
   theme?: "dark";
 }
 
 const fixedRoutes: readonly PublicRouteRecord[] = [
-  { path: "/", render: "v3", indexable: true, priority: 1 },
-  { path: "/portfolio", render: "v3", indexable: true, priority: 0.9 },
-  { path: "/blog", render: "v3", indexable: true, priority: 0.75 },
-  { path: "/about", render: "v3", indexable: true, priority: 0.75 },
-  { path: "/contact", render: "v3", indexable: true, priority: 0.75 },
+  { path: "/", render: "v3", indexable: true, priority: 1, theme: "dark" },
+  { path: "/portfolio", render: "v3", indexable: true, priority: 0.9, theme: "dark" },
+  { path: "/blog", render: "v3", indexable: true, priority: 0.75, theme: "dark" },
+  { path: "/about", render: "v3", indexable: true, priority: 0.75, theme: "dark" },
+  { path: "/contact", render: "v3", indexable: true, priority: 0.75, theme: "dark" },
   { path: "/calculator", render: "calculator", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/content-day", render: "static", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/reklamnye-roliki", render: "static", indexable: true, priority: 0.9, theme: "dark" },
   { path: "/event-video", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/reels", render: "static", indexable: true, priority: 0.9, theme: "dark" },
-  { path: "/cvetokorrekciya", render: "static", indexable: true, priority: 0.85 },
+  { path: "/cvetokorrekciya", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/video-dlya-marketpleysov", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/pryamye-translyacii", render: "static", indexable: true, priority: 0.9, theme: "dark" },
-  { path: "/ceny", render: "static", indexable: true, priority: 0.8 },
+  { path: "/ceny", render: "static", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/photo", render: "static", indexable: true, priority: 0.75, theme: "dark" },
   { path: "/portfolio/photo", render: "private", indexable: false },
   { path: "/account", render: "private", indexable: false },
   { path: "/admin", render: "private", indexable: false },
   { path: "/journal", render: "private", indexable: false },
-  { path: "/privacy-policy", render: "static", indexable: true, priority: 0.3 },
-  { path: "/personal-data-consent", render: "static", indexable: true, priority: 0.2 },
-  { path: "/cookie-policy", render: "static", indexable: true, priority: 0.2 },
-  { path: "/terms", render: "static", indexable: true, priority: 0.3 },
-  { path: "/payment-terms", render: "static", indexable: true, priority: 0.3 },
-  { path: "/cancellation-refund", render: "static", indexable: true, priority: 0.2 },
-  { path: "/gallery-terms", render: "static", indexable: true, priority: 0.2 },
-  { path: "/data-request", render: "static", indexable: true, priority: 0.2 },
+  { path: "/privacy-policy", render: "legal", indexable: true, priority: 0.3, theme: "dark" },
+  { path: "/personal-data-consent", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/cookie-policy", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/terms", render: "legal", indexable: true, priority: 0.3, theme: "dark" },
+  { path: "/payment-terms", render: "legal", indexable: true, priority: 0.3, theme: "dark" },
+  { path: "/cancellation-refund", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/gallery-terms", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/data-request", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
   { path: "/blog/skolko-stoit-snyat-reklamnyy-rolik", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7, theme: "dark" },
@@ -67,6 +71,7 @@ const categoryRoutes: readonly PublicRouteRecord[] = PORTFOLIO_CATEGORY_ORDER.ma
   render: "v3" as const,
   indexable: true,
   priority: category === "camera" || category === "post" ? 0.85 : 0.8,
+  theme: "dark" as const,
 }));
 
 const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
@@ -74,6 +79,7 @@ const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
   render: "v3" as const,
   indexable: true,
   priority: project.featured ? 0.8 : 0.75,
+  theme: "dark" as const,
 }));
 
 export const ROUTE_MANIFEST: readonly PublicRouteRecord[] = [

@@ -28,32 +28,29 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-/* Все одиннадцать статических страниц плюс калькулятор: QWEN-05 §3 Г.
- * QWEN-07 §5 доводит список до 24: сюда добавлены `/ceny`, `/cvetokorrekciya`,
- * `/404`, восемь юридических и `/about` с `/contact` — те страницы, которые
- * владелец собирается переводить на тёмную тему следующими. Манифест не
- * трогаем — тему тест включает сам, страницы в репозитории остаются светлыми.
+/* PROMPT-35 §1.3: весь публичный сайт тёмный теперь, не 24 отобранных
+ * страницы — список берётся из INDEXABLE_ROUTES (единственный источник
+ * маршрутов, см. src/public/routeManifest.ts), плюс `/404` и `/_kit`
+ * (не indexable, но публично открываются и уже помечены theme: "dark").
+ * Явных исключений с "принципиально светлым" содержимым нет — если такие
+ * появятся, они перечисляются здесь по имени с причиной в комментарии, а
+ * не пропускаются молча.
  *
- * Пилот /video-dlya-marketpleysov — единственная страница сайта, уже тёмная
- * (поле theme: "dark" в манифесте), поэтому он в списке с самого начала: на нём
- * было видно, что заголовок внутри .bb-signal (оранжевая заливка, color: var
- * (--ds-on-accent) в bb-components.css:313) перебивался типографикой корпуса и
- * давал PAPER на ORANGE = 2.62. Слой skin-правил теперь обходит классы bb-*
- * (тот же приём, что PROMPT-31 применил к .site-static a) — сам файл
- * bb-components.css не тронут. */
-const ROUTES = [
-  "/reels", "/photo", "/event-video", "/reklamnye-roliki", "/content-day",
-  "/pryamye-translyacii", "/video-dlya-marketpleysov", "/calculator",
-  "/blog/kak-snimat-reels-dlya-biznesa", "/blog/skolko-stoit-snyat-reklamnyy-rolik",
-  "/blog/video-dlya-kartochek-wildberries", "/blog/videosemka-meropriyatiy-nn",
-  "/ceny", "/cvetokorrekciya", "/404", "/about", "/contact",
-  "/terms", "/privacy-policy", "/cookie-policy", "/data-request",
-  "/cancellation-refund", "/payment-terms", "/gallery-terms", "/personal-data-consent",
-];
+ * Пилот /video-dlya-marketpleysov был первой тёмной страницей сайта — на
+ * нём было видно, что заголовок внутри .bb-signal (оранжевая заливка,
+ * color: var(--ds-on-accent) в bb-components.css:313) перебивался
+ * типографикой корпуса и давал PAPER на ORANGE = 2.62. Слой skin-правил
+ * обходит классы bb-* (тот же приём, что PROMPT-31 применил к
+ * .site-static a) — сам файл bb-components.css не тронут. */
+const ROUTES = await (async () => {
+  const { INDEXABLE_ROUTES } = await import("../src/public/routeManifest.ts");
+  const extra = ["/404", "/_kit"];
+  return [...INDEXABLE_ROUTES.map((r: { path: string }) => r.path), ...extra];
+})();
 const THRESHOLD_TEXT = 4.5;
 const THRESHOLD_LARGE = 3;
 /* Минимум измеренных узлов по коротким страницам — см. использование. */
-const MIN_NODES: Record<string, number> = { "/404": 10, "/contact": 12 };
+const MIN_NODES: Record<string, number> = { "/contact": 12 };
 
 async function loadPlaywright() {
   const name = "playwright";
@@ -193,11 +190,14 @@ test("тёмная тема: текст и поля содержимого чи�
       const res = await page.evaluate(AUDIT) as { total: number; fields?: number; indeterminate?: number; fails: string[]; worst?: number; note?: string };
       /* Пол «сколько узлов измерено» не может быть один на всех: он обязан быть
        ниже фактического числа на каждой странице, иначе тест краснеет на
-       короткой странице вместо того, чтобы краснеть на поломке. Числа справа —
-       результат замера этой же мерки (24.09, сборка f66d2b9+): /404 — 12 узлов,
-       /contact — 13 (форма считается одним полем на метку). Для всех
-       остальных 20 — это «не прошёл впустую», а не «прошёл». */
-      const minNodes = MIN_NODES[route] ?? 20;
+       короткой странице вместо того, чтобы краснеть на поломке. PROMPT-35 §1.3
+       расширил список с 24 отобранных (в основном длинных) страниц до всех
+       публичных ~80 маршрутов — среди них короткие карточки портфолио
+       (13-19 узлов) и категории; общий пол снижен с 20 до 10, отдельные
+       страницы — точечно через MIN_NODES (форма на /contact считается одним
+       полем на метку, поэтому у неё свой порог 12). 10 — это «не прошёл
+       впустую» (страница реально не отрендерилась), а не «прошёл». */
+      const minNodes = MIN_NODES[route] ?? 10;
       assert.ok(res.total >= minNodes, `${route}: измерено всего ${res.total} узлов (ожидание ≥${minNodes}, ${res.note ?? ""}) — тест не должен проходить «впустую»`);
       seen.push(`${route}: узлов ${res.total} (полей ${res.fields ?? 0}), неопределённого фона ${res.indeterminate ?? 0}, ниже порога ${res.fails.length}`);
       assert.deepEqual(res.fails, [], `${route}: в тёмной теме текст ниже порога AA:\n  ${res.fails.join("\n  ")}`);

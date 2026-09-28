@@ -51,7 +51,13 @@ async function resolveFile(urlPath: string): Promise<string | null> {
     // Сначала литеральный путь: /tokens.css и /site-shell.js — это ассеты, и
     // без этой строки они уезжают в 404, а страница молча рендерится без
     // общих стилей. Именно так и рождается фейковый «вычисленный стиль».
-    rel ? path.join(DIST, rel) : path.join(DIST, "index.html"),
+    // Только когда rel непустой — иначе для "/" это давало dist/index.html
+    // (сырой Vite-шаблон без data-theme и контента пре-рендера) РАНЬШЕ
+    // строки ниже, вопреки собственному комментарию файла и
+    // server/production-server.js:124-128 (там пре-рендер для "/" проверяется
+    // первым). Из-за этого локальные замеры годами мерили "/" без
+    // data-theme="dark" — production-server.js эту ветку никогда не обходил.
+    ...(rel ? [path.join(DIST, rel)] : []),
     path.join(DIST, "prerender", rel, "index.html"),
     rel ? path.join(DIST, rel, "index.html") : path.join(DIST, "index.html"),
     rel ? path.join(DIST, `${rel}.html`) : path.join(DIST, "index.html"),

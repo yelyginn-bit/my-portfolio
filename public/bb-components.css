@@ -276,7 +276,11 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.bb-project-card__arrow { position: absolute; right: 1.2rem; bottom: 1.2rem; color: var(--ds-violet); font-size: 1.1rem; line-height: 1; }
+/* PROMPT-35 §1: VIOLET на GRAPHITE в тёмной теме — 4.22 при 1.1rem (17.6px),
+   ниже порога AA для обычного текста (нужно 4.5). WCAG «крупный текст»
+   (порог 3.0) без bold требует ≥24px — кегль поднят до 1.5rem, цвет и
+   начертание не менял. */
+.bb-project-card__arrow { position: absolute; right: 1.2rem; bottom: 1.2rem; color: var(--ds-violet); font-size: 1.5rem; line-height: 1; }
 
 /* ── Case hero ──────────────────────────────────────────────────────── */
 .bb-case-hero { display: grid; gap: 1.5rem; padding-block: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem); }

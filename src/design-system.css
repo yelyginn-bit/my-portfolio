@@ -548,22 +548,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-section-head h2 { margin: 0; font: 700 clamp(3rem, 6.7vw, 7.4rem)/1 var(--ds-font-display); letter-spacing: -.065em; }
 .v3-section-head > a { justify-self: end; display: inline-flex; align-items: center; gap: .5rem; padding-bottom: .5rem; border-bottom: 1px solid; font: 680 .68rem/1 var(--ds-font-mono); }
 .v3-project-grid, .v3-catalog__list { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
-.v3-project-card { position: relative; grid-column: span 6; display: grid; grid-template-columns: minmax(0, 7fr) minmax(220px, 5fr); min-height: 370px; border: 1px solid var(--ds-text); background: var(--ds-surface); color: var(--ds-text); overflow: hidden; }
-.v3-project-card:nth-child(3n + 2) { grid-column: span 5; grid-template-columns: minmax(0, 1fr); }
-.v3-project-card:nth-child(3n + 3) { grid-column: span 7; }
-.v3-media { position: relative; width: 100%; height: 100%; min-height: 260px; overflow: hidden; background: #111; }
-.v3-media--portrait { aspect-ratio: 9/16; max-height: 780px; }
-.v3-project-card .v3-media--portrait { width: min(100%, 310px); justify-self: center; }
-.v3-media img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.92) contrast(1.03); transition: transform .7s cubic-bezier(.16,1,.3,1), filter .35s ease; }
-.v3-project-card:hover .v3-media img { transform: scale(1.025); filter: saturate(1.08) contrast(1.05); }
-.v3-media__index { position: absolute; left: 8px; bottom: 8px; padding: .35rem .45rem; color: #fff; background: #0a0a0a; font: 650 .56rem/1 var(--ds-font-mono); }
-.v3-project-card__body { position: relative; display: flex; flex-direction: column; padding: clamp(1.1rem, 2vw, 1.8rem); border-left: 1px solid var(--ds-text); }
-.v3-project-card:nth-child(3n + 2) .v3-project-card__body { border-left: 0; border-top: 1px solid var(--ds-text); }
-.v3-project-card__body > div { display: flex; justify-content: space-between; color: var(--ds-violet); font: 650 .58rem/1 var(--ds-font-mono); }
-.v3-project-card h3 { margin: auto 0 .75rem; font: 820 clamp(1.6rem, 2.8vw, 3.2rem)/.92 var(--ds-font-display); letter-spacing: -.045em; text-transform: uppercase; overflow-wrap: break-word; }
-.v3-project-card p { margin: 0 0 1rem; color: var(--ds-text-secondary); font-size: .88rem; line-height: 1.45; }
-.v3-project-card small { margin-top: auto; font: 600 .58rem/1.4 var(--ds-font-mono); text-transform: uppercase; color: var(--ds-text-secondary); }
-.v3-project-card__body > svg { position: absolute; right: 1rem; bottom: 1rem; width: 20px; }
 .v3-capability { padding-block: clamp(5rem, 9vw, 9rem); border-top: 1px solid var(--ds-text); }
 .v3-capability > .v3-shell { display: grid; grid-template-columns: 4fr 8fr; gap: clamp(2rem, 5vw, 7rem); }
 .v3-capability header { position: sticky; top: 100px; align-self: start; }
@@ -571,7 +555,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-capability header > p:not(.v3-kicker) { max-width: 32rem; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-capability header a { display: inline-flex; gap: .5rem; align-items: center; margin: 1rem 1rem 0 0; border-bottom: 1px solid; font: 650 .7rem/1.8 var(--ds-font-mono); }
 .v3-capability > .v3-shell > div { display: grid; gap: var(--ds-grid-gap); }
-.v3-capability .v3-project-card { grid-column: auto; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); min-height: 310px; }
 .v3-capability--camera { background: #0d0d0d; color: #f4f4ef; }
 .v3-capability--camera .v3-kicker { color: var(--ds-orange); }
 .v3-capability--camera header > p:not(.v3-kicker) { color: rgba(244,244,239,.66); }
@@ -650,7 +633,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-filters { position: sticky; z-index: 70; top: 82px; display: flex; gap: 6px; padding: 7px; margin-bottom: 3rem; overflow-x: auto; border: 1px solid var(--ds-border-strong); border-radius: 15px; background: rgba(244,244,239,.91); backdrop-filter: blur(15px); scrollbar-width: none; }
 .v3-filters a { flex: 0 0 auto; padding: .7rem .95rem; border: 1px dashed transparent; border-radius: 9px; font: 650 .64rem/1 var(--ds-font-mono); }
 .v3-filters a[aria-current="page"] { color: #fff; background: var(--ds-text); }
-.v3-catalog__list .v3-project-card { min-height: 330px; }
 .v3-project { padding-block: 8rem; }
 .v3-project__back { display: inline-flex; align-items: center; gap: .5rem; font: 650 .66rem/1 var(--ds-font-mono); }
 .v3-project__back svg { width: 15px; }
@@ -701,12 +683,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-nav { grid-template-columns: 52px repeat(4, max-content) minmax(190px, 1fr); }
   .v3-hero { grid-template-columns: 5fr 7fr; }
   .v3-hero__system { display: none; }
-  /* PROMPT-31 §2.4: minmax(0, 1fr) — /portfolio (и все каталоги, где эта
-     карточка встречается) переполнялись на 390 из-за длинного слова в
-     заголовке одной карточки («Станция «Горьковская». Reels»); голый 1fr
-     не ограничивает трек, у него implicit min-width = min-content контента. */
-  .v3-project-card, .v3-project-card:nth-child(3n + 2), .v3-project-card:nth-child(3n + 3) { grid-column: span 6; grid-template-columns: minmax(0, 1fr); }
-  .v3-project-card__body, .v3-project-card:nth-child(3n + 2) .v3-project-card__body { min-height: 210px; border-left: 0; border-top: 1px solid var(--ds-text); }
   .v3-section-head, .v3-catalog__hero { grid-template-columns: 2fr 7fr 3fr; }
 }
 
@@ -730,12 +706,8 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-section-head h2 { max-width: 100%; font-size: clamp(1.85rem, 8.2vw, 2.4rem); overflow-wrap: anywhere; }
   .v3-section-head > a { justify-self: start; }
   .v3-project-grid, .v3-catalog__list { grid-template-columns: 1fr; }
-  .v3-project-card, .v3-project-card:nth-child(3n + 2), .v3-project-card:nth-child(3n + 3) { grid-column: 1; min-height: 0; }
-  .v3-project-card .v3-media { min-height: 230px; }
-  .v3-project-card .v3-media--portrait { width: min(100%, 78vw); aspect-ratio: 9/16; max-height: none; }
   .v3-capability > .v3-shell { grid-template-columns: 1fr; }
   .v3-capability header { position: static; }
-  .v3-capability .v3-project-card { grid-template-columns: minmax(0, 1fr); }
   .v3-broadcast { min-height: 64svh; }
   .v3-broadcast .v3-shell { grid-template-columns: 1fr; }
   .v3-broadcast h2, .v3-broadcast > .v3-shell > p:not(.v3-kicker), .v3-broadcast .v3-button { grid-column: 1; }
@@ -770,7 +742,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 
 @media (prefers-reduced-motion: reduce) {
   .v3-marquee > div { animation: none; }
-  .v3-project-card img, .v3-button { transition: none; }
 }
 .v32-work-proof { position: relative; isolation: isolate; overflow: hidden; background: #0a0a0a; }
 .v32-work-proof::before { content: ""; position: absolute; z-index: 0; inset: 0; background: linear-gradient(158deg, #0a0a0a 0%, #101016 25%, #171116 47%, #0e1119 72%, #0a0a0a 100%); pointer-events: none; }
@@ -1041,34 +1012,6 @@ body.v3-menu-open { overflow: hidden; }
 .v32-home .v3-work, .v32-home .v32-proof { overflow: visible; background: transparent; }
 
 .v3-project-grid, .v3-catalog__list { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(.75rem, 1.35vw, 1.25rem); }
-.v3-project-card {
-  grid-column: span 6;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(180px, 4fr);
-  border: 1px solid currentColor;
-  background: transparent;
-  color: inherit;
-  overflow: hidden;
-}
-.v3-project-card--featured, .v3-project-card--full { grid-column: 1 / -1; }
-.v3-project-card--featured { grid-template-columns: minmax(0, 8fr) minmax(230px, 4fr); }
-.v3-project-card--split { grid-column: span 7; }
-.v3-project-card--mosaic { grid-column: span 5; grid-template-columns: 1fr; }
-.v3-project-card--poster { grid-column: span 4; grid-template-columns: 1fr; }
-.v3-project-card--full { grid-template-columns: minmax(0, 9fr) minmax(220px, 3fr); }
-.v3-project-card .v3-media { min-height: clamp(240px, 31vw, 500px); border: 0; }
-.v3-project-card--mosaic .v3-media { min-height: clamp(320px, 42vw, 560px); }
-.v3-project-card--poster .v3-media { min-height: clamp(390px, 45vw, 640px); }
-.v3-project-card .v3-media__index { display: none; }
-.v3-project-card__body { min-height: 100%; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(1rem, 2vw, 2rem); border: 0; background: transparent; }
-.v3-project-card__body > div { width: 100%; display: flex; justify-content: space-between; gap: .8rem; color: currentColor; font: 650 .52rem/1 var(--ds-font-mono); letter-spacing: .08em; }
-.v3-project-card__body h3 { margin: auto 0 .8rem; font: 820 clamp(1.8rem, 3.3vw, 4.3rem)/.84 var(--ds-font-display); letter-spacing: -.055em; text-wrap: balance; }
-.v3-project-card__body small { max-width: 22ch; color: currentColor; font: 650 .56rem/1.35 var(--ds-font-mono); letter-spacing: .07em; }
-.v3-project-card__body > svg { width: 20px; height: 20px; margin-top: 1.4rem; }
-.v3-project-card--mosaic .v3-project-card__body, .v3-project-card--poster .v3-project-card__body { min-height: 190px; }
-.v3-project-card:hover .v3-media img { transform: scale(1.015); }
-.v3-project-card .v3-media img { transition: transform .5s cubic-bezier(.16,1,.3,1); }
 
 .v3-catalog__hero { padding-top: clamp(9rem, 14vw, 12rem); }
 .v3-catalog__hero p { max-width: 33rem; }
@@ -1098,11 +1041,6 @@ body.v3-menu-open { overflow: hidden; }
      переопределения (PROMPT-30 §9.1.2). */
   .nav-dropdown-mobile-group summary { color: #0a0a0a; border-bottom-color: rgba(0,0,0,.14); }
   .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
-  .v3-project-card, .v3-project-card--featured, .v3-project-card--split, .v3-project-card--mosaic, .v3-project-card--poster, .v3-project-card--full { grid-column: 1 / -1; grid-template-columns: 1fr; }
-  .v3-project-card .v3-media, .v3-project-card--mosaic .v3-media, .v3-project-card--poster .v3-media { min-height: 0; aspect-ratio: 16 / 10; }
-  .v3-project-card--poster .v3-media { aspect-ratio: 4 / 5; }
-  .v3-project-card__body, .v3-project-card--mosaic .v3-project-card__body, .v3-project-card--poster .v3-project-card__body { min-height: 168px; }
-  .v3-project-card__body h3 { margin-top: 3rem; font-size: clamp(2.15rem, 10vw, 3.4rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   .v3-marquee__track { animation: none; }
@@ -1157,9 +1095,6 @@ body.v3-menu-open { overflow: hidden; }
 .v3-nav__cta { min-width: 172px; justify-content: space-between !important; gap: .65rem; padding-inline: 1rem !important; border-color: #0a0a0a; border-radius: 14px; }
 .v3-nav__cta-short { display: none; }
 .v3-nav__menu { display: none; }
-
-/* The public content is useful before JavaScript enhancement runs. */
-.v3-project-card { opacity: 1 !important; transform: none !important; visibility: visible !important; }
 .v32-showreel > iframe { display: none !important; }
 .v32-showreel > img { opacity: 1 !important; }
 .v32-reveal-field { backdrop-filter: none !important; }
@@ -1276,12 +1211,6 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-posters a { min-width: 0; }
 .portfolio-posters figure { aspect-ratio: 4 / 5.65; overflow: hidden; background: #151515; }
 .portfolio-posters img { width: 100%; height: 100%; display: block; object-fit: cover; filter: grayscale(.08) contrast(1.04); transition: transform .48s cubic-bezier(.16,1,.3,1); }
-/* PROMPT-31 §2.4: minmax(0, 1fr) — тот же класс бага, что у .v3-project-card
-   и .v3-project__head: голый 1fr рядом с auto-колонкой не сжимается ниже
-   min-content заголовка («Станция «Горьковская». Reels» капсом), карточка
-   вылезала на 4px на 390 (/portfolio и другие каталоги, где эта карточка
-   попадает на первый экран). */
-.portfolio-posters a > div { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .35rem .75rem; padding-top: .75rem; }
 .portfolio-posters a > div > span { grid-row: span 2; color: var(--ds-orange); font: 700 .52rem/1 var(--ds-font-mono); }
 .portfolio-posters h3 { margin: 0; font: 800 clamp(1.3rem, 2vw, 2.3rem)/.92 var(--ds-font-display); text-transform: uppercase; overflow-wrap: break-word; }
 .portfolio-posters small { color: rgba(244,244,239,.58); font: 650 .5rem/1.35 var(--ds-font-mono); text-transform: uppercase; }

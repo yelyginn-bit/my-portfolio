@@ -1,9 +1,9 @@
 {
   "src/design-system.css": {
-    "color": 237,
+    "color": 234,
     "radius": 40,
     "fontFamily": 0,
-    "total": 277
+    "total": 274
   },
   "src/index.css": {
     "color": 54,

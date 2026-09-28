@@ -30,6 +30,16 @@
   --ds-charcoal: #171717;
   --ds-fog: #d9d7d1;
   --ds-on-accent: #0a0a0a;
+  /* PROMPT-35 §0.3, §4: роли, не зависящие от темы — «светлый текст/рамка на
+     тёмной поверхности» и «скрим/затемнение», буквальный смысл ~200
+     литералов (var(--ds-on-dark), rgba(255,255,255,α), rgba(0,0,0,α)) по всему
+     репозиторию (docs/audit/brandbook-compliance.md, находка «Две
+     недостающие роли»). var(--ds-text)/var(--ds-bg) не годятся: они
+     переворачиваются в тёмной теме, а эти поверхности (карточки, стекло,
+     скримы поверх фото) остаются тёмными в обеих темах. Определены один раз
+     здесь — НЕ переопределяются в :root[data-theme="dark"] ниже. */
+  --ds-on-dark: #f2f1ec; /* PAPER, всегда */
+  --ds-scrim: #0a0a0a; /* INK, всегда */
   --ds-success: #4ade80;
   --ds-error: #ff6b5e;
   --ds-radius-sm: 3px;
@@ -39,8 +49,8 @@
      взяты серединой: glass fill .52–.58 → .55, border .60–.75 → .68 (светлое);
      fill .38–.46 → .42, border .12–.20 → .16 (тёмное, ниже). blur — фикс из
      IMPLEMENTATION MAP, не диапазон. */
-  --ds-glass-bg: rgba(255, 255, 255, 0.55);
-  --ds-glass-border: rgba(255, 255, 255, 0.68);
+  --ds-glass-bg: color-mix(in srgb, var(--ds-on-dark) 55%, transparent);
+  --ds-glass-border: color-mix(in srgb, var(--ds-on-dark) 68%, transparent);
   --ds-glass-blur: 28px;
   --ds-glow-blur: 80px;
   --ds-radius-shell: 24px;
@@ -108,23 +118,27 @@
    в src/design-system.css, продублирована сюда для статических страниц
    (как раньше со всем остальным набором токенов). */
 :root[data-theme="dark"] {
-  --ds-bg: #0a0a0a;
-  --ds-bg-alt: #171717;
-  --ds-surface: #171717;
-  --ds-text: #f2f1ec;
-  --ds-text-secondary: #d9d7d1;
-  --ds-text-muted: #d9d7d1;
-  --ds-border: rgba(255, 255, 255, 0.12);
-  --ds-border-strong: rgba(255, 255, 255, 0.4);
-  --ds-accent: #ff6422;
-  --ds-accent-text-legacy: #ff6422;
+  --ds-bg: #0a0a0a; /* INK */
+  --ds-bg-alt: #171717; /* GRAPHITE — второй цвет для тонких секций, третьего в брендбуке нет */
+  --ds-surface: #171717; /* GRAPHITE */
+  --ds-text: #f2f1ec; /* PAPER — 17.51 на INK, 15.85 на GRAPHITE */
+  --ds-text-secondary: #d9d7d1; /* FOG — 13.76 на INK, 12.46 на GRAPHITE */
+  --ds-text-muted: #d9d7d1; /* тот же FOG — двух уровней достаточно (правило §3.2), третий не заводим */
+  --ds-border: color-mix(in srgb, var(--ds-on-dark) 12%, transparent); /* декоративные линии/разделители */
+  /* Границы контролов: промпт предлагал белый 18%, но белый 18% на INK
+     считает 1.64:1 — далеко не 3:1 (UI-порог). Белый 18% на #fff/светлом фоне
+     даёт совсем другую цифру; на INK/GRAPHITE непрозрачность нужна другая.
+     Белый 40% на INK — 3.77:1, проходит с запасом; отчёт об этом — отдельно. */
+  --ds-border-strong: color-mix(in srgb, var(--ds-on-dark) 40%, transparent);
+  --ds-accent: #ff6422; /* SIGNAL ORANGE — тот же цвет в обеих темах */
+  --ds-accent-text-legacy: #ff6422; /* §3.1: на тёмной теме легаси-красный не используется, мелкий акцентный текст — сразу ORANGE */
   --ds-orange: #ff6422;
   --ds-violet: #8a5cf6;
   --ds-charcoal: #171717;
   --ds-fog: #d9d7d1;
-  --ds-on-accent: #0a0a0a;
-  --ds-glass-bg: rgba(17, 17, 17, 0.42);
-  --ds-glass-border: rgba(255, 255, 255, 0.16);
+  --ds-on-accent: #0a0a0a; /* подпись на заливке ORANGE — всегда тёмная, тема не меняет */
+  --ds-glass-bg: rgba(17, 17, 17, 0.42); /* GRAPHITE, .38–.46 из style-spec-v2.json glass.dark */
+  --ds-glass-border: color-mix(in srgb, var(--ds-on-dark) 16%, transparent); /* .12–.20 из style-spec-v2.json glass.dark */
   color-scheme: dark;
 }
 

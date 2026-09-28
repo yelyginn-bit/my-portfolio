@@ -674,7 +674,7 @@ table {
 }
 
 .g-top {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: color-mix(in srgb, var(--ds-on-dark) 88%, transparent) !important;
 }
 
 .g-lb-bar {
@@ -1115,7 +1115,7 @@ textarea::placeholder {
    на /reels, /photo, /event-video, /reklamnye-roliki осталось 8 абзацев вида
    `style="… color:rgba(255,255,255,.4…)"` — белёсый текст прежней тёмной
    палитры. Без этого правила они невидимы на PAPER (проверено снятием
-   `!important` только в этой строке: rgba(10,10,10,.62) → rgba(255,255,255,.45)).
+   `!important` только в этой строке: rgba(10,10,10,.62) → color-mix(in srgb, var(--ds-on-dark) 45%, transparent)).
    Инлайн-стили править нельзя (QWEN-04 §0.3), поэтому правило остаётся, но
    чернила берутся из токена. */
 [style*="color:rgba(255"],
@@ -1393,9 +1393,9 @@ body.site-static .site-static-header {
   width: min(calc(100% - clamp(12px, 3vw, 48px)), 1720px);
   margin-inline: auto;
   padding: 5px !important;
-  border: 1px solid rgba(16,16,16,.22) !important;
+  border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent) !important;
   border-radius: 19px;
-  background: rgba(244,244,239,.88) !important;
+  background: color-mix(in srgb, var(--ds-on-dark) 88%, transparent) !important;
   box-shadow: 0 16px 52px rgba(20,20,18,.1);
   backdrop-filter: blur(18px) saturate(1.15);
 }
@@ -1403,13 +1403,13 @@ body.site-static .site-static-header__inner { min-height: 50px; grid-template-co
 body.site-static .site-static-brand { height: 50px; display: grid; place-items: center; color: var(--ds-bg) !important; background: var(--site-text); border-radius: 13px; font: 900 1rem/1 Arial,sans-serif; }
 body.site-static .site-static-nav { height: 50px; gap: 0 !important; justify-content: stretch; }
 body.site-static .site-static-nav > a,
-body.site-static .site-static-services > button { height: 50px; flex: 1; justify-content: center; padding-inline: clamp(.55rem,1vw,1rem); border-right: 1px solid rgba(16,16,16,.13); color: var(--site-text) !important; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing: .06em !important; text-transform: uppercase; }
+body.site-static .site-static-services > button { height: 50px; flex: 1; justify-content: center; padding-inline: clamp(.55rem,1vw,1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); color: var(--site-text) !important; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing: .06em !important; text-transform: uppercase; }
 body.site-static .site-static-header__cta { height: 50px; justify-content: center; border-radius: 13px; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; }
-body.site-static .site-static-footer-shell { color: #f4f4ef !important; background: #080808 !important; }
-body.site-static .site-static-footer__brand > a { color: transparent !important; -webkit-text-stroke: 1px rgba(255,255,255,.5); font-size: clamp(4rem,10vw,10rem); letter-spacing: -.07em; }
+body.site-static .site-static-footer-shell { color: var(--ds-on-dark) !important; background: #080808 !important; }
+body.site-static .site-static-footer__brand > a { color: transparent !important; -webkit-text-stroke: 1px color-mix(in srgb, var(--ds-on-dark) 50%, transparent); font-size: clamp(4rem,10vw,10rem); letter-spacing: -.07em; }
 body.site-static .site-static-footer__brand p,
 body.site-static .site-static-footer__contacts span,
-body.site-static .site-static-footer__legal { color: rgba(244,244,239,.62) !important; }
+body.site-static .site-static-footer__legal { color: color-mix(in srgb, var(--ds-on-dark) 62%, transparent) !important; }
 
 /* Тёмный подвал закреплён literals-строкой выше (#080808), а часть текста
    внутри него брала цвет из ТЕМАТИЧЕСКИХ токенов --site-text / --site-muted и
@@ -1434,7 +1434,7 @@ body.site-static .site-static-footer-nav nav strong { color: var(--ds-fog) !impo
 /* Phase 1 shared static navbar: one container, six public destinations. */
 body.site-static .site-static-header__inner { grid-template-columns: 56px minmax(0,1fr) max-content max-content; gap: 0; }
 body.site-static .site-static-nav > a { flex: 0 1 auto; }
-body.site-static .site-static-status { display: inline-flex; align-items: center; padding-inline: .85rem; border-left: 1px solid rgba(16,16,16,.13); color: rgba(0,0,0,.58); font: 680 .61rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; white-space: nowrap; }
+body.site-static .site-static-status { display: inline-flex; align-items: center; padding-inline: .85rem; border-left: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); color: color-mix(in srgb, var(--ds-scrim) 58%, transparent); font: 680 .61rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; white-space: nowrap; }
 @media (max-width: 1180px) { body.site-static .site-static-status { display: none; } }
 @media (max-width: 900px) {
   body.site-static .site-static-header__inner { grid-template-columns: 48px 1fr max-content 48px; }
@@ -1473,9 +1473,9 @@ body.site-static .site-static-menu-button {
   text-transform: uppercase;
   white-space: nowrap;
 }
-body.site-static .site-static-brand { width: 50px; color: #f4f4ef !important; background: #101010; }
-body.site-static .site-static-nav > a { display: inline-flex; align-items: center; justify-content: center; padding-inline: clamp(.56rem,.75vw,.82rem); border-right: 1px solid rgba(10,10,10,.1); color: #101010 !important; background: rgba(255,255,255,.22); }
-body.site-static .site-static-status { min-width: 0; justify-content: center; padding-inline: 1rem; border: 1px dashed rgba(10,10,10,.5); color: rgba(10,10,10,.58); background: rgba(255,255,255,.16); }
+body.site-static .site-static-brand { width: 50px; color: var(--ds-on-dark) !important; background: #101010; }
+body.site-static .site-static-nav > a { display: inline-flex; align-items: center; justify-content: center; padding-inline: clamp(.56rem,.75vw,.82rem); border-right: 1px solid rgba(10,10,10,.1); color: #101010 !important; background: color-mix(in srgb, var(--ds-on-dark) 22%, transparent); }
+body.site-static .site-static-status { min-width: 0; justify-content: center; padding-inline: 1rem; border: 1px dashed rgba(10,10,10,.5); color: rgba(10,10,10,.58); background: color-mix(in srgb, var(--ds-on-dark) 16%, transparent); }
 body.site-static .site-static-header__cta { min-width: 172px; padding-inline: 1rem; color: #fff !important; background: #101010; border-color: #101010; }
 body.site-static .site-static-header__cta-short { display: none; }
 
@@ -1498,5 +1498,5 @@ body.site-static .site-static-header__cta-short { display: none; }
   body.site-static .site-static-header__cta { display: inline-flex; min-width: 0; height: 46px; min-height: 46px; padding-inline: .65rem; font-size: .8125rem !important; }
   body.site-static .site-static-header__cta-full { display: none; }
   body.site-static .site-static-header__cta-short { display: inline; }
-  body.site-static .site-static-menu-button { width: 48px; height: 46px; min-height: 46px; display: grid; place-items: center; background: rgba(255,255,255,.22); }
+  body.site-static .site-static-menu-button { width: 48px; height: 46px; min-height: 46px; display: grid; place-items: center; background: color-mix(in srgb, var(--ds-on-dark) 22%, transparent); }
 }

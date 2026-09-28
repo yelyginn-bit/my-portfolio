@@ -65,7 +65,15 @@ function readBaseline(): Record<string, RouteBaseline> {
  * Проверено после фикса: три прогона подряд — одно и то же число. */
 const AUDIT_FN = `async (width) => {
   await Promise.all((document.getAnimations ? document.getAnimations() : []).filter((a) => a.playState === "running" && (!a.effect || a.effect.getTiming().iterations !== Infinity) && a.timeline === document.timeline).map((a) => a.finished.catch(() => {})));
-  const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (m) { const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; } return null; };
+  // PROMPT-35 §4: color-mix(in srgb, ...) — computed color/backgroundColor
+  // отдаёт "color(srgb r g b / a)" (0..1), не rgb()/rgba() — без разбора
+  // этого формата цепочка фона тихо пропускала такой слой и проваливалась
+  // на фон предка (ложный провал контраста после перевода литералов на
+  // --ds-on-dark/--ds-scrim через color-mix).
+  const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (m) { const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; }
+    const cm = String(c).match(/color\\(srgb\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)(?:\\s*\\/\\s*([\\d.]+))?\\)/);
+    if (cm) return [Number(cm[1]) * 255, Number(cm[2]) * 255, Number(cm[3]) * 255, cm[4] !== undefined ? Number(cm[4]) : 1];
+    return null; };
   const composite = (layers) => { const L = layers.slice().reverse(); let o = [255, 255, 255]; for (const [r, g, b, a] of L) o = [Math.round(r * a + o[0] * (1 - a)), Math.round(g * a + o[1] * (1 - a)), Math.round(b * a + o[2] * (1 - a))]; return o; };
   const effBg = (el) => { const layers = []; let n = el;
     while (n) { const s = getComputedStyle(n); const c = rgba(s.backgroundColor);

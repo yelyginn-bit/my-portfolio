@@ -66,8 +66,16 @@ async function loadPlaywright() {
  * body) плюс отдельно узлов формы: цвет/фон с компаундом полупрозрачности по
  * цепочке предков; фон-картинка или градиент считаются «не определено». */
 const AUDIT = `(function(){
-  const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (!m) return null;
-    const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; };
+  // PROMPT-35 §4: color-mix(in srgb, ...) — computed backgroundColor/color
+  // возвращает CSS Color 4 "color(srgb r g b / a)" (r/g/b/a в 0..1), не
+  // классический rgb()/rgba() — regex ниже раньше это тихо пропускал, и
+  // цепочка фона у .v32-hero__position "не находила" собственный светлый
+  // фон, проваливаясь на тёмный фон секции позади (ложный провал контраста).
+  const rgba = (c) => { const m = String(c).match(/rgba?\\(([^)]+)\\)/); if (m) {
+      const p = m[1].split(',').map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; }
+    const cm = String(c).match(/color\\(srgb\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)(?:\\s*\\/\\s*([\\d.]+))?\\)/);
+    if (cm) return [Number(cm[1]) * 255, Number(cm[2]) * 255, Number(cm[3]) * 255, cm[4] !== undefined ? Number(cm[4]) : 1];
+    return null; };
   const lum = (c) => { const v = c.map((x) => { const s = x / 255; return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); });
     return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
   const ratio = (a, b) => { const l1 = lum(a), l2 = lum(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); };

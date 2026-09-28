@@ -1,9 +1,9 @@
 {
   "src/design-system.css": {
-    "color": 166,
+    "color": 88,
     "radius": 34,
     "fontFamily": 0,
-    "total": 200
+    "total": 122
   },
   "src/index.css": {
     "color": 0,
@@ -18,10 +18,10 @@
     "total": 0
   },
   "src/v3-polish.css": {
-    "color": 67,
+    "color": 27,
     "radius": 26,
     "fontFamily": 0,
-    "total": 93
+    "total": 53
   },
   "public/bb-components.css": {
     "color": 0,
@@ -30,10 +30,10 @@
     "total": 0
   },
   "public/site-skin.css": {
-    "color": 39,
+    "color": 26,
     "radius": 11,
     "fontFamily": 1,
-    "total": 51
+    "total": 38
   },
   "public/tokens.css": {
     "color": 0,

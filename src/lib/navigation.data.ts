@@ -87,12 +87,19 @@ export const PRIMARY_NAV: readonly PrimaryNavEntry[] = [
 /** Подвал — карта сайта по группам (PROMPT-21 §4). Каждая публичная страница
  * достижима хотя бы отсюда: либо прямой ссылкой, либо через категорию/раздел
  * в один клик (38 карточек проектов — через свои 10 категорий, не перечислены
- * поштучно). */
+ * поштучно).
+ *
+ * Порядок групп (PROMPT-35 §5): подвал — сетка 3 колонки × 2 строки
+ * (.v3-footer__groups, design-system.css), высота строки = высота самой
+ * длинной колонки в ней. «Работы» (12 ссылок) при любой раскладке остаётся
+ * самой высокой колонкой сайта — её нельзя «облегчить», не убирая ссылок.
+ * Раньше она стояла в одной строке с «Цены и расчёт» (2 ссылки) — 10-строчный
+ * перепад в одной строке. Теперь «Работы» — со «Цены и расчёт» (2) и «О себе
+ * и контакты» (2), двумя самыми короткими: контраст остаётся (это неизбежно
+ * для самой длинной колонки), но во второй строке — «Документы» (8),
+ * «Услуги» (7), «Блог» (5), разброс всего 3 ссылки, вместо прежних 6. Ссылки
+ * и подписи не менялись, только порядок групп в массиве. */
 export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] }[] = [
-  {
-    title: "Услуги",
-    links: SERVICE_LINKS,
-  },
   {
     title: "Работы",
     links: [PORTFOLIO_OVERVIEW_LINK, ...PORTFOLIO_CATEGORY_LINKS, PHOTO_LINK],
@@ -100,16 +107,6 @@ export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] 
   {
     title: "Цены и расчёт",
     links: [PRICES_LINK, CALCULATOR_LINK],
-  },
-  {
-    title: "Блог",
-    links: [
-      BLOG_LINK,
-      link("/blog/skolko-stoit-snyat-reklamnyy-rolik", "Сколько стоит рекламный ролик"),
-      link("/blog/kak-snimat-reels-dlya-biznesa", "Как подготовить Reels для бизнеса"),
-      link("/blog/video-dlya-kartochek-wildberries", "Видео для карточек товара"),
-      link("/blog/videosemka-meropriyatiy-nn", "Видеосъёмка мероприятий в НН"),
-    ],
   },
   {
     title: "О себе и контакты",
@@ -126,6 +123,20 @@ export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] 
       link("/cancellation-refund", "Отмена и возврат"),
       link("/gallery-terms", "Условия доступа к галереям"),
       link("/data-request", "Запрос данных"),
+    ],
+  },
+  {
+    title: "Услуги",
+    links: SERVICE_LINKS,
+  },
+  {
+    title: "Блог",
+    links: [
+      BLOG_LINK,
+      link("/blog/skolko-stoit-snyat-reklamnyy-rolik", "Сколько стоит рекламный ролик"),
+      link("/blog/kak-snimat-reels-dlya-biznesa", "Как подготовить Reels для бизнеса"),
+      link("/blog/video-dlya-kartochek-wildberries", "Видео для карточек товара"),
+      link("/blog/videosemka-meropriyatiy-nn", "Видеосъёмка мероприятий в НН"),
     ],
   },
 ];

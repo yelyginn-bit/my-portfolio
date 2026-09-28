@@ -83,12 +83,6 @@ function applyTheme(html: string, isDark: boolean) {
   return replaceMeta(withAttr, "theme-color", "#0A0A0A");
 }
 
-function applyLegalMeta(html: string, title: string, description: string) {
-  const titlePattern = /<title>.*?<\/title>/isu;
-  const result = titlePattern.test(html) ? html.replace(titlePattern, `<title>${escapeHtml(title)}</title>`) : html;
-  return replaceMeta(result, "description", description);
-}
-
 function injectRoot(html: string, markup: string) {
   const rootPattern = /<div\s+id="root"\s*><\/div>/iu;
   if (!rootPattern.test(html)) throw new Error("Build template does not contain an empty #root element");
@@ -167,7 +161,11 @@ async function main() {
   for (const [legalPath, page] of Object.entries(legalDocuments)) {
     const legalMarkup = renderToString(createElement(StrictMode, null, createElement(LegalApp, { pathname: legalPath })));
     if (!/<h1(?:\s|>)/iu.test(legalMarkup)) throw new Error(`Prerendered legal route has no H1: ${legalPath}`);
-    const html = injectRoot(applyLegalMeta(legalTemplate, page.seo.title, page.seo.description), legalMarkup);
+    /* applySeo, а не applyLegalMeta: юридические страницы получали только
+     * <title> и description, поэтому на восьми маршрутах не было ни canonical,
+     * ни og:title/og:description/og:url (QWEN-08 §2.4, §2.7). Тексты не
+     * сочиняются — og копирует уже утверждённые page.seo.title/description. */
+    const html = injectRoot(applyTheme(applySeo(legalTemplate, page.seo.title, page.seo.description, legalPath), true), legalMarkup);
     const outputFile = outputFileFor(legalPath);
     await mkdir(path.dirname(outputFile), { recursive: true });
     await writeFile(outputFile, html);

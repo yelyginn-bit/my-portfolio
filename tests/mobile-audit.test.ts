@@ -91,6 +91,15 @@ const AUDIT_FN = `async (width) => {
     const r = el.getBoundingClientRect(); if (r.width < 1 || r.height < 1) continue;
     const s = getComputedStyle(el); if (s.visibility === 'hidden' || s.opacity === '0') continue;
     const fg = rgba(s.color); if (!fg || fg[3] === 0) continue;
+    // SVG-текст красится fill/stroke, а не color. Слово «YELYGINN» в
+    // .v3-footer__wordmark имеет fill: none и stroke rgba(255,255,255,.35):
+    // по computed.color оно выглядело как INK на INK (1.00) и легло в baseline
+    // после PROMPT-33 как ложный провал. Узел, который цветом не рисуется,
+    // мерить контрастом текста нельзя.
+    if (el.namespaceURI && String(el.namespaceURI).indexOf("svg") !== -1) {
+      const unpainted = (v) => !v || v === "none" || /^rgba\(0, 0, 0, 0\)$/.test(v);
+      if (unpainted(s.fill)) continue;
+    }
     const painted = effBg(el);
     if (painted.indeterminate) { indeterminate++; continue; }
     const bg = painted.bg;

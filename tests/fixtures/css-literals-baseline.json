@@ -1,15 +1,15 @@
 {
   "src/design-system.css": {
-    "color": 234,
-    "radius": 40,
+    "color": 167,
+    "radius": 34,
     "fontFamily": 0,
-    "total": 274
+    "total": 201
   },
   "src/index.css": {
-    "color": 54,
-    "radius": 20,
-    "fontFamily": 17,
-    "total": 91
+    "color": 0,
+    "radius": 0,
+    "fontFamily": 0,
+    "total": 0
   },
   "src/legal/legal.css": {
     "color": 0,
@@ -18,10 +18,10 @@
     "total": 0
   },
   "src/v3-polish.css": {
-    "color": 75,
-    "radius": 28,
+    "color": 68,
+    "radius": 26,
     "fontFamily": 0,
-    "total": 103
+    "total": 94
   },
   "public/bb-components.css": {
     "color": 0,

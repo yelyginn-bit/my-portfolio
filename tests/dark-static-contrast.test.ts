@@ -96,9 +96,12 @@ const AUDIT = `(function(){
     for (const [cr, cg, cb, ca] of layers.slice().reverse()) o = [cr * ca + o[0] * (1 - ca), cg * ca + o[1] * (1 - ca), cb * ca + o[2] * (1 - ca)];
     return o.map(Math.round);
   };
-  // <main> есть не на всех проверяемых страницах (у калькулятора его нет) —
-  // тогда меряем body целиком: поля и текст относятся к содержимому.
-  const main = document.querySelector("main") || document.body;
+  /* Обход идёт по всему body, а не по <main>: фиксированная шапка и подвал —
+   * вне <main>, и ровно там PROMPT-35 оставил невидимый текст (подпись кнопки
+   * «Рассчитать стоимость» и четыре пункта меню дали 1.01 на светлом баре), а
+   * тест отвечал «0 провалов на 80 маршрутах». <main> был выбран ради полей
+   * ввода — они и так снимаются отдельным циклом ниже. */
+  const main = document.body;
   if (!main) return { total: 0, fields: 0, fails: [], worst: 99, note: "нет ни <main>, ни <body>" };
   const fails = [];
   let total = 0, indeterminate = 0, worst = 99;

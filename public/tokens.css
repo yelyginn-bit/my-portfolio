@@ -16,21 +16,15 @@
   --ds-border: rgba(16, 16, 16, 0.14);
   --ds-border-strong: rgba(16, 16, 16, 0.34);
   --ds-accent: #ff6422;
-  --ds-accent-text-legacy: #c83227;
-  /* PROMPT-30 §8.2 (аудит qwen/site §6.1): --ds-accent-text нигде не было
-     определено — pryamye-translyacii.html:50 и site-skin.css:32 читали
-     несуществующее имя и наследовали цвет родителя. Не дублирует значение:
-     ссылается на уже тематизированный --ds-accent-text-legacy (#c83227 на
-     PAPER — 4.5:1, прошёл контраст в PROMPT-20; на тёмной теме этот же токен
-     переопределён в SIGNAL ORANGE ниже, #ff6422 на INK/GRAPHITE тоже проходит,
-     scripts/contrast.ts), так что не нужен отдельный override в :root[data-theme="dark"].
-     PROMPT-35 §4: весь публичный сайт теперь тёмный (§1) — 9 правил
-     публичных страниц, которые читали этот токен, переведены на
-     var(--ds-orange) напрямую (docs/audit/brandbook-compliance.md).
-     Определение здесь не удалено: приватные account.html/admin.html/
-     journal.html остаются светлыми (вне области PROMPT-35), делят этот
-     бандл и не проверены на отсутствие непрямых ссылок на --ds-accent-text. */
-  --ds-accent-text: var(--ds-accent-text-legacy);
+  /* PROMPT-35 §4: --ds-accent-text-legacy/--ds-accent-text (and
+     site-skin.css's --site-accent-text, its only reader) removed — grep
+     across src/, every root *.html and both CSS bundles found zero
+     remaining consumers of either token anywhere, public or private
+     (admin.html/journal.html/account.html included: no reference in their
+     markup or in their React sources under src/). The 10 real consumers (9
+     public-page rules from the earlier pass, plus pryamye-translyacii.html's
+     .eyebrow and calculator.html's 4 rules found in this same pass) were all
+     already migrated to the --ds-orange token directly. */
   --ds-orange: #ff6422;
   --ds-violet: #8a5cf6;
   --ds-charcoal: #171717;
@@ -137,7 +131,6 @@
      Белый 40% на INK — 3.77:1, проходит с запасом; отчёт об этом — отдельно. */
   --ds-border-strong: color-mix(in srgb, var(--ds-on-dark) 40%, transparent);
   --ds-accent: #ff6422; /* SIGNAL ORANGE — тот же цвет в обеих темах */
-  --ds-accent-text-legacy: #ff6422; /* §3.1: на тёмной теме легаси-красный не используется, мелкий акцентный текст — сразу ORANGE */
   --ds-orange: #ff6422;
   --ds-violet: #8a5cf6;
   --ds-charcoal: #171717;

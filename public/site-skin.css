@@ -37,6 +37,9 @@
   --site-h1: var(--ds-h1);
   --site-h2: var(--ds-h2);
 }
+/* PROMPT-36 §2: статьи блога — документ, а не посадочная: H1 роли doc, H2 — sub.
+   Атрибут data-title="doc" стоит на <body> статьи. */
+body[data-title="doc"] { --site-h1: var(--ds-title-doc); --site-h2: var(--ds-title-sub); }
 
 body.site-static { margin: 0; overflow-x: clip; background: var(--site-bg) !important; color: var(--site-text); }
 body.site-menu-open { overflow: hidden; }
@@ -118,10 +121,14 @@ body.site-menu-open { overflow: hidden; }
    !important от этого правила и давал PAPER на ORANGE = 2.62. Остальные
    десять статических страниц классов `bb-` не используют вовсе — для них
    селектор матчает те же элементы, что и раньше. */
-.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { max-width: 11ch; margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 700; line-height: .9 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+/* PROMPT-36 §0.4/§2: дисплейный H1 — Inter Bold капсом по брендбуку, как везде.
+   Исключение letter-spacing:0 / text-transform:none (десять посадочных были
+   выведены из правила) снято; max-width:11ch тоже — колонку задаёт сетка, а не
+   заголовок (PROMPT-28 §5.4), иначе капс шире 11ch и слово вылезает из блока. */
+.site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 700; line-height: var(--ds-title-lh) !important; letter-spacing: var(--ds-track-display) !important; text-transform: uppercase !important; text-wrap: balance; }
 .site-static :is(header, main, footer) h1 br { display: none; }
 .site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span:not([class*="bb-"]), .site-static :is(header, main, footer) h2 span:not([class*="bb-"]) { color: var(--site-accent) !important; font-style: normal; }
-.site-static :is(header, main, footer) h2:not([class*="bb-"]) { max-width: 11ch; margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h2:not([class*="bb-"]) { margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
 .site-static :is(.lead, .hero p, .price-lead) { color: var(--site-text) !important; font-size: clamp(1.125rem, 1.65vw, 1.5rem) !important; line-height: 1.5; }
 .site-static :is(.grid-3, .price-row, .price-grid) { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)) !important; gap: 0 !important; border-top: 1px solid var(--site-border); border-left: 0 !important; }
 .site-static :is(.card, .price-card) { grid-column: span 4; min-height: 0; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem) clamp(1.5rem, 3vw, 2.5rem) 0 !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--site-border) !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -227,12 +234,9 @@ body.site-menu-open { overflow: hidden; }
 
 @media (max-width: 767px) {
   :root { --site-gutter: clamp(1rem, 5vw, 1.25rem); --site-section: clamp(3.5rem, 18vw, 5rem); }
-  /* Перенос длинных слов — защитный слой на случай обрезания заголовков
-     похожего рода, что нашлись на React-страницах; на статических
-     маршрутах новым детектором не подтверждено, но проверено не было.
-     hyphens:auto вместо break-word — html lang="ru" стоит на всех
-     статических страницах, перенос идёт по слогу с дефисом. */
-  h1, h2, h3 { hyphens: auto; }
+  /* PROMPT-36 §1: переносов внутри слова нет. hyphens:auto вместе с
+     text-wrap:balance рвал даже влезающие слова («Приме-ры»). Слово целиком
+     помещается за счёт кегля; держит scripts/word-breaks.ts. */
   .site-static-header__inner { min-height: 64px; }
   .site-static-header__cta { display: none; }
   .site-static-mobile-menu { inset-block-start: 64px; }
@@ -244,8 +248,6 @@ body.site-menu-open { overflow: hidden; }
   .site-static .hero .wrap > .lead { margin-top: 1.5rem; padding: 1.25rem 0 0; border-top: 1px solid var(--site-border); border-left: 0; }
   .site-static .hero .wrap > .ctas { padding-left: 0; }
   .site-static .hero .wrap > .ctas :is(.cta,.cta-ghost) { flex: 1 1 100%; width: 100%; }
-  .site-static :is(header, main, footer) h1, .site-static .price-hero h1 { font-size: clamp(2.75rem, 14vw, 4rem) !important; }
-  .site-static :is(header, main, footer) h2 { font-size: clamp(2.25rem, 11vw, 3.25rem) !important; }
   .site-static :is(.grid-3, .price-row, .price-grid) { grid-template-columns: repeat(4, minmax(0,1fr)) !important; }
   .site-static :is(.card, .price-card) { grid-column: 1 / -1; padding: 1.5rem 0 !important; border-left: 0 !important; }
   .site-static :is(.card, .price-card) + :is(.card, .price-card) { padding-left: 0 !important; border-left: 0 !important; }
@@ -1520,4 +1522,19 @@ body.site-static .site-static-header__cta-short { display: none; }
   body.site-static .site-static-header__cta-full { display: none; }
   body.site-static .site-static-header__cta-short { display: inline; }
   body.site-static .site-static-menu-button { width: 48px; height: 46px; min-height: 46px; display: grid; place-items: center; background: color-mix(in srgb, var(--ds-on-dark) 22%, transparent); }
+}
+
+/* PROMPT-36 §2: H1 калькулятора и пилота — роль page, как у остальных страниц.
+   Их размер и вес задавали не .site-static-правила, а рукописный CSS страницы
+   (.calc-title: 56px, вес 800, трекинг −0.03em) и общий `h1 { font-size:
+   clamp(2rem, 13vw, 3.6rem) !important }` на мобильном (54.6px у пилота). Селектор
+   с классом бьёт оба; !important — потому что legacy-слой тоже с !important. */
+h1.calc-title, .bb-hero h1.bb-display {
+  max-width: none;
+  font-size: var(--ds-title-page) !important;
+  font-weight: 700;
+  line-height: var(--ds-title-lh) !important;
+  letter-spacing: var(--ds-track-display) !important;
+  text-transform: uppercase;
+  text-wrap: balance;
 }

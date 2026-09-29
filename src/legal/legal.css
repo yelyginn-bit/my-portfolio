@@ -30,12 +30,12 @@ a { color: inherit; text-underline-offset: 3px; }
 main { width: min(960px, calc(100% - 32px)); margin: auto; padding: 64px 0; }
 .eyebrow, .meta { font-size: 13px; color: var(--ds-text-secondary); }
 .eyebrow { text-transform: uppercase; letter-spacing: .12em; }
-h1 { font-family: var(--ds-font-display); font-size: var(--ds-h1); font-weight: 700; line-height: 1.02; letter-spacing: var(--ds-track-display); margin: 12px 0 20px; text-wrap: balance; }
+h1 { font-family: var(--ds-font-display); font-size: var(--ds-title-doc); font-weight: 700; line-height: var(--ds-title-lh); letter-spacing: var(--ds-track-display); text-transform: uppercase; margin: 12px 0 20px; text-wrap: balance; }
 .lead { font-size: clamp(18px, 2.5vw, 24px); max-width: 760px; }
 .meta { margin: 24px 0 48px; }
 
 section { border-top: 1px solid var(--ds-border); padding: 28px 0; }
-h2 { font-family: var(--ds-font-display); font-size: var(--ds-h2); font-weight: 700; margin: 0 0 14px; text-wrap: balance; }
+h2 { font-family: var(--ds-font-display); font-size: var(--ds-title-sub); font-weight: 700; line-height: 1.1; letter-spacing: var(--ds-track-h2); margin: 0 0 14px; text-wrap: balance; }
 p, li { font-size: 16px; }
 li + li { margin-top: 8px; }
 

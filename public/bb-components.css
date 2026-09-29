@@ -206,8 +206,11 @@
   align-items: center;
   padding-block: clamp(3rem, 7vw, 6rem);
 }
-.bb-hero__copy { grid-column: 1 / span 6; display: grid; gap: 1.5rem; }
-.bb-hero__media { grid-column: 7 / -1; min-width: 0; }
+/* PROMPT-36 §2: H1 роли page (72px на 1440) при слове «МАРКЕТПЛЕЙСОВ» 9.4em
+   не помещался в колонку 6 из 12 (640px нужно ≥ 694) и налезал на медиа —
+   текст на 7 из 12, медиа на 5. */
+.bb-hero__copy { grid-column: 1 / span 7; display: grid; gap: 1.5rem; }
+.bb-hero__media { grid-column: 8 / -1; min-width: 0; }
 .bb-hero__lead { margin: 0; max-width: 46ch; color: var(--ds-text-secondary); font-size: var(--ds-lead); line-height: 1.6; }
 .bb-hero__ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
 

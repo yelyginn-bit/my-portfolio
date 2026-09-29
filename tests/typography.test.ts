@@ -29,14 +29,23 @@ test("scale tokens in design-system.css match the brand book scale exactly", () 
   }
 });
 
-test("--ds-h1/--ds-h2 clamp between two of the scale's own steps, not arbitrary numbers", () => {
+test("--ds-h1/--ds-h2 and the title roles clamp between the scale's own steps, not arbitrary numbers", () => {
   const css = read("src/design-system.css");
-  const h1 = css.match(/--ds-h1:\s*([^;]+);/u)?.[1] ?? "";
-  const h2 = css.match(/--ds-h2:\s*([^;]+);/u)?.[1] ?? "";
-  const display = css.match(/--ds-display:\s*([^;]+);/u)?.[1] ?? "";
-  for (const [name, value] of [["--ds-display", display], ["--ds-h1", h1], ["--ds-h2", h2]] as const) {
-    assert.match(value, /clamp\(var\(--ds-fs-\d+\),.*var\(--ds-fs-\d+\)\)/u, `${name} must clamp between two --ds-fs-* tokens, found: ${value}`);
+  const value = (token: string) => css.match(new RegExp(`${token}:\\s*([^;]+);`, "u"))?.[1] ?? "";
+  for (const token of ["--ds-display", "--ds-title-home", "--ds-title-page", "--ds-title-doc", "--ds-title-section", "--ds-title-sub"]) {
+    assert.match(value(token), /clamp\(var\(--ds-fs-\d+\),.*var\(--ds-fs-\d+\)\)/u, `${token} must clamp between two --ds-fs-* tokens, found: ${value(token)}`);
   }
+  // PROMPT-36 §2: --ds-h1/--ds-h2 — псевдонимы ролей, а не третья шкала
+  assert.equal(value("--ds-h1"), "var(--ds-title-page)");
+  assert.equal(value("--ds-h2"), "var(--ds-title-section)");
+});
+
+test("roles descend: page > doc >= section >= sub (PROMPT-36 §2)", () => {
+  const css = read("src/design-system.css");
+  const upper = (token: string) => Number(css.match(new RegExp(`${token}:\\s*clamp\\([^,]+,[^,]+,\\s*var\\(--ds-fs-(\\d+)\\)`, "u"))?.[1]);
+  assert.ok(upper("--ds-title-page") > upper("--ds-title-doc"), "page must top out above doc");
+  assert.ok(upper("--ds-title-doc") >= upper("--ds-title-section"), "doc must not top out below section");
+  assert.ok(upper("--ds-title-section") >= upper("--ds-title-sub"), "section must not top out below sub");
 });
 
 // Список растёт по мере перевода на токены (как было с цветом, PROMPT-20 §7.3).

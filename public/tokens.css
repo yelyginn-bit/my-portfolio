@@ -102,8 +102,31 @@
   --ds-track-display: -0.035em;
   --ds-track-h2: -0.025em;
   --ds-display: clamp(var(--ds-fs-48), 8vw, var(--ds-fs-104));
-  --ds-h1: clamp(var(--ds-fs-32), 6vw, var(--ds-fs-72));
-  --ds-h2: clamp(var(--ds-fs-20), 4vw, var(--ds-fs-48));
+  /* ── Роли заголовков (PROMPT-36 §2): вместо разброса H1 в 8 кеглях (48–130px)
+     и H2 в 16–72px — четыре роли H1 и две роли H2. Пределы clamp — шаги шкалы
+     брендбука (72/48/32/20). Везде: Inter 700, капс у H1, трекинг
+     --ds-track-display, line-height --ds-title-lh.
+       home    — главная, эталон: значение то же, что было (48px @1440)
+       work    — страницы проектов: потолок здесь, а сам кегль считается от
+                 самого длинного слова названия (src/lib/capsFit.ts)
+       page    — /portfolio, категории, /blog, /about, /contact, /calculator,
+                 услуги, /ceny, /cvetokorrekciya, пилот, /404. 72px на 1440
+                 (верх диапазона 72–104 из PROMPT-36 не нужен: самая узкая
+                 колонка H1 — контакты, 523px при слове «РАССКАЖИТЕ» 6.65em, то
+                 есть ≤ 76px). Пол 32px: самое широкое слово этих H1
+                 (ЦВЕТОКОРРЕКЦИЯ, 9.3em) при колонке 350px на 390 даёт ≤ 36px.
+       doc     — 8 юридических и статьи блога: длинные фразы капсом, ниже page
+       section — H2 разделов; sub — подзаголовки, H2 внутри документов */
+  --ds-title-home: clamp(var(--ds-fs-20), 4vw, var(--ds-fs-48));
+  --ds-title-work-max: min(9vw, 9rem);
+  --ds-title-page: clamp(var(--ds-fs-32), 5vw, var(--ds-fs-72));
+  --ds-title-doc: clamp(var(--ds-fs-32), 3.4vw, var(--ds-fs-48));
+  --ds-title-section: clamp(var(--ds-fs-32), 4vw, var(--ds-fs-48));
+  --ds-title-sub: clamp(var(--ds-fs-20), 2.4vw, var(--ds-fs-32));
+  --ds-title-lh: 0.9;
+  --ds-title-lh-doc: 1;
+  --ds-h1: var(--ds-title-page);
+  --ds-h2: var(--ds-title-section);
   --ds-h3: var(--ds-fs-32);
   --ds-lead: var(--ds-fs-20);
   --ds-body-lg: var(--ds-fs-20);

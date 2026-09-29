@@ -270,7 +270,8 @@
    курсивом как таковым — Inter Italic теперь честный (см. @font-face
    design-system.css), но межстрочный это не чинил. 1.0 — граница, ниже
    которой соседние строки гарантированно не касаются. */
-.v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(3.2rem, 4.8vw, 5rem); line-height: 1; }
+/* PROMPT-36 §1: нижняя граница 2.5rem (была 3.2rem) — на 768 колонка интро 323px, «РАССКАЖИТЕ» (курсив, 6.65em) при 44–51px в неё не влезало. */
+.v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(2.5rem, 4.8vw, 5rem); line-height: 1; }
 .v3-contact__intro :is(h1, h2) i { color: var(--ds-orange); font-family: var(--ds-font-display); font-weight: 400; }
 .v3-social-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: auto !important; padding-top: 2rem; }
 .v3-social {
@@ -296,14 +297,14 @@
 .v3-social-grid__secondary svg { width: 13px; }
 .v3-contact--unified .v3-form { height: 100%; box-sizing: border-box; align-self: stretch; border-radius: 20px; }.v3-editorial-page { min-height: 100svh; padding-top: clamp(6.8rem, 8vw, 8.5rem); color: var(--ds-on-dark); background: #0a0a0a; }
 .v3-editorial-hero { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--v3-module-gap); align-items: end; padding-bottom: clamp(2rem, 4vw, 4rem); border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 24%, transparent); }
-.v3-editorial-hero h1 { margin: 0; font: 700 clamp(4.2rem, 8.5vw, 9rem)/.82 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-wrap: balance; }
+.v3-editorial-hero h1 { margin: 0; font: 700 var(--ds-title-page)/var(--ds-title-lh) var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
 .v3-editorial-hero h1 i { color: var(--ds-orange); font-family: var(--ds-font-display); font-weight: 400; }
 .v3-editorial-hero > p:last-child { margin: 0; color: color-mix(in srgb, var(--ds-on-dark) 64%, transparent); line-height: 1.55; }
 .v3-blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem) clamp(6rem, 10vw, 10rem); }
 .v3-blog-grid > a { position: relative; min-height: clamp(300px, 36vw, 520px); display: flex; flex-direction: column; padding: clamp(1.25rem, 2.6vw, 2.5rem); border: 1px solid color-mix(in srgb, var(--ds-on-dark) 22%, transparent); border-radius: 20px; color: inherit; background: #141414; text-decoration: none; overflow: hidden; }
 .v3-blog-grid > a:nth-child(1), .v3-blog-grid > a:nth-child(4) { background: #21140f; }
 .v3-blog-grid span { color: var(--ds-orange); font: 700 .56rem/1 var(--ds-font-mono); letter-spacing: .08em; }
-.v3-blog-grid h2 { margin: auto 0 1rem; font: 700 clamp(2.1rem, 4.3vw, 5rem)/.88 var(--ds-font-display); letter-spacing: var(--ds-track-h2); text-transform: uppercase; text-wrap: balance; }
+.v3-blog-grid h2 { margin: auto 0 1rem; font: 700 var(--ds-title-sub)/.94 var(--ds-font-display); letter-spacing: var(--ds-track-h2); text-transform: uppercase; text-wrap: balance; }
 .v3-blog-grid p { max-width: 36ch; margin: 0; color: color-mix(in srgb, var(--ds-on-dark) 62%, transparent); line-height: 1.5; }
 .v3-blog-grid svg { position: absolute; top: 1.25rem; right: 1.25rem; width: 20px; }
 .v3-about-page { display: grid; grid-template-columns: minmax(0, 7fr) minmax(300px, 5fr); gap: var(--v3-module-gap); padding-block: clamp(2rem, 5vw, 5rem); }
@@ -311,11 +312,11 @@
 .v3-about-page figure img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .v3-about-page figcaption { position: absolute; right: 0; bottom: 0; left: 0; padding: .7rem; background: #0a0a0a; font: 650 .54rem/1 var(--ds-font-mono); }
 .v3-about-page > div { display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.4rem, 3vw, 3rem); border-radius: 20px; background: var(--ds-charcoal); }
-.v3-about-page h2 { margin: 0 0 2rem; font: 700 clamp(2.8rem, 5vw, 5.5rem)/.87 var(--ds-font-display); letter-spacing: -.05em; }
+.v3-about-page h2 { margin: 0 0 2rem; font: 700 var(--ds-title-section)/.94 var(--ds-font-display); letter-spacing: var(--ds-track-h2); }
 .v3-about-page p { color: color-mix(in srgb, var(--ds-on-dark) 68%, transparent); line-height: 1.55; }
 .v3-about-page .v3-button { align-self: flex-start; margin-top: 1.5rem; }
 .v3-about-teaching { max-width: 62ch; padding-bottom: clamp(2rem, 5vw, 5rem); }
-.v3-about-teaching h2 { margin: 0 0 1.25rem; font: 700 clamp(1.4rem, 2.4vw, 1.9rem)/1.2 var(--ds-font-display); letter-spacing: -.02em; }
+.v3-about-teaching h2 { margin: 0 0 1.25rem; font: 700 var(--ds-title-sub)/1.1 var(--ds-font-display); letter-spacing: var(--ds-track-h2); }
 .v3-about-teaching p { margin: 0 0 1rem; color: color-mix(in srgb, var(--ds-on-dark) 68%, transparent); line-height: 1.6; }
 .v3-about-teaching p:last-child { margin-bottom: 0; }
 .v3-contact-page { padding-bottom: var(--v3-module-gap); }
@@ -398,7 +399,6 @@
   .v3-social-grid { grid-template-columns: 1fr 1fr; }
   .v3-social--instagram, .v3-social--telegram { grid-column: 1 / -1; }
   .v3-editorial-page { padding-top: 6.3rem; }
-  .v3-editorial-hero h1 { font-size: clamp(4rem, 20vw, 6.5rem); }
   .v3-blog-grid { grid-template-columns: 1fr; }
   .v3-blog-grid > a { min-height: 320px; }
   .v3-about-page figure { min-height: 430px; }
@@ -482,7 +482,7 @@
      (Georgia italic, отдельный letter-spacing) на 360px — детач-проба
      показала обрезание 15px при 48px и чистые 289.61 vs 283.26 при 44px.
      2.75rem даёт запас ~6px на 360px. */
-  .v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(2.75rem, 4.8vw, 5rem); }
+  .v3-contact--unified .v3-contact__intro :is(h1, h2) { font-size: clamp(2.5rem, 4.8vw, 5rem); }
   /* A deliberately composed mobile hero — not desktop type scaled down. */
   .v32-hero__copy {
     top: clamp(7.35rem, 19vw, 8.75rem);
@@ -540,23 +540,24 @@
 
   .v32-hero__actions { width: 100%; }
 
+  /* PROMPT-36 §1.1: кегль и трекинг заголовка проекта считает
+     design-system.css от самого длинного слова (потолок там же) — прежние
+     clamp(2.9rem, 14.2vw, 4rem) и -.062em выводили «ПРОИЗВОДСТВА» за край. */
   .v3-project__head h1 {
     max-width: 100%;
-    font-size: clamp(2.9rem, 14.2vw, 4rem);
     line-height: .84;
-    letter-spacing: -.062em;
   }
 
   .v3-project__head dl { color: color-mix(in srgb, var(--ds-on-dark) 88%, transparent); }
   .v3-project__description { font-size: 1.05rem; line-height: 1.5; }
 
-  .v3-editorial-hero h1 {
-    max-width: 100%;
-    font-size: clamp(3rem, 15.2vw, 4.35rem);
-    line-height: .84;
-    letter-spacing: -.057em;
-  }
+  .v3-editorial-hero h1 { max-width: 100%; }
 
   .v32-resolve-chapter__media figure:first-child,
   .v32-resolve-chapter__media figure:last-child { border-radius: 0; }
 }
+
+/* PROMPT-36 §2: H1 контактов — роль page. Правило стоит в конце файла, чтобы
+   перебить и общий :is(h1, h2) выше, и его мобильную копию (тот же вес
+   селектора, побеждает порядок). Кегль/трекинг/регистр — из токенов. */
+.v3-contact--unified .v3-contact__intro h1 { font-size: var(--ds-title-page); line-height: var(--ds-title-lh); letter-spacing: var(--ds-track-display); text-transform: uppercase; }

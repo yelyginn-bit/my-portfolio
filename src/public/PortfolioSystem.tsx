@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { longestWordEm } from "../lib/capsFit";
 import { ArrowUpRight } from "lucide-react";
 import {
   assetsForProject,
@@ -114,7 +116,7 @@ function ProjectInfo({ project, number, detailed = false }: { project: Project; 
         <span>{visualCount} {materialLabel(visualCount)}</span>
       </div>
       <div>
-        <h3>{project.title}</h3>
+        <h3 style={{ "--title-em": longestWordEm(project.title, -0.05) } as CSSProperties}>{project.title}</h3>
         {detailed && project.description && <p>{project.description}</p>}
         <small>{projectRoles(project)}</small>
       </div>
@@ -198,7 +200,7 @@ export function PosterGrid({ projects, allProjects }: { projects: Project[]; all
               <figure>
                 <ResponsivePoster asset={asset} alt={`Вертикальный кадр из проекта «${project.title}»`} sizes="(max-width: 700px) 45vw, 30vw" />
               </figure>
-              <div><span>{projectNumber(allProjects, project)}</span><h3>{project.title}</h3>{project.description && <p>{project.description}</p>}<small>{projectRoles(project)}</small></div>
+              <div><span>{projectNumber(allProjects, project)}</span><h3 style={{ "--title-em": longestWordEm(project.title, 0) } as CSSProperties}>{project.title}</h3>{project.description && <p>{project.description}</p>}<small>{projectRoles(project)}</small></div>
             </a>
           );
         })}

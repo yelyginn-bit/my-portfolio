@@ -97,8 +97,31 @@
   --ds-track-display: -0.035em;
   --ds-track-h2: -0.025em;
   --ds-display: clamp(var(--ds-fs-48), 8vw, var(--ds-fs-104));
-  --ds-h1: clamp(var(--ds-fs-32), 6vw, var(--ds-fs-72));
-  --ds-h2: clamp(var(--ds-fs-20), 4vw, var(--ds-fs-48));
+  /* ── Роли заголовков (PROMPT-36 §2): вместо разброса H1 в 8 кеглях (48–130px)
+     и H2 в 16–72px — четыре роли H1 и две роли H2. Пределы clamp — шаги шкалы
+     брендбука (72/48/32/20). Везде: Inter 700, капс у H1, трекинг
+     --ds-track-display, line-height --ds-title-lh.
+       home    — главная, эталон: значение то же, что было (48px @1440)
+       work    — страницы проектов: потолок здесь, а сам кегль считается от
+                 самого длинного слова названия (src/lib/capsFit.ts)
+       page    — /portfolio, категории, /blog, /about, /contact, /calculator,
+                 услуги, /ceny, /cvetokorrekciya, пилот, /404. 72px на 1440
+                 (верх диапазона 72–104 из PROMPT-36 не нужен: самая узкая
+                 колонка H1 — контакты, 523px при слове «РАССКАЖИТЕ» 6.65em, то
+                 есть ≤ 76px). Пол 32px: самое широкое слово этих H1
+                 (ЦВЕТОКОРРЕКЦИЯ, 9.3em) при колонке 350px на 390 даёт ≤ 36px.
+       doc     — 8 юридических и статьи блога: длинные фразы капсом, ниже page
+       section — H2 разделов; sub — подзаголовки, H2 внутри документов */
+  --ds-title-home: clamp(var(--ds-fs-20), 4vw, var(--ds-fs-48));
+  --ds-title-work-max: min(9vw, 9rem);
+  --ds-title-page: clamp(var(--ds-fs-32), 5vw, var(--ds-fs-72));
+  --ds-title-doc: clamp(var(--ds-fs-32), 3.4vw, var(--ds-fs-48));
+  --ds-title-section: clamp(var(--ds-fs-32), 4vw, var(--ds-fs-48));
+  --ds-title-sub: clamp(var(--ds-fs-20), 2.4vw, var(--ds-fs-32));
+  --ds-title-lh: 0.9;
+  --ds-title-lh-doc: 1;
+  --ds-h1: var(--ds-title-page);
+  --ds-h2: var(--ds-title-section);
   --ds-h3: var(--ds-fs-32);
   --ds-lead: var(--ds-fs-20);
   --ds-body-lg: var(--ds-fs-20);
@@ -214,7 +237,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 .price-page-hero > div:first-child { grid-column: 1 / span 8; }
 .price-page-hero > div:last-child { grid-column: 9 / -1; }
 .price-page-hero > div:first-child > p, .price-page-catalog > header > p { margin: 0 0 1.5rem; color: var(--ds-orange); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
-.price-page-hero h1 { margin: 0; font-size: var(--ds-h1); line-height: .9; letter-spacing: var(--ds-track-display); text-wrap: balance; }
+.price-page-hero h1 { margin: 0; font-size: var(--ds-title-page); line-height: var(--ds-title-lh); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
 .price-page-hero > div:last-child > p { margin: 0; font-size: var(--ds-lead); line-height: 1.45; }
 .price-page-hero small { display: block; margin-top: 1.5rem; color: var(--ds-text-secondary); font-size: .9rem; line-height: 1.55; }
 .price-page-catalog { padding-block: var(--ds-section-space); }
@@ -298,7 +321,7 @@ h1, h2 { font-weight: var(--ds-fw-display); }
 /* ── Цветокоррекция: страница /cvetokorrekciya и слайдер «до/после» ───────── */
 
 .color-hero { padding-block: clamp(4.5rem, 9vw, 9rem) clamp(3rem, 5vw, 5rem); border-bottom: 1px solid var(--ds-border); }
-.color-hero h1 { margin: 0; font-size: var(--ds-h1); line-height: .9; letter-spacing: var(--ds-track-display); text-wrap: balance; }
+.color-hero h1 { margin: 0; font-size: var(--ds-title-page); line-height: var(--ds-title-lh); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
 .color-hero-lead { max-width: 54ch; margin: clamp(1.5rem, 3vw, 2.25rem) 0 0; color: var(--ds-text-secondary); font-size: var(--ds-lead); line-height: 1.5; }
 .color-hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: clamp(2rem, 4vw, 3rem); }
 
@@ -501,7 +524,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-about > div { display: grid; gap: 1.3rem; align-content: end; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-about > div p { margin: 0; }
 .v3-contact { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 7vw, 9rem); padding-block: clamp(6rem, 10vw, 10rem); }
-.v3-contact__intro :is(h1, h2) { margin: 1rem 0; font: 800 clamp(3.3rem, 6.6vw, 7rem)/.84 var(--ds-font-display); letter-spacing: -.065em; }
+.v3-contact__intro :is(h1, h2) { margin: 1rem 0; font: 700 clamp(3.3rem, 6.6vw, 7rem)/.84 var(--ds-font-display); letter-spacing: -.065em; }
 .v3-contact__intro > p:not(.v3-kicker) { max-width: 31rem; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-contact__intro > div { display: grid; gap: .6rem; margin-top: 2rem; font: 650 .72rem/1.4 var(--ds-font-mono); }
 .v3-form { padding: clamp(1rem, 2vw, 2rem); border: 1px solid var(--ds-text); background: var(--ds-surface); }
@@ -549,7 +572,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-form label > span:first-child { color: var(--ds-violet); }
 .v3-catalog { padding-block: clamp(8rem, 14vw, 12rem) 8rem; }
 .v3-catalog__hero { display: grid; grid-template-columns: 3fr 6fr 3fr; gap: var(--ds-grid-gap); align-items: end; margin-bottom: 4rem; }
-.v3-catalog__hero h1 { margin: 0; font: 700 clamp(4rem, 10vw, 10rem)/.78 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; }
+.v3-catalog__hero h1 { margin: 0; font: 700 var(--ds-title-page)/var(--ds-title-lh) var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; }
 .v3-catalog__hero > p:last-child { margin: 0; color: var(--ds-text-secondary); line-height: 1.5; }
 .v3-filters { position: sticky; z-index: 70; top: 82px; display: flex; gap: 6px; padding: 7px; margin-bottom: 3rem; overflow-x: auto; border: 1px solid var(--ds-border-strong); border-radius: 12px; background: color-mix(in srgb, var(--ds-on-dark) 91%, transparent); backdrop-filter: blur(15px); scrollbar-width: none; }
 .v3-filters a { flex: 0 0 auto; padding: .7rem .95rem; border: 1px dashed transparent; border-radius: 9px; font: 650 .64rem/1 var(--ds-font-mono); }
@@ -565,7 +588,12 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
    на h1 — чтобы длинное слово переносилось, а не резалось/вылезало из своей
    уже-ограниченной ячейки. */
 .v3-project__head { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--ds-grid-gap); align-items: end; padding-block: 3rem; border-bottom: 1px solid var(--ds-text); }
-.v3-project__head h1 { margin: .7rem 0 0; font: 700 clamp(3.8rem, 9vw, 9rem)/.8 var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
+/* PROMPT-36 §1.1: слово заголовка не рвётся ни при каком кегле — кегль
+   считается от самого длинного слова. --title-em (em ширины этого слова с
+   трекингом) ставит V3App из src/lib/capsFit.ts; 100cqw — ширина колонки
+   заголовка (контейнер — .v3-project__title). Потолок — --ds-title-work-max (прежние 9vw/9rem). */
+.v3-project__title { container-type: inline-size; }
+.v3-project__head h1 { margin: .7rem 0 0; font: 700 min(var(--ds-title-work-max), calc(100cqw / var(--title-em, 10)))/var(--ds-title-lh) var(--ds-font-display); letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; }
 .v3-project__head dl { display: grid; grid-template-columns: 1fr 2fr; gap: .6rem 1rem; margin: 0; font: 580 .68rem/1.45 var(--ds-font-mono); }
 .v3-project__head dt { color: var(--ds-violet); }
 .v3-project__head dd { margin: 0; text-transform: uppercase; }
@@ -578,17 +606,17 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 /* Обогащённый кейс (PROMPT-23) — Задача/Моя роль/Как сделано/Результат.
    Рендерится только когда у проекта есть project.caseStudy (пока — HOFF). */
 .v3-project__case { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-grid-gap) var(--ds-s7); margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--ds-border); }
-.v3-project__case h2 { margin: 0 0 .6rem; font-size: clamp(1.1rem, 1.6vw, 1.4rem); text-transform: uppercase; letter-spacing: .02em; color: var(--ds-orange); }
+.v3-project__case h2 { margin: 0 0 .6rem; font-size: var(--ds-title-sub); text-transform: uppercase; letter-spacing: .02em; color: var(--ds-orange); }
 .v3-project__case p { margin: 0; color: var(--ds-text-secondary); line-height: 1.55; }
 .v3-project__related-actions { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; }
 .v3-project__credits { display: grid; grid-template-columns: 5fr 7fr; gap: var(--ds-grid-gap); margin-block: 8rem; padding-block: 3rem; border-block: 1px solid var(--ds-text); }
-.v3-project__credits h2 { margin: .7rem 0 0; font: 700 clamp(2.5rem, 5vw, 5rem)/.9 var(--ds-font-display); }
+.v3-project__credits h2 { margin: .7rem 0 0; font: 700 var(--ds-title-section)/.94 var(--ds-font-display); letter-spacing: var(--ds-track-h2); }
 .v3-project__credits ul { margin: 0; padding: 0; list-style: none; }
 .v3-project__credits li { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--ds-border); font-size: 1rem; }
 .v3-project__credits li::after { content: "+"; color: var(--ds-violet); }
 .v3-project__related-group { margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--ds-border); }
 .v3-project__related { display: grid; grid-template-columns: 5fr 7fr; gap: var(--ds-grid-gap); }
-.v3-project__related h2 { margin: .7rem 0 0; font: 700 clamp(2rem, 4vw, 3.5rem)/.9 var(--ds-font-display); }
+.v3-project__related h2 { margin: .7rem 0 0; font: 700 var(--ds-title-section)/.94 var(--ds-font-display); letter-spacing: var(--ds-track-h2); }
 .v3-project__related h2 i { font-family: var(--ds-font-display); font-weight: 400; font-style: normal; }
 .v3-project__related-list { display: grid; gap: .6rem; margin-bottom: 1.25rem; }
 .v3-project__related-list a { display: flex; min-height: 52px; align-items: center; padding: 0 1.1rem; color: var(--ds-text); background: var(--ds-surface); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); font-size: .95rem; font-weight: 650; }
@@ -599,9 +627,10 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
    страницы (всегда контрастен var(--ds-bg)); текст поэтому тоже должен
    читаться из var(--ds-bg), а не литералом #fff/--ds-orange — оба давали
    1.10/2.68 в тёмной теме, когда --ds-text стал PAPER, а не INK. */
-.v3-next { min-height: 220px; display: grid; grid-template-columns: 2fr 9fr 1fr; gap: 1rem; align-items: center; padding: 2rem; color: var(--ds-bg); background: var(--ds-text); }
+.v3-next { container-type: inline-size; min-height: 220px; display: grid; grid-template-columns: 2fr 9fr 1fr; gap: 1rem; align-items: center; padding: 2rem; color: var(--ds-bg); background: var(--ds-text); }
 .v3-next span { font: 600 .64rem/1 var(--ds-font-mono); color: var(--ds-bg); }
-.v3-next strong { font: 820 clamp(2rem, 5vw, 5rem)/.9 var(--ds-font-display); text-transform: uppercase; }
+/* PROMPT-36 §1: на десктопе strong стоит в колонке 9fr из 12 (≈75% строки), на мобильном — на всю. */
+.v3-next strong { --fit: calc(72cqw / var(--title-em, 10)); font: 820 min(clamp(2rem, 5vw, 5rem), var(--fit))/.9 var(--ds-font-display); text-transform: uppercase; }
 .v3-next svg { justify-self: end; }
 
 @media (max-width: 1100px) {
@@ -640,13 +669,13 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-catalog .v3-filters { max-width: calc(100% - 32px); }
   .v3-project { padding-top: 6.5rem; }
   .v3-project__head, .v3-project__credits, .v3-project__related, .v3-project__case { grid-template-columns: minmax(0, 1fr); }
-  .v3-project__head h1 { font-size: 18vw; }
+  .v3-project__head h1 { font-size: min(14.2vw, 4rem, calc(100cqw / var(--title-em, 10))); }
   .v3-project__description { margin: 2rem 0 4rem; }
   .v3-project__media article { grid-template-columns: 1fr; }
   .v3-project__media-meta { flex-direction: row; justify-content: space-between; }
   .kinescope-embed[data-orientation="9:16"] { width: min(100%, 88vw); }
   .v3-next { grid-template-columns: 1fr auto; }
-  .v3-next strong { grid-column: 1 / -1; }
+  .v3-next strong { grid-column: 1 / -1; --fit: calc(100cqw / var(--title-em, 10)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -769,20 +798,9 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
 }
 
 @media (max-width: 767px) {
-  /* Нижняя граница --ds-h1/--ds-h2 замерена по самому длинному слову на
-     360px (детектор scrollWidth>clientWidth + детач-проба ширины слова):
-     "продакшна" (/ceny, h1) требовало ≤2.8rem, "подходящий" (/ceny, h2)
-     требовало ≤2.05rem — округлено вниз до 2.8rem/2rem с запасом
-     10-17px. vw- и верхняя граница не трогаются — на ширинах, где реально
-     работает vw-часть (>767px), значение не меняется. */
-  :root { --ds-h1: clamp(2.8rem, 7.5vw, 7rem); --ds-h2: clamp(2rem, 5.5vw, 5rem); }
-  /* hyphens:auto вместо overflow-wrap:break-word — <html lang="ru"> уже
-     стоит везде, словарь переносов включается сам, разрыв идёт по слогу
-     с дефисом, а не посреди букв. Держим как общую страховку: сейчас ни
-     один h1/h2/.v32-hero__title не переносится на 360-390px (снижения
-     floor хватило везде, включая .v32-hero__title — см. его отдельный
-     clamp в v3-polish.css), но новый текст может снова не влезть. */
-  h1, h2, h3, .v32-hero__title { hyphens: auto; }
+  /* PROMPT-36 §1: переносов внутри слова нет (ни hyphens:auto, ни overflow-wrap:
+     anywhere/break-word) — слово целиком помещается за счёт кегля.
+     Держит scripts/word-breaks.ts + tests/word-breaks.test.ts. */
   .v32-hero { min-height: max(840px, 100svh); }
   .v32-showreel > img { inset: 0; width: 100%; height: 100%; }
   .v32-showreel > img { object-position: 58% center; }  .v32-hero__copy { top: 116px; right: 10px; bottom: auto; left: 10px; width: auto; }
@@ -972,7 +990,7 @@ body.v3-menu-open { overflow: hidden; }
    и давало обрезанный по буквам заголовок у правого края. */
 .v32-services__head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--ds-grid-gap); align-items: end; margin-bottom: clamp(2rem, 4vw, 4rem); padding-bottom: 1.4rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 24%, transparent); }
 .v32-services__head > p { grid-column: 1 / 3; }
-.v32-services__head h1 { grid-column: 3 / 13; margin: 0; font-family: var(--ds-font-display); font-weight: 700; font-size: var(--ds-h2); line-height: .92; letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
+.v32-services__head h1 { grid-column: 3 / 13; margin: 0; font-family: var(--ds-font-display); font-weight: 700; font-size: var(--ds-title-home); line-height: .92; letter-spacing: var(--ds-track-display); text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; }
 .v32-services__head h2 { grid-column: 3 / 10; margin: .7rem 0 0; color: color-mix(in srgb, var(--ds-on-dark) 70%, transparent); font: 400 clamp(1rem, 1.5vw, 1.25rem)/1.35 var(--ds-font-display); }
 .v32-services__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(.75rem, 1.35vw, 1.25rem); }
 .v32-services__card { grid-column: span 4; display: flex; min-height: 250px; flex-direction: column; padding: clamp(1.15rem, 2vw, 1.8rem); border: 1px solid color-mix(in srgb, var(--ds-on-dark) 26%, transparent); border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 3.5%, transparent); }
@@ -991,7 +1009,7 @@ body.v3-menu-open { overflow: hidden; }
 .v3-catalog { min-height: 100svh; padding: 0 0 clamp(5rem, 8vw, 9rem); color: var(--ds-on-dark); background: #0a0a0a; }
 .v3-catalog > .v3-catalog__hero { padding-top: clamp(7rem, 9vw, 9rem); }
 .v3-catalog__hero { grid-template-columns: 2fr 7fr 3fr; align-items: end; gap: var(--ds-grid-gap); margin-bottom: 1.5rem; padding-bottom: clamp(1.5rem, 2.5vw, 2.5rem); border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 24%, transparent); }
-.v3-catalog__hero h1 { color: var(--ds-on-dark); font-size: clamp(3.2rem, 7vw, 7.5rem); line-height: .86; text-wrap: balance; }
+.v3-catalog__hero h1 { color: var(--ds-on-dark); text-wrap: balance; }
 .v3-catalog__hero > p:last-child { max-width: 34rem; color: color-mix(in srgb, var(--ds-on-dark) 66%, transparent); }
 .v3-catalog .v3-filters { position: static; display: flex; gap: 4px; width: max-content; max-width: calc(100% - 24px); margin-block: 0 clamp(1.5rem, 3vw, 2.5rem); padding: 4px; border-color: color-mix(in srgb, var(--ds-on-dark) 30%, transparent); border-radius: 12px; color: var(--ds-on-dark); background: #111; backdrop-filter: none; }
 .v3-catalog .v3-filters a { border-radius: 11px; color: color-mix(in srgb, var(--ds-on-dark) 68%, transparent); }
@@ -1012,14 +1030,14 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-media-cluster__rail:has(figure:only-child) { grid-template-rows: 1fr; }
 .portfolio-media-cluster--portrait .portfolio-media-cluster__main { aspect-ratio: 9 / 16; }
 
-.portfolio-project-info { min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(1rem, 2.4vw, 2.25rem); color: var(--ds-on-dark); }
+.portfolio-project-info { container-type: inline-size; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(1rem, 2.4vw, 2.25rem); color: var(--ds-on-dark); }
 .portfolio-project-info__meta { width: 100%; display: flex; justify-content: space-between; gap: 1rem; color: var(--ds-orange); font: 700 .7rem/1 var(--ds-font-mono); letter-spacing: .09em; text-transform: uppercase; }
 .portfolio-project-info > div:nth-child(2) { margin-top: auto; }
 /* PROMPT-32 §1.1.4: 0.88 — на длинных заголовках («Концерты «Станции метро
    Горьковская»», 3-4 строки) поздние строки съезжали друг на друга и
    зрительно обрезали последние буквы/закрывающую кавычку — тот же класс
    бага, что у .v3-section-head h2 и .v3-contact__intro. */
-.portfolio-project-info h3 { margin: 3rem 0 .85rem; font: 800 clamp(2rem, 4vw, 5rem)/1 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; overflow-wrap: anywhere; }
+.portfolio-project-info h3 { margin: 3rem 0 .85rem; --fit: calc(100cqw / var(--title-em, 10)); font: 800 min(clamp(2rem, 4vw, 5rem), var(--fit))/1 var(--ds-font-display); letter-spacing: -.05em; text-transform: uppercase; text-wrap: balance; }
 .portfolio-project-info p { max-width: 38ch; margin: 0 0 1.2rem; color: color-mix(in srgb, var(--ds-on-dark) 70%, transparent); font: 400 clamp(.88rem, 1.1vw, 1rem)/1.5 var(--ds-font-mono); }
 .portfolio-project-info small { display: block; color: color-mix(in srgb, var(--ds-on-dark) 60%, transparent); font: 650 .56rem/1.4 var(--ds-font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .portfolio-project-info > svg { width: 20px; margin-top: 1.5rem; }
@@ -1028,15 +1046,12 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-featured__media { min-width: 0; border-radius: 20px; overflow: hidden; }
 .portfolio-featured__media .portfolio-media-cluster { border-radius: inherit; }
 .portfolio-featured__info { min-width: 0; border-radius: 20px; background: #232323; }
-/* PROMPT-35 §0.2/§4: .portfolio-project-info h3's shared clamp(2rem,4vw,5rem)
-   + overflow-wrap:anywhere was tuned for .portfolio-row's wider 5fr column;
-   in .portfolio-featured's narrower 4fr column it let long titles
-   ("Концерты «Станции метро Горьковская»") grow past the point where
-   "ГОРЬКОВСКАЯ" fits whole and fall back to breaking the word mid-letter.
-   Scoped smaller clamp (46px verified to fit) + overflow-wrap:normal (break
-   only at spaces, same text-wrap:balance) — .portfolio-row keeps the
-   original, wider-column-tuned values untouched. */
-.portfolio-featured__info h3 { font-size: clamp(2rem, 3.2vw, 3.4rem); overflow-wrap: normal; }
+/* PROMPT-36 §1.2: кегль карточки — меньшее из прежнего clamp и «самое длинное
+   слово целиком в ширину карточки» (--title-em ставит PortfolioSystem из
+   src/lib/capsFit.ts, 100cqw — контент .portfolio-project-info). Заменило
+   overflow-wrap:anywhere/normal, которыми слово рвалось посреди букв. В узкой
+   колонке .portfolio-featured потолок ниже, чем у .portfolio-row. */
+.portfolio-featured__info h3 { font-size: min(clamp(2rem, 3.2vw, 3.4rem), var(--fit)); }
 .portfolio-featured:hover .portfolio-media-cluster__main img { transform: scale(1.012); }
 
 .portfolio-row { min-height: clamp(430px, 49vw, 690px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(260px, 5fr); border-radius: 20px; background: var(--ds-charcoal); overflow: hidden; }
@@ -1065,11 +1080,11 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-posters { padding-block: clamp(3rem, 6vw, 6rem); }
 .portfolio-posters > header { width: min(920px, 100%); display: flex; justify-content: space-between; gap: 1rem; margin: 0 auto 1rem; padding-bottom: .8rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 25%, transparent); color: color-mix(in srgb, var(--ds-on-dark) 62%, transparent); font: 650 .55rem/1 var(--ds-font-mono); letter-spacing: .08em; }
 .portfolio-posters > div { width: min(920px, 100%); display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: clamp(1.25rem, 4vw, 3.2rem); margin-inline: auto; }
-.portfolio-posters a { min-width: 0; }
+.portfolio-posters a { container-type: inline-size; min-width: 0; }
 .portfolio-posters figure { aspect-ratio: 4 / 5.65; overflow: hidden; background: var(--ds-charcoal); }
 .portfolio-posters img { width: 100%; height: 100%; display: block; object-fit: cover; filter: grayscale(.08) contrast(1.04); transition: transform .48s cubic-bezier(.16,1,.3,1); }
 .portfolio-posters a > div > span { grid-row: span 2; color: var(--ds-orange); font: 700 .52rem/1 var(--ds-font-mono); }
-.portfolio-posters h3 { margin: 0; font: 800 clamp(1.3rem, 2vw, 2.3rem)/.92 var(--ds-font-display); text-transform: uppercase; overflow-wrap: break-word; }
+.portfolio-posters h3 { margin: 0; font: 800 min(clamp(1.3rem, 2vw, 2.3rem), calc(100cqw / var(--title-em, 10)))/.92 var(--ds-font-display); text-transform: uppercase; }
 .portfolio-posters small { color: color-mix(in srgb, var(--ds-on-dark) 58%, transparent); font: 650 .5rem/1.35 var(--ds-font-mono); text-transform: uppercase; }
 .portfolio-posters a:hover img { transform: scale(1.018); }
 
@@ -1100,7 +1115,7 @@ body.v3-menu-open { overflow: hidden; }
   .v3-mobile-menu { top: 74px; }
 
   .v32-home .v3-work .v3-section-head, .v3-catalog__hero { grid-template-columns: 1fr; align-items: start; }
-  .v32-home .v3-work .v3-section-head h2, .v3-catalog__hero h1 { font-size: clamp(2.8rem, 11vw, 5rem); }
+  .v32-home .v3-work .v3-section-head h2 { font-size: clamp(2.8rem, 11vw, 5rem); }
   .v3-catalog__hero > p:last-child { margin-top: .4rem; }
   .v32-services__head { grid-template-columns: 1fr; }
   .v32-services__head > p, .v32-services__head h1, .v32-services__head h2 { grid-column: 1; }
@@ -1112,7 +1127,7 @@ body.v3-menu-open { overflow: hidden; }
   .portfolio-featured__info, .portfolio-row .portfolio-project-info, .portfolio-row--reverse .portfolio-project-info { order: 2; min-height: 260px; }
   .portfolio-media-cluster { grid-template-columns: minmax(0,3fr) minmax(90px,1fr); }
   .portfolio-mosaic { grid-auto-rows: clamp(170px, 29vw, 260px); }
-  .portfolio-project-info h3 { font-size: clamp(2.5rem, 8vw, 4rem); }
+  .portfolio-project-info h3 { font-size: min(clamp(2.5rem, 8vw, 4rem), var(--fit)); }
 }
 
 @media (max-width: 560px) {
@@ -1125,7 +1140,7 @@ body.v3-menu-open { overflow: hidden; }
   .portfolio-media-cluster { grid-template-columns: 1fr; }
   .portfolio-media-cluster__rail { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; min-height: 110px; }
   .portfolio-project-info { padding: 1rem; }
-  .portfolio-project-info h3 { margin-top: 2.5rem; font-size: clamp(2.2rem, 11vw, 3.2rem); }
+  .portfolio-project-info h3 { margin-top: 2.5rem; font-size: min(clamp(2.2rem, 11vw, 3.2rem), var(--fit)); }
   .portfolio-mosaic { display: grid; grid-template-columns: 1fr; grid-auto-rows: auto; gap: .85rem; }
   .portfolio-mosaic__item, .portfolio-mosaic__item--1, .portfolio-mosaic__item--2, .portfolio-mosaic__item--3, .portfolio-mosaic--count-1 .portfolio-mosaic__item--1, .portfolio-mosaic--count-2 .portfolio-mosaic__item--2 { grid-column: 1; grid-row: auto; aspect-ratio: 4 / 3; }
   .portfolio-posters { padding-block: 2.5rem; }

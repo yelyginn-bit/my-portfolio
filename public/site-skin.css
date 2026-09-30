@@ -128,7 +128,7 @@ body.site-menu-open { overflow: hidden; }
 .site-static :is(header, main, footer) h1:not([class*="bb-"]), .site-static .price-hero h1 { margin: 0; color: var(--site-text) !important; font-size: var(--site-h1) !important; font-weight: 700; line-height: var(--ds-title-lh) !important; letter-spacing: var(--ds-track-display) !important; text-transform: uppercase !important; text-wrap: balance; }
 .site-static :is(header, main, footer) h1 br { display: none; }
 .site-static :is(header, main, footer) h1 em, .site-static :is(header, main, footer) h1 span:not([class*="bb-"]), .site-static :is(header, main, footer) h2 span:not([class*="bb-"]) { color: var(--site-accent) !important; font-style: normal; }
-.site-static :is(header, main, footer) h2:not([class*="bb-"]) { margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: 0 !important; text-transform: none !important; text-wrap: balance; }
+.site-static :is(header, main, footer) h2:not([class*="bb-"]) { margin: 0 0 clamp(2rem, 5vw, 4rem); color: var(--site-text) !important; font-size: var(--site-h2) !important; line-height: .94 !important; letter-spacing: var(--ds-track-h2) !important; text-transform: uppercase !important; text-wrap: balance; }
 .site-static :is(.lead, .hero p, .price-lead) { color: var(--site-text) !important; font-size: clamp(1.125rem, 1.65vw, 1.5rem) !important; line-height: 1.5; }
 .site-static :is(.grid-3, .price-row, .price-grid) { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)) !important; gap: 0 !important; border-top: 1px solid var(--site-border); border-left: 0 !important; }
 .site-static :is(.card, .price-card) { grid-column: span 4; min-height: 0; padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem) clamp(1.5rem, 3vw, 2.5rem) 0 !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--site-border) !important; border-radius: 0 !important; box-shadow: none !important; }
@@ -1538,3 +1538,6 @@ h1.calc-title, .bb-hero h1.bb-display {
   text-transform: uppercase;
   text-wrap: balance;
 }
+
+/* PROMPT-36b: H2 section — капсом (брендбук); в статьях блога H2 роли sub — регистр прежний. */
+body[data-title="doc"] :is(header, main, footer) h2:not([class*="bb-"]) { text-transform: none !important; letter-spacing: 0 !important; }

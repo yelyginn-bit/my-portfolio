@@ -1220,3 +1220,7 @@ body.v3-menu-open { overflow: hidden; }
 @media (max-width: 767px) {
   .v3-footer__groups { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
+/* PROMPT-36b: H2 роли section — капсом по брендбуку (как «ВЫБРАННЫЕ РАБОТЫ» на
+   главной; главная сама не трогается). H2 роли sub регистр не меняют. */
+.ds-section-header h2, .price-page-catalog h2, .price-page-cta h2, .color-cta h2,
+.v3-project__credits h2, .v3-project__related h2 { text-transform: uppercase; }

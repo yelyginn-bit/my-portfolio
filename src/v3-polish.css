@@ -561,3 +561,6 @@
    перебить и общий :is(h1, h2) выше, и его мобильную копию (тот же вес
    селектора, побеждает порядок). Кегль/трекинг/регистр — из токенов. */
 .v3-contact--unified .v3-contact__intro h1 { font-size: var(--ds-title-page); line-height: var(--ds-title-lh); letter-spacing: var(--ds-track-display); text-transform: uppercase; }
+
+/* PROMPT-36b: H2 section на странице «Обо мне» — капсом. */
+.v3-about-page h2 { text-transform: uppercase; }

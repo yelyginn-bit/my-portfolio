@@ -94,7 +94,7 @@ export default function PriceRules() {
                       <td><input type="number" style={{ ...inp, width: 80 }} value={r.priceMin} onChange={(e) => patchLocal(r.id, { priceMin: Number(e.target.value) || 0 })} onBlur={(e) => save(r.id, { priceMin: Number(e.target.value) || 0 })} /></td>
                       <td><input type="number" style={{ ...inp, width: 80 }} value={r.priceMax} onChange={(e) => patchLocal(r.id, { priceMax: Number(e.target.value) || 0 })} onBlur={(e) => save(r.id, { priceMax: Number(e.target.value) || 0 })} /></td>
                       <td><input type="checkbox" checked={r.active} onChange={(e) => { patchLocal(r.id, { active: e.target.checked }); save(r.id, { active: e.target.checked }); }} /></td>
-                      <td style={{ textAlign: "right" }}><button className="adm-pill" style={{ cursor: "pointer", background: "transparent", color: "#fe2c1f", borderColor: "rgba(254,44,31,0.5)" }} onClick={() => remove(r)}>×</button></td>
+                      <td style={{ textAlign: "right" }}><button className="adm-pill" style={{ cursor: "pointer", background: "transparent", color: "var(--ds-accent)", borderColor: "color-mix(in srgb, var(--ds-accent) 50%, transparent)" }} onClick={() => remove(r)}>×</button></td>
                     </tr>
                   ))}
                 </tbody>

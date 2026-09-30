@@ -617,7 +617,8 @@ scoped через `#page-marketplace main` — эта страница одна)
 - **Главная:** ссылка «Оператор с камерой на съёмочный день» → `/ceny#field-video`.
 - **`/llms.txt`** генерируется на сборке (`scripts/llms.ts`, `tests/llms.test.ts`). `seo-audit` — храповик `npm run seo:ratchet` (baseline `tests/fixtures/seo-audit-baseline.json`).
 - **deploy.sh:** H1-проверка теперь по всем индексируемым маршрутам (`dist/indexable-routes.json`), а не по ручному списку (статьи блога выпадали). Запуск `tests/seo.test.ts` на VPS не проверялся — grep оставлен.
-- **Не сделано:** Часть 3 (легаси-красный `#fe2c1f` в приватных TSX), живая проверка после деплоя.
+- **Легаси-красный `#fe2c1f`** в приватных TSX (admin, gallery) заменён на `var(--ds-accent)`.
+- **Не сделано:** живая проверка после деплоя (нужен push и деплой владельцем).
 
 ## В работе
 

@@ -114,7 +114,7 @@ export default function Dashboard() {
                 fontSize: 28,
                 fontWeight: 800,
                 lineHeight: 1.05,
-                color: t.accent ? "#fe2c1f" : "#f5f5f4",
+                color: t.accent ? "var(--ds-accent)" : "#f5f5f4",
                 letterSpacing: "-0.02em",
               }}
             >

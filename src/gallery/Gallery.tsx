@@ -473,7 +473,7 @@ export default function Gallery() {
                           <button
                             onClick={() => removeComment(c)}
                             title="Удалить"
-                            style={{ marginLeft: 8, background: "none", border: "none", color: "#fe2c1f", cursor: "pointer", fontSize: 12 }}
+                            style={{ marginLeft: 8, background: "none", border: "none", color: "var(--ds-accent)", cursor: "pointer", fontSize: 12 }}
                           >
                             ×
                           </button>

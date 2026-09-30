@@ -38,7 +38,7 @@ const FIELD: any = {
   marginBottom: 12,
 };
 const LABEL: any = { fontSize: 12.5, color: "#8e8e8c" };
-const SAVED: any = { marginLeft: 12, fontSize: 13, color: "#fe2c1f" };
+const SAVED: any = { marginLeft: 12, fontSize: 13, color: "var(--ds-accent)" };
 
 export default function SettingsPanel() {
   // ─── Уровни скидок ─────────────────────────────────────────────────────────

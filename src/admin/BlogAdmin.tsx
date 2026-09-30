@@ -119,7 +119,7 @@ export default function BlogAdmin() {
                 <td><span className={p.published ? "adm-pill red" : "adm-pill"}>{p.published ? "Опубликован" : "Черновик"}</span></td>
                 <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                   <button className="adm-pill" style={{ cursor: "pointer", background: "transparent", marginRight: 6 }} onClick={() => edit(p)}>править</button>
-                  <button className="adm-pill" style={{ cursor: "pointer", background: "transparent", color: "#fe2c1f", borderColor: "rgba(254,44,31,0.5)" }} onClick={() => remove(p)}>удалить</button>
+                  <button className="adm-pill" style={{ cursor: "pointer", background: "transparent", color: "var(--ds-accent)", borderColor: "color-mix(in srgb, var(--ds-accent) 50%, transparent)" }} onClick={() => remove(p)}>удалить</button>
                 </td>
               </tr>
             ))}

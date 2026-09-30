@@ -477,7 +477,7 @@ export default function Galleries() {
                         </div>
                         <button
                           className="adm-pill"
-                          style={{ cursor: "pointer", background: "transparent", color: "#fe2c1f", borderColor: "rgba(254,44,31,0.5)", flexShrink: 0 }}
+                          style={{ cursor: "pointer", background: "transparent", color: "var(--ds-accent)", borderColor: "color-mix(in srgb, var(--ds-accent) 50%, transparent)", flexShrink: 0 }}
                           onClick={() => removeComment(c)}
                         >
                           ×
@@ -503,11 +503,11 @@ export default function Galleries() {
               {/* Альбомы (разделы внутри галереи) */}
               <div style={{ display: "flex", gap: 6, alignItems: "center", margin: "0 0 14px", flexWrap: "wrap" }}>
                 <span style={{ fontSize: 11.5, color: "#8e8e8c", marginRight: 2 }}>Альбомы:</span>
-                <button className="gal-chip" data-on={albumFilter === null} style={{ position: "static", background: albumFilter === null ? "#fe2c1f" : "transparent", border: "1px solid rgba(255,255,255,0.2)" }} onClick={() => setAlbumFilter(null)}>
+                <button className="gal-chip" data-on={albumFilter === null} style={{ position: "static", background: albumFilter === null ? "var(--ds-accent)" : "transparent", border: "1px solid rgba(255,255,255,0.2)" }} onClick={() => setAlbumFilter(null)}>
                   Все
                 </button>
                 {[...albums].sort((a, b) => a.sortOrder - b.sortOrder).map((al, i, arr) => (
-                  <span key={al.id} className="gal-chip" style={{ position: "static", display: "inline-flex", gap: 6, alignItems: "center", background: albumFilter === al.id ? "#fe2c1f" : "transparent", border: "1px solid rgba(255,255,255,0.2)" }}>
+                  <span key={al.id} className="gal-chip" style={{ position: "static", display: "inline-flex", gap: 6, alignItems: "center", background: albumFilter === al.id ? "var(--ds-accent)" : "transparent", border: "1px solid rgba(255,255,255,0.2)" }}>
                     {al.coverAssetId && urls[al.coverAssetId] && (
                       <img src={urls[al.coverAssetId]} alt="" style={{ width: 18, height: 18, objectFit: "cover", borderRadius: 4 }} />
                     )}
@@ -589,7 +589,7 @@ export default function Galleries() {
                         {a.albumId && albums.some((al) => al.id === a.albumId) && (
                           <span
                             className="gal-chip"
-                            style={albums.find((al) => al.id === a.albumId)?.coverAssetId === a.id ? { background: "#fe2c1f", borderColor: "#fe2c1f" } : undefined}
+                            style={albums.find((al) => al.id === a.albumId)?.coverAssetId === a.id ? { background: "var(--ds-accent)", borderColor: "var(--ds-accent)" } : undefined}
                             title="Обложка альбома (клик — назначить/снять)"
                             onClick={() => setAlbumCover(a.albumId!, a.id)}
                           >

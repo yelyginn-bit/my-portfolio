@@ -184,7 +184,7 @@ export default function Reviews() {
                   {r.authorName || "Аноним"}
                 </strong>
                 <span
-                  style={{ color: "#fe2c1f", fontSize: 14, letterSpacing: 1 }}
+                  style={{ color: "var(--ds-accent)", fontSize: 14, letterSpacing: 1 }}
                   title={`${r.rating} из 5`}
                 >
                   {stars(r.rating)}
@@ -226,8 +226,8 @@ export default function Reviews() {
                   className="adm-btn"
                   style={{
                     background: "transparent",
-                    border: "1px solid rgba(254,44,31,0.5)",
-                    color: "#fe2c1f",
+                    border: "1px solid color-mix(in srgb, var(--ds-accent) 50%, transparent)",
+                    color: "var(--ds-accent)",
                   }}
                   onClick={() => remove(r)}
                 >

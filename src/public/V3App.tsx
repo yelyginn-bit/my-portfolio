@@ -226,11 +226,10 @@ function HomeServices() {
           </article>
         ))}
       </div>
-      <nav className="v32-services__links" aria-label="Полезные разделы">
-        <a href="/ceny">ЦЕНЫ <ArrowRight aria-hidden="true" /></a>
-        <a href="/calculator">КАЛЬКУЛЯТОР <ArrowRight aria-hidden="true" /></a>
-        <a href="/portfolio">ПОРТФОЛИО <ArrowRight aria-hidden="true" /></a>
-        <a href="/ceny#field-video">ОПЕРАТОР С КАМЕРОЙ НА СЪЁМОЧНЫЙ ДЕНЬ <ArrowRight aria-hidden="true" /></a>
+      <nav className="bb-link-grid" aria-label="Полезные разделы">
+        {[["/ceny", "ЦЕНЫ"], ["/calculator", "КАЛЬКУЛЯТОР"], ["/portfolio", "ПОРТФОЛИО"], ["/ceny#field-video", "ОПЕРАТОР С КАМЕРОЙ НА СЪЁМОЧНЫЙ ДЕНЬ"]].map(([href, label], index) => (
+          <a className="bb-link-card" href={href} key={href}><span className="bb-link-card__kicker">{String(index + 1).padStart(2, "0")}</span><span className="bb-link-card__title">{label}</span></a>
+        ))}
       </nav>
       {/* TODO: сюда добавятся /montazh-video, /pryamye-translyacii, /korporativnoe-video, /promyshlennaya-videosemka, /intervyu-podkasty после создания страниц. */}
     </section>

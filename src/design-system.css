@@ -39,6 +39,7 @@
   --ds-error: #ff6b5e;
   --ds-radius-sm: 3px;
   --ds-radius: 6px;
+  --ds-radius-card: 12px; /* PROMPT-37: карточки-ссылки и плашки (структура 0–12px по брендбуку) */
   /* ── Брендбук (PROMPT-30): стекло, свечение, оболочки — IMPLEMENTATION MAP
      докс/brandbook/README.md, раздел «В коде». Диапазоны из style-spec-v2.json
      взяты серединой: glass fill .52–.58 → .55, border .60–.75 → .68 (светлое);
@@ -1031,9 +1032,6 @@ body.v3-menu-open { overflow: hidden; }
 /* PROMPT-32 §1.2.7: раньше та же лёгкая текстовая ссылка, что у карточек —
    на тёмном фоне почти не видна. Кнопка в системе карточек над блоком:
    рамка, моно капс, min-height как у .v3-button. */
-.v32-services__links { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 1.25rem; }
-.v32-services__links a { display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; padding: .8rem 1.4rem; border: 1px solid color-mix(in srgb, var(--ds-on-dark) 35%, transparent); border-radius: 2px; color: inherit; font: 720 .72rem/1 var(--ds-font-mono); letter-spacing: .09em; text-transform: uppercase; text-decoration: none; transition: transform .22s ease, border-color .22s ease, color .22s ease; }
-.v32-services__links a:hover { transform: translateY(-2px); border-color: var(--ds-orange); color: var(--ds-orange); }
 
 .v3-catalog { min-height: 100svh; padding: 0 0 clamp(5rem, 8vw, 9rem); color: var(--ds-on-dark); background: #0a0a0a; }
 .v3-catalog > .v3-catalog__hero { padding-top: clamp(7rem, 9vw, 9rem); }
@@ -1260,3 +1258,21 @@ body.v3-menu-open { overflow: hidden; }
 /* PROMPT-37 §1: .nav-calc-button на главной считался content-box (min-height 48 + рамка 2 = 50) и растягивал
    строку пилюли до 50 против 48 на статике (68 против 66px). border-box, как у остальных пунктов шапки. */
 .v3-nav a, .v3-nav button, .v3-nav .v3-nav__status { box-sizing: border-box; }
+
+/* ── PROMPT-37 §2.1/§3.2: карточка-ссылка bb-link-card ────────────────────────────
+   Один компонент для «Ценa / Калькулятор / Портфолио / Оператор…» на главной и
+   «Другие услуги» на страницах услуг: GRAPHITE, радиус 12, внутренний отступ,
+   кикер Roboto Mono, название, стрелка в углу. Сетка 2×2 на телефоне и 4 в ряд
+   на компьютере, все карточки одной высоты (grid stretch + min-height). */
+.bb-link-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-grid-gap); margin-top: 1.25rem; }
+.bb-link-card { position: relative; display: flex; min-width: 0; min-height: 116px; flex-direction: column; justify-content: space-between; gap: 1.5rem; padding: 1rem 2.6rem 1.1rem 1rem; color: var(--ds-text); background: var(--ds-surface); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-card); text-decoration: none; transition: border-color .18s ease, transform .18s ease; }
+.bb-link-card::after { content: "↗"; position: absolute; top: .9rem; right: 1rem; color: var(--ds-orange); font: 600 1.25rem/1 var(--ds-font-mono); }
+.bb-link-card:hover { border-color: var(--ds-orange); transform: translateY(-2px); }
+.bb-link-card__kicker { color: var(--ds-text-secondary); font: 500 .68rem/1 var(--ds-font-mono); letter-spacing: .04em; text-transform: uppercase; }
+.bb-link-card__title { font: 700 1rem/1.15 var(--ds-font-display); overflow-wrap: normal; }
+@media (min-width: 900px) { .bb-link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .bb-link-card { min-height: 132px; } }
+.bb-link-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  .bb-link-card:last-child:nth-child(odd) { grid-column: auto; }
+  .bb-link-grid:has(> :nth-child(5):last-child) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

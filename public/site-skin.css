@@ -1562,3 +1562,15 @@ body[data-title="doc"] :is(header, main) h1:not([class*="bb-"]) { margin-bottom:
 
 /* PROMPT-36c: заголовок баннера cookie — компонент, а не H2 раздела: капс и трекинг H2 на него не распространяются. */
 .yel-cookie h2 { text-transform: none !important; letter-spacing: -.02em !important; line-height: 1.45 !important; }
+
+/* PROMPT-37 §3.1: выделенная карточка тарифа — карточка bb (GRAPHITE, радиус 12, внутренний отступ) на всех
+   ширинах; на телефоне общее правило `.card, .price-card { padding: 1.5rem 0 }` оставляло серую заливку
+   вплотную к тексту и без скругления. */
+.site-static .price-card[data-featured="true"], .site-static .price-card.featured { padding: 1.5rem 1.25rem !important; border: 1px solid var(--ds-border) !important; border-radius: var(--ds-radius-card) !important; }
+
+/* PROMPT-37 §3.1: кикеры и метки статических страниц — Roboto Mono, обычная разрядка (.04em) вместо
+   Inter с 0.16–0.35em (на телефоне подпись «М О Н Т А Ж — С Т А Н Д А Р Т» рассыпалась по буквам). Как у карточек bb. */
+.site-static :is(.eyebrow, .card-num, .price-label, .mk-price-label, .stat-label, .client-tag, .mk-platform, .price-note) {
+  font-family: var(--ds-font-mono) !important; font-weight: 500 !important; letter-spacing: .04em !important; text-transform: uppercase;
+}
+.site-static :is(.eyebrow, .card-num, .price-label, .mk-price-label) { font-size: .78rem !important; line-height: 1.35 !important; }

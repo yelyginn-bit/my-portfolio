@@ -376,7 +376,7 @@
 
 @media (max-width: 767px) {
   .v32-hero__copy h1 { max-width: none; font-size: clamp(3.8rem, 16.5vw, 5.2rem); line-height: .79; }
-  .v32-showreel > video { object-position: 58% center; }
+  .v32-showreel > video { object-position: center; }
   .v32-showreel-controls { right: 10px; bottom: 16px; left: 10px; }
   .v32-showreel-controls button { flex: 1; justify-content: space-between; }
   .v32-showreel-toggle { right: 10px; left: 10px; justify-content: center; }

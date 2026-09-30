@@ -822,7 +822,9 @@ body:has(.v32-home) .v3-nav { grid-template-columns: 56px repeat(8, max-content)
      Держит scripts/word-breaks.ts + tests/word-breaks.test.ts. */
   .v32-hero { min-height: max(840px, 100svh); }
   .v32-showreel > img { inset: 0; width: 100%; height: 100%; }
-  .v32-showreel > img { object-position: 58% center; }  .v32-hero__copy { top: 116px; right: 10px; bottom: auto; left: 10px; width: auto; }
+  /* центр, а не 58%: на телефоне постер был сдвинут вправо (QWEN-09 §3.1).
+     Парное правило для <video> — в v3-polish.css, менять надо оба. */
+  .v32-showreel > img { object-position: center; }  .v32-hero__copy { top: 116px; right: 10px; bottom: auto; left: 10px; width: auto; }
   .v32-hero__copy :is(h1, .v32-hero__title) { margin-top: .6rem; font-size: clamp(4.2rem, 18.8vw, 6rem); line-height: .75; }
   .v32-hero__position { width: 100%; align-items: flex-start; flex-direction: column; gap: .25rem; }
   .v32-hero__lead { max-width: 29rem; margin-block: .85rem 1rem; font-size: .9rem; }

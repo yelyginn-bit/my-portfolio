@@ -1273,3 +1273,5 @@ body.v3-menu-open { overflow: hidden; }
   .bb-link-card:last-child:nth-child(odd) { grid-column: auto; }
   .bb-link-grid:has(> :nth-child(5):last-child) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
+/* PROMPT-37 §3.3: связанные работы /cvetokorrekciya — радиус карточки bb. */
+.color-related-card { border-radius: var(--ds-radius-card); }

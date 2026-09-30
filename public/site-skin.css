@@ -1574,3 +1574,6 @@ body[data-title="doc"] :is(header, main) h1:not([class*="bb-"]) { margin-bottom:
   font-family: var(--ds-font-mono) !important; font-weight: 500 !important; letter-spacing: .04em !important; text-transform: uppercase;
 }
 .site-static :is(.eyebrow, .card-num, .price-label, .mk-price-label) { font-size: .78rem !important; line-height: 1.35 !important; }
+
+/* PROMPT-37 §3.3: серые плитки-превью проектов (service-showcase) — радиус карточки bb, а не 0. */
+.site-static :is(.service-showcase-main, .service-showcase-side) { border-radius: var(--ds-radius-card) !important; overflow: hidden; }

@@ -1118,7 +1118,7 @@ body.v3-menu-open { overflow: hidden; }
 .portfolio-posters a:hover img { transform: scale(1.018); }
 
 @media (max-width: 1080px) and (min-width: 821px) {
-  .v3-nav { width: calc(100% - 12px); grid-template-columns: 48px repeat(6, max-content) minmax(86px,1fr) max-content !important; gap: 3px; }
+  .v3-nav { width: calc(100% - 12px); grid-template-columns: 48px repeat(6, max-content) minmax(86px,1fr) max-content max-content !important; gap: 3px; }
   .v3-nav__brand { width: 48px; }
   .v3-nav__links a { padding-inline: .48rem; font-size: .52rem; }
   .v3-nav__status { padding-inline: .55rem; font-size: .5rem; }
@@ -1256,3 +1256,7 @@ body.v3-menu-open { overflow: hidden; }
 
 /* PROMPT-36c: якорные ссылки на позиции прайса (/ceny#field-video) — запас под фиксированную шапку. */
 .price-page-list article[id] { scroll-margin-top: 110px; }
+
+/* PROMPT-37 §1: .nav-calc-button на главной считался content-box (min-height 48 + рамка 2 = 50) и растягивал
+   строку пилюли до 50 против 48 на статике (68 против 66px). border-box, как у остальных пунктов шапки. */
+.v3-nav a, .v3-nav button, .v3-nav .v3-nav__status { box-sizing: border-box; }

@@ -206,7 +206,7 @@ body.site-menu-open { overflow: hidden; }
 .site-static-footer-shell { padding: clamp(4rem, 7vw, 7rem) var(--site-gutter) 1.5rem !important; color: var(--site-text) !important; background: var(--ds-surface) !important; border: 0 !important; }
 .site-static-footer { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--site-gap); width: min(var(--site-content), 100%); margin-inline: auto; }
 .site-static-footer__brand { grid-column: 1 / span 6; }
-.site-static-footer__brand > a { font-size: clamp(2.8rem, 6vw, 6rem); font-weight: 800; line-height: .9; }
+.site-static-footer__brand > a { display: block; }
 .site-static-footer__brand p { max-width: 31rem; margin: 1.5rem 0 0; color: var(--site-muted); font-size: 1rem; line-height: 1.55; }
 .site-static-footer nav { grid-column: 8 / span 2; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem !important; }
 .site-static-footer :is(a,button) { color: inherit !important; letter-spacing: 0 !important; text-transform: none; }
@@ -1441,7 +1441,10 @@ body.site-static .site-static-nav > a,
 body.site-static .site-static-services > button { height: 50px; flex: 1; justify-content: center; padding-inline: clamp(.55rem,1vw,1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); color: var(--site-text) !important; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing: .06em !important; text-transform: uppercase; }
 body.site-static .site-static-header__cta { height: 50px; justify-content: center; border-radius: 12px; font: 680 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .06em; }
 body.site-static .site-static-footer-shell { color: var(--ds-on-dark) !important; background: #080808 !important; }
-body.site-static .site-static-footer__brand > a { color: transparent !important; -webkit-text-stroke: 1px color-mix(in srgb, var(--ds-on-dark) 50%, transparent); font-size: clamp(4rem,10vw,10rem); letter-spacing: -.07em; }
+/* -webkit-text-stroke убран: это псевдо-обводка из копий заливки, на внутренних
+   углах Y и N копии не гасят друг друга, и оставался видимый треугольник
+   (тот же дефект описан у .v3-footer__wordmark в design-system.css). Подвал
+   статики теперь несёт тот же векторный знак, что и V3. */
 body.site-static .site-static-footer__brand p,
 body.site-static .site-static-footer__contacts span,
 body.site-static .site-static-footer__legal { color: color-mix(in srgb, var(--ds-on-dark) 62%, transparent) !important; }

@@ -91,7 +91,9 @@
     if (footer.children.length === 0) footer.innerHTML = `
       <div class="site-static-footer">
         <div class="site-static-footer__brand">
-          <a href="/">YELYGINN</a>
+          <a class="site-static-footer__wordmark" href="/" aria-label="YELYGINN">
+            <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true"><text x="0" y="0">YELYGINN</text></svg>
+          </a>
           <p>Операторская работа, монтаж, цвет и live production.</p>
         </div>
         <nav aria-label="Навигация в подвале">

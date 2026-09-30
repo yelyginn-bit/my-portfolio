@@ -571,9 +571,18 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
    < 1 с overflow:hidden срезали низ буквы. Настоящая SVG-обводка (stroke
    векторного контура, а не копии заливки) даёт чистый контур без артефактов,
    viewBox по замеру getBBox — без обрезки. */
-.v3-footer__wordmark { padding: clamp(3rem, 6vw, 6rem) 1rem 2rem; }
-.v3-footer__wordmark svg { display: block; width: 100%; max-width: 1800px; height: auto; overflow: visible; }
-.v3-footer__wordmark text { font: 900 1000px var(--ds-font-display); letter-spacing: -.045em; fill: none; stroke: color-mix(in srgb, var(--ds-on-dark) 35%, transparent); stroke-width: 1.25px; paint-order: stroke; vector-effect: non-scaling-stroke; }
+.v3-footer__wordmark,
+.site-static-footer__wordmark { display: block; padding: clamp(3rem, 6vw, 6rem) 1rem 2rem; }
+.v3-footer__wordmark svg,
+.site-static-footer__wordmark svg { display: block; width: 100%; max-width: 1800px; height: auto; overflow: visible; }
+/* Заливка вместо обводки (QWEN-09 §4). Обводка была честная векторная, но
+   non-scaling-stroke держит 1.25 CSS-px на любом масштабе: на 1440 знак 1394px
+   широкие буквы, на 390 — 319px, и одна и та же толщина выглядит то ниточкой,
+   то рваной. Владелец просил GRAPHITE — на INK-подвале это контраст 1.09, то
+   есть невидимость, поэтому плотная заливка из той же семьи, что и штрих
+   (--ds-on-dark), но тише: знак декоративный, имя несёт aria-label. */
+.v3-footer__wordmark text,
+.site-static-footer__wordmark text { font: 900 1000px var(--ds-font-display); letter-spacing: -.045em; fill: color-mix(in srgb, var(--ds-on-dark) 14%, transparent); stroke: none; }
 .v3-footer__meta { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; padding: 2rem 1rem; border-top: 1px solid color-mix(in srgb, var(--ds-on-dark) 15%, transparent); color: color-mix(in srgb, var(--ds-on-dark) 62%, transparent); font: 550 .62rem/1.4 var(--ds-font-mono); }
 .v3-footer__meta nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
 .v3-footer__meta span:last-child { text-align: right; }

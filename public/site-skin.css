@@ -374,7 +374,10 @@ header {
   min-height: 64px;
 }
 
-nav,
+/* nav без скоупа ловил и общий .v3-nav: на 1440 это давало 10px между элементами
+   пилы вместо 4px у главной, а на 390 — 18px вместо 3px, и «ОБСУДИТЬ» вставало
+   впритык к бургеру. Интерфейсные отступы навбара задаёт design-system.css. */
+nav:not(.v3-nav),
 .links-row,
 .ctas {
   gap: 10px !important;
@@ -400,16 +403,17 @@ nav a,
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
-/* Цвет здесь не задаётся: эта же разметка шапки (.v3-header/.v3-nav) стоит и на
-   светлой в обеих темах панели навбара, и на тёмном выпадающем меню, а
-   `!important` перекрывал и то, и другое одним токеном. После флипа темы на
-   тёмную --ds-text стал PAPER — четыре пункта меню и подпись кнопки стали
-   невидимыми на светлом баре (замер 1.01 против ~17 на живом сайте).
-   Бар красится в design-system.css (он в бандле v3-polish-*.css), а для
-   выпадающего меню нужна явная строка: .site-static a { color: inherit }
-   выше (0,2,1) специфичнее .nav-dropdown-menu a (0,1,1) и тянул бы GRAPHITE
-   шапки на INK-фон меню. */
-header nav a {
+/* Легаси-стиль СТАРОЙ шапки статических страниц. Скоуп :not(.v3-header) — по
+   той же причине, по какой PROMPT-35 ограничил здесь padding-block: с тех пор
+   как статика переехала на общий компонент .v3-header/.v3-nav, это правило
+   красило не свою шапку, а чужую, и делало её непохожей на главную:
+   letter-spacing: 0 и text-transform: none перебивали брендовый трекинг и капс
+   (замер: на /photo ссылки были 650/none/normal против 720/UP/0.51px на /),
+   min-height: 40px и font-size: 12px меняли высоту кнопок.
+   Цвет здесь больше не задаётся: та же разметка стоит и на светлой панели
+   навбара, и на тёмном выпадающем меню, а !important перекрывал обе одним
+   токеном — после флипа темы пункты стали PAPER по PAPER (1.01 против ~17). */
+header:not(.v3-header) nav a {
   display: inline-flex;
   min-height: 40px;
   align-items: center;
@@ -891,7 +895,10 @@ select:focus-visible {
 }
 
 @media (max-width: 520px) {
-  header nav {
+  /* Тот же скоуп: на 390 это правило давало общему .v3-nav column-gap 18px
+     вместо 3px и font-size 12px, из-за чего кнопка «ОБСУДИТЬ» на статике была
+     уже, чем на главной (65.6px против 71px). */
+  header:not(.v3-header) nav {
     flex-wrap: nowrap;
     overflow-x: auto;
     column-gap: 18px !important;
@@ -908,7 +915,7 @@ select:focus-visible {
     font-size: 12px !important;
     line-height: 1.45;
   }
-  header nav a {
+  header:not(.v3-header) nav a {
     flex: 0 0 auto;
   }
 
@@ -1375,7 +1382,12 @@ body.site-static {
   color: var(--site-text) !important;
 }
 
-body.site-static header {
+/* :not(.v3-header) — по той же причине, что и четыре правила ниже в этом файле.
+   Общий компонент шапки фиксированный и БЕЗ фона: поверхность несёт пилюля
+   .v3-nav. Это правило натягивало на весь <header> полупрозрачную светлую
+   плашку и нижнюю границу — отсюда «тонкая горизонтальная линия под шапкой»
+   на /photo, которой нет на главной. */
+body.site-static header:not(.v3-header) {
   color: var(--site-text);
   background: rgba(246, 246, 243, 0.92) !important;
   border-bottom-color: var(--site-border) !important;

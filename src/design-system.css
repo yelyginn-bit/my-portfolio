@@ -1224,3 +1224,6 @@ body.v3-menu-open { overflow: hidden; }
    главной; главная сама не трогается). H2 роли sub регистр не меняют. */
 .ds-section-header h2, .price-page-catalog h2, .price-page-cta h2, .color-cta h2,
 .v3-project__credits h2, .v3-project__related h2 { text-transform: uppercase; }
+
+/* PROMPT-36c: якорные ссылки на позиции прайса (/ceny#field-video) — запас под фиксированную шапку. */
+.price-page-list article[id] { scroll-margin-top: 110px; }

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { PageContainer } from "../components/site/Layout";
 import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
@@ -5,6 +6,14 @@ import { SITE } from "../config/site";
 import { PUBLIC_PRICES } from "../lib/pricing.data";
 
 export default function Prices() {
+  /* PROMPT-36c: якорь /ceny#field-video с главной не прокручивал — страница
+     пересобирается клиентом уже после того, как браузер отработал #hash. */
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const frame = requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start" }));
+    return () => cancelAnimationFrame(frame);
+  }, []);
   return <RoutePathContext.Provider value="/ceny"><div className="price-page"><SiteHeader /><main>
     <PageContainer as="section" className="price-page-hero"><div><p>Прайс / ориентиры</p><h1>Цены на видеосъёмку в Нижнем Новгороде</h1></div><div><p>Понятные точки входа для съёмки, монтажа, фото и регулярного контента.</p><small>Точная стоимость рассчитывается после брифа и фиксируется в смете.</small></div></PageContainer>
     <PageContainer as="section" className="price-page-catalog"><header><p>Основные услуги</p><h2>Выберите подходящий формат</h2></header><div className="price-page-list">{PUBLIC_PRICES.map((item,index)=><article key={item.id} id={item.id} className={item.featured?"is-featured":""}><div className="price-page-index">{String(index+1).padStart(2,"0")}</div><div className="price-page-name"><span>{item.category}</span><h3>{item.title}</h3><p>{item.description}</p></div><div className="price-page-price"><strong>{item.price}</strong>{item.exampleHref && <a href={item.exampleHref} className="price-page-example">Пример работы</a>}</div><div className="price-page-details"><p>{item.includes.join(" · ")}</p><small>{item.limitations}<br />{item.timeline}.</small></div><div className="price-page-actions"><a href={item.portfolioHref}>Работы</a><a href={item.href} aria-label={`${item.title}: подробнее`}><ArrowUpRight /></a></div></article>)}</div></PageContainer>

@@ -435,16 +435,16 @@ function HomePage() {
           <ProductionProof />
         </div>
         <section id="about" className="v3-about v3-shell">
-          <div className="v3-about__roles">
+          <div className="v3-about__lead">
             <p className="v3-kicker">ОБО МНЕ</p>
-            <ul>
+            <h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2>
+            <ul className="v3-about__roles" aria-label="Роли">
               <li>Оператор</li>
               <li>Режиссёр монтажа</li>
               <li>Колорист</li>
             </ul>
           </div>
-          <h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2>
-          <div>
+          <div className="v3-about__text">
             <p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p>
             <p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p>
             <p>Преподаю видеопроизводство на Медиафоруме молодых журналистов в ВДЦ «Смена», стажировался на ГТРК «Нижний Новгород».</p>

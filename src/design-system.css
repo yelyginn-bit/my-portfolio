@@ -908,8 +908,10 @@ body.v3-menu-open { overflow: hidden; }
      на ~1689 — правило для тёмного контекста шапки, а .v3-mobile-menu здесь
      светлый (см. выше), но для <summary> (не <a>) не было своего мобильного
      переопределения (PROMPT-30 §9.1.2). */
-  .nav-dropdown-mobile-group summary { color: #0a0a0a; border-bottom-color: color-mix(in srgb, var(--ds-scrim) 14%, transparent); }
-  .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
+  /* PROMPT-36c: с .v3-mobile-menu в селекторе — иначе базовое правило ниже по файлу
+     (color:#fff, тот же вес) побеждало и «Услуги»/«Портфолио» были белыми на светлом, 1.13:1 */
+  .v3-mobile-menu .nav-dropdown-mobile-group summary { color: #0a0a0a; border-bottom-color: color-mix(in srgb, var(--ds-scrim) 14%, transparent); }
+  .v3-mobile-menu .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
 }
 @media (prefers-reduced-motion: reduce) {
   .v3-marquee__track { animation: none; }

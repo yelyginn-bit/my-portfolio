@@ -1541,3 +1541,6 @@ h1.calc-title, .bb-hero h1.bb-display {
 
 /* PROMPT-36b: H2 section — капсом (брендбук); в статьях блога H2 роли sub — регистр прежний. */
 body[data-title="doc"] :is(header, main, footer) h2:not([class*="bb-"]) { text-transform: none !important; letter-spacing: 0 !important; }
+
+/* PROMPT-36c: H1 статьи блога (капс, line-height .9) вплотную к строке автора — воздух под заголовком. */
+body[data-title="doc"] :is(header, main) h1:not([class*="bb-"]) { margin-bottom: .4em !important; }

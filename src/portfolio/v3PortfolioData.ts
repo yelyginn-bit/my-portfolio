@@ -286,12 +286,12 @@ export const HERO_SHOWREEL_ID = "hCJmSvmN6S7P8uAnexguQ5";
 export const CATEGORY_META: Record<PortfolioCategory, { label: string; title: string; description: string }> = {
   camera: { label: "CAMERA", title: "Операторская работа", description: "Проекты, где источник прямо подтверждает работу Юрия с камерой или в операторской группе." },
   commercial: { label: "COMMERCIAL", title: "Коммерческие проекты", description: "Продуктовые, рекламные и презентационные видео для брендов и бизнеса." },
-  events: { label: "EVENTS", title: "События и SDE", description: "Отчётные фильмы, форумы, турниры и материалы, собранные в темпе события." },
+  events: { label: "EVENTS", title: "События и фестивали", description: "Отчётные фильмы, форумы, турниры и материалы, собранные в темпе события." },
   reels: { label: "REELS", title: "Вертикальные работы", description: "Четырнадцать работ в честном формате 9:16: подкасты, события и рекламные адаптации." },
   concerts: { label: "CONCERTS", title: "Концерты", description: "Live-выступления и мультикамерный концертный монтаж." },
   interviews: { label: "INTERVIEWS", title: "Интервью и спецпроекты", description: "Интервью, образовательные циклы и подкастовые форматы." },
   post: { label: "POST", title: "Монтаж и постпродакшн", description: "Проекты с подтверждённой работой в монтаже, мультикаме, графике, звуке или cleanup." },
-  color: { label: "COLOR", title: "Цвет", description: "Работы, где цветокоррекция указана в исходной транскрипции." },
+  color: { label: "COLOR", title: "Цветокоррекция", description: "Работы, где цветокоррекция указана в исходной транскрипции." },
   broadcast: { label: "ПРЯМАЯ ТРАНСЛЯЦИЯ", title: "Прямая трансляция", description: "Операторская работа в команде прямого эфира, мультикамерная запись и последующий монтаж." },
   product: { label: "PRODUCT", title: "Продуктовое видео", description: "Каталоги, карточки товара, производство и обучающие ролики о продукте." },
 };

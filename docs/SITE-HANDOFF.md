@@ -609,6 +609,16 @@ scoped через `#page-marketplace main` — эта страница одна)
 
 ---
 
+### PROMPT-36 / 36b — слова целиком, шкала заголовков, SEO-тексты, llms.txt (29–30.09.2026)
+
+- **Разрывы слов = 0.** `scripts/word-breaks.ts` + `tests/word-breaks.test.ts` (в `npm run check`): 70 маршрутов × 1440/1200/768/390, было 116, стало 0; заодно ловит слово шире своей колонки/окна. Отрицательный контроль — слово в 40 букв. `hyphens:auto`, `overflow-wrap:anywhere/break-word` и `max-width: Nch` у заголовков убраны: кегль подгоняется под слово. Заголовки проектов, карточки каталога и «следующий проект» считают кегль от самого длинного слова (`src/lib/capsFit.ts` — таблица ширин Inter Bold капсом + container query).
+- **Шкала заголовков — токены ролей** (`design-system.css` и `public/tokens.css`): `--ds-title-home` (не менялась), `-work-max`, `-page` (32→72), `-doc` (32→48), `-section` (32→48), `-sub` (20→32). Все H1 — Inter 700, капс, трекинг `--ds-track-display`, `line-height` 0.9. `--ds-h1/--ds-h2` — псевдонимы. H2 section — капсом, sub — регистр прежний, главная не тронута. `scripts/heading-scale.ts` — замер и таблица «до → после».
+- **SEO-тексты** — один источник `src/public/seoCopy.ts` (70 маршрутов: title 30–70, description 110–165, бренд `| YELYGINN`, у главной `| Юрий Елыгин`); на сборке их проставляет `scripts/prerender.ts` (статические html, /calculator, /ceny, /cvetokorrekciya, юридические, V3). `tests/seo-copy.test.ts`: длины, бренд, уникальность, нет «ИП». Видимые H1: /portfolio «Портфолио видеосъёмки», /ceny, /about, категории «События и фестивали», «Цветокоррекция». Альты: шоурил на главной, постеры проектов «<название> — <вид работы>, кадр NN из MM».
+- **Главная:** ссылка «Оператор с камерой на съёмочный день» → `/ceny#field-video`.
+- **`/llms.txt`** генерируется на сборке (`scripts/llms.ts`, `tests/llms.test.ts`). `seo-audit` — храповик `npm run seo:ratchet` (baseline `tests/fixtures/seo-audit-baseline.json`).
+- **deploy.sh:** H1-проверка теперь по всем индексируемым маршрутам (`dist/indexable-routes.json`), а не по ручному списку (статьи блога выпадали). Запуск `tests/seo.test.ts` на VPS не проверялся — grep оставлен.
+- **Не сделано:** Часть 3 (легаси-красный `#fe2c1f` в приватных TSX), живая проверка после деплоя.
+
 ## В работе
 
 **Фаза 2 (палитра), фаза 4 (навигация) и фаза 3 (шрифты) закрыты и на проде.**

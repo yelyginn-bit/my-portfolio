@@ -42,22 +42,14 @@ echo "==> Restarting $APP_NAME"
 pm2 restart "$APP_NAME" --update-env
 pm2 save --force
 
+# PROMPT-36 §5.2: проверка H1 — по ВСЕМ индексируемым маршрутам манифеста
+# (dist/indexable-routes.json пишет scripts/prerender.ts), а не по списку,
+# который вручную отстаёт от манифеста (раньше выпадали статьи блога).
+# tests/seo.test.ts на VPS не запускается без проверки — оставлен grep.
 mapfile -t PRERENDER_ROUTES < <(
-  node -e 'for (const route of require("./dist/prerender-manifest.json").routes) console.log(route)'
+  node -e 'for (const route of require("./dist/indexable-routes.json").routes) console.log(route)'
 )
-
-# These public static pages are not rendered by the shared V3 manifest.
-STATIC_PUBLIC_ROUTES=(
-  /reklamnye-roliki
-  /event-video
-  /reels
-  /ceny
-  /photo
-  /content-day
-  /cvetokorrekciya
-  /video-dlya-marketpleysov
-  /pryamye-translyacii
-)
+STATIC_PUBLIC_ROUTES=()
 
 declare -A SEEN_ROUTES=()
 for route in "${PRERENDER_ROUTES[@]}" "${STATIC_PUBLIC_ROUTES[@]}"; do

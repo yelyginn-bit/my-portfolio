@@ -11,10 +11,13 @@ import Prices from "../src/prices/Prices";
 import V3App from "../src/public/V3App";
 import {
   PRERENDER_ROUTES,
+  INDEXABLE_ROUTES,
   ROUTE_MANIFEST,
   V3_PRERENDER_ROUTES,
   resolveV3Route,
 } from "../src/public/routeManifest";
+import { seoCopyFor } from "../src/public/seoCopy";
+import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
 import { checkJsonLdPrices } from "./priceGuard";
 
@@ -65,6 +68,12 @@ function applySeo(html: string, title: string, description: string, canonicalPat
   return canonicalPattern.test(result)
     ? result.replace(canonicalPattern, canonicalTag)
     : result.replace("</head>", `    ${canonicalTag}\n  </head>`);
+}
+
+/** PROMPT-36 §0.1: тексты из src/public/seoCopy.ts; маршрута нет в копирайте — html как есть. */
+function applySeoFor(html: string, routePath: string) {
+  const copy = seoCopyFor(routePath);
+  return copy ? applySeo(html, copy.title, copy.description, routePath) : html;
 }
 
 /**
@@ -141,21 +150,21 @@ async function main() {
   if (!/<h1(?:\s|>)/iu.test(calculatorMarkup)) throw new Error("Prerendered calculator has no H1");
   const calculatorOutput = outputFileFor("/calculator");
   await mkdir(path.dirname(calculatorOutput), { recursive: true });
-  await writeFile(calculatorOutput, injectRoot(calculatorTemplate, calculatorMarkup));
+  await writeFile(calculatorOutput, injectRoot(applySeoFor(calculatorTemplate, "/calculator"), calculatorMarkup));
   generated.push("/calculator");
 
   const colorGradingMarkup = renderToString(createElement(StrictMode, null, createElement(ColorGrading)));
   if (!/<h1(?:\s|>)/iu.test(colorGradingMarkup)) throw new Error("Prerendered cvetokorrekciya has no H1");
   const colorGradingOutput = outputFileFor("/cvetokorrekciya");
   await mkdir(path.dirname(colorGradingOutput), { recursive: true });
-  await writeFile(colorGradingOutput, injectRoot(colorGradingTemplate, colorGradingMarkup));
+  await writeFile(colorGradingOutput, injectRoot(applySeoFor(colorGradingTemplate, "/cvetokorrekciya"), colorGradingMarkup));
   generated.push("/cvetokorrekciya");
 
   const pricesMarkup = renderToString(createElement(StrictMode, null, createElement(Prices)));
   if (!/<h1(?:\s|>)/iu.test(pricesMarkup)) throw new Error("Prerendered ceny has no H1");
   const pricesOutput = outputFileFor("/ceny");
   await mkdir(path.dirname(pricesOutput), { recursive: true });
-  await writeFile(pricesOutput, injectRoot(pricesTemplate, pricesMarkup));
+  await writeFile(pricesOutput, injectRoot(applySeoFor(pricesTemplate, "/ceny"), pricesMarkup));
   generated.push("/ceny");
 
   for (const [legalPath, page] of Object.entries(legalDocuments)) {
@@ -172,6 +181,18 @@ async function main() {
     generated.push(legalPath);
   }
 
+  /* Рукописные статические html (услуги, статьи блога, 404): их <title> и
+   * description живут в самих файлах — после сборки приводим к seoCopy.ts,
+   * чтобы не было второго источника. /ceny и /cvetokorrekciya уже обработаны выше. */
+  for (const route of ROUTE_MANIFEST) {
+    if (route.render !== "static" || !route.indexable || generated.includes(route.path)) continue;
+    const file = path.join(distDir, `${route.path.slice(1)}.html`);
+    const html = await readFile(file, "utf8").catch(() => null);
+    if (html === null) throw new Error(`Нет собранного html для статического маршрута ${route.path}: ${file}`);
+    if (!seoCopyFor(route.path)) throw new Error(`Нет SEO-текстов для ${route.path} в src/public/seoCopy.ts`);
+    await writeFile(file, applySeoFor(html, route.path));
+  }
+
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);
 
@@ -179,6 +200,8 @@ async function main() {
   await Promise.all([
     writeFile(path.join(distDir, "prerender-manifest.json"), `${JSON.stringify({ routes: generated }, null, 2)}\n`),
     writeFile(path.join(distDir, "sitemap.xml"), sitemap),
+    writeFile(path.join(distDir, "llms.txt"), llmsTxt()),
+    writeFile(path.join(distDir, "indexable-routes.json"), `${JSON.stringify({ routes: INDEXABLE_ROUTES.map((route) => route.path) }, null, 2)}\n`),
   ]);
   console.log(`Prerendered ${generated.length} routes from the shared route manifest.`);
 }

@@ -1,0 +1,144 @@
+{
+  "pagesWithProblems": 46,
+  "problems": {
+    "/calculator": [
+      "нет JSON-LD"
+    ],
+    "/content-day": [
+      "нет JSON-LD"
+    ],
+    "/video-dlya-marketpleysov": [
+      "img без alt: 1",
+      "img без размеров: 3"
+    ],
+    "/ceny": [
+      "нет JSON-LD"
+    ],
+    "/photo": [
+      "img без размеров: 1"
+    ],
+    "/privacy-policy": [
+      "нет JSON-LD"
+    ],
+    "/personal-data-consent": [
+      "нет JSON-LD"
+    ],
+    "/cookie-policy": [
+      "нет JSON-LD"
+    ],
+    "/terms": [
+      "нет JSON-LD"
+    ],
+    "/payment-terms": [
+      "нет JSON-LD"
+    ],
+    "/cancellation-refund": [
+      "нет JSON-LD"
+    ],
+    "/gallery-terms": [
+      "нет JSON-LD"
+    ],
+    "/data-request": [
+      "нет JSON-LD"
+    ],
+    "/portfolio/gorky-stranicy-pamyati": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/metro-gorkovskaya-concerts": [
+      "img без размеров: 5"
+    ],
+    "/portfolio/sber-arhitektura": [
+      "img без размеров: 6"
+    ],
+    "/portfolio/zhenshchiny-sibura": [
+      "img без размеров: 6"
+    ],
+    "/portfolio/uchenye-nizhnego": [
+      "img без размеров: 3"
+    ],
+    "/portfolio/horosho-teaser": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/zhenshchiny-sibura-teaser": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/sber-arhitektura-teaser": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/barier-instrukcii": [
+      "img без размеров: 3"
+    ],
+    "/portfolio/caprigo-obuchenie": [
+      "img без размеров: 8"
+    ],
+    "/portfolio/become-legendary-architecture": [
+      "img без размеров: 4"
+    ],
+    "/portfolio/egovtsev-podcast-reels": [
+      "img без размеров: 5"
+    ],
+    "/portfolio/metro-gorkovskaya-reels": [
+      "img без размеров: 2"
+    ],
+    "/portfolio/yango-campaign": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/osnova-report-reels": [
+      "img без размеров: 5"
+    ],
+    "/portfolio/hoff-product-cards": [
+      "img без размеров: 10"
+    ],
+    "/portfolio/caprigo-product-catalog": [
+      "img без размеров: 10"
+    ],
+    "/portfolio/cartier-product-video": [
+      "img без размеров: 2"
+    ],
+    "/portfolio/showreel-site": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/jetlag-showreel": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/showreel-presentation": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/chistotop-awards": [
+      "img без размеров: 2"
+    ],
+    "/portfolio/osnova-trainer": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/osnova-den-materi": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/forum-malaya-rodina": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/skrf-hockey": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/banya-fest": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/yango-arabic-15": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/teraflex-presentation": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/caprigo-presentation": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/korona-production": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/gorky-v-teni-voyny": [
+      "img без размеров: 1"
+    ],
+    "/portfolio/socialnyy-uchastkovyy": [
+      "img без размеров: 1"
+    ]
+  }
+}

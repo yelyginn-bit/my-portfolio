@@ -1,4 +1,5 @@
 import React from "react";
+import { PAGE_SEO } from "../public/seoCopy";
 import { LEGAL, LEGAL_PATHS, SERVICES } from "../config/legal";
 import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
 
@@ -92,6 +93,11 @@ export const documents: Record<string, DocumentPage> = {
   [LEGAL_PATHS.terms]: terms, [LEGAL_PATHS.payment]: payment, [LEGAL_PATHS.refund]: refund,
   [LEGAL_PATHS.gallery]: gallery, [LEGAL_PATHS.dataRequest]: dataRequest,
 };
+// PROMPT-36 §0.1: title/description — из единого источника src/public/seoCopy.ts
+for (const [legalPath, page] of Object.entries(documents)) {
+  const copy = PAGE_SEO[legalPath];
+  if (copy) page.seo = { title: copy.title, description: copy.description };
+}
 
 export default function LegalApp({ pathname }: { pathname?: string } = {}) {
   const browserPath = typeof window === "undefined" ? LEGAL_PATHS.privacy : window.location.pathname;

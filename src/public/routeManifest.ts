@@ -8,6 +8,7 @@ import {
   type PortfolioCategory,
   type Project,
 } from "../portfolio/v3PortfolioData";
+import { seoCopyFor } from "./seoCopy";
 
 export type RouteRenderKind = "v3" | "calculator" | "static" | "legal" | "private" | "redirect";
 
@@ -99,6 +100,12 @@ export const PRERENDER_ROUTES = [
 
 export const INDEXABLE_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable);
 
+/** Тексты из seoCopy.ts перекрывают то, что собрано ниже из данных. */
+const withCopy = <T extends { path: string; seo: { title: string; description: string; canonical: string } }>(r: T): T => {
+  const copy = seoCopyFor(r.path);
+  return copy ? { ...r, seo: { ...r.seo, title: copy.title, description: copy.description } } : r;
+};
+
 export const normalizePublicPath = (rawPath: string) => rawPath.replace(/\/+$/u, "") || "/";
 
 export interface V3RouteResolution {
@@ -109,7 +116,7 @@ export interface V3RouteResolution {
   seo: { title: string; description: string; canonical: string };
 }
 
-export function resolveV3Route(rawPath: string, rawSearch = ""): V3RouteResolution {
+function resolveV3RouteRaw(rawPath: string, rawSearch = ""): V3RouteResolution {
   const path = normalizePublicPath(rawPath);
   const segment = path.startsWith("/portfolio/") ? decodeURIComponent(path.slice("/portfolio/".length)) : "";
   const normalizedCategory = segment === "editing" ? "post" : segment;
@@ -137,3 +144,5 @@ export function resolveV3Route(rawPath: string, rawSearch = ""): V3RouteResoluti
   if (path === "/") return { path, kind: "home", seo: { title: "Видеограф и видеооператор в Нижнем Новгороде — съёмка, монтаж, цвет | Юрий Елыгин", description: "Профессиональная видеосъёмка в Нижнем Новгороде: рекламные ролики, съёмка мероприятий, Reels, монтаж и цветокоррекция. Работаю с брендами и бизнесом. Смета после брифа.", canonical: "/" } };
   return { path, kind: "unknown", seo: { title: "YELYGINN", description: "Операторская работа, монтаж, цвет и live production.", canonical: path } };
 }
+
+export const resolveV3Route = (rawPath: string, rawSearch = ""): V3RouteResolution => withCopy(resolveV3RouteRaw(rawPath, rawSearch));

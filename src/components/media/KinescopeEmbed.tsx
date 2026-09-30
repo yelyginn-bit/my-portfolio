@@ -27,7 +27,7 @@ export interface KinescopeEmbedProps {
   /** Осмысленная подпись ролика — видна на заглушке и уходит в aria-label и iframe title. */
   title: string;
   /** Кадр видео на заглушке до активации. Без него заглушка — просто иконка + подпись. */
-  poster?: { src: string; srcSet?: string; sizes?: string };
+  poster?: { src: string; srcSet?: string; sizes?: string; alt?: string };
 }
 
 export function KinescopeEmbed({ id, orientation, title, poster }: KinescopeEmbedProps) {
@@ -65,7 +65,7 @@ export function KinescopeEmbed({ id, orientation, title, poster }: KinescopeEmbe
           onClick={() => setActive(true)}
           aria-label={`Воспроизвести видео: ${title}`}
         >
-          {poster && <img className="kinescope-embed-poster" src={poster.src} srcSet={poster.srcSet} sizes={poster.sizes} alt="" loading="lazy" decoding="async" />}
+          {poster && <img className="kinescope-embed-poster" src={poster.src} srcSet={poster.srcSet} sizes={poster.sizes} alt={poster.alt ?? ""} loading="lazy" decoding="async" />}
           {poster && <span className="kinescope-embed-scrim" aria-hidden="true" />}
           <span className="kinescope-embed-play" aria-hidden="true"><Play size={22} fill="currentColor" /></span>
           <span className="kinescope-embed-label">{title}</span>

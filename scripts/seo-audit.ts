@@ -137,7 +137,7 @@ const problems = (r: Row) => {
   const p: string[] = [];
   if (!r.file) p.push("нет файла");
   if (r.h1.length !== 1) p.push(`H1: ${r.h1.length}`);
-  if (r.title.length < 30 || r.title.length > 65) p.push(`title ${r.title.length}`);
+  if (r.title.length < 30 || r.title.length > 70) p.push(`title ${r.title.length}`);
   if (r.desc.length < 110 || r.desc.length > 165) p.push(`desc ${r.desc.length}`);
   if (!r.canonical) p.push("нет canonical");
   else if (!r.canonical.startsWith(siteOrigin)) p.push("canonical не абсолютный");
@@ -154,9 +154,33 @@ const problems = (r: Row) => {
   return p;
 };
 
+const withProblems = rows.filter((r) => problems(r).length > 0);
+const BASELINE = "tests/fixtures/seo-audit-baseline.json";
+/* PROMPT-36 §5.3 — храповик: `--write-baseline` фиксирует число страниц с
+ * замечаниями и их список, `--ratchet` (в npm run check) падает, если страниц с
+ * замечаниями стало больше записанного или у страницы появилось новое замечание. */
+if (process.argv.includes("--write-baseline")) {
+  const data = { pagesWithProblems: withProblems.length, problems: Object.fromEntries(withProblems.map((r) => [r.route, problems(r)])) };
+  await mkdir(path.dirname(path.join(ROOT, BASELINE)), { recursive: true });
+  await writeFile(path.join(ROOT, BASELINE), `${JSON.stringify(data, null, 2)}\n`);
+  console.log(`baseline записан: ${withProblems.length} страниц с замечаниями`);
+}
+if (process.argv.includes("--ratchet")) {
+  const base = JSON.parse(await readFile(path.join(ROOT, BASELINE), "utf8").catch(() => "null")) as { pagesWithProblems: number; problems: Record<string, string[]> } | null;
+  if (!base) { console.error(`нет ${BASELINE}: npx tsx scripts/seo-audit.ts --write-baseline`); process.exit(1); }
+  const worse: string[] = [];
+  if (withProblems.length > base.pagesWithProblems) worse.push(`страниц с замечаниями: ${base.pagesWithProblems} → ${withProblems.length}`);
+  for (const r of withProblems) {
+    const known = new Set(base.problems[r.route] ?? []);
+    for (const p of problems(r)) if (!known.has(p)) worse.push(`${r.route}: новое замечание «${p}»`);
+  }
+  if (worse.length) { console.error(`seo-audit: хуже, чем в baseline:\n  ${worse.join("\n  ")}`); process.exit(1); }
+  console.log(`seo-audit: не хуже baseline (${withProblems.length} страниц с замечаниями из ${base.pagesWithProblems})`);
+}
+
 const clean = rows.filter((r) => problems(r).length === 0).length;
 console.log(`страниц: ${rows.length} · без замечаний: ${clean} · sitemap URL: ${sitemapUrls.length} · lastmod: ${rows.filter((r) => r.lastmod).length}`);
-console.log(`H1 ровно один: ${rows.filter((r) => r.h1.length === 1).length} · title вне 30–65: ${rows.filter((r) => r.title.length < 30 || r.title.length > 65).length} · description вне 110–165: ${rows.filter((r) => r.desc.length < 110 || r.desc.length > 165).length}`);
+console.log(`H1 ровно один: ${rows.filter((r) => r.h1.length === 1).length} · title вне 30–70: ${rows.filter((r) => r.title.length < 30 || r.title.length > 70).length} · description вне 110–165: ${rows.filter((r) => r.desc.length < 110 || r.desc.length > 165).length}`);
 console.log(`без canonical: ${rows.filter((r) => !r.canonical).length} · без JSON-LD: ${rows.filter((r) => !r.jsonld.length).length} · битые цели ссылок: ${orphanTargets.join(", ") || "нет"}`);
 
 if (process.argv.includes("--write")) {

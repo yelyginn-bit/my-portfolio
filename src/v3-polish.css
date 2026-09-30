@@ -574,7 +574,7 @@
 .v3-about > .v3-about__lead { display: grid; gap: 1.25rem; align-content: start; }
 .v3-about > .v3-about__lead > p { margin: 0; }
 .v3-about__roles { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 0; padding: 0; list-style: none; }
-.v3-about__roles li { padding: .5rem .95rem; color: color-mix(in srgb, var(--ds-on-dark) 82%, transparent); border: 1px solid color-mix(in srgb, var(--ds-on-dark) 28%, transparent); border-radius: 999px; font: 650 .72rem/1.2 var(--ds-font-mono); letter-spacing: .03em; text-transform: uppercase; }
+.v3-about__roles li { padding: .5rem .95rem; color: color-mix(in srgb, var(--ds-on-dark) 82%, transparent); border: 1px solid color-mix(in srgb, var(--ds-on-dark) 28%, transparent); border-radius: var(--ds-radius-pill); font: 650 .72rem/1.2 var(--ds-font-mono); letter-spacing: .03em; text-transform: uppercase; }
 .v3-about > .v3-about__text { align-content: start; }
 @media (max-width: 899px) { .v3-about { grid-template-columns: minmax(0, 1fr); } .v3-about > .v3-about__text { grid-column: 1; } }
 
@@ -582,9 +582,9 @@
    border-bottom), отступы секций — одна шкала; контакты — ОДНА поверхность с концентрическими радиусами:
    внешняя 28 = внутренняя 20 + поле 8 (13–19px запрещены). */
 .v32-home .v3-about { border-radius: 0; padding-bottom: clamp(2.5rem, 5vw, 4.5rem); }
-.v3-contact--unified { padding: 8px; border-radius: 28px; }
+.v3-contact--unified { padding: 8px; border-radius: var(--ds-radius-frame); }
 .v32-home .v3-contact--unified { margin-top: clamp(3rem, 6vw, 6rem); }
-.v3-contact--unified .v3-contact__intro, .v3-contact--unified .v3-form { border-radius: 20px; }
+.v3-contact--unified .v3-contact__intro, .v3-contact--unified .v3-form { border-radius: var(--ds-radius-inner); }
 .v3-about > .v3-about__lead { color: var(--ds-on-dark); }
 .v32-home .v3-about > .v3-about__lead, .v32-home .v3-about > .v3-about__lead h2 { color: var(--ds-on-dark); }
 .v32-home .v3-about > .v3-about__lead h2 i { color: var(--ds-orange); }

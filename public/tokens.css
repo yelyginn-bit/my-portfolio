@@ -45,6 +45,9 @@
   --ds-radius-sm: 3px;
   --ds-radius: 6px;
   --ds-radius-card: 12px; /* PROMPT-37: карточки-ссылки и плашки (структура 0–12px по брендбуку) */
+  --ds-radius-frame: 28px; /* PROMPT-37: внешняя рамка = внутренний радиус 20 + поле 8 */
+  --ds-radius-inner: 20px;
+  --ds-radius-pill: 999px;
   /* ── Брендбук (PROMPT-30): стекло, свечение, оболочки — IMPLEMENTATION MAP
      докс/brandbook/README.md, раздел «В коде». Диапазоны из style-spec-v2.json
      взяты серединой: glass fill .52–.58 → .55, border .60–.75 → .68 (светлое);

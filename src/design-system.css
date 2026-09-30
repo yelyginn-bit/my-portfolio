@@ -490,10 +490,17 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-nav > a:hover, .v3-nav > a:focus-visible { background: #fff; }
 .v3-nav__brand { padding: 0 !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; font-size: 1rem !important; font-weight: 900 !important; }.v3-nav__cta { justify-content: space-between !important; padding-inline: 1.25rem !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; border-right: 0 !important; }
 .v3-nav__menu { display: none; border: 0; background: var(--ds-orange); border-radius: 12px; }
-.v3-mobile-menu { position: fixed; z-index: calc(var(--ds-header-z) - 1); inset: 82px 8px auto; padding: 12px; border: 1px solid var(--ds-border-strong); border-radius: 20px; background: rgba(11,11,11,.97); color: #fff; box-shadow: 0 24px 90px rgba(0,0,0,.35); }
-.v3-mobile-menu a { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-on-dark) 12%, transparent); font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; }
-.v3-mobile-menu a span { color: var(--ds-orange); font-size: .65rem; }
-.v3-mobile-menu__contacts { display: flex; gap: 1.5rem; margin-top: 1rem; padding: 0 1rem; color: var(--ds-orange); font: 650 .8rem/1.2 var(--ds-font-mono); text-transform: uppercase; }.v3-hero__copy h1 i, .v3-section-head h2 i, .v3-capability h2 i, .v3-broadcast h2 i { font-family: var(--ds-font-display); font-weight: 400; letter-spacing: -.06em; }
+/* Меню — ОДИН компонент на весь сайт: светлая панель в обеих темах, поэтому и
+   панель, и чернила берутся из непереворачиваемых токенов, и цвет панели
+   непрозрачный. Раньше базовый фон был rgba(11,11,11,.97) с белым текстом
+   (наследие тёмной шапки), а мобильное переопределение красило только <a>:
+   всё остальное наследовало белый и на светлой панели становилось невидимым.
+   Теперь наследуемое значение само по себе INK — пропуск своего правила не
+   может больше дать белый на светлом. */
+.v3-mobile-menu { position: fixed; z-index: calc(var(--ds-header-z) - 1); inset: 82px 8px auto; padding: 12px; border: 1px solid var(--ds-scrim); border-radius: 20px; background: var(--ds-on-dark); color: var(--ds-scrim); box-shadow: 0 24px 90px rgba(0,0,0,.35); }
+.v3-mobile-menu a { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-scrim) 12%, transparent); color: var(--ds-scrim); font: 650 1rem/1.2 var(--ds-font-mono); text-transform: uppercase; }
+.v3-mobile-menu a span { color: color-mix(in srgb, var(--ds-scrim) 55%, transparent); font-size: .65rem; }
+.v3-mobile-menu__contacts { display: flex; gap: 1.5rem; margin-top: 1rem; padding: 0 1rem; color: var(--ds-scrim); font: 650 .8rem/1.2 var(--ds-font-mono); text-transform: uppercase; }.v3-hero__copy h1 i, .v3-section-head h2 i, .v3-capability h2 i, .v3-broadcast h2 i { font-family: var(--ds-font-display); font-weight: 400; letter-spacing: -.06em; }
 .v3-hero__copy > p:not(.v3-kicker) { max-width: 35rem; margin: 0 0 1.6rem; color: var(--ds-text-secondary); font-size: clamp(1rem, 1.35vw, 1.24rem); line-height: 1.5; }.v3-marquee { overflow: hidden; border-block: 1px solid var(--ds-text); background: var(--ds-orange); }
 .v3-marquee > div { width: max-content; display: flex; animation: v3-marquee 32s linear infinite; }
 .v3-marquee span { display: inline-flex; align-items: center; gap: 2rem; padding: .95rem 1rem; color: var(--ds-text); font: 800 clamp(.85rem, 1.4vw, 1.2rem)/1 var(--ds-font-display); letter-spacing: -.02em; }
@@ -898,8 +905,8 @@ body.v3-menu-open { overflow: hidden; }
   .v3-nav__links { display: none; }
   .v3-nav__cta { font-size: .5rem; }
   .v3-nav__menu { width: 54px; min-height: 54px; display: inline-grid; place-items: center; border: 0; border-left: 1px solid color-mix(in srgb, var(--ds-scrim) 17%, transparent); color: #0a0a0a; background: transparent; }
-  .v3-mobile-menu { position: fixed; z-index: 150; top: 76px; right: 10px; left: 10px; padding: 10px; border: 1px solid #0a0a0a; border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 98%, transparent); box-shadow: 0 18px 45px rgba(0,0,0,.18); }
-  .v3-mobile-menu a { display: flex; align-items: center; gap: 1rem; min-height: 52px; padding: 0 .75rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-scrim) 14%, transparent); color: #0a0a0a; font: 750 .67rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
+  .v3-mobile-menu { position: fixed; z-index: 150; top: 76px; right: 10px; left: 10px; padding: 10px; border: 1px solid var(--ds-scrim); border-radius: 20px; background: var(--ds-on-dark); box-shadow: 0 18px 45px rgba(0,0,0,.18); }
+  .v3-mobile-menu a { display: flex; align-items: center; gap: 1rem; min-height: 52px; padding: 0 .75rem; border-bottom: 1px solid color-mix(in srgb, var(--ds-scrim) 14%, transparent); color: var(--ds-scrim); font: 750 .67rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
   .v3-mobile-menu a:last-child { border-bottom: 0; }
   .v3-mobile-menu a span { color: color-mix(in srgb, var(--ds-scrim) 50%, transparent); }
   .v3-mobile-menu a svg { margin-left: auto; }
@@ -910,8 +917,14 @@ body.v3-menu-open { overflow: hidden; }
      переопределения (PROMPT-30 §9.1.2). */
   /* PROMPT-36c: с .v3-mobile-menu в селекторе — иначе базовое правило ниже по файлу
      (color:#fff, тот же вес) побеждало и «Услуги»/«Портфолио» были белыми на светлом, 1.13:1 */
-  .v3-mobile-menu .nav-dropdown-mobile-group summary { color: #0a0a0a; border-bottom-color: color-mix(in srgb, var(--ds-scrim) 14%, transparent); }
-  .v3-mobile-menu .nav-dropdown-mobile-group[open] summary { color: var(--ds-orange); }
+  .v3-mobile-menu .nav-dropdown-mobile-group summary { color: var(--ds-scrim); border-bottom-color: color-mix(in srgb, var(--ds-scrim) 14%, transparent); }
+  /* Открытая группа помечается ORANGE-маркером, а не оранжевым текстом: на
+     светлой панели текст в #FF6422 даёт 2.5 против порога 4.5 (QWEN-09 §1.3 —
+     «активный пункт отличается, но читается»). */
+  .v3-mobile-menu .nav-dropdown-mobile-group[open] summary { color: var(--ds-scrim); }
+  .v3-mobile-menu .nav-dropdown-mobile-group[open] summary::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: .55rem; border-radius: var(--ds-radius-sm); background: var(--ds-orange); }
+  /* Контакты в меню: INK + подчёркивание, ORANGE остаётся маркером, не чернилами. */
+  .v3-mobile-menu .v3-mobile-menu__contacts a { color: var(--ds-scrim); text-decoration: underline; text-underline-offset: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .v3-marquee__track { animation: none; }

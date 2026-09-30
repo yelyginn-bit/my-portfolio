@@ -564,3 +564,6 @@
 
 /* PROMPT-36b: H2 section на странице «Обо мне» — капсом. */
 .v3-about-page h2 { text-transform: uppercase; }
+
+/* PROMPT-36c: H1 «Обо мне» / блога — запятая в «ВИДЕООПЕРАТОР,» задевала следующую строку при 0.9 (кадр 390px). Как и у документов, здесь разрешено 1.0. */
+.v3-editorial-hero h1 { line-height: var(--ds-title-lh-doc); }

@@ -1544,3 +1544,6 @@ body[data-title="doc"] :is(header, main, footer) h2:not([class*="bb-"]) { text-t
 
 /* PROMPT-36c: H1 статьи блога (капс, line-height .9) вплотную к строке автора — воздух под заголовком. */
 body[data-title="doc"] :is(header, main) h1:not([class*="bb-"]) { margin-bottom: .4em !important; }
+
+/* PROMPT-36c: заголовок баннера cookie — компонент, а не H2 раздела: капс и трекинг H2 на него не распространяются. */
+.yel-cookie h2 { text-transform: none !important; letter-spacing: -.02em !important; line-height: 1.45 !important; }

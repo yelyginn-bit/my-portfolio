@@ -18,7 +18,7 @@ prerender, sitemap, llms.txt и H1-проверку сборки. Ссылка �
 
 ## Коммиты
 
-- Реализация и handoff: хэш будет вписан после создания коммита.
+- Реализация и handoff: `c362326` (`feat(site): add sites landing page`).
 
 ## Кадры
 

@@ -15,3 +15,4 @@
 - No writes to `Documents/New_claude/site/`; no server, form endpoint, deploy,
   or push changes.
 - Details: [`CODEX-YE-01-report.md`](./CODEX-YE-01-report.md).
+- Implementation commit: `c362326`.

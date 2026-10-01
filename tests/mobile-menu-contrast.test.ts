@@ -34,10 +34,12 @@ test("мобильное меню: весь текст читается на п�
   const { server, origin } = await startLocalServer();
   try {
     const page = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();
-    await page.goto(`${origin}/`, { waitUntil: "load" });
-    const rows = await page.evaluate(`(${PAGE_FN})()`) as Array<{ text: string; ratio: number }>;
-    assert.ok(rows.length >= 8, `в меню нашлось только ${rows.length} текстов — оно не открылось`);
-    const bad = rows.filter((r) => r.ratio < 4.5).map((r) => `«${r.text}» ${r.ratio}`);
-    assert.deepEqual(bad, [], `нечитаемый текст в мобильном меню: ${bad.join(", ")}`);
+    for (const route of ["/", "/sajty"]) {
+      await page.goto(`${origin}${route}`, { waitUntil: "load" });
+      const rows = await page.evaluate(`(${PAGE_FN})()`) as Array<{ text: string; ratio: number }>;
+      assert.ok(rows.length >= 8, `${route}: в меню нашлось только ${rows.length} текстов — оно не открылось`);
+      const bad = rows.filter((r) => r.ratio < 4.5).map((r) => `«${r.text}» ${r.ratio}`);
+      assert.deepEqual(bad, [], `${route}: нечитаемый текст в мобильном меню: ${bad.join(", ")}`);
+    }
   } finally { await browser.close(); server.close(); }
 });

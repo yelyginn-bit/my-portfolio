@@ -41,6 +41,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/reels", render: "static", indexable: true, priority: 0.9, theme: "dark" },
   { path: "/cvetokorrekciya", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/video-dlya-marketpleysov", render: "static", indexable: true, priority: 0.85, theme: "dark" },
+  { path: "/sajty", render: "static", indexable: true, priority: 0.85, theme: "dark" },
   { path: "/pryamye-translyacii", render: "static", indexable: true, priority: 0.9, theme: "dark" },
   { path: "/ceny", render: "static", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/photo", render: "static", indexable: true, priority: 0.75, theme: "dark" },

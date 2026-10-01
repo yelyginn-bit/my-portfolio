@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data.ts";
 
 /**
  * Достаёт числа похожие на цену (₽): группы цифр (пробел/nbsp — разделитель
@@ -36,4 +37,23 @@ export function checkJsonLdPrices(rootDir: string, htmlFiles: string[]): string[
     }
   }
   return problems;
+}
+
+const SAJTY_PRICE_REFERENCES = ["sajty-start", "sajty-pro", "sajty-premium", "sajty-support"] as const;
+
+/** Replace template references with the sole public-price source at build time. */
+export function renderSajtyPriceReferences(html: string): string {
+  let result = html;
+  for (const id of SAJTY_PRICE_REFERENCES) {
+    const marker = `<span data-price-reference="${id}"></span>`;
+    const occurrences = result.split(marker).length - 1;
+    if (occurrences !== 1) throw new Error(`sajty.html: expected one ${id} price reference, found ${occurrences}`);
+    const item = PUBLIC_PRICE_BY_ID[id];
+    if (!item || item.category !== "Сайты" || item.showOnCatalog !== false) {
+      throw new Error(`sajty.html: ${id} must exist in the hidden-from-catalog Сайты price data`);
+    }
+    result = result.replace(marker, item.price);
+  }
+  if (/data-price-reference=/u.test(result)) throw new Error("sajty.html: unknown public price reference");
+  return result;
 }

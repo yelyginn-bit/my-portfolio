@@ -1,6 +1,6 @@
 import type { EstimateData } from "./types";
 
-export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн" | "Цвет" | "Прямые трансляции";
+export type PublicPriceCategory = "Монтаж" | "Съёмка" | "Съёмка + монтаж" | "Регулярный контент" | "Фото" | "Маркетплейсы" | "Полный продакшн" | "Цвет" | "Прямые трансляции" | "Сайты";
 
 export type PublicPriceItem = {
   id: string;
@@ -14,6 +14,8 @@ export type PublicPriceItem = {
   href: string;
   portfolioHref: string;
   featured?: boolean;
+  /** Позиция показывается на своей посадочной, но не в общем `/ceny` (CODEX-YE-01). */
+  showOnCatalog?: boolean;
   /** Необязательная ссылка «пример работы» рядом с ценой — секция/страница
    * с доказательством услуги (PROMPT-22 §5). У остальных позиций не задана. */
   exampleHref?: string;
@@ -30,6 +32,10 @@ export const PUBLIC_PRICES: PublicPriceItem[] = [
   { id: "photo-product", category: "Фото", title: "Предметная съёмка", price: "от 1 500 ₽/кадр", description: "Каталожная или имиджевая. Чистый фон или композиция.", includes: ["Съёмка", "Обработка", "Ретушь"], limitations: "Минимальное количество кадров уточняется в брифе.", timeline: "Срок согласуется по объёму", href: "/photo", portfolioHref: "/portfolio/photo" },
   { id: "content-day", category: "Регулярный контент", title: "Контент-день", price: "от 60 000 ₽", description: "Фото и серия коротких роликов за одну подготовленную съёмку.", includes: ["Подготовка", "3–4 часа съёмки", "7 Reels и фото"], limitations: "Точный объём фиксируется в смете.", timeline: "Контент на несколько недель", href: "/content-day", portfolioHref: "/portfolio/reels", featured: true },
   { id: "marketplace", category: "Маркетплейсы", title: "Видео для маркетплейса", price: "от 35 000 ₽", description: "Съёмка и монтаж одного товара с демонстрацией особенностей.", includes: ["Подготовка", "Предметная съёмка", "Монтаж"], limitations: "Модель, реквизит, локация и сложная графика — отдельно.", timeline: "После согласования сценария", href: "/video-dlya-marketpleysov", portfolioHref: "/portfolio" },
+  { id: "sajty-start", category: "Сайты", title: "Сайт под ключ — Старт", price: "15 000 ₽", description: "Одностраничный сайт: работы, услуги, контакты. Шаблон в ваших цветах и шрифтах. Теги для Яндекса.", includes: ["Один круг правок"], limitations: "Фиксированная стоимость.", timeline: "Старт — 3–5 дней", href: "/sajty#zakaz", portfolioHref: "/sajty", showOnCatalog: false },
+  { id: "sajty-pro", category: "Сайты", title: "Сайт под ключ — Про", price: "35 000 ₽", description: "До пяти страниц, анимации, галереи и видео, форма заявок в Telegram, Яндекс Метрика.", includes: ["Два круга правок"], limitations: "Половина после согласования концепта.", timeline: "Старт — 3–5 дней", href: "/sajty#zakaz", portfolioHref: "/sajty", showOnCatalog: false },
+  { id: "sajty-premium", category: "Сайты", title: "Сайт под ключ — Премиум", price: "от 80 000 ₽", description: "Индивидуальный дизайн с эффектами, от десяти страниц, блог и кейсы, настройка под поиск Яндекса.", includes: ["Три круга правок"], limitations: "Половина после согласования концепта.", timeline: "Срок согласуется по брифу", href: "/sajty#zakaz", portfolioHref: "/sajty", showOnCatalog: false },
+  { id: "sajty-support", category: "Сайты", title: "Поддержка сайта", price: "от 2 000 ₽ в месяц", description: "Хостинг, домен и мелкие правки после запуска.", includes: ["Ежемесячное сопровождение"], limitations: "Объём крупных работ согласуется отдельно.", timeline: "Ежемесячно", href: "/sajty#zakaz", portfolioHref: "/sajty", showOnCatalog: false },
   { id: "field-video", category: "Съёмка", title: "Оператор + техника", price: "от 35 000 ₽", description: "Выездная смена с комплектом камеры, света и звука.", includes: ["Оператор", "Камера", "Базовый свет и звук"], limitations: "Логистика и дополнительная техника считаются отдельно. Результат — смонтированное видео после съёмки, не прямой эфир. Трансляции считаются отдельно.", timeline: "Одна съёмочная дата", href: "/calculator", portfolioHref: "/portfolio" },
   { id: "color-grading", category: "Цвет", title: "Цветокоррекция в DaVinci Resolve", price: "от 5 000 ₽", description: "Отдельная удалённая услуга: присылаете исходники — возвращаю грейд.", includes: ["Разбор материала", "Первичная коррекция", "Финальный грейд"], limitations: "Реставрация брака съёмки и пересъёмка не входят.", timeline: "Обычно 3–7 рабочих дней", href: "/cvetokorrekciya", portfolioHref: "/portfolio/color", featured: true },
   { id: "advertising", category: "Полный продакшн", title: "Рекламный ролик", price: "от 70 000 ₽", description: "Проект от концепции и подготовки до финального мастера.", includes: ["Препродакшн", "Съёмка", "Постпродакшн"], limitations: "Команда, площадка и техника зависят от задачи.", timeline: "После брифа и плана производства", href: "/reklamnye-roliki", portfolioHref: "/portfolio", featured: true },

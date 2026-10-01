@@ -127,7 +127,7 @@ export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] 
   },
   {
     title: "Услуги",
-    links: SERVICE_LINKS,
+    links: [...SERVICE_LINKS, link("/sajty", "Сайты под ключ")],
   },
   {
     title: "Блог",

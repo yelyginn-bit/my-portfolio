@@ -5,14 +5,14 @@
  * пишется, чтобы не разъехаться с сайтом. Только факты, которые уже есть на
  * сайте: без ИП (статус — самозанятый), без выдуманных цифр.
  */
-import { PUBLIC_PRICES } from "../src/lib/pricing.data.ts";
+import { PUBLIC_PRICES, PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data.ts";
 import { SITE } from "../src/config/site.ts";
 import { SOCIALS } from "../src/config/socials.ts";
 import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 import { CATEGORY_SEO, PAGE_SEO, seoCopyFor } from "../src/public/seoCopy.ts";
 import { siteOrigin } from "./sitemap.ts";
 
-const LANDINGS = ["/reklamnye-roliki", "/event-video", "/reels", "/video-dlya-marketpleysov", "/pryamye-translyacii", "/content-day", "/cvetokorrekciya", "/photo"];
+const LANDINGS = ["/reklamnye-roliki", "/event-video", "/reels", "/video-dlya-marketpleysov", "/pryamye-translyacii", "/content-day", "/cvetokorrekciya", "/photo", "/sajty"];
 const link = (route: string, label?: string) => `- [${label ?? seoCopyFor(route)?.title.replace(/\s*\|.*$/u, "") ?? route}](${siteOrigin}${route}): ${seoCopyFor(route)?.description ?? ""}`.replace(/: $/u, "");
 
 export function llmsTxt(): string {
@@ -23,6 +23,7 @@ export function llmsTxt(): string {
   lines.push(`> ${SITE.owner} — видеограф и видеооператор из Нижнего Новгорода, самозанятый (плательщик налога на профессиональный доход). Съёмка, монтаж, цветокоррекция, Reels, съёмка мероприятий, прямые трансляции, фото. Сайт: ${siteOrigin}.`, "");
   lines.push("## Услуги и цены", "");
   for (const item of PUBLIC_PRICES) lines.push(`- ${item.title} — ${item.price} (${siteOrigin}${item.href})`);
+  lines.push(`- Сайты под ключ — от ${PUBLIC_PRICE_BY_ID["sajty-start"].price} (${siteOrigin}/sajty)`);
   lines.push("", "Цены ориентировочные; точная стоимость фиксируется в смете после брифа. Актуальный список: " + `${siteOrigin}/ceny`, "");
   lines.push("## Страницы услуг", "");
   for (const route of LANDINGS.filter(has)) lines.push(link(route));

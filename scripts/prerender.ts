@@ -19,7 +19,9 @@ import {
 import { seoCopyFor } from "../src/public/seoCopy";
 import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
-import { checkJsonLdPrices } from "./priceGuard";
+import { checkJsonLdPrices, renderSajtyPriceReferences } from "./priceGuard";
+import KinescopeEmbed from "../src/components/media/KinescopeEmbed";
+import { renderSajtyCases } from "../src/public/sajtyCases";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
@@ -35,6 +37,7 @@ const HAND_WRITTEN_JSONLD_PAGES = [
   "photo.html",
   "event-video.html",
   "video-dlya-marketpleysov.html",
+  "sajty.html",
   "reklamnye-roliki.html",
   "reels.html",
   "cvetokorrekciya.html",
@@ -190,7 +193,26 @@ async function main() {
     const html = await readFile(file, "utf8").catch(() => null);
     if (html === null) throw new Error(`Нет собранного html для статического маршрута ${route.path}: ${file}`);
     if (!seoCopyFor(route.path)) throw new Error(`Нет SEO-текстов для ${route.path} в src/public/seoCopy.ts`);
-    await writeFile(file, applySeoFor(html, route.path));
+    let outputHtml = applySeoFor(html, route.path);
+    if (route.path === "/sajty") {
+      outputHtml = renderSajtyPriceReferences(outputHtml);
+      const playerMarkup = renderToString(createElement(KinescopeEmbed, {
+        id: "rTz2wthYwLPnnMbHzM2SjS",
+        orientation: "16:9",
+        title: "Видео для сети «Метро» — 10 коктейльных рецептов",
+      }));
+      const playerSlot = '<div id="metro-player"></div>';
+      if (outputHtml.split(playerSlot).length - 1 !== 1) throw new Error("sajty.html: expected one Kinescope player slot");
+      outputHtml = outputHtml.replace(playerSlot, `<div id="metro-player">${playerMarkup}</div>`);
+      const casesSlot = '<div data-sajty-cases></div>';
+      if (outputHtml.split(casesSlot).length - 1 !== 1) throw new Error("sajty.html: expected one website-cases slot");
+      outputHtml = outputHtml.replace(casesSlot, renderSajtyCases());
+      const prerenderedOutput = outputFileFor(route.path);
+      await mkdir(path.dirname(prerenderedOutput), { recursive: true });
+      await writeFile(prerenderedOutput, outputHtml);
+      generated.push(route.path);
+    }
+    await writeFile(file, outputHtml);
   }
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));

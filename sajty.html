@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Разработка сайтов под ключ в Нижнем Новгороде | YELYGINN</title>
+    <meta name="description" content="Сайты для фотографов, видеографов, кафе и малого бизнеса. Концепт в день заявки, сайт от 3–5 дней. Фото и видео для сайта снимаю сам." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <link rel="canonical" href="https://yelyginn.ru/sajty" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yelyginn.ru/sajty" />
+    <meta property="og:title" content="Разработка сайтов под ключ в Нижнем Новгороде | YELYGINN" />
+    <meta property="og:description" content="Сайты для фотографов, видеографов, кафе и малого бизнеса. Концепт в день заявки, сайт от 3–5 дней. Фото и видео для сайта снимаю сам." />
+    <meta property="og:locale" content="ru_RU" />
+    <link rel="stylesheet" href="/tokens.css" />
+    <link rel="stylesheet" href="/bb-components.css" />
+    <link rel="stylesheet" href="/site-skin.css" />
+    <link rel="stylesheet" href="/src/design-system.css" />
+    <link rel="stylesheet" href="/src/v3-polish.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body { background: var(--ds-bg); color: var(--ds-text); font-family: var(--ds-font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      #page-sajty main { min-width: 0; }
+      #page-sajty .sajty-shell { width: min(1120px, 100% - 40px); margin-inline: auto; }
+      #page-sajty .sajty-hero { padding-block: clamp(3rem, 9vw, 8rem) clamp(2.5rem, 6vw, 5rem); }
+      #page-sajty .sajty-hero h1 { max-width: 12ch; margin: .5rem 0 1.5rem; }
+      #page-sajty .sajty-hero__lead { max-width: 62ch; color: var(--ds-text-secondary); font-size: clamp(1.1rem, 2vw, 1.35rem); }
+      #page-sajty .sajty-section { padding-block: clamp(2.5rem, 6vw, 5rem); }
+      #page-sajty .sajty-section + .sajty-section { border-top: var(--ds-stroke) solid var(--ds-border); }
+      #page-sajty .sajty-section h2 { margin: 0 0 1.5rem; }
+      #page-sajty .sajty-section__intro { max-width: 62ch; margin: 0 0 2rem; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-prices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
+      #page-sajty .sajty-price { min-width: 0; }
+      #page-sajty .sajty-price__name { margin: 0; font: 500 .72rem/1.3 var(--ds-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-price__value { display: block; margin: .75rem 0 1rem; font: 700 clamp(1.55rem, 2.5vw, 2.25rem)/1.1 var(--ds-font-display); }
+      #page-sajty .sajty-price__description { color: var(--ds-text-secondary); }
+      #page-sajty .sajty-price__revisions { margin-top: 1.25rem; color: var(--ds-text); }
+      #page-sajty .sajty-note { margin: 1.5rem 0 0; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-actions { margin-top: 1.5rem; }
+      #page-sajty .sajty-offers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ds-grid-gap); }
+      #page-sajty .bb-link-card { min-width: 0; }
+      #page-sajty .sajty-offer__body { display: block; margin-top: .5rem; color: var(--ds-text-secondary); font-size: .9rem; }
+      #page-sajty .sajty-work { display: grid; gap: var(--ds-grid-gap); align-items: start; }
+      #page-sajty .sajty-work__mark { display: grid; place-items: center; aspect-ratio: 16 / 9; background: var(--ds-surface); color: var(--ds-text-secondary); font: 700 clamp(1rem, 2.6vw, 2rem)/1 var(--ds-font-display); letter-spacing: .04em; }
+      #page-sajty .sajty-work__copy { display: grid; gap: .75rem; align-content: start; }
+      #page-sajty .sajty-work__copy h3 { margin: 0; font: 700 1.15rem/1.2 var(--ds-font-display); text-transform: uppercase; }
+      #page-sajty .sajty-work__copy p { margin: 0; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-cafe { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: var(--ds-grid-gap); align-items: start; }
+      #page-sajty .sajty-cafe p { margin: 0; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--ds-grid-gap); }
+      #page-sajty .sajty-faq .bb-step { align-items: start; }
+      #page-sajty .sajty-order { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: center; }
+      #page-sajty .sajty-order p { max-width: 58ch; margin: 0; color: var(--ds-text-secondary); }
+      #page-sajty .sajty-order .bb-btn { white-space: normal; }
+      @media (max-width: 760px) {
+        #page-sajty .sajty-shell { width: min(100% - 32px, 1120px); }
+        #page-sajty .sajty-prices { grid-template-columns: minmax(0, 1fr); }
+        #page-sajty .sajty-offers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        #page-sajty .sajty-work, #page-sajty .sajty-cafe, #page-sajty .sajty-faq, #page-sajty .sajty-order { grid-template-columns: minmax(0, 1fr); }
+        #page-sajty .sajty-order { align-items: start; }
+      }
+    </style>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+        {"@type":"Question","name":"Смогу ли я править сайт сам?","acceptedAnswer":{"@type":"Answer","text":"Мелкие правки делаю по подписке. Если нужно править самим — добавлю простую панель для текстов и фото, это обсуждается отдельно."}},
+        {"@type":"Question","name":"Кому принадлежит сайт?","acceptedAnswer":{"@type":"Answer","text":"Вам. Код и домен передаю после полной оплаты."}},
+        {"@type":"Question","name":"Вы делаете сайты с ИИ?","acceptedAnswer":{"@type":"Answer","text":"Да. Поэтому быстро и дешевле студии. Дизайн, проверку и ответственность за результат беру на себя."}},
+        {"@type":"Question","name":"Сколько правок входит?","acceptedAnswer":{"@type":"Answer","text":"От одного до трёх кругов, зависит от тарифа. Дальше — почасово."}},
+        {"@type":"Question","name":"Нужна ли предоплата?","acceptedAnswer":{"@type":"Answer","text":"За Старт — оплата сразу. За Про и Премиум — половина после того, как концепт понравился."}}
+      ]}
+    </script>
+  </head>
+  <body id="page-sajty">
+    <header></header>
+    <main>
+      <section class="sajty-shell sajty-hero" aria-labelledby="sajty-title">
+        <p class="bb-kicker">Нижний Новгород / Сайты под ключ</p>
+        <h1 id="sajty-title" class="bb-display">САЙТЫ ПОД КЛЮЧ</h1>
+        <p class="sajty-hero__lead">Для тех, кто показывает свою работу: фотографов, видеографов, кафе и малого бизнеса. Сначала вы видите концепт своего сайта — потом решаете.</p>
+        <div class="bb-hero__ctas sajty-actions">
+          <a href="#zakaz" class="bb-btn">Заказать сайт</a>
+          <a href="#tarify" class="bb-btn bb-btn--secondary">Тарифы</a>
+        </div>
+      </section>
+
+      <section class="sajty-section" aria-labelledby="sajty-steps-title">
+        <div class="sajty-shell">
+          <p class="bb-kicker">01 / Процесс</p>
+          <h2 id="sajty-steps-title" class="bb-display">Как это работает</h2>
+          <ol class="bb-steps">
+            <li class="bb-step"><span class="bb-step__num">01</span><div><h3 class="bb-step__title">Бриф</h3><p class="bb-step__body">Восемь вопросов, ссылки на ваши работы и пара сайтов, которые нравятся.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">02</span><div><h3 class="bb-step__title">Концепт главной страницы</h3><p class="bb-step__body">В день заявки.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">03</span><div><h3 class="bb-step__title">Правки и оплата</h3><p class="bb-step__body">После того, как концепт понравился.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">04</span><div><h3 class="bb-step__title">Сайт на вашем домене</h3><p class="bb-step__body">Старт — за 3–5 дней.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="tarify" class="sajty-section" aria-labelledby="sajty-tariffs-title">
+        <div class="sajty-shell">
+          <p class="bb-kicker">02 / Стоимость</p>
+          <h2 id="sajty-tariffs-title" class="bb-display">Тарифы</h2>
+          <div class="sajty-prices">
+            <article class="bb-meta-panel sajty-price"><p class="sajty-price__name">Старт</p><strong class="sajty-price__value"><span data-price-reference="sajty-start"></span></strong><p class="sajty-price__description">Одностраничный сайт: работы, услуги, контакты. Шаблон в ваших цветах и шрифтах. Теги для Яндекса.</p><p class="sajty-price__revisions">Один круг правок.</p></article>
+            <article class="bb-meta-panel sajty-price"><p class="sajty-price__name">Про</p><strong class="sajty-price__value"><span data-price-reference="sajty-pro"></span></strong><p class="sajty-price__description">До пяти страниц, анимации, галереи и видео, форма заявок в Telegram, Яндекс Метрика.</p><p class="sajty-price__revisions">Два круга правок.</p></article>
+            <article class="bb-meta-panel sajty-price"><p class="sajty-price__name">Премиум</p><strong class="sajty-price__value"><span data-price-reference="sajty-premium"></span></strong><p class="sajty-price__description">Индивидуальный дизайн с эффектами, от десяти страниц, блог и кейсы, настройка под поиск Яндекса.</p><p class="sajty-price__revisions">Три круга правок.</p></article>
+          </div>
+          <p class="sajty-note">Поддержка после запуска — хостинг, домен и мелкие правки — <span data-price-reference="sajty-support"></span></p>
+          <p class="sajty-note">Старт оплачивается сразу. Про и Премиум — половина после того, как концепт понравился.</p>
+        </div>
+      </section>
+
+      <section class="sajty-section" aria-labelledby="sajty-production-title">
+        <div class="sajty-shell">
+          <p class="bb-kicker">03 / Один подрядчик</p>
+          <h2 id="sajty-production-title" class="bb-display">Сайт и съёмка — у одного человека</h2>
+          <p class="sajty-section__intro">Я видеограф и фотограф. Фото и видео для сайта снимаю сам — не нужно искать второго подрядчика.</p>
+          <div class="bb-link-grid sajty-offers">
+            <a class="bb-link-card" href="#zakaz"><span class="bb-link-card__kicker">01 / Услуга</span><span class="bb-link-card__title">Сайт</span><span class="sajty-offer__body">Под ключ, от концепта до домена.</span></a>
+            <a class="bb-link-card" href="#zakaz"><span class="bb-link-card__kicker">02 / Услуга</span><span class="bb-link-card__title">Видео</span><span class="sajty-offer__body">Ролик на первый экран, видео блюд и напитков, товар в движении.</span></a>
+            <a class="bb-link-card" href="#zakaz"><span class="bb-link-card__kicker">03 / Услуга</span><span class="bb-link-card__title">Фото</span><span class="sajty-offer__body">Предметная съёмка, блюда и напитки, команда и интерьер.</span></a>
+            <a class="bb-link-card" href="#zakaz"><span class="bb-link-card__kicker">04 / Услуга</span><span class="bb-link-card__title">Сопровождение</span><span class="sajty-offer__body">Каждый месяц обновляю сайт и снимаю новый контент.</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="sajty-section" aria-labelledby="sajty-work-title">
+        <div class="sajty-shell">
+          <p class="bb-kicker">04 / Подтверждение</p>
+          <h2 id="sajty-work-title" class="bb-display">Работы</h2>
+          <div class="bb-work-grid bb-work-grid--2 sajty-work">
+            <a class="bb-project-card" href="/">
+              <div class="sajty-work__mark" aria-hidden="true">YELYGINN</div>
+              <div class="bb-project-card__meta"><h3 class="bb-project-card__title">Этот сайт</h3><p class="bb-project-card__role">yelyginn.ru собран с помощью ИИ: тёмная тема, страницы отдаются поисковику готовым HTML, заявки приходят в Telegram.</p></div>
+              <span class="bb-project-card__arrow" aria-hidden="true">↗</span>
+            </a>
+            <article class="bb-case-hero sajty-work__copy">
+              <p class="bb-kicker">Видео / Сеть «Метро»</p>
+              <h3>Видео для сети «Метро»</h3>
+              <p>10 коктейльных рецептов: монтаж, цвет, звук, инфографика, версии для горизонтального и вертикального экрана.</p>
+              <div id="metro-player"></div>
+            </article>
+          </div>
+          <div data-sajty-cases></div>
+        </div>
+      </section>
+
+      <section class="sajty-section" aria-labelledby="sajty-cafe-title">
+        <div class="sajty-shell sajty-cafe">
+          <div><p class="bb-kicker">05 / Для общепита</p><h2 id="sajty-cafe-title" class="bb-display">Кафе без сайта</h2></div>
+          <p>Сфотографирую ваше бумажное меню — и соберу сайт-меню: разделы, цены, часы работы, адрес и кнопка заказа. QR-коды на столы — по желанию.</p>
+        </div>
+      </section>
+
+      <section class="sajty-section" aria-labelledby="sajty-faq-title">
+        <div class="sajty-shell">
+          <p class="bb-kicker">06 / Ответы</p>
+          <h2 id="sajty-faq-title" class="bb-display">Вопросы</h2>
+          <ol class="bb-steps sajty-faq">
+            <li class="bb-step"><span class="bb-step__num">01</span><div><h3 class="bb-step__title">Смогу ли я править сайт сам?</h3><p class="bb-step__body">Мелкие правки делаю по подписке. Если нужно править самим — добавлю простую панель для текстов и фото, это обсуждается отдельно.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">02</span><div><h3 class="bb-step__title">Кому принадлежит сайт?</h3><p class="bb-step__body">Вам. Код и домен передаю после полной оплаты.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">03</span><div><h3 class="bb-step__title">Вы делаете сайты с ИИ?</h3><p class="bb-step__body">Да. Поэтому быстро и дешевле студии. Дизайн, проверку и ответственность за результат беру на себя.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">04</span><div><h3 class="bb-step__title">Сколько правок входит?</h3><p class="bb-step__body">От одного до трёх кругов, зависит от тарифа. Дальше — почасово.</p></div></li>
+            <li class="bb-step"><span class="bb-step__num">05</span><div><h3 class="bb-step__title">Нужна ли предоплата?</h3><p class="bb-step__body">За Старт — оплата сразу. За Про и Премиум — половина после того, как концепт понравился.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="zakaz" class="sajty-section" aria-labelledby="sajty-order-title">
+        <div class="sajty-shell sajty-order">
+          <div><p class="bb-kicker">07 / Следующий шаг</p><h2 id="sajty-order-title" class="bb-display">Заказать</h2><p>Напишите, чем занимаетесь и какой сайт нужен — пришлю пример под вашу нишу.</p></div>
+          <a class="bb-btn" href="https://t.me/YuriElygin">Написать в Telegram</a>
+        </div>
+      </section>
+    </main>
+    <footer></footer>
+    <script type="module" src="/src/public/sajty-player.tsx"></script>
+  </body>
+</html>

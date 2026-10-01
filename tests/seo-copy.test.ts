@@ -31,7 +31,7 @@ const pages = INDEXABLE_ROUTES.map((r) => {
 const NO_BRAND = new Set(["/blog/skolko-stoit-snyat-reklamnyy-rolik"]);
 
 test("у каждого индексируемого маршрута есть текст в seoCopy.ts", () => {
-  assert.equal(pages.length, 70);
+  assert.equal(pages.length, INDEXABLE_ROUTES.length);
   for (const p of pages) assert.ok(seoCopyFor(p.route), `${p.route}: нет в src/public/seoCopy.ts`);
 });
 

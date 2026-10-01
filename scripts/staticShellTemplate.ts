@@ -75,6 +75,7 @@ export const STATIC_SHELL_FILES: readonly string[] = [
   "reklamnye-roliki.html",
   "pryamye-translyacii.html",
   "video-dlya-marketpleysov.html",
+  "sajty.html",
   "blog/kak-snimat-reels-dlya-biznesa.html",
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html",
   "blog/video-dlya-kartochek-wildberries.html",

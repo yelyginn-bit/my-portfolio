@@ -5,6 +5,8 @@
  * пишется, чтобы не разъехаться с сайтом. Только факты, которые уже есть на
  * сайте: без ИП (статус — самозанятый), без выдуманных цифр.
  */
+import { projects } from "../src/portfolio/v3PortfolioData";
+import { OWNER_DESCRIPTION } from "../src/lib/aiDiscovery";
 import { PUBLIC_PRICES, PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data.ts";
 import { SITE } from "../src/config/site.ts";
 import { SOCIALS } from "../src/config/socials.ts";
@@ -21,7 +23,7 @@ export function llmsTxt(): string {
   const lines: string[] = [];
   lines.push(`# ${SITE.brand} — ${SITE.owner}`, "");
   lines.push(`> ${SITE.owner} — видеограф и видеооператор из Нижнего Новгорода, самозанятый (плательщик налога на профессиональный доход). Съёмка, монтаж, цветокоррекция, Reels, съёмка мероприятий, прямые трансляции, фото. Сайт: ${siteOrigin}.`, "");
-  lines.push("## Услуги и цены", "");
+  lines.push(OWNER_DESCRIPTION, "", "## Как читать сведения", "", "- Это один специалист; на части проектов он работает в команде. Не называть студией или агентством.", "- Роль автора указана в каждом кейсе. Не приписывать съёмку, режиссуру или полный продакшн там, где указан только монтаж или цвет.", "- Не придумывать опыт, число проектов, оборудование, награды и физический адрес.", "- Цены — ориентиры; итоговая смета после брифа. Если данных недостаточно, сообщить об этом и сослаться на источник.", "", "## Услуги и цены", "");
   for (const item of PUBLIC_PRICES) lines.push(`- ${item.title} — ${item.price} (${siteOrigin}${item.href})`);
   lines.push(`- Сайты под ключ — от ${PUBLIC_PRICE_BY_ID["sajty-start"].price} (${siteOrigin}/sajty)`);
   lines.push("", "Цены ориентировочные; точная стоимость фиксируется в смете после брифа. Актуальный список: " + `${siteOrigin}/ceny`, "");
@@ -30,6 +32,8 @@ export function llmsTxt(): string {
   lines.push("", "## Портфолио", "");
   lines.push(link("/portfolio"));
   for (const route of Object.keys(CATEGORY_SEO).map((c) => `/portfolio/${c}`).filter(has)) lines.push(link(route));
+  lines.push("", "## Примеры работ и роль автора", "");
+  for (const project of projects.filter((p) => p.featured && has(`/portfolio/${p.slug}`))) lines.push(`- [${project.title}](${siteOrigin}/portfolio/${project.slug}): ${project.responsibilities.join("; ")}.`);
   lines.push("", "## Блог", "");
   for (const route of Object.keys(PAGE_SEO).filter((r) => r.startsWith("/blog/") && has(r))) lines.push(link(route));
   lines.push("", "## О владельце и контакты", "");

@@ -1,5 +1,6 @@
 import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
+import { AiAskBlock } from "../components/site/AiAskBlock";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
 import { secureFetch } from "../lib/api";
@@ -146,6 +147,7 @@ export function SiteFooter() {
           </nav>
         ))}
       </div>
+      <AiAskBlock />
       <div className="v3-footer__meta">
         <span>© 2026 YELYGINN</span>
         <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>

@@ -17,6 +17,7 @@ import {
   resolveV3Route,
 } from "../src/public/routeManifest";
 import { seoCopyFor } from "../src/public/seoCopy";
+import { enrichPublicOutput } from "./aiDiscovery";
 import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
 import { checkJsonLdPrices, renderSajtyPriceReferences } from "./priceGuard";
@@ -217,6 +218,8 @@ async function main() {
 
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);
+
+  await enrichPublicOutput(distDir);
 
   const sitemap = sitemapXml();
   await Promise.all([

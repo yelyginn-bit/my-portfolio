@@ -1,3 +1,6 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AiAskBlock } from "../src/components/site/AiAskBlock";
 // Достройка навигации для 11 статических страниц (7 услуг + 4 статьи блога).
 //
 // Важная поправка к первоначальному плану: аудит фазы 4 заявлял, что у этих
@@ -160,6 +163,7 @@ export function renderV3Footer(active: V3ChromeActive = {}): string {
         </svg>
       </div>
       <div class="v3-footer__groups">${groups}</div>
+      ${renderToStaticMarkup(createElement(AiAskBlock))}
       <div class="v3-footer__meta">
         <span>© 2026 YELYGINN</span>
         <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>

@@ -87,7 +87,7 @@ for (const route of INDEXABLE_ROUTES) {
     inbound: 0, ip: null, bytes: 0,
   };
   if (!file) { rows.push(row); continue; }
-  const html = await readFile(file, "utf8");
+  const html = (await readFile(file, "utf8")).replace(/<!--[\s\S]*?-->/gu, "");
   row.bytes = html.length;
   row.lang = /<html\b[^>]*\blang="([^"]*)"/iu.exec(html)?.[1] ?? null;
   row.dataTheme = /<html\b[^>]*\bdata-theme="([^"]*)"/iu.exec(html)?.[1] ?? null;
@@ -110,7 +110,7 @@ for (const route of INDEXABLE_ROUTES) {
   row.imgs = imgs.length;
   row.imgNoAlt = imgs.filter((t) => !/\balt=/iu.test(t)).length;
   row.imgEmptyAlt = imgs.filter((t) => /\balt=""/u.test(t)).length;
-  row.imgNoDims = imgs.filter((t) => !/\bwidth=/iu.test(t) || !/\bheight=/iu.test(t)).length;
+  row.imgNoDims = imgs.filter((t) => /\bsrc="[^"]+"/iu.test(t) && (!/\bwidth=/iu.test(t) || !/\bheight=/iu.test(t))).length;
   row.imgNoLoading = imgs.filter((t) => !/\bloading=/iu.test(t)).length;
   const plain = textOf(html);
   const ipHit = /(?:^|[^А-Яа-яЁё])(ИП)\s+[А-ЯЁ]/u.exec(plain);

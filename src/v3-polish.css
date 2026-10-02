@@ -718,3 +718,18 @@ body.v3-menu-open .yel-cookie, body:has(.v3-mobile-menu:not([hidden])) .yel-cook
 @media (min-width: 768px) { .v3-blog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 @media (max-width: 359px) { .portfolio-posters > div { grid-template-columns: minmax(0, 1fr); } }
+
+/* Общий блок вопросов о владельце: React и статические страницы. */
+.v3-ai-ask { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px; margin-top: 40px; padding-block: 24px; border-top: 1px solid var(--ds-surface); }
+.v3-ai-ask h2 { margin: 0 0 8px; font: 700 20px/1.2 var(--ds-font-display); color: var(--ds-text); }
+.v3-ai-ask p, .v3-ai-ask label, .v3-ai-ask [data-ai-status] { font: 400 14px/1.5 var(--ds-font-body); color: var(--ds-fog); }
+.v3-ai-ask__actions nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.v3-ai-ask__actions nav a, .v3-ai-ask button { min-height: 44px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ds-fog); border-radius: var(--ds-radius); background: transparent; color: var(--ds-text); font: 500 14px/1.4 var(--ds-font-body); text-decoration: none; cursor: pointer; }
+.v3-ai-ask__actions nav a:hover, .v3-ai-ask button:hover { border-color: var(--ds-orange); color: var(--ds-orange); }
+.v3-ai-ask :is(a, button, summary, textarea):focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 3px; }
+.v3-ai-ask details { margin-top: 12px; }
+.v3-ai-ask summary { min-height: 44px; padding-block: 10px; color: var(--ds-fog); font: 400 14px/1.5 var(--ds-font-body); cursor: pointer; }
+.v3-ai-ask label { display: block; }
+.v3-ai-ask textarea { box-sizing: border-box; display: block; width: 100%; max-width: 100%; margin-block: 12px; padding: 12px; resize: vertical; background: var(--ds-surface); color: var(--ds-text); border: 1px solid var(--ds-fog); border-radius: var(--ds-radius); font: 400 14px/1.5 var(--ds-font-body); }
+.v3-ai-ask [data-ai-status] { display: block; margin-top: 8px; }
+@media (max-width: 767px) { .v3-ai-ask { grid-template-columns: minmax(0, 1fr); gap: 12px; } }

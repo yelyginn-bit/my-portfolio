@@ -104,6 +104,7 @@ const sharedHeadAssets = (metrikaId: string, gaId: string) => ({
       { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Юрий Елыгин — оператор, монтаж, цвет и live production' }, injectTo: 'head' },
       { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://yelyginn.ru/og-cover.jpg' }, injectTo: 'head' },
       { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true }, injectTo: 'body' },
+      { tag: 'script', attrs: { src: '/ai-ask.js', defer: true }, injectTo: 'body' },
     ];
     // PROMPT-29 фаза 5: тёмные страницы несут собственный
     // <meta name="theme-color" content="#0A0A0A"> в исходнике (пилот —

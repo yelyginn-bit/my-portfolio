@@ -1,0 +1,1756 @@
+[
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 640,
+    "route": "/portfolio/cartier-product-video",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 552
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 640,
+    "route": "/portfolio/jetlag-showreel",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 552
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 640,
+    "height": 360,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 269
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 640,
+    "height": 360,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 269
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 640,
+    "height": 360,
+    "route": "/portfolio/post",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      },
+      {
+        "text": "SBER.Архитектура. Тизер",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 269
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 640,
+    "height": 360,
+    "route": "/portfolio/showreel-presentation",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 640,
+    "height": 360,
+    "route": "/portfolio/chistotop-awards",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 720,
+    "route": "/portfolio/sber-arhitektura-teaser",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 632
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 720,
+    "route": "/account",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 632
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 720,
+    "height": 360,
+    "route": "/portfolio/yango-arabic-15",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 740,
+    "route": "/portfolio/sber-arhitektura",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 652
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 740,
+    "height": 360,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 740,
+    "height": 360,
+    "route": "/portfolio/cartier-product-video",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 780,
+    "route": "/privacy-policy",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 692
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/interviews",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/broadcast",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/zhenshchiny-sibura-teaser",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/yango-campaign",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/osnova-report-reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 780,
+    "height": 360,
+    "route": "/portfolio/chistotop-awards",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 360,
+    "height": 800,
+    "route": "/account",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 712
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 800,
+    "height": 360,
+    "route": "/blog/video-dlya-kartochek-wildberries",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 800,
+    "height": 360,
+    "route": "/blog/videosemka-meropriyatiy-nn",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 272
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 832,
+    "height": 384,
+    "route": "/portfolio/osnova-report-reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 296
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 1005,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 914
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 1005,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 914
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 1005,
+    "route": "/portfolio/post",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      },
+      {
+        "text": "SBER.Архитектура. Тизер",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 914
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 834,
+    "height": 1210,
+    "route": "/blog",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 1122
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 834,
+    "height": 1210,
+    "route": "/portfolio/skrf-hockey",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 1122
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 1032,
+    "height": 1376,
+    "route": "/portfolio/caprigo-obuchenie",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1899,
+      "clientHeight": 1288
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 375,
+    "height": 667,
+    "route": "/portfolio/barier-instrukcii",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 579
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 375,
+    "height": 667,
+    "route": "/portfolio/gorky-v-teni-voyny",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 579
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 667,
+    "height": 375,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 284
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 667,
+    "height": 375,
+    "route": "/portfolio/post",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 284
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 414,
+    "height": 736,
+    "route": "/cookie-policy",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 648
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 800,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 709
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 800,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 709
+    }
+  },
+  {
+    "engine": "chromium",
+    "width": 600,
+    "height": 800,
+    "route": "/portfolio/post",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      },
+      {
+        "text": "SBER.Архитектура. Тизер",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 709
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 640,
+    "height": 360,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 269
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 640,
+    "height": 360,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 269
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "height": 780,
+    "route": "/video-dlya-marketpleysov",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/oesfViYTJW9KWuKo4rpFxq.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 692
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "height": 780,
+    "route": "/cvetokorrekciya",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 692
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "height": 780,
+    "route": "/calculator",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 692
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 600,
+    "height": 1005,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 914
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 600,
+    "height": 1005,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 914
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 800,
+    "height": 1280,
+    "route": "/event-video",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/cA7pGxKbCP8XFNYUjNSbpr.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1192
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 800,
+    "height": 1280,
+    "route": "/photo",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/portfolio-photos/anastasia-box-08.webp",
+        "distortion": 0.00010742712046481807,
+        "sourceMismatch": 0.0007372654155495182
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1192
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 800,
+    "height": 1333,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 960,
+    "height": 1536,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 876,
+    "height": 1400,
+    "route": "/calculator",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 924,
+    "height": 1480,
+    "route": "/event-video",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/cA7pGxKbCP8XFNYUjNSbpr.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 924,
+    "height": 1480,
+    "route": "/calculator",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 924,
+    "height": 1480,
+    "route": "/account",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 900,
+    "height": 1440,
+    "route": "/reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0.00002441465856091914,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1224
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1024,
+    "height": 768,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 680
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1024,
+    "height": 768,
+    "route": "/pryamye-translyacii",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/portfolio-photos/broadcast-01.webp",
+        "distortion": 0,
+        "sourceMismatch": 0.00006627243066887334
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 680
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1080,
+    "height": 810,
+    "route": "/reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0.00002441465856091914,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 722
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1080,
+    "height": 810,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 722
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1080,
+    "height": 810,
+    "route": "/photo",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/portfolio-photos/anastasia-box-08.webp",
+        "distortion": 0.00010742712046481807,
+        "sourceMismatch": 0.0007372654155495182
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 722
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1080,
+    "height": 810,
+    "route": "/account",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 722
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 820,
+    "height": 1180,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1092
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 820,
+    "height": 1180,
+    "route": "/blog",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 1092
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "height": 820,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 732
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1180,
+    "height": 820,
+    "route": "/blog",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1899,
+      "clientHeight": 732
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1112,
+    "height": 834,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 746
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 834,
+    "height": 1194,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1106
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1194,
+    "height": 834,
+    "route": "/reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0.00002441465856091914,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 746
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1194,
+    "height": 834,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 746
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1194,
+    "height": 834,
+    "route": "/blog",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1899,
+      "clientHeight": 746
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 744,
+    "height": 1133,
+    "route": "/about",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1897,
+      "clientHeight": 1045
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 1133,
+    "height": 744,
+    "route": "/blog",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1899,
+      "clientHeight": 656
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 834,
+    "height": 1210,
+    "route": "/content-day",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      },
+      {
+        "src": "/portfolio-photos/anastasia-box-08-480w.webp",
+        "distortion": 0,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 1122
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 667,
+    "height": 375,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 284
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 390,
+    "height": 844,
+    "route": "/reels",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [
+      {
+        "src": "/v3-assets/posters/0e6mxyEoYRosiGzuBzBdwb.webp",
+        "distortion": 0.00002441465856091914,
+        "sourceMismatch": 0
+      }
+    ],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 756
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 932,
+    "height": 430,
+    "route": "/account",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": false,
+      "scrollHeight": 1224,
+      "clientHeight": 342
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 600,
+    "height": 800,
+    "route": "/",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "SBER.Архитектура",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 709
+    }
+  },
+  {
+    "engine": "webkit",
+    "width": 600,
+    "height": 800,
+    "route": "/portfolio",
+    "overflow": 0,
+    "navFits": true,
+    "minNavFont": 12,
+    "footerMatches": true,
+    "outside": [
+      {
+        "text": "БАРЬЕР. Видеоинструкции",
+        "class": ""
+      }
+    ],
+    "media": [],
+    "menu": {
+      "fits": true,
+      "overflow": 0,
+      "cookieHidden": true,
+      "scrollHeight": 1897,
+      "clientHeight": 709
+    }
+  }
+]

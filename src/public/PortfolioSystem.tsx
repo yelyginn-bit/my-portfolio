@@ -177,7 +177,7 @@ export function ModularMosaic({ projects, allProjects }: { projects: Project[]; 
             <ProjectImage project={project} alt={`Кадр из проекта «${project.title}»`} sizes={index === 0 ? "(max-width: 700px) 94vw, 58vw" : "(max-width: 700px) 94vw, 38vw"} />
             <div>
               <span>{projectNumber(allProjects, project)}</span>
-              <h3>{project.title}</h3>
+              <h3 style={{ "--title-em": longestWordEm(project.title, -0.04) } as CSSProperties}>{project.title}</h3>
               {project.description && <p>{truncateAtWord(project.description)}</p>}
               <small>{projectRoles(project)}</small>
             </div>

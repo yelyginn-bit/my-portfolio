@@ -1,0 +1,706 @@
+{
+  "unit": "CSS px",
+  "status": "recommended tests, not all audited",
+  "profiles": [
+    {
+      "width": 360,
+      "height": 640,
+      "orientation": "portrait",
+      "example": "Компактный 16:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 640,
+      "height": 360,
+      "orientation": "landscape",
+      "example": "Компактный 16:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 360,
+      "height": 720,
+      "orientation": "portrait",
+      "example": "Экран 18:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 720,
+      "height": 360,
+      "orientation": "landscape",
+      "example": "Экран 18:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "orientation": "portrait",
+      "example": "Экран 18.5:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 740,
+      "height": 360,
+      "orientation": "landscape",
+      "example": "Экран 18.5:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 360,
+      "height": 780,
+      "orientation": "portrait",
+      "example": "Экран 19.5:9 / узкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 780,
+      "height": 360,
+      "orientation": "landscape",
+      "example": "Экран 19.5:9 / узкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 360,
+      "height": 800,
+      "orientation": "portrait",
+      "example": "Экран 20:9 / узкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 800,
+      "height": 360,
+      "orientation": "landscape",
+      "example": "Экран 20:9 / узкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 384,
+      "height": 832,
+      "orientation": "portrait",
+      "example": "Экран 19.5:9 / средний",
+      "kind": "recommended"
+    },
+    {
+      "width": 832,
+      "height": 384,
+      "orientation": "landscape",
+      "example": "Экран 19.5:9 / средний",
+      "kind": "recommended"
+    },
+    {
+      "width": 393,
+      "height": 873,
+      "orientation": "portrait",
+      "example": "Экран 20:9 / средний",
+      "kind": "recommended"
+    },
+    {
+      "width": 873,
+      "height": 393,
+      "orientation": "landscape",
+      "example": "Экран 20:9 / средний",
+      "kind": "recommended"
+    },
+    {
+      "width": 412,
+      "height": 892,
+      "orientation": "portrait",
+      "example": "Экран 19.5:9 / широкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 892,
+      "height": 412,
+      "orientation": "landscape",
+      "example": "Экран 19.5:9 / широкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 412,
+      "height": 915,
+      "orientation": "portrait",
+      "example": "Экран 20:9 / широкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 915,
+      "height": 412,
+      "orientation": "landscape",
+      "example": "Экран 20:9 / широкий",
+      "kind": "recommended"
+    },
+    {
+      "width": 432,
+      "height": 960,
+      "orientation": "portrait",
+      "example": "Крупный 20:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 960,
+      "height": 432,
+      "orientation": "landscape",
+      "example": "Крупный 20:9",
+      "kind": "recommended"
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "orientation": "landscape",
+      "example": "Ноутбук HD",
+      "kind": "recommended"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "orientation": "landscape",
+      "example": "Монитор 16:10 WXGA+",
+      "kind": "recommended"
+    },
+    {
+      "width": 1536,
+      "height": 864,
+      "orientation": "landscape",
+      "example": "Full HD с масштабом 125%",
+      "kind": "recommended"
+    },
+    {
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "example": "Ноутбук HD+",
+      "kind": "recommended"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "example": "Full HD с масштабом 100%",
+      "kind": "recommended"
+    },
+    {
+      "width": 1920,
+      "height": 1200,
+      "orientation": "landscape",
+      "example": "Монитор WUXGA",
+      "kind": "recommended"
+    },
+    {
+      "width": 2048,
+      "height": 1152,
+      "orientation": "landscape",
+      "example": "QHD с масштабом 125%",
+      "kind": "recommended"
+    },
+    {
+      "width": 1707,
+      "height": 1067,
+      "orientation": "landscape",
+      "example": "Ноутбук WQXGA",
+      "kind": "recommended"
+    },
+    {
+      "width": 3440,
+      "height": 1440,
+      "orientation": "landscape",
+      "example": "Ultrawide UWQHD",
+      "kind": "recommended"
+    },
+    {
+      "width": 2560,
+      "height": 1440,
+      "orientation": "landscape",
+      "example": "4K с масштабом 150%",
+      "kind": "recommended"
+    },
+    {
+      "width": 600,
+      "height": 1005,
+      "orientation": "portrait",
+      "example": "Galaxy Tab A9",
+      "kind": "recommended"
+    },
+    {
+      "width": 1005,
+      "height": 600,
+      "orientation": "landscape",
+      "example": "Galaxy Tab A9",
+      "kind": "recommended"
+    },
+    {
+      "width": 800,
+      "height": 1280,
+      "orientation": "portrait",
+      "example": "Galaxy Tab A9+",
+      "kind": "recommended"
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "orientation": "landscape",
+      "example": "Galaxy Tab A9+",
+      "kind": "recommended"
+    },
+    {
+      "width": 800,
+      "height": 1333,
+      "orientation": "portrait",
+      "example": "Galaxy Tab A7 10.4",
+      "kind": "recommended"
+    },
+    {
+      "width": 1333,
+      "height": 800,
+      "orientation": "landscape",
+      "example": "Galaxy Tab A7 10.4",
+      "kind": "recommended"
+    },
+    {
+      "width": 960,
+      "height": 1536,
+      "orientation": "portrait",
+      "example": "Galaxy Tab S9 FE",
+      "kind": "recommended"
+    },
+    {
+      "width": 1536,
+      "height": 960,
+      "orientation": "landscape",
+      "example": "Galaxy Tab S9 FE",
+      "kind": "recommended"
+    },
+    {
+      "width": 876,
+      "height": 1400,
+      "orientation": "portrait",
+      "example": "Galaxy Tab S9+",
+      "kind": "recommended"
+    },
+    {
+      "width": 1400,
+      "height": 876,
+      "orientation": "landscape",
+      "example": "Galaxy Tab S9+",
+      "kind": "recommended"
+    },
+    {
+      "width": 924,
+      "height": 1480,
+      "orientation": "portrait",
+      "example": "Galaxy Tab S9 Ultra",
+      "kind": "recommended"
+    },
+    {
+      "width": 1480,
+      "height": 924,
+      "orientation": "landscape",
+      "example": "Galaxy Tab S9 Ultra",
+      "kind": "recommended"
+    },
+    {
+      "width": 900,
+      "height": 1440,
+      "orientation": "portrait",
+      "example": "Galaxy Tab S10 FE+",
+      "kind": "recommended"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "example": "iPad mini 5",
+      "kind": "recommended"
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "orientation": "landscape",
+      "example": "iPad mini 5",
+      "kind": "recommended"
+    },
+    {
+      "width": 810,
+      "height": 1080,
+      "orientation": "portrait",
+      "example": "iPad 9",
+      "kind": "recommended"
+    },
+    {
+      "width": 1080,
+      "height": 810,
+      "orientation": "landscape",
+      "example": "iPad 9",
+      "kind": "recommended"
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "orientation": "portrait",
+      "example": "iPad 10",
+      "kind": "recommended"
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "orientation": "landscape",
+      "example": "iPad 10",
+      "kind": "recommended"
+    },
+    {
+      "width": 834,
+      "height": 1112,
+      "orientation": "portrait",
+      "example": "iPad Pro 10.5",
+      "kind": "recommended"
+    },
+    {
+      "width": 1112,
+      "height": 834,
+      "orientation": "landscape",
+      "example": "iPad Pro 10.5",
+      "kind": "recommended"
+    },
+    {
+      "width": 834,
+      "height": 1194,
+      "orientation": "portrait",
+      "example": "iPad Pro 11 — M2",
+      "kind": "recommended"
+    },
+    {
+      "width": 1194,
+      "height": 834,
+      "orientation": "landscape",
+      "example": "iPad Pro 11 — M2",
+      "kind": "recommended"
+    },
+    {
+      "width": 744,
+      "height": 1133,
+      "orientation": "portrait",
+      "example": "iPad mini 6",
+      "kind": "recommended"
+    },
+    {
+      "width": 1133,
+      "height": 744,
+      "orientation": "landscape",
+      "example": "iPad mini 6",
+      "kind": "recommended"
+    },
+    {
+      "width": 1024,
+      "height": 1366,
+      "orientation": "portrait",
+      "example": "iPad Pro 12.9 — M1",
+      "kind": "recommended"
+    },
+    {
+      "width": 1366,
+      "height": 1024,
+      "orientation": "landscape",
+      "example": "iPad Pro 12.9 — M1",
+      "kind": "recommended"
+    },
+    {
+      "width": 834,
+      "height": 1210,
+      "orientation": "portrait",
+      "example": "iPad Pro 11 — M4",
+      "kind": "recommended"
+    },
+    {
+      "width": 1210,
+      "height": 834,
+      "orientation": "landscape",
+      "example": "iPad Pro 11 — M4",
+      "kind": "recommended"
+    },
+    {
+      "width": 1032,
+      "height": 1376,
+      "orientation": "portrait",
+      "example": "iPad Pro 13 — M4",
+      "kind": "recommended"
+    },
+    {
+      "width": 1376,
+      "height": 1032,
+      "orientation": "landscape",
+      "example": "iPad Pro 13 — M4",
+      "kind": "recommended"
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "orientation": "portrait",
+      "example": "iPhone SE 2/3",
+      "kind": "recommended"
+    },
+    {
+      "width": 667,
+      "height": 375,
+      "orientation": "landscape",
+      "example": "iPhone SE 2/3",
+      "kind": "recommended"
+    },
+    {
+      "width": 414,
+      "height": 736,
+      "orientation": "portrait",
+      "example": "iPhone 8 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 736,
+      "height": 414,
+      "orientation": "landscape",
+      "example": "iPhone 8 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "orientation": "portrait",
+      "example": "iPhone 13 mini",
+      "kind": "recommended"
+    },
+    {
+      "width": 812,
+      "height": 375,
+      "orientation": "landscape",
+      "example": "iPhone 13 mini",
+      "kind": "recommended"
+    },
+    {
+      "width": 414,
+      "height": 896,
+      "orientation": "portrait",
+      "example": "iPhone XR / 11",
+      "kind": "recommended"
+    },
+    {
+      "width": 896,
+      "height": 414,
+      "orientation": "landscape",
+      "example": "iPhone XR / 11",
+      "kind": "recommended"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "orientation": "portrait",
+      "example": "iPhone 13 / 14",
+      "kind": "recommended"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "orientation": "landscape",
+      "example": "iPhone 13 / 14",
+      "kind": "recommended"
+    },
+    {
+      "width": 428,
+      "height": 926,
+      "orientation": "portrait",
+      "example": "iPhone 13 Pro Max / 14 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 926,
+      "height": 428,
+      "orientation": "landscape",
+      "example": "iPhone 13 Pro Max / 14 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 393,
+      "height": 852,
+      "orientation": "portrait",
+      "example": "iPhone 15 / 16",
+      "kind": "recommended"
+    },
+    {
+      "width": 852,
+      "height": 393,
+      "orientation": "landscape",
+      "example": "iPhone 15 / 16",
+      "kind": "recommended"
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "orientation": "portrait",
+      "example": "iPhone 15 Pro Max / 16 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 932,
+      "height": 430,
+      "orientation": "landscape",
+      "example": "iPhone 15 Pro Max / 16 Plus",
+      "kind": "recommended"
+    },
+    {
+      "width": 402,
+      "height": 874,
+      "orientation": "portrait",
+      "example": "iPhone 16 Pro",
+      "kind": "recommended"
+    },
+    {
+      "width": 874,
+      "height": 402,
+      "orientation": "landscape",
+      "example": "iPhone 16 Pro",
+      "kind": "recommended"
+    },
+    {
+      "width": 440,
+      "height": 956,
+      "orientation": "portrait",
+      "example": "iPhone 16 Pro Max",
+      "kind": "recommended"
+    },
+    {
+      "width": 956,
+      "height": 440,
+      "orientation": "landscape",
+      "example": "iPhone 16 Pro Max",
+      "kind": "recommended"
+    },
+    {
+      "width": 1280,
+      "height": 832,
+      "orientation": "landscape",
+      "example": "MacBook Air 13 — M2",
+      "kind": "recommended"
+    },
+    {
+      "width": 1440,
+      "height": 932,
+      "orientation": "landscape",
+      "example": "MacBook Air 15 — M2",
+      "kind": "recommended"
+    },
+    {
+      "width": 1512,
+      "height": 982,
+      "orientation": "landscape",
+      "example": "MacBook Pro 14 — 2021",
+      "kind": "recommended"
+    },
+    {
+      "width": 1728,
+      "height": 1117,
+      "orientation": "landscape",
+      "example": "MacBook Pro 16 — 2021",
+      "kind": "recommended"
+    },
+    {
+      "width": 2240,
+      "height": 1260,
+      "orientation": "landscape",
+      "example": "iMac 24 — Retina 4.5K",
+      "kind": "recommended"
+    },
+    {
+      "width": 3008,
+      "height": 1692,
+      "orientation": "landscape",
+      "example": "Pro Display XDR",
+      "kind": "recommended"
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 767,
+      "height": 900,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 769,
+      "height": 900,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 1199,
+      "height": 900,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 1200,
+      "height": 900,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 1201,
+      "height": 900,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 1680,
+      "height": 1050,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 3840,
+      "height": 2160,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 1024,
+      "height": 500,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 800,
+      "height": 500,
+      "orientation": "landscape",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 600,
+      "height": 800,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    },
+    {
+      "width": 500,
+      "height": 800,
+      "orientation": "portrait",
+      "example": "Проверка границы/окна/высоты",
+      "kind": "extra"
+    }
+  ]
+}

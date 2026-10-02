@@ -1,0 +1,34 @@
+{
+  "base_commit": "55fb19d33448b7f01283ef4efead66923e0c58ee",
+  "check": "npm run check",
+  "check_exit_code": 0,
+  "tests": {
+    "unit": 28,
+    "integration": 5,
+    "portfolio_and_browser": 76,
+    "total": 109,
+    "skipped": 0
+  },
+  "largest_css_KiB": 104,
+  "largest_js_KiB": 208,
+  "files": {
+    "content-day.html": "6642e61dd671308d8c907ce20b53d12535f5f63a463a79d5abd10481341972fc",
+    "event-video.html": "e7f657d6fc7c0d979d1a6a54d88c29810f165b3a9eb2a21e796ac33852afcb99",
+    "package.json": "34eaa8604e202173674f6459936ff1c00d954b242db74bd0af4c961b984568e5",
+    "photo.html": "d2442d41e312e73c832664a8df068c415adbaadb65ce171b5a5b5400510f0942",
+    "pryamye-translyacii.html": "7a2095808d181fafaf67bf947f91b2ec3810c97367bc30207d75b97b3752d394",
+    "public/cookie-consent.js": "b50e0c3b16650fc31aa431fd6c04a1d0a8f1c91268a02f8372644591256079e3",
+    "public/site-skin.css": "b9660db0bde63e705c953cacc39c8cf7f2383d1e6e40299681946f04fd8610bd",
+    "public/v3-header-behavior.js": "c05f30c1b2341f3f407eaabcc7bee3f06bf68d3e98669c30a15accfc62856678",
+    "reels.html": "94747f358b7fa0ac6e80856885a554e9abb1dd0de0c44974cdc30f1f9fb89b2d",
+    "reklamnye-roliki.html": "3d1048afb4f5d32a09f568d05d914177afe35fa9c12bef5c9a4b157e4682093b",
+    "scripts/staticShellTemplate.ts": "df95c79eefb547aea01e609ccf38a8b8ea32c8909c2e9559482813e05a4dda6f",
+    "src/color/ColorGrading.tsx": "93ef2b8da8918aca3c31007eeb5f3e785a667d44f7851561b6bb80ebad07128f",
+    "src/design-system.css": "a7364f243a0f195109404127ea7da9b0486419ecd588daaa246b34d60edb9bb6",
+    "src/public/PortfolioSystem.tsx": "e0a4c57eea23753994889ee91c286b041812984c75e93ab2b3413078952d2742",
+    "src/public/V3App.tsx": "bd774a755da496080ae789e2ddddc19800a6dca21f78e95e8b8b05e7e093e0e2",
+    "src/v3-polish.css": "66089e5e0d10091dbf0efe9e5a1a0b14b79f1c1a052bbef388a1243ae25220ca",
+    "video-dlya-marketpleysov.html": "93cf39304066d81d7c627eebf2b56d5e842fd3f3d0088d60d59d3ca655e331d3",
+    "tests/handoff-navigation.test.ts": "b0859e6c3f7bb3f9b904d4064c4e75d8247afcdcd874785aba6a261142d3bbfd"
+  }
+}

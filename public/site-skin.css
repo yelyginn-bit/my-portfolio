@@ -41,7 +41,7 @@
    Атрибут data-title="doc" стоит на <body> статьи. */
 body[data-title="doc"] { --site-h1: var(--ds-title-doc); --site-h2: var(--ds-title-sub); }
 
-body.site-static { margin: 0; overflow-x: clip; background: var(--site-bg) !important; color: var(--site-text); }
+body.site-static { margin: 0; background: var(--site-bg) !important; color: var(--site-text); }
 body.site-menu-open { overflow: hidden; }
 /* PROMPT-31 §2.1 (найдено QWEN-03, night-log.md «Решить владельцу» п.8):
    этот безусловный `color: inherit` (0,1,1) перебивал `.bb-btn { color:

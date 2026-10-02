@@ -1,0 +1,11 @@
+{
+  "unique_combinations": 8900,
+  "chromium_routes": 72,
+  "webkit_routes": 17,
+  "unique_viewports": 100,
+  "geometry_issues_in_full_run": 0,
+  "initial_cookie_transition_readings": 807,
+  "final_rechecks": 996,
+  "final_findings": 0,
+  "scope": "Full geometry dataset plus final source rechecks of all cookie discrepancies and every homepage viewport in both engines. Untouched geometry rows retain full-run provenance. Not a physical-device certification."
+}

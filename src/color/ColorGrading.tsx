@@ -80,6 +80,7 @@ const PROCESS = [
 
 export default function ColorGrading() {
   const hasProof = COLOR_COMPARE_PAIRS.length > 0;
+  const heroPair = COLOR_COMPARE_PAIRS[0];
 
   return (
     <RoutePathContext.Provider value="/cvetokorrekciya">
@@ -87,7 +88,8 @@ export default function ColorGrading() {
 
       <main id="main">
         <Section className="color-hero">
-          <PageContainer>
+          <PageContainer className="color-hero-grid">
+            <div className="color-hero-copy">
             <p className="ds-eyebrow">Цветокоррекция</p>
             <h1>Цвет в DaVinci&nbsp;Resolve</h1>
             <p className="color-hero-lead">
@@ -100,6 +102,8 @@ export default function ColorGrading() {
                 Telegram <ArrowUpRight size={15} aria-hidden="true" />
               </a>
             </div>
+            </div>
+            {heroPair && <div className="color-hero-proof"><ColorCompare pair={heroPair} /></div>}
           </PageContainer>
         </Section>
 
@@ -117,7 +121,7 @@ export default function ColorGrading() {
                 intro="Один и тот же кадр, один кроп, одно разрешение. Слева — исходник с камеры."
               />
               {COLOR_COMPARE_GROUP_ORDER.map((group) => {
-                const pairsInGroup = COLOR_COMPARE_PAIRS.filter((pair) => pair.group === group);
+                const pairsInGroup = COLOR_COMPARE_PAIRS.filter((pair) => pair.group === group && pair.id !== heroPair?.id);
                 if (pairsInGroup.length === 0) return null;
                 return (
                   <div className="color-proof-group" key={group}>

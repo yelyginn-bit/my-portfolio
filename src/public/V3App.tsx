@@ -1,4 +1,4 @@
-import { createContext, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
@@ -52,9 +52,42 @@ const selectedWorkProjectIds = ["metro-concerts", "sibur-women", "scientists-nn"
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const path = useContext(RoutePathContext);
-  useEffect(() => {
-    document.body.classList.toggle("v3-menu-open", open);
-    return () => document.body.classList.remove("v3-menu-open");
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!open || !menuRef.current || !menuButtonRef.current) return;
+    const panel = menuRef.current;
+    const button = menuButtonRef.current;
+    const background = [...document.querySelectorAll<HTMLElement>("main, footer")].map((el) => ({ el, inert: el.inert }));
+    background.forEach(({ el }) => { el.inert = true; });
+    document.body.classList.add("v3-menu-open");
+    const close = () => { setOpen(false); button.focus(); };
+    const place = () => {
+      if (!button.getClientRects().length) { setOpen(false); return; }
+      panel.style.setProperty("--mobile-menu-top", `${button.getBoundingClientRect().bottom + 16}px`);
+    };
+    const focusables = () => [button, ...panel.querySelectorAll<HTMLElement>("a[href], summary, button")].filter((el) => el.getClientRects().length);
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); close(); }
+      if (event.key === "Tab") {
+        const items = focusables(), index = items.indexOf(document.activeElement as HTMLElement);
+        if (event.shiftKey && index <= 0) { event.preventDefault(); items.at(-1)?.focus(); }
+        else if (!event.shiftKey && (index === items.length - 1 || index < 0)) { event.preventDefault(); items[0]?.focus(); }
+      }
+    };
+    const outside = (event: PointerEvent) => { if (event.target instanceof Node && !panel.contains(event.target) && !button.contains(event.target)) close(); };
+    place();
+    panel.querySelector<HTMLElement>("a[href]")?.focus({ preventScroll: true });
+    document.addEventListener("keydown", keydown);
+    document.addEventListener("pointerdown", outside);
+    window.addEventListener("resize", place);
+    return () => {
+      document.body.classList.remove("v3-menu-open");
+      background.forEach(({ el, inert }) => { el.inert = inert; });
+      document.removeEventListener("keydown", keydown);
+      document.removeEventListener("pointerdown", outside);
+      window.removeEventListener("resize", place);
+    };
   }, [open]);
   return (
     <>
@@ -73,11 +106,11 @@ export function SiteHeader() {
           <a className="nav-calc-button" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
           <span className="v3-nav__status">CORE // READY</span>
           <a className="v3-nav__cta" href={CONTACT_LINK.href}><span className="v3-nav__cta-full">{CONTACT_LINK.label.toUpperCase()}</span><span className="v3-nav__cta-short">ОБСУДИТЬ</span><ArrowUpRight size={14} /></a>
-          <button className="v3-nav__menu" type="button" aria-expanded={open} aria-controls="v3-mobile-menu" aria-label={open ? "Закрыть меню" : "Открыть меню"} onClick={() => setOpen((value) => !value)}>{open ? <X /> : <Menu />}</button>
+          <button ref={menuButtonRef} className="v3-nav__menu" type="button" aria-expanded={open} aria-controls="v3-mobile-menu" aria-label={open ? "Закрыть меню" : "Открыть меню"} onClick={() => { setOpen(!open); if (open) menuButtonRef.current?.focus(); }}>{open ? <X /> : <Menu />}</button>
         </nav>
       </header>
       {open && (
-          <div id="v3-mobile-menu" className="v3-mobile-menu">
+          <div ref={menuRef} id="v3-mobile-menu" className="v3-mobile-menu" role="dialog" aria-modal="true" aria-label="Меню сайта">
             <a className="v3-mobile-menu__calc" href={CALCULATOR_LINK.href} onClick={() => setOpen(false)}>{CALCULATOR_LINK.label}</a>
             {PRIMARY_NAV.map((entry) => (
               <Fragment key={entry.label}>

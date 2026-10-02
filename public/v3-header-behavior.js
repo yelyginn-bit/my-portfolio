@@ -73,18 +73,46 @@
   const menuButton = nav.querySelector(".v3-nav__menu");
   const mobileMenu = document.getElementById("v3-mobile-menu");
   if (menuButton instanceof HTMLElement && mobileMenu instanceof HTMLElement) {
-    menuButton.addEventListener("click", () => {
-      const isOpen = menuButton.getAttribute("aria-expanded") === "true";
-      menuButton.setAttribute("aria-expanded", String(!isOpen));
-      menuButton.setAttribute("aria-label", isOpen ? "Открыть меню" : "Закрыть меню");
-      mobileMenu.hidden = isOpen;
-      document.body.classList.toggle("v3-menu-open", !isOpen);
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
+    let background = [];
+    const isOpen = () => menuButton.getAttribute("aria-expanded") === "true";
+    const close = (restoreFocus = true) => {
       menuButton.setAttribute("aria-expanded", "false");
+      menuButton.setAttribute("aria-label", "Открыть меню");
       mobileMenu.hidden = true;
       document.body.classList.remove("v3-menu-open");
+      background.forEach(({ el, inert }) => { el.inert = inert; });
+      background = [];
+      if (restoreFocus) menuButton.focus();
+    };
+    const place = () => {
+      if (!menuButton.getClientRects().length) { close(false); return; }
+      mobileMenu.style.setProperty("--mobile-menu-top", `${menuButton.getBoundingClientRect().bottom + 16}px`);
+    };
+    menuButton.addEventListener("click", () => {
+      if (isOpen()) { close(); return; }
+      menuButton.setAttribute("aria-expanded", "true");
+      menuButton.setAttribute("aria-label", "Закрыть меню");
+      mobileMenu.hidden = false;
+      document.body.classList.add("v3-menu-open");
+      background = [...document.querySelectorAll("main, footer")].map((el) => ({ el, inert: el.inert }));
+      background.forEach(({ el }) => { el.inert = true; });
+      place();
+      mobileMenu.querySelector("a[href]")?.focus({ preventScroll: true });
+    });
+    mobileMenu.addEventListener("click", (event) => { if (event.target.closest("a[href]")) close(false); });
+    document.addEventListener("pointerdown", (event) => {
+      if (isOpen() && !menuButton.contains(event.target) && !mobileMenu.contains(event.target)) close();
+    });
+    window.addEventListener("resize", () => { if (isOpen()) place(); });
+    document.addEventListener("keydown", (event) => {
+      if (!isOpen()) return;
+      if (event.key === "Escape") { event.preventDefault(); close(); }
+      if (event.key === "Tab") {
+        const items = [menuButton, ...mobileMenu.querySelectorAll("a[href], summary, button")].filter((el) => el.getClientRects().length);
+        const index = items.indexOf(document.activeElement);
+        if (event.shiftKey && index <= 0) { event.preventDefault(); items.at(-1)?.focus(); }
+        else if (!event.shiftKey && (index === items.length - 1 || index < 0)) { event.preventDefault(); items[0]?.focus(); }
+      }
     });
   }
 })();

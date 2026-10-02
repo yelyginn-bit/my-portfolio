@@ -119,7 +119,7 @@ function renderNavEntry(entry: (typeof PRIMARY_NAV)[number], active: V3ChromeAct
     return `<details class="nav-dropdown-mobile-group"><summary${activeHref ? ' aria-current="page"' : ""}>${escapeHtml(entry.label)}</summary>${overview}${items}</details>`;
   }
   const overview = entry.href ? `<a href="${entry.href}">${isServices ? "Всё" : "Всё портфолио"}</a>` : "";
-  return `<div class="nav-dropdown"><button type="button" aria-expanded="false"${activeHref ? ' data-active="true"' : ""}>${escapeHtml(entry.label)}</button><div class="nav-dropdown-menu">${overview}${items}</div></div>`;
+  return `<div class="nav-dropdown"><button type="button" aria-expanded="false" aria-controls="nav-${escapeHtml(entry.label)}"${activeHref ? ' data-active="true"' : ""}>${escapeHtml(entry.label)}</button><div id="nav-${escapeHtml(entry.label)}" class="nav-dropdown-menu">${overview}${items}</div></div>`;
 }
 
 export function renderV3Header(active: V3ChromeActive = {}): string {
@@ -135,7 +135,7 @@ export function renderV3Header(active: V3ChromeActive = {}): string {
         <button class="v3-nav__menu" type="button" aria-expanded="false" aria-controls="v3-mobile-menu" aria-label="Открыть меню"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button>
       </nav>
     </header>
-    <div id="v3-mobile-menu" class="v3-mobile-menu" hidden>
+    <div id="v3-mobile-menu" class="v3-mobile-menu" role="dialog" aria-modal="true" aria-label="Меню сайта" hidden>
       <a class="v3-mobile-menu__calc" href="${CALCULATOR_LINK.href}">${escapeHtml(CALCULATOR_LINK.label)}</a>
       ${mobileLinks}
       <a href="${CONTACT_LINK.href}">${escapeHtml(CONTACT_LINK.label)} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>

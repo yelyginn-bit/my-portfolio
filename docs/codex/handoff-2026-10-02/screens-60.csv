@@ -1,0 +1,61 @@
+﻿category,name,physical_width,physical_height,panel_ratio,panel_ratio_decimal,css_width,css_height,landscape_css_width,landscape_css_height,landscape_panel_ratio,note,source
+Android — телефоны,Компактный 16:9,720,1280,9:16,0.5625,360,640,640,360,16:9,Базовая проверка старых и компактных телефонов; иллюстративная панель 2×,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 18:9,1080,2160,1:2,0.5,360,720,720,360,2:1,Иллюстративная панель 3×,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 18.5:9,1440,2960,18:37,0.4865,360,740,740,360,37:18,Иллюстративная панель 4×,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 19.5:9 / узкий,1080,2340,6:13,0.4615,360,780,780,360,13:6,Иллюстративная панель 3×,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 20:9 / узкий,1080,2400,9:20,0.45,360,800,800,360,20:9,Распространённый CSS-профиль; панель приведена для примера,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 19.5:9 / средний,1080,2340,6:13,0.4615,384,832,832,384,13:6,"Выбранный CSS-профиль, отношение панели и CSS совпадает",https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 20:9 / средний,1080,2400,9:20,0.45,393,873,873,393,20:9,CSS округлён; плотность и настройки Android меняют размеры,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 19.5:9 / широкий,1440,3120,6:13,0.4615,412,892,892,412,13:6,Округлённый тестовый режим; не паспорт конкретного телефона,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Экран 20:9 / широкий,1440,3200,9:20,0.45,412,915,915,412,20:9,Округлённый тестовый режим; не паспорт конкретного телефона,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Android — телефоны,Крупный 20:9,1080,2400,9:20,0.45,432,960,960,432,20:9,Тестовый режим 2.5×; покрытие широких Android-телефонов,https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide
+Windows,Ноутбук HD,1366,768,683:384,1.7786,1366,768,,,,Тест при масштабе Windows 100%; реальная высота окна меньше экрана,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Монитор 16:10 WXGA+,1440,900,8:5,1.6,1440,900,,,,100%,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Full HD с масштабом 125%,1920,1080,16:9,1.7778,1536,864,,,,1920÷1.25; распространённый логический размер,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Ноутбук HD+,1600,900,16:9,1.7778,1600,900,,,,100%,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Full HD с масштабом 100%,1920,1080,16:9,1.7778,1920,1080,,,,100%,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Монитор WUXGA,1920,1200,8:5,1.6,1920,1200,,,,100%; 16:10,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,QHD с масштабом 125%,2560,1440,16:9,1.7778,2048,1152,,,,125%,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Ноутбук WQXGA,2560,1600,8:5,1.6,1707,1067,,,,150%; округлённый логический размер,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,Ultrawide UWQHD,3440,1440,43:18,2.3889,3440,1440,,,,"100%; часто продаётся как 21:9, точное отношение 43:18",https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Windows,4K с масштабом 150%,3840,2160,16:9,1.7778,2560,1440,,,,150%; дополнительно проверить 100% и 200%,https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
+Android — планшеты,Galaxy Tab A9,800,1340,40:67,0.597,600,1005,1005,600,67:40,Выбранная плотность 4/3; не гарантированный режим по умолчанию,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab A7 Lite,800,1340,40:67,0.597,600,1005,1005,600,67:40,"Та же геометрия, другой тип устройства; плотность 4/3",https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab A9+,1200,1920,5:8,0.625,800,1280,1280,800,8:5,Выбранный тестовый режим 1.5×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab A7 10.4,1200,2000,3:5,0.6,800,1333,1333,800,5:3,Выбранный режим 1.5×; округление высоты,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S6 Lite,1200,2000,3:5,0.6,800,1333,1333,800,5:3,Выбранный режим 1.5×; общий профиль с A7,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S9 FE,1440,2304,5:8,0.625,960,1536,1536,960,8:5,Выбранный тестовый режим 1.5×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S9,1600,2560,5:8,0.625,800,1280,1280,800,8:5,Выбранный тестовый режим 2×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S9+,1752,2800,219:350,0.6257,876,1400,1400,876,350:219,Выбранный тестовый режим 2×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S9 Ultra,1848,2960,231:370,0.6243,924,1480,1480,924,370:231,Выбранный тестовый режим 2×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+Android — планшеты,Galaxy Tab S10 FE+,1800,2880,5:8,0.625,900,1440,1440,900,8:5,Выбранный тестовый режим 2×,https://developer.samsung.com/galaxy-emulator-skin/galaxy-tab.html
+iPad,iPad mini 5,1536,2048,3:4,0.75,768,1024,1024,768,4:3,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111904
+iPad,iPad 9,1620,2160,3:4,0.75,810,1080,1080,810,4:3,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111898
+iPad,iPad 10,1640,2360,41:59,0.6949,820,1180,1180,820,59:41,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111840
+iPad,iPad Air 5,1640,2360,41:59,0.6949,820,1180,1180,820,59:41,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111887
+iPad,iPad Pro 10.5,1668,2224,3:4,0.75,834,1112,1112,834,4:3,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111927
+iPad,iPad Pro 11 — M2,1668,2388,139:199,0.6985,834,1194,1194,834,199:139,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111842
+iPad,iPad mini 6,1488,2266,744:1133,0.6567,744,1133,1133,744,1133:744,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111886
+iPad,iPad Pro 12.9 — M1,2048,2732,512:683,0.7496,1024,1366,1366,1024,683:512,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/111896
+iPad,iPad Pro 11 — M4,1668,2420,417:605,0.6893,834,1210,1210,834,605:417,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/119892
+iPad,iPad Pro 13 — M4,2064,2752,3:4,0.75,1032,1376,1376,1032,4:3,Логический полноэкранный профиль 2×; панели Safari и режим нескольких окон уменьшают область страницы,https://support.apple.com/en-us/119891
+iPhone,iPhone SE 2/3,750,1334,375:667,0.5622,375,667,667,375,667:375,Компактный 16:9; логический режим 2×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111882
+iPhone,iPhone 8 Plus,1080,1920,9:16,0.5625,414,736,736,414,16:9,Логический профиль 414×736; рендер 3× с последующим уменьшением до панели; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111950
+iPhone,iPhone 13 mini,1080,2340,6:13,0.4615,375,812,812,375,13:6,Логический профиль отличается от простого деления физической панели на 3; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111873
+iPhone,iPhone XR / 11,828,1792,207:448,0.4621,414,896,896,414,448:207,Логический режим 2×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111868
+iPhone,iPhone 13 / 14,1170,2532,195:422,0.4621,390,844,844,390,422:195,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111872
+iPhone,iPhone 13 Pro Max / 14 Plus,1284,2778,214:463,0.4622,428,926,926,428,463:214,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111870
+iPhone,iPhone 15 / 16,1179,2556,131:284,0.4613,393,852,852,393,284:131,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111831
+iPhone,iPhone 15 Pro Max / 16 Plus,1290,2796,215:466,0.4614,430,932,932,430,466:215,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/111828
+iPhone,iPhone 16 Pro,1206,2622,201:437,0.46,402,874,874,402,437:201,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/121031
+iPhone,iPhone 16 Pro Max,1320,2868,110:239,0.4603,440,956,956,440,239:110,Логический режим 3×; профиль до вычета панелей Safari и safe area,https://support.apple.com/en-us/121032
+Mac,MacBook Air 13 — M1,2560,1600,8:5,1.6,1280,800,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111883
+Mac,MacBook Air 13 — M2,2560,1664,20:13,1.5385,1280,832,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111867
+Mac,MacBook Air 15 — M2,2880,1864,360:233,1.5451,1440,932,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111346
+Mac,MacBook Pro 14 — 2021,3024,1964,756:491,1.5397,1512,982,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111902
+Mac,MacBook Pro 16 — 2021,3456,2234,1728:1117,1.547,1728,1117,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111901
+Mac,MacBook Pro 16 — Intel 2019,3072,1920,8:5,1.6,1536,960,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111932
+Mac,iMac 21.5 — Retina 4K,4096,2304,16:9,1.7778,2048,1152,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111963
+Mac,iMac 24 — Retina 4.5K,4480,2520,16:9,1.7778,2240,1260,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111895
+Mac,Studio Display / iMac 27 5K,5120,2880,16:9,1.7778,2560,1440,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111890
+Mac,Pro Display XDR,6016,3384,16:9,1.7778,3008,1692,,,,"Выбранный тестовый режим 2×; macOS может использовать другой scaled mode, это не обещание размера окна по умолчанию",https://support.apple.com/en-us/111892

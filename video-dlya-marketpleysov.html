@@ -187,7 +187,7 @@
         <button class="v3-nav__menu" type="button" aria-expanded="false" aria-controls="v3-mobile-menu" aria-label="Открыть меню"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button>
       </nav>
     </header>
-    <div id="v3-mobile-menu" class="v3-mobile-menu" hidden>
+    <div id="v3-mobile-menu" class="v3-mobile-menu" role="dialog" aria-modal="true" aria-label="Меню сайта" hidden>
       <a class="v3-mobile-menu__calc" href="/calculator">Рассчитать стоимость</a>
       <details class="nav-dropdown-mobile-group">
         <summary aria-current="page">Услуги</summary>
@@ -225,7 +225,7 @@
     </div>
 
     <main>
-      <section class="bb-hero wrap">
+      <section class="bb-hero wrap service-product-hero">
         <div class="bb-hero__copy">
           <p class="bb-kicker">Нижний Новгород / Видео для маркетплейсов</p>
           <h1 class="bb-display">Видео для <em>маркетплейсов</em></h1>
@@ -237,8 +237,9 @@
             <a href="/portfolio" class="bb-btn bb-btn--secondary">Смотреть работы</a>
           </div>
         </div>
-        <div class="bb-hero__media bb-atmosphere">
-          <div class="bb-glass bb-hero__proof">
+        <div class="bb-hero__media service-product-media">
+          <a href="/portfolio/hoff-product-cards" aria-label="HOFF · карточки товара"><img src="/v3-assets/posters/oesfViYTJW9KWuKo4rpFxq.webp" alt="" width="1280" height="720" loading="eager" decoding="async" /></a>
+          <div class="bb-hero__proof">
             <div class="bb-meta-panel">
               <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Площадки</span><span class="bb-meta-panel__value">5</span></div>
               <div class="bb-meta-panel__row"><span class="bb-meta-panel__key">Съёмка и монтаж</span><span class="bb-meta-panel__value">от 35 000 ₽</span></div>

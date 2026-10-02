@@ -20,7 +20,7 @@ import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
 const store = getStore();
 
 const Check = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 6L9 17l-5-5" />
   </svg>
 );
@@ -57,6 +57,9 @@ export default function Calculator() {
   );
   const [optSel, setOptSel] = useState<Set<string>>(new Set());
   const [urgent, setUrgent] = useState(false);
+  const hasSelectedDayItems = typeData.base.some((item) => item.unit === "day" && baseSel.has(item.name))
+    || typeData.options.some((item) => item.unit === "day" && optSel.has(item.name));
+  useEffect(() => { if (!hasSelectedDayItems) setDays(1); }, [hasSelectedDayItems]);
 
   // Контакты + скидка. Если клиент вошёл — подставляем телефон/имя из сессии,
   // и скидка подтянется автоматически (эффект ниже реагирует на phone).
@@ -216,8 +219,8 @@ export default function Calculator() {
 
   return (
     <RoutePathContext.Provider value="/calculator">
+    <SiteHeader />
     <div className="calc-wrap">
-      <SiteHeader />
 
       <main>
       <p className="calc-eyebrow">Калькулятор сметы</p>
@@ -249,11 +252,14 @@ export default function Calculator() {
 
           {hasDayItems && (
             <div className="calc-section">
-              <div className="calc-label">Съёмочных смен</div>
+              <label className="calc-label" htmlFor="estimate-days">Съёмочных смен</label>
               <div className="calc-slider-row">
                 <input
+                  id="estimate-days"
                   className="calc-range"
                   type="range"
+                  disabled={!hasSelectedDayItems}
+                  aria-describedby="estimate-days-hint"
                   min={1}
                   max={MAX_DAYS}
                   value={days}
@@ -263,6 +269,9 @@ export default function Calculator() {
                   <b>{days}</b> <span>{daysWord(days)}</span>
                 </div>
               </div>
+              <p className="calc-days-hint" id="estimate-days-hint">{hasSelectedDayItems
+                ? "Число смен умножает выбранные позиции с пометкой «за смену». Позиции «за проект» считаются один раз."
+                : "Сейчас выбраны позиции за проект. Для расчёта нескольких смен выберите позицию «за смену» ниже."}</p>
             </div>
           )}
 
@@ -274,21 +283,24 @@ export default function Calculator() {
               {typeData.base.map((item) => {
                 const on = baseSel.has(item.name);
                 return (
-                  <div
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
                     key={item.name}
                     className="calc-row"
                     data-on={on}
                     onClick={() => toggle(baseSel, item.name, setBaseSel)}
                   >
-                    <div className="calc-check"><Check /></div>
-                    <div className="calc-row-name">
+                    <span className="calc-check" aria-hidden="true"><Check /></span>
+                    <span className="calc-row-name">
                       {item.name}{" "}
                       <span className="calc-row-unit">· {unitLabel(item.unit)}</span>
-                    </div>
-                    <div className="calc-row-price">
+                    </span>
+                    <span className="calc-row-price">
                       {formatRubRange(item.priceMin, item.priceMax)}
-                    </div>
-                  </div>
+                    </span>
+                  </button>
                 );
               })}
             </div>
@@ -301,21 +313,24 @@ export default function Calculator() {
                 {typeData.options.map((item) => {
                   const on = optSel.has(item.name);
                   return (
-                    <div
+                    <button
+                      type="button"
+                      role="checkbox"
+                      aria-checked={on}
                       key={item.name}
                       className="calc-row"
                       data-on={on}
                       onClick={() => toggle(optSel, item.name, setOptSel)}
                     >
-                      <div className="calc-check"><Check /></div>
-                      <div className="calc-row-name">
+                      <span className="calc-check" aria-hidden="true"><Check /></span>
+                      <span className="calc-row-name">
                         {item.name}{" "}
                         <span className="calc-row-unit">· {unitLabel(item.unit)}</span>
-                      </div>
-                      <div className="calc-row-price">
+                      </span>
+                      <span className="calc-row-price">
                         {formatRubRange(item.priceMin, item.priceMax)}
-                      </div>
-                    </div>
+                      </span>
+                    </button>
                   );
                 })}
               </div>
@@ -323,17 +338,20 @@ export default function Calculator() {
           )}
 
           <div className="calc-section">
-            <div
+            <button
+              type="button"
+              role="switch"
+              aria-checked={urgent}
               className="calc-toggle"
               data-on={urgent}
               onClick={() => setUrgent((v) => !v)}
             >
-              <div className="calc-switch" />
-              <div className="calc-toggle-txt">
+              <span className="calc-switch" aria-hidden="true" />
+              <span className="calc-toggle-txt">
                 <b>Срочный проект</b>
                 <span>Сжатые сроки — наценка +{Math.round(URGENCY_SURCHARGE * 100)}%</span>
-              </div>
-            </div>
+              </span>
+            </button>
           </div>
         </div>
 
@@ -371,7 +389,7 @@ export default function Calculator() {
 
               <div className="calc-total">
                 <div className="calc-total-label">Итого</div>
-                <div className="calc-total-val">
+                <div className="calc-total-val" aria-live="polite" aria-atomic="true">
                   {formatRubRange(breakdown.totalMin, breakdown.totalMax)}
                 </div>
                 {discountPercent > 0 && (
@@ -467,8 +485,8 @@ export default function Calculator() {
         </div>
       </div>
       </main>
-      <SiteFooter />
     </div>
+    <SiteFooter />
     </RoutePathContext.Provider>
   );
 }

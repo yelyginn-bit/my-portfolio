@@ -66,7 +66,7 @@ body.site-menu-open { overflow: hidden; }
   .site-static-footer-nav { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 
-.site-static-header {
+.site-static-header:not(.v3-header) {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -340,14 +340,13 @@ select {
 }
 
 .calc-wrap,
-.acc-wrap,
 .adm-wrap,
 .c-wrap,
 .j-wrap {
   padding-top: clamp(22px, 4vw, 42px) !important;
 }
 
-header {
+header:not(.v3-header) {
   border-bottom: 1px solid var(--line-soft) !important;
 }
 .calc-top,
@@ -359,7 +358,7 @@ header {
   border-bottom: 1px solid var(--line-soft) !important;
 }
 
-header {
+header:not(.v3-header) {
   position: sticky;
   top: 0;
   z-index: 60;
@@ -1184,7 +1183,7 @@ body {
 header:not(.v3-header) {
   padding-block: 18px !important;
 }
-header nav {
+header:not(.v3-header) nav {
   justify-content: flex-end;
   flex-wrap: wrap;
 }
@@ -1577,3 +1576,59 @@ body[data-title="doc"] :is(header, main) h1:not([class*="bb-"]) { margin-bottom:
 
 /* PROMPT-37 §3.3: серые плитки-превью проектов (service-showcase) — радиус карточки bb, а не 0. */
 .site-static :is(.service-showcase-main, .service-showcase-side) { border-radius: var(--ds-radius-card) !important; overflow: hidden; }
+
+/* Owner 02.10: scoped service repair, no change to the home/portfolio composition. */
+body.service-page { --site-section: clamp(2.5rem, 5vw, 4.5rem); }
+.service-page .grid-3, .service-page .price-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 16px !important; background: transparent !important; border: 0 !important;
+}
+.service-page .grid-3:has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.service-page .grid-3 > .card, .service-page .price-row > .price-card {
+  box-sizing: border-box; grid-column: auto; min-width: 0;
+  padding: clamp(20px, 2.5vw, 32px) !important; border: 1px solid var(--ds-border) !important;
+  border-radius: var(--ds-radius-card) !important; background: var(--ds-charcoal) !important;
+}
+.service-page .grid-3 > .card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.service-page .grid-3 > .card > * { width: 100%; max-width: 42ch; }
+.service-page .grid-3 > .card h3 { margin: 8px 0 16px; font-size: clamp(1.2rem, 1.65vw, 1.6rem); line-height: 1.2; }
+.service-page .grid-3 > .card p.card-num { margin-bottom: 12px; }
+.service-page .price-row > .price-card.featured { border-color: var(--ds-orange) !important; }
+.service-page .price-label { min-height: 2.7em; }
+.service-page .price-note { font: 400 1rem/1.6 var(--ds-font-body) !important; text-transform: none !important; letter-spacing: normal !important; max-width: 80ch; }
+.service-page .service-price-photo { display: block; width: 100%; height: 200px; object-fit: cover; margin-bottom: 24px; border-radius: var(--ds-radius); }
+.service-page .price-row:has(.service-price-photo) { align-items: stretch; }
+.service-page section:has(.faq) > .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px; align-items: start; }
+.service-page section:has(.faq) h2 { margin: 0; line-height: 1.05 !important; }
+.service-page .faq { width: 100%; max-width: none; margin: 0; }
+.service-page .bts-grid { display: block; columns: 3; column-gap: 16px; }
+.service-page .bts-grid figure { break-inside: avoid; margin: 0 0 16px; border-radius: var(--ds-radius-inner); overflow: hidden; border: 1px solid var(--ds-border); }
+.service-page .bts-grid img { width: 100%; height: auto; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .service-page .grid-3, .service-page .price-row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .service-page .price-row:has(> .price-card:nth-child(3):last-child) > .price-card:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+  .service-page .grid-3, .service-page .price-row, .service-page .grid-3:has(> .card:nth-child(4):last-child) { grid-template-columns: 1fr !important; }
+  .service-page section:has(.faq) > .wrap { grid-template-columns: 1fr; gap: 24px; }
+  .service-page .bts-grid { columns: 2; }
+}
+
+/* The client gate stays private; its presentation uses the current dark shell. */
+:root[data-theme="dark"]:has(.acc-wrap) { color-scheme: dark; }
+body:has(.acc-wrap) { background: var(--ds-bg); color: var(--ds-text); }
+.acc-wrap { width: min(1000px, calc(100% - 32px)); padding-top: 128px; min-height: 75svh; }
+.acc-wrap .acc-eyebrow, .acc-wrap .acc-label { font-family: var(--ds-font-mono); }
+.acc-wrap .acc-title { font-family: var(--ds-font-display); font-size: var(--ds-title-page); }
+.acc-wrap .acc-card { border: 1px solid var(--ds-border) !important; background: var(--ds-charcoal) !important; box-shadow: none !important; border-radius: var(--ds-radius-card) !important; }
+.acc-wrap .acc-hint { font-size: 1rem; line-height: 1.6; color: var(--ds-text-secondary) !important; max-width: 70ch; }
+.acc-wrap .acc-btn { width: fit-content; max-width: 100%; font-family: var(--ds-font-mono); color: var(--ds-on-accent) !important; }
+.acc-wrap .acc-btn-ghost { color: var(--ds-text) !important; }
+.acc-wrap .acc-input { background: var(--ds-bg) !important; border-color: var(--ds-border) !important; }
+@media (max-width: 767px) { .acc-wrap { padding-top: 104px; } .acc-wrap .acc-btn { width: 100%; } }
+.calc-row, .calc-toggle { width: 100%; font-family: var(--ds-font-body); text-align: left; }
+.calc-days-hint { margin: 12px 0 0; color: var(--ds-text-secondary); font-size: .875rem; line-height: 1.5; }
+.calc-range:disabled { opacity: .4; cursor: not-allowed; }
+.calc-range:focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 8px; }
+.calc-row[data-on="true"] .calc-check { color: var(--ds-on-accent); }
+.calc-range { background: var(--ds-border-strong) !important; }

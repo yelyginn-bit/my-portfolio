@@ -19,6 +19,8 @@ import { formatRub } from "../lib/calc";
 import type { Client, Order, OrderStatus } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
 
+import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
+
 const store = getStore();
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
@@ -339,14 +341,9 @@ export default function Account() {
   useEffect(() => { hydrateTiers().then(() => setTiersReady((v) => v + 1)); }, []);
 
   return (
-    <div className="acc-wrap">
-      <div className="acc-top">
-        <a className="acc-logo" href="/">YELYG<span>I</span>NN</a>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <a className="acc-back" href="/#all-sections">Все разделы</a>
-          <a className="acc-back" href="/">← на главную</a>
-        </div>
-      </div>
+    <RoutePathContext.Provider value="/account">
+    <SiteHeader />
+    <main className="acc-wrap">
 
       <p className="acc-eyebrow">Личный кабинет</p>
       <h1 className="acc-title">{session ? <>Ваш <span>кабинет</span></> : <>Вход для <span>клиентов</span></>}</h1>
@@ -358,6 +355,8 @@ export default function Account() {
       ) : (
         <Login onDone={() => setSession(getSession())} />
       )}
-    </div>
+    </main>
+    <SiteFooter />
+    </RoutePathContext.Provider>
   );
 }

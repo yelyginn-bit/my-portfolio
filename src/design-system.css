@@ -495,7 +495,7 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
 .v3-nav { width: min(calc(100% - clamp(12px, 3vw, 48px)), var(--ds-grid-max)); min-height: 60px; margin-inline: auto; display: grid; grid-template-columns: 56px repeat(8, max-content) minmax(210px, 1fr); align-items: stretch; padding: 8px; border: 1px solid color-mix(in srgb, var(--ds-scrim) 22%, transparent); border-radius: 20px; background: color-mix(in srgb, var(--ds-on-dark) 86%, transparent); box-shadow: 0 16px 52px rgba(20,20,18,.1); backdrop-filter: blur(18px) saturate(1.15); pointer-events: auto; }
 .v3-nav > a { display: flex; align-items: center; justify-content: center; padding: 0 clamp(.62rem, 1.1vw, 1rem); border-right: 1px solid color-mix(in srgb, var(--ds-scrim) 13%, transparent); border-radius: 12px; color: var(--ds-scrim); font: 680 .68rem/1 var(--ds-font-mono); letter-spacing: .07em; transition: background .2s ease, color .2s ease; }
 .v3-nav > a:hover, .v3-nav > a:focus-visible { background: #fff; }
-.v3-nav__brand { padding: 0 !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; font-size: 1rem !important; font-weight: 900 !important; text-decoration: none; }.v3-nav__cta { justify-content: space-between !important; padding-inline: 1.25rem !important; color: var(--ds-bg) !important; background: var(--ds-text) !important; border-right: 0 !important; }
+.v3-nav__brand { padding: 0 !important; color: var(--ds-scrim) !important; background: transparent !important; font-size: 1rem !important; font-weight: 900 !important; text-decoration: none; }.v3-nav__cta { justify-content: space-between !important; padding-inline: 1.25rem !important; color: var(--ds-scrim) !important; background: transparent !important; border: 1px solid var(--ds-scrim) !important; }
 .v3-nav__menu { display: none; border: 0; background: var(--ds-orange); border-radius: 12px; }
 /* Меню — ОДИН компонент на весь сайт: светлая панель в обеих темах, поэтому и
    панель, и чернила берутся из непереворачиваемых токенов, и цвет панели
@@ -1027,8 +1027,8 @@ body.v3-menu-open { overflow: hidden; }
 .v32-services__card > p:first-child { margin: 0 0 auto; color: var(--ds-orange); font: 700 .6rem/1 var(--ds-font-mono); letter-spacing: .1em; }
 .v32-services__card h3 { margin: 2rem 0 .75rem; font: 750 clamp(1.45rem, 2vw, 2.1rem)/.95 var(--ds-font-display); letter-spacing: -.03em; text-transform: uppercase; }
 .v32-services__card > p:not(:first-child) { margin: 0; color: color-mix(in srgb, var(--ds-on-dark) 68%, transparent); font-size: .96rem; line-height: 1.5; }
-.v32-services__card a { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding-top: 1.25rem; color: inherit; font: 700 .62rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
-.v32-services__card a:hover { color: var(--ds-orange); }
+.v32-services__link { display: inline-flex; align-items: center; gap: .45rem; margin-top: auto; padding-top: 1.25rem; color: inherit; font: 700 .62rem/1 var(--ds-font-mono); letter-spacing: .06em; text-decoration: none; }
+.v32-services__card:hover .v32-services__link { color: var(--ds-orange); }
 /* PROMPT-32 §1.2.7: раньше та же лёгкая текстовая ссылка, что у карточек —
    на тёмном фоне почти не видна. Кнопка в системе карточек над блоком:
    рамка, моно капс, min-height как у .v3-button. */

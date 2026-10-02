@@ -49,6 +49,7 @@ const COVER_ALLOWLIST = [
   ".kinescope-embed-poster", // постер видео — тот же формат, что рамка плеера
   ".editorial-service-media img",
   ".related-work-list .bb-project-card__media img",
+  ".service-page .price-card img.service-price-photo", // owner 02.10: equal-height photo covers in broadcast price cards; the gallery keeps native ratios
 ];
 
 const AUDIT_FN = `(coverSelectors) => {

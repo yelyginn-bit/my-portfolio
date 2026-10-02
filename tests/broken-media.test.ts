@@ -45,13 +45,18 @@ const run = async () => {
 
   for (const route of INDEXABLE_ROUTES) {
     const broken: string[] = [];
+    const servedMedia = new Set<string>();
     const onResponse = (response: import("playwright").Response) => {
       const req = response.request();
       const isMedia = MEDIA_TYPES.has(req.resourceType()) || MEDIA_EXT.test(response.url());
+      if (req.resourceType() === "media" && response.ok()) servedMedia.add(response.url());
       if (isMedia && response.status() >= 400) broken.push(`${response.status()} ${response.url()}`);
     };
     const onRequestFailed = (req: import("playwright").Request) => {
       const isMedia = MEDIA_TYPES.has(req.resourceType()) || MEDIA_EXT.test(req.url());
+      // Successful MP4 range requests may be cancelled when playback seeks or
+      // metadata loading switches to playback. An HTTP error still fails above.
+      if (req.resourceType() === "media" && req.failure()?.errorText === "net::ERR_ABORTED" && servedMedia.has(req.url())) return;
       if (isMedia) broken.push(`FAILED ${req.failure()?.errorText ?? "?"} ${req.url()}`);
     };
     page.on("response", onResponse);

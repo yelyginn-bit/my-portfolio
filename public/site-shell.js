@@ -86,13 +86,13 @@
   }
 
   const footer = document.querySelector("body > footer");
-  if (footer) {
+  if (footer && !footer.classList.contains("v3-footer")) {
     footer.className = "site-static-footer-shell";
     if (footer.children.length === 0) footer.innerHTML = `
       <div class="site-static-footer">
         <div class="site-static-footer__brand">
           <a class="site-static-footer__wordmark" href="/" aria-label="YELYGINN">
-            <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true"><text x="0" y="0">YELYGINN</text></svg>
+            <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true"><text x="0" y="0">YELYGINN</text></svg>
           </a>
           <p>Операторская работа, монтаж, цвет и live production.</p>
         </div>

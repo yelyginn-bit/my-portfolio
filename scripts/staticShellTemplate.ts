@@ -155,7 +155,7 @@ export function renderV3Footer(active: V3ChromeActive = {}): string {
   }).join("");
   return `<footer class="v3-footer">
       <div class="v3-footer__wordmark" aria-label="YELYGINN">
-        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true">
+        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
           <text x="0" y="0">YELYGINN</text>
         </svg>
       </div>

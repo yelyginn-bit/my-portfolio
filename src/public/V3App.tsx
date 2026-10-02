@@ -101,7 +101,7 @@ export function SiteFooter() {
   return (
     <footer className="v3-footer">
       <div className="v3-footer__wordmark" aria-label="YELYGINN">
-        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMinYMid meet" role="img" aria-hidden="true">
+        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
           <text x="0" y="0">YELYGINN</text>
         </svg>
       </div>
@@ -128,11 +128,19 @@ function HeroShowreel() {
   const [videoFailed, setVideoFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [fallbackOpen, setFallbackOpen] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    video.play().catch(() => setPlaying(false));
+    if (!video) return;
+    // The prerendered media can fail before React attaches its event handlers.
+    if (video.error) { setVideoFailed(true); return; }
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.play().catch(() => {
+        setPlaying(false);
+        if (video.error) setVideoFailed(true);
+      });
+    }
     return () => video.pause();
   }, []);
 
@@ -168,8 +176,8 @@ function HeroShowreel() {
         />
         {!videoFailed && <video
           ref={videoRef}
+          src="/v3-assets/hero-showreel.mp4"
           poster="/v3-assets/hero-showreel-poster.webp"
-          autoPlay
           muted
           loop
           playsInline
@@ -179,7 +187,7 @@ function HeroShowreel() {
           onPause={() => setPlaying(false)}
           onError={() => { setVideoFailed(true); setPlaying(false); }}
           aria-label="Шоурил YELYGINN"
-        ><source src="/v3-assets/hero-showreel.mp4" type="video/mp4" /></video>}
+        />}
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
@@ -191,12 +199,37 @@ function HeroShowreel() {
           <a className="v3-button v3-button--line" href="#contact">ОБСУДИТЬ ПРОЕКТ <ArrowUpRight /></a>
         </div>
       </div>
-      {videoFailed ? <a className="v32-showreel-toggle" href={`https://kinescope.io/${HERO_SHOWREEL_ID}`} target="_blank" rel="noreferrer"><Play fill="currentColor" /><span>ШОУРИЛ // ОТКРЫТЬ</span></a> : <div className="v32-showreel-controls">
+      {videoFailed ? <button type="button" className="v32-showreel-toggle" onClick={() => setFallbackOpen(true)}><Play fill="currentColor" /><span>ШОУРИЛ // СМОТРЕТЬ</span></button> : <div className="v32-showreel-controls">
         <button type="button" onClick={togglePlayback} aria-label={playing ? "Поставить шоурил на паузу" : "Воспроизвести шоурил"}>{playing ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}<span>{playing ? "ПАУЗА" : "ШОУРИЛ"}</span></button>
         <button type="button" onClick={toggleSound} aria-label={muted ? "Включить звук" : "Выключить звук"}>{muted ? <VolumeX /> : <Volume2 />}<span>{muted ? "ЗВУК" : "ВКЛЮЧЁН"}</span></button>
       </div>}
+      {fallbackOpen && <ShowreelDialog onClose={() => setFallbackOpen(false)} />}
     </section>
   );
+}
+
+function ShowreelDialog({ onClose }: { onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => { ref.current?.showModal(); }, []);
+  return <dialog ref={ref} aria-label="Шоурил YELYGINN" className="v32-showreel-dialog" onCancel={onClose} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <button type="button" onClick={onClose} aria-label="Закрыть шоурил"><X /></button>
+    <KinescopeEmbed id={HERO_SHOWREEL_ID} orientation="16:9" title="Шоурил YELYGINN" />
+  </dialog>;
+}
+
+function ClientMarquee() {
+  const [paused, setPaused] = useState(false);
+  useEffect(() => { setPaused(window.matchMedia("(prefers-reduced-motion: reduce)").matches); }, []);
+  return <section className="v3-marquee" aria-label="Бренды и проекты" data-motion={!paused}>
+    <div className="v3-marquee__track">
+      {[0, 1].map((copy) => <div className="v3-marquee__group" key={copy} aria-hidden={copy === 1 ? true : undefined}>
+        {MARQUEE_ITEMS.map((brand) => <span key={brand}>{brand}<b>//</b></span>)}
+      </div>)}
+    </div>
+    <button type="button" className="v3-marquee__toggle" onClick={() => setPaused((value) => !value)} aria-label={paused ? "Запустить ленту клиентов" : "Остановить ленту клиентов"} aria-pressed={paused}>
+      {paused ? <Play size={16} /> : <Pause size={16} />}
+    </button>
+  </section>;
 }
 
 const HOME_SERVICES = [
@@ -213,17 +246,17 @@ function HomeServices() {
     <section className="v32-services v3-shell" aria-labelledby="home-services-title">
       <header className="v32-services__head">
         <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
-        <h1 id="home-services-title">Видеосъёмка и видеопродакшн в Нижнем Новгороде</h1>
+        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Видеосъёмка и видеопродакшн в Нижнем Новгороде") } as CSSProperties}>Видеосъёмка и видеопродакшн в Нижнем Новгороде</h1>
         <h2>Услуги видеосъёмки в Нижнем Новгороде</h2>
       </header>
       <div className="v32-services__grid">
         {HOME_SERVICES.map((service) => (
-          <article className="v32-services__card" key={service.href}>
+          <a className="v32-services__card" key={service.href} href={service.href}>
             <p>{service.number} /</p>
             <h3>{service.title}</h3>
             <p>{service.description}</p>
-            <a href={service.href}>ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></a>
-          </article>
+            <span className="v32-services__link">ПОДРОБНЕЕ <ArrowUpRight aria-hidden="true" /></span>
+          </a>
         ))}
       </div>
       <nav className="bb-link-grid" aria-label="Полезные разделы">
@@ -429,7 +462,7 @@ function HomePage() {
       <main className="v32-home">
         <HeroShowreel />
         <HomeServices />
-        <section className="v3-marquee" aria-label="Бренды и проекты"><div className="v3-marquee__track">{[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((brand, index) => <span key={`${brand}-${index}`}>{brand}<b>//</b></span>)}</div></section>
+        <ClientMarquee />
         <div className="v32-work-proof">
           <section className="v3-work"><div className="v3-shell"><header className="v3-section-head"><p className="v3-kicker">ОТОБРАННЫЕ // ПРОЕКТЫ</p><h2>ВЫБРАННЫЕ<br /><i>РАБОТЫ</i></h2><a href="/portfolio">ВСЕ РАБОТЫ <ArrowUpRight /></a></header><PortfolioSystem projects={selectedWorkProjects} /></div></section>
           <ProductionProof />
@@ -521,7 +554,12 @@ function BlogPage() {
 
 function AboutPage() {
   return (
-    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — видеооператор, Нижний Новгород</h1><p>Оператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="eager" decoding="async" alt="Юрий Елыгин работает с камерой на съёмочной площадке" /><figcaption>СЪЁМОЧНАЯ ПЛОЩАДКА // BTS</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Могу самостоятельно снять небольшой проект или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-teaching v3-shell"><h2>Преподавание и телевидение</h2><p>Преподавал видеопроизводство на Медиафоруме молодых журналистов во Всероссийском детском центре «Смена» — в 2023 году как педагог направления, в 2025-м участвовал в проведении программы.</p><p>Медиашкола «Пилот медиа»: программа «Видеопроизводство и монтаж», стажировка на ГТРК «Нижний Новгород», аттестационная работа — короткометражный фильм.</p></section><ContactSection /></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — видеооператор, Нижний Новгород</h1><p>Оператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="eager" decoding="async" alt="Юрий Елыгин работает с камерой на съёмочной площадке" /><figcaption>СЪЁМОЧНАЯ ПЛОЩАДКА // BTS</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Могу самостоятельно снять небольшой проект или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-photos v3-shell" aria-label="Юрий Елыгин: портреты и съёмочная работа">
+  <figure><img src="/v3-assets/about/portrait.webp" srcSet="/v3-assets/about/portrait-480w.webp 480w, /v3-assets/about/portrait.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина в чёрной одежде" /><figcaption>ПОРТРЕТ</figcaption></figure>
+  <figure><img src="/v3-assets/about/live-camera.webp" srcSet="/v3-assets/about/live-camera-480w.webp 480w, /v3-assets/about/live-camera.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин работает у видеокамеры перед сценой" /><figcaption>У КАМЕРЫ</figcaption></figure>
+  <figure><img src="/v3-assets/about/on-set.webp" srcSet="/v3-assets/about/on-set-480w.webp 320w, /v3-assets/about/on-set.webp 800w" sizes="50vw" width="800" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин сидит на кофре с камерой на съёмочной площадке" /><figcaption>НА ПЛОЩАДКЕ</figcaption></figure>
+  <figure><img src="/v3-assets/about/camera-backstage.webp" srcSet="/v3-assets/about/camera-backstage-480w.webp 480w, /v3-assets/about/camera-backstage.webp 1200w" sizes="50vw" width="1200" height="900" loading="lazy" decoding="async" alt="Юрий Елыгин с камерой и монитором на стадионе" /><figcaption>СЪЁМОЧНАЯ РАБОТА</figcaption></figure>
+</section><section className="v3-about-teaching v3-shell"><h2>Преподавание и телевидение</h2><p>Преподавал видеопроизводство на Медиафоруме молодых журналистов во Всероссийском детском центре «Смена» — в 2023 году как педагог направления, в 2025-м участвовал в проведении программы.</p><p>Медиашкола «Пилот медиа»: программа «Видеопроизводство и монтаж», стажировка на ГТРК «Нижний Новгород», аттестационная работа — короткометражный фильм.</p></section><ContactSection /></main><SiteFooter /></>
   );
 }
 

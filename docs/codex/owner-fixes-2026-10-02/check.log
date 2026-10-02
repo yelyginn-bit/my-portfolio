@@ -1,0 +1,246 @@
+
+> react-example@0.0.0 check
+> npm run lint && npm test && npm run test:integration && npm run build && npm run test:portfolio && npm run seo:ratchet && npm run check:budget
+
+
+> react-example@0.0.0 lint
+> tsc --noEmit
+
+
+> react-example@0.0.0 test
+> node --test tests/*.test.js
+
+✔ legal sources have no merge markers or template placeholders (1.308167ms)
+✔ analytics requires active consent and excludes private routes (0.127083ms)
+✔ cookie center supports reject, settings and withdrawal cleanup (0.094125ms)
+✔ analytics can be enabled after an earlier rejection (0.078459ms)
+✔ analytics accepts only approved goals and sanitized parameters (0.0885ms)
+✔ OTP and access tokens use cryptographic generators (0.377667ms)
+✔ rate limiter blocks attempts above limit (0.081875ms)
+✔ gallery passwords are salted and not stored as plaintext (76.794542ms)
+✔ RLS migration removes anonymous CRM writes and open selections (0.43075ms)
+✔ payment create ignores client amount and uses database order total (0.165292ms)
+✔ webhook verifies amount, currency and idempotency (0.116292ms)
+✔ manual receipt flow never claims automatic tax receipt (0.360958ms)
+✔ admin receipt API requires cookie auth and CSRF (0.06ms)
+✔ OTP schema records attempts, use and session issuance (0.060125ms)
+✔ calculator blocks submission until separate consent (0.090542ms)
+✔ auth request does not return linked-state enumeration (0.077333ms)
+✔ OTP session can be issued only once (0.047584ms)
+✔ OTP verification is limited by IP, phone and token (0.046667ms)
+✔ gallery API binds share token, gallery and asset (0.12225ms)
+✔ gallery comments are sanitized, bounded and rate limited (0.050125ms)
+✔ payment status requires authenticated order owner (0.050083ms)
+✔ private tokens and payment identifiers are sent in POST bodies (0.522292ms)
+✔ account data is resolved from HttpOnly session ownership (0.109ms)
+✔ JWT is absent from persistent browser storage (0.132834ms)
+✔ face grouping is disabled in production (0.044042ms)
+✔ lead endpoint records policy and consent versions (0.051333ms)
+✔ production health endpoint is routed without exposing secrets (0.075792ms)
+✔ public prices use the reviewed 2026 market entry points (0.132666ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.45275
+
+> react-example@0.0.0 test:integration
+> node --test tests/integration/*.test.js
+
+✔ form is rejected without explicit current consent (0.80775ms)
+✔ form rejects inactive document version (0.069375ms)
+✔ admin API rejects an invalid password without configuration disclosure (0.74325ms)
+✔ OTP endpoint returns the same neutral response for an invalid phone (0.213083ms)
+✔ gallery and upload APIs reject requests without authenticated access (0.259375ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.439041
+
+> react-example@0.0.0 build
+> vite build && tsx scripts/prerender.ts
+
+vite v6.4.3 building for production...
+transforming...
+Found 1 warning while optimizing generated CSS:
+
+[2m│   color: var(--ds-on-accent);[22m
+[2m│ }[22m
+[2m│[22m : ;
+[2m┆[22m   [33m[2m^--[22m Invalid token in pseudo element: WhiteSpace(" ")[39m
+[2m┆[22m
+[2m│ @property --tw-rotate-x {[22m
+[2m│   syntax: "*";[22m
+
+✓ 1879 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/legal.html                                      1.82 kB │ gzip:  0.82 kB
+dist/project.html                                    1.94 kB │ gzip:  0.83 kB
+dist/portfolio-concerts.html                         2.38 kB │ gzip:  0.87 kB
+dist/portfolio-editing.html                          2.39 kB │ gzip:  0.89 kB
+dist/portfolio-photo.html                            2.40 kB │ gzip:  0.87 kB
+dist/portfolio-reels.html                            2.42 kB │ gzip:  0.88 kB
+dist/portfolio-events.html                           2.47 kB │ gzip:  0.93 kB
+dist/portfolio.html                                  2.57 kB │ gzip:  0.91 kB
+dist/ceny.html                                       2.74 kB │ gzip:  1.06 kB
+dist/cvetokorrekciya.html                            3.98 kB │ gzip:  1.37 kB
+dist/index.html                                      4.84 kB │ gzip:  1.61 kB
+dist/journal.html                                    4.93 kB │ gzip:  1.80 kB
+dist/gallery.html                                    6.91 kB │ gzip:  2.37 kB
+dist/account.html                                    8.24 kB │ gzip:  2.51 kB
+dist/admin.html                                      9.10 kB │ gzip:  2.61 kB
+dist/404.html                                       12.00 kB │ gzip:  3.06 kB
+dist/calculator.html                                14.22 kB │ gzip:  4.34 kB
+dist/_kit.html                                      15.11 kB │ gzip:  3.75 kB
+dist/content-day.html                               18.70 kB │ gzip:  4.89 kB
+dist/blog/kak-snimat-reels-dlya-biznesa.html        23.61 kB │ gzip:  6.71 kB
+dist/blog/skolko-stoit-snyat-reklamnyy-rolik.html   24.59 kB │ gzip:  6.53 kB
+dist/blog/video-dlya-kartochek-wildberries.html     25.21 kB │ gzip:  6.70 kB
+dist/sajty.html                                     27.53 kB │ gzip:  6.60 kB
+dist/blog/videosemka-meropriyatiy-nn.html           27.83 kB │ gzip:  7.60 kB
+dist/event-video.html                               28.08 kB │ gzip:  7.00 kB
+dist/reels.html                                     28.37 kB │ gzip:  7.25 kB
+dist/reklamnye-roliki.html                          29.48 kB │ gzip:  7.44 kB
+dist/pryamye-translyacii.html                       33.73 kB │ gzip:  8.07 kB
+dist/video-dlya-marketpleysov.html                  39.09 kB │ gzip: 10.10 kB
+dist/photo.html                                     77.70 kB │ gzip: 15.30 kB
+dist/assets/legal-ClARWUgD.css                       1.33 kB │ gzip:  0.55 kB
+dist/assets/index-C7ybM7w1.css                      13.00 kB │ gzip:  3.08 kB
+dist/assets/v3-polish-X8T6UO-s.css                 102.01 kB │ gzip: 17.56 kB
+dist/assets/main-CPrm19Mx.js                         0.32 kB │ gzip:  0.25 kB
+dist/assets/sajty-DajBeYkH.js                        0.43 kB │ gzip:  0.37 kB
+dist/assets/index-D7JCFNeG.js                        0.68 kB │ gzip:  0.31 kB
+dist/assets/auth-BoRgYl3f.js                         2.19 kB │ gzip:  1.02 kB
+dist/assets/calc-DRP4bJNS.js                         2.73 kB │ gzip:  1.22 kB
+dist/assets/analytics-Deunex41.js                    2.89 kB │ gzip:  1.45 kB
+dist/assets/prices-BnHoTILK.js                       3.28 kB │ gzip:  1.44 kB
+dist/assets/KinescopeEmbed-CSrPQibp.js               3.46 kB │ gzip:  1.53 kB
+dist/assets/journal-CThKvk9X.js                      3.89 kB │ gzip:  1.63 kB
+dist/assets/colorGrading-Cgf3XcXj.js                 7.61 kB │ gzip:  2.87 kB
+dist/assets/account-DY0gVXky.js                     10.21 kB │ gzip:  3.69 kB
+dist/assets/calculator-DKFb8pP_.js                  12.94 kB │ gzip:  4.89 kB
+dist/assets/api-CmHmonH8.js                         15.46 kB │ gzip:  4.16 kB
+dist/assets/ai-D1wKTHUh.js                          17.04 kB │ gzip:  7.64 kB
+dist/assets/legal-CxDC02jH.js                       24.98 kB │ gzip:  6.99 kB
+dist/assets/store-N2mekOcO.js                       37.33 kB │ gzip:  8.39 kB
+dist/assets/gallery-oRSK57xn.js                     51.64 kB │ gzip: 18.88 kB
+dist/assets/admin-BrXdVAFO.js                       69.89 kB │ gzip: 18.22 kB
+dist/assets/V3App-1KsadkwN.js                      129.12 kB │ gzip: 35.49 kB
+dist/assets/client-Dqse9xYq.js                     194.57 kB │ gzip: 60.78 kB
+dist/assets/index-Qj1tetv6.js                      213.46 kB │ gzip: 55.27 kB
+✓ built in 1.49s
+Prerendered 60 routes from the shared route manifest.
+
+> react-example@0.0.0 test:portfolio
+> tsx --test tests/portfolio-registry.test.ts tests/portfolio-image.test.ts tests/v3.test.ts tests/seo.test.ts tests/palette.test.ts tests/navigation.test.ts tests/typography.test.ts tests/theme.test.ts tests/docs-not-in-dist.test.ts tests/bb-components.test.ts tests/kit-page.test.ts tests/production-routes.test.ts tests/css-literals.test.ts tests/mobile-audit.test.ts tests/photo-aspect-ratio.test.ts tests/broken-media.test.ts tests/dark-static-contrast.test.ts tests/text-geometry.test.ts tests/word-breaks.test.ts tests/seo-copy.test.ts tests/llms.test.ts tests/sajty-page.test.ts tests/mobile-menu-contrast.test.ts tests/owner-fixes.test.ts
+
+✔ bb-components.css uses only var(--ds-*) colors and radii, no brand literals (1.302041ms)
+✔ bb-components.css is loaded before /site-skin.css on every static page that uses bb-* classes (0.251209ms)
+✔ ни один <img>/<video poster>/фон не грузится с ошибкой (все индексируемые маршруты) (38259.625542ms)
+ℹ сломанных медиа найдено на 0 маршрутах
+✔ ни один файл не содержит больше литералов, чем в baseline (2.114ms)
+✔ уменьшение литералов подтверждается подсказкой обновить baseline (0.157709ms)
+✔ baseline не содержит лишних категорий и все счётчики согласованы (0.128875ms)
+✔ тёмная тема: текст и поля содержимого читаются (26604.934166ms)
+ℹ /: узлов 202 (полей 7), неопределённого фона 6, ниже порога 0 | /portfolio: узлов 196 (полей 0), неопределённого фона 5, ниже порога 0 | /blog: узлов 72 (полей 0), неопределённого фона 0, ниже порога 0 | /about: узлов 84 (полей 6), неопределённого фона 6, ниже порога 0 | /contact: узлов 70 (полей 6), неопределённого фона 6, ниже порога 0 | /calculator: узлов 103 (полей 5), неопределённого фона 0, ниже порога 0 | /content-day: узлов 87 (полей 0), неопределённого фона 0, ниже порога 0 | /reklamnye-roliki: узлов 142 (полей 0), неопределённого фона 2, ниже порога 0 | /event-video: узлов 131 (полей 0), неопределённого фона 2, ниже порога 0 | /reels: узлов 136 (полей 0), неопределённого фона 2, ниже порога 0 | /cvetokorrekciya: узлов 161 (полей 0), неопределённого фона 0, ниже порога 0 | /video-dlya-marketpleysov: узлов 143 (полей 0), неопределённого фона 0, ниже порога 0 | /sajty: узлов 141 (полей 0), неопределённого фона 0, ниже порога 0 | /pryamye-translyacii: узлов 131 (полей 0), неопределённого фона 0, ниже порога 0 | /ceny: узлов 179 (полей 0), неопределённого фона 0, ниже порога 0 | /photo: узлов 141 (полей 0), неопределённого фона 0, ниже порога 0 | /privacy-policy: узлов 113 (полей 0), неопределённого фона 0, ниже порога 0 | /personal-data-consent: узлов 84 (полей 0), неопределённого фона 0, ниже порога 0 | /cookie-policy: узлов 95 (полей 0), неопределённого фона 0, ниже порога 0 | /terms: узлов 79 (полей 0), неопределённого фона 0, ниже порога 0 | /payment-terms: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /cancellation-refund: узлов 77 (полей 0), неопределённого фона 0, ниже порога 0 | /gallery-terms: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /data-request: узлов 81 (полей 0), неопределённого фона 0, ниже порога 0 | /blog/skolko-stoit-snyat-reklamnyy-rolik: узлов 134 (полей 0), неопределённого фона 0, ниже порога 0 | /blog/kak-snimat-reels-dlya-biznesa: узлов 102 (полей 0), неопределённого фона 0, ниже порога 0 | /blog/video-dlya-kartochek-wildberries: узлов 138 (полей 0), неопределённого фона 0, ниже порога 0 | /blog/videosemka-meropriyatiy-nn: узлов 131 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/camera: узлов 81 (полей 0), неопределённого фона 5, ниже порога 0 | /portfolio/commercial: узлов 115 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/events: узлов 106 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/reels: узлов 87 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/concerts: узлов 73 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/interviews: узлов 89 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/post: узлов 193 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/color: узлов 125 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/broadcast: узлов 102 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/product: узлов 94 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/gorky-stranicy-pamyati: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/metro-gorkovskaya-concerts: узлов 90 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/sber-arhitektura: узлов 95 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/zhenshchiny-sibura: узлов 105 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/uchenye-nizhnego: узлов 87 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/horosho-teaser: узлов 79 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/zhenshchiny-sibura-teaser: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/sber-arhitektura-teaser: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/barier-instrukcii: узлов 88 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/caprigo-obuchenie: узлов 103 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/become-legendary-architecture: узлов 91 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/egovtsev-podcast-reels: узлов 94 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/metro-gorkovskaya-reels: узлов 82 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/yango-campaign: узлов 82 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/osnova-report-reels: узлов 95 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/hoff-product-cards: узлов 119 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/caprigo-product-catalog: узлов 109 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/cartier-product-video: узлов 83 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/showreel-site: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/jetlag-showreel: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/showreel-presentation: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/chistotop-awards: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/osnova-trainer: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/osnova-den-materi: узлов 80 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/forum-malaya-rodina: узлов 83 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/skrf-hockey: узлов 83 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/banya-fest: узлов 81 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/yango-arabic-15: узлов 82 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/teraflex-presentation: узлов 84 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/caprigo-presentation: узлов 82 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/korona-production: узлов 92 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/gorky-v-teni-voyny: узлов 83 (полей 0), неопределённого фона 0, ниже порога 0 | /portfolio/socialnyy-uchastkovyy: узлов 78 (полей 0), неопределённого фона 0, ниже порога 0 | /404: узлов 75 (полей 0), неопределённого фона 0, ниже порога 0 | /_kit: узлов 110 (полей 0), неопределённого фона 0, ниже порога 0
+ℹ отрицательный контроль: с литералом #111 слой даёт 13 провалов, худший 1.01 (span «МОНТИРУЮ» rgb(17, 17, 17) на rgb(10,10,10) = 1.05)
+✔ nothing from docs/ ships in the built dist/ output (15.0775ms)
+✔ /_kit is noindex and absent from the sitemap and the public navigation (766.140833ms)
+✔ llms.txt собран и описывает владельца честно (0.84925ms)
+✔ llms.txt: все цены — из pricing.data.ts, все контакты — с /contact, ссылки ведут на реальные маршруты (0.298958ms)
+✔ мобильная геометрия и контраст не хуже базлайна (В1+В2) (8.74025ms)
+ℹ измерено маршрутов: 71 из 70; на 390px впереди вьюпорта 0px открытого переполнения, ещё 4556px спрятано внутренним overflow: hidden/clip; контраст ниже порога: 0 узлов
+✔ мобильное меню: весь текст читается на панели (≥ 4.5) (3081.696833ms)
+✔ every indexable route in the manifest is reachable from the footer, directly or via its portfolio category (0.650666ms)
+✔ navigation references only routes that exist in the manifest and are indexable (0.081ms)
+✔ "Фото" is present in the primary (header) navigation (0.036417ms)
+✔ the calculator link is a valid, indexable route (rendered in every header outside PRIMARY_NAV, next to the main CTA) (0.030833ms)
+✔ negative control detects the old immediate-close menu defect (1560.514459ms)
+✔ owner fixes: menu, media, marquee and every estimate control in Chromium/WebKit (28656.573375ms)
+✔ the six brand tokens in design-system.css match the Figma brand book exactly (0.981666ms)
+✔ every allowed pair from the brand book contrast table clears its role's threshold (0.170834ms)
+✔ forbidden pairs are documented as failing, not silently used as text/border/focus (0.066333ms)
+✔ no stray saturated hex color literals outside the brand whitelist in the scanned files (1.020917ms)
+✔ ни один <img> вне allowlist не искажён по пропорции больше чем на 2% (1440px) (34801.00325ms)
+ℹ найдено искажённых узлов на 0 маршрутах из 70 (1440px)
+✔ ни один <img> вне allowlist не искажён по пропорции больше чем на 2% (390px) (34589.380042ms)
+ℹ найдено искажённых узлов на 0 маршрутах из 70 (390px)
+✔ renders an <img> with a webp srcset and no jpg fallback for a known id (3.305708ms)
+✔ sets width/height from the manifest so the layout does not shift (0.196875ms)
+✔ uses native lazy loading, not an eager fetch (0.165667ms)
+✔ a narrower source (below all srcset steps) only lists the widths it actually has (0.116ms)
+✔ throws a clear error for an id that was never processed (0.23425ms)
+✔ live portfolio registry has no duplicate Kinescope IDs across projects (1.129208ms)
+✔ live portfolio registry uses only valid video orientations (0.072333ms)
+✔ live portfolio registry passes full validation (0.069167ms)
+✔ catches the two known duplicate Kinescope IDs from YELYGINN-registry-proektov.md (0.095708ms)
+✔ does not flag an ID that is reused within the same single project (0.04425ms)
+✔ flags an invalid orientation value (0.07475ms)
+✔ every non-prerendered route in ROUTE_MANIFEST resolves somewhere in production-server.js (1.318083ms)
+✔ /sajty is the single new indexable dark static route (1305.850792ms)
+✔ page prices are build-time references to pricing.data.ts, not source literals (0.483625ms)
+✔ site packages stay out of /ceny and calculator and the link exists only in the footer (0.459ms)
+✔ sajty prerender has eight content blocks, one H1, FAQPage and the lazy Kinescope video (0.306ms)
+✔ у каждого индексируемого маршрута есть текст в seoCopy.ts (1.378708ms)
+✔ title: 30–70 знаков, бренд | YELYGINN (у главной | Юрий Елыгин), совпадает с og:title (0.4165ms)
+✔ description: 110–165 знаков (0.352833ms)
+✔ 70 title и 70 description — все разные (2.99725ms)
+✔ в текстах нет «ИП» и запрещённых упоминаний (0.869959ms)
+✔ indexable public pages have one title, description and canonical (6.980125ms)
+✔ all embedded JSON-LD blocks are valid JSON (9.060625ms)
+✔ sitemap is generated from the indexable route manifest (938.646875ms)
+✔ private application pages are noindex (0.746ms)
+✔ design tokens stay in sync between bundle and static pages (0.978667ms)
+✔ every var(--ds-*) referenced in CSS/HTML is defined somewhere (PROMPT-30 §8.2) (8.719167ms)
+✔ static pages load the shared token file before the skin (1.326583ms)
+✔ every indexable route ships one H1, unique title/description, canonical and parseable JSON-LD (QWEN-08 §2.12) (27.032417ms)
+✔ текст не налезает, не обрезан и не уезжает за экран (Д) (5.739917ms)
+ℹ замеров: 142; строк внахлёст 0, блоков налезли 0, обрезано X 0, Y 0, за краем 0
+✔ at least one route is marked theme: "dark" (phase 5 has started) (2.201542ms)
+✔ every route marked theme: "dark" ships data-theme="dark" in its built HTML (27.611792ms)
+✔ no route outside ROUTE_MANIFEST's theme:"dark" list ships data-theme="dark" (no orphaned dark pages) (0.198916ms)
+✔ scale tokens in design-system.css match the brand book scale exactly (13.767084ms)
+✔ --ds-h1/--ds-h2 and the title roles clamp between the scale's own steps, not arbitrary numbers (1.037791ms)
+✔ roles descend: page > doc >= section >= sub (PROMPT-36 §2) (0.618666ms)
+✔ no font-family literals outside the shared tokens in the scanned files (2.962709ms)
+✔ no ch-based max-width narrows H1/H2/H3 in the scanned files (PROMPT-28 §5.4) (1.553417ms)
+✔ every explicit H1/H2 font-weight in the scanned files is exactly 700 (PROMPT-29 §1) (1.500625ms)
+✔ V3 canonical source contains 90 unique Kinescope assets in the audited orientation split (2.103042ms)
+✔ every V3 asset source order is covered exactly once by a project range (2.576709ms)
+✔ V3 public UI omits generic invented contribution fallbacks (3.1285ms)
+✔ V3 hides internal and private photo routes from navigation and sitemap (546.221792ms)
+✔ every canonical V3 project has a sitemap URL and legacy redirects do not (0.716416ms)
+✔ V3 hardening covers previously unprotected tables and removes spoofable review inserts (0.134167ms)
+✔ отрицательный контроль: слово из 40 букв в узкой колонке ловится (559.255042ms)
+✔ ни одного разорванного слова: все маршруты × 1440 / 1200 / 768 / 390 (25362.3475ms)
+ℹ маршрутов×ширин: 284, слов: 87002, разорванных: 0
+ℹ tests 72
+ℹ suites 0
+ℹ pass 72
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69765.593458
+
+> react-example@0.0.0 seo:ratchet
+> tsx scripts/seo-audit.ts --ratchet
+
+seo-audit: не хуже baseline (46 страниц с замечаниями из 46)
+страниц: 71 · без замечаний: 25 · sitemap URL: 71 · lastmod: 71
+H1 ровно один: 71 · title вне 30–70: 0 · description вне 110–165: 0
+без canonical: 0 · без JSON-LD: 11 · битые цели ссылок: нет
+
+> react-example@0.0.0 check:budget
+> node scripts/check-build-budget.mjs
+
+Largest CSS: v3-polish-X8T6UO-s.css (100 KiB)
+Largest JS: index-Qj1tetv6.js (208 KiB)

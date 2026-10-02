@@ -1,0 +1,10 @@
+✔ negative control detects the old immediate-close menu defect (880.1975ms)
+✔ owner fixes: menu, media, marquee and every estimate control in Chromium/WebKit (24138.484917ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25298.097792

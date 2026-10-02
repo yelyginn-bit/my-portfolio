@@ -84,6 +84,7 @@ const TYPES: Record<string, string> = {
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
   ".json": "application/json",
+  ".mp4": "video/mp4",
 };
 
 export function startLocalServer(): Promise<{ server: Server; origin: string }> {
@@ -97,8 +98,24 @@ export function startLocalServer(): Promise<{ server: Server; origin: string }> 
         return;
       }
       const type = TYPES[path.extname(target).toLowerCase()] ?? "application/octet-stream";
-      res.writeHead(200, { "content-type": type, "cache-control": "no-store" });
-      res.end(await readFile(target));
+      const body = await readFile(target);
+      const headers = { "content-type": type, "cache-control": "no-store", "accept-ranges": "bytes" };
+      // Safari probes MP4 with byte ranges, just as on the production server.
+      const range = req.headers.range?.match(/^bytes=(\d*)-(\d*)$/u);
+      if (range && (range[1] || range[2])) {
+        const start = range[1] ? Number(range[1]) : Math.max(0, body.length - Number(range[2]));
+        const end = range[1] && range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
+        if (start > end || start >= body.length) {
+          res.writeHead(416, { ...headers, "content-range": `bytes */${body.length}` });
+          res.end();
+          return;
+        }
+        res.writeHead(206, { ...headers, "content-range": `bytes ${start}-${end}/${body.length}`, "content-length": end - start + 1 });
+        res.end(req.method === "HEAD" ? undefined : body.subarray(start, end + 1));
+        return;
+      }
+      res.writeHead(200, { ...headers, "content-length": body.length });
+      res.end(req.method === "HEAD" ? undefined : body);
     };
     // порт 0 = свободный порт от ОС; ipv4 explicitly — живой сайт не трогаем
     const server = createServer(handler).listen(0, "127.0.0.1", () => {

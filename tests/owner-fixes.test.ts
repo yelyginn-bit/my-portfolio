@@ -79,10 +79,26 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         assert.ok(Math.abs(after - before) > 2, `${engine.name()}: client tape moves`);
         await page.getByRole('button', { name: "Остановить ленту клиентов" }).click();
         await page.locator('.v3-marquee[data-motion="false"]').waitFor();
-        await page.waitForTimeout(50);
-        const paused = await track.evaluate((el) => el.getBoundingClientRect().x);
+        // Wait for the browser's pending pause and font layout, not a fixed 50 ms.
+        await track.evaluate(async (el) => {
+          await document.fonts.ready;
+          const animations = el.getAnimations();
+          await Promise.all(animations.map((animation) => animation.ready));
+          await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+        });
+        const paused = await track.evaluate((el) => ({
+          x: el.getBoundingClientRect().x,
+          animations: el.getAnimations().map((animation) => ({ state: animation.playState, time: animation.currentTime })),
+        }));
+        assert.ok(paused.animations.length > 0, `${engine.name()}: pause preserves animation`);
+        assert.ok(paused.animations.every((animation) => animation.state === "paused"), `${engine.name()}: animation is paused`);
         await page.waitForTimeout(250);
-        assert.ok(Math.abs(await track.evaluate((el) => el.getBoundingClientRect().x) - paused) < 1);
+        const still = await track.evaluate((el) => ({
+          x: el.getBoundingClientRect().x,
+          times: el.getAnimations().map((animation) => animation.currentTime),
+        }));
+        assert.deepEqual(still.times, paused.animations.map((animation) => animation.time), `${engine.name()}: paused timeline does not advance`);
+        assert.ok(Math.abs(still.x - paused.x) < 1, `${engine.name()}: paused client tape does not move`);
         const video = page.locator('video');
         await video.evaluate((v: HTMLVideoElement) => v.pause());
         await page.getByRole('button', { name: "Воспроизвести шоурил", exact: true }).click();

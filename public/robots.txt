@@ -5,6 +5,7 @@ Disallow: /admin
 Disallow: /account
 Disallow: /g/
 Disallow: /gallery
+Allow: /gallery-terms$
 Disallow: /journal
 # Открыта только коммерческая страница /photo; возможные вложенные пути остаются закрыты.
 Disallow: /photo/

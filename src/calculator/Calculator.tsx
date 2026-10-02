@@ -83,6 +83,15 @@ export default function Calculator() {
     if (currentSession?.name) setName(currentSession.name);
   }, []);
 
+  // Photo CTAs select the matching estimate after mount so static HTML and
+  // the first hydration render stay identical.
+  useEffect(() => {
+    const service = new URLSearchParams(window.location.search).get("service");
+    const target = service === "photo-reportage" ? "Репортажная фотосъёмка"
+      : service === "photo-studio" ? "Студийная фотосъёмка" : null;
+    if (target && TYPES.includes(target)) setShootType(target);
+  }, []);
+
   // Скидки и прайс могут быть отредактированы в админке/БД — подтягиваем их.
   const [tiersReady, setTiersReady] = useState(0);
   useEffect(() => {

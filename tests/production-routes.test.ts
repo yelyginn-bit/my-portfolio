@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { spawn } from "node:child_process";
+import { createServer } from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { ROUTE_MANIFEST } from "../src/public/routeManifest.ts";
@@ -27,5 +29,53 @@ test("every non-prerendered route in ROUTE_MANIFEST resolves somewhere in produc
     if (route.render === "redirect" || route.render === "private" || route.render === "v3" || route.render === "calculator") continue;
     const resolvable = prerendered.has(route.path) || pageMapKeys.has(route.path) || prefixCovered(route.path);
     assert.ok(resolvable, `${route.path}: не найден ни в dist/prerender-manifest.json, ни в server/production-server.js pageMap, ни под известным префиксом — вернёт 404 в проде`);
+  }
+});
+
+test("production HTTP routes redirect photo aliases and return 404 for unknown portfolio slugs", async () => {
+  const portProbe = createServer();
+  await new Promise<void>((resolve, reject) => {
+    portProbe.once("error", reject);
+    portProbe.listen(0, "127.0.0.1", resolve);
+  });
+  const address = portProbe.address();
+  assert.ok(address && typeof address !== "string");
+  const port = address.port;
+  await new Promise<void>((resolve, reject) => portProbe.close((error) => error ? reject(error) : resolve()));
+
+  const child = spawn(process.execPath, ["server/production-server.js"], {
+    cwd: root,
+    env: { ...process.env, PORT: String(port) },
+    stdio: "ignore",
+  });
+  const origin = `http://127.0.0.1:${port}`;
+  try {
+    let ready = false;
+    for (let attempt = 0; attempt < 100; attempt += 1) {
+      if (child.exitCode !== null) break;
+      try {
+        const response = await fetch(`${origin}/photo`);
+        if (response.status === 200) { ready = true; break; }
+      } catch { /* server is still starting */ }
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    assert.ok(ready, "production server did not become ready");
+
+    const photoSlash = await fetch(`${origin}/photo/?utm_source=test`, { redirect: "manual" });
+    assert.equal(photoSlash.status, 301);
+    assert.equal(photoSlash.headers.get("location"), "/photo?utm_source=test");
+
+    const photoHtml = await fetch(`${origin}/photo.html?utm_source=test`, { redirect: "manual" });
+    assert.equal(photoHtml.status, 301);
+    assert.equal(photoHtml.headers.get("location"), "/photo?utm_source=test");
+
+    const validProject = await fetch(`${origin}/portfolio/hoff-product-cards`);
+    assert.equal(validProject.status, 200);
+
+    const unknownProject = await fetch(`${origin}/portfolio/preload`);
+    assert.equal(unknownProject.status, 404);
+  } finally {
+    child.kill("SIGTERM");
+    if (child.exitCode === null) await new Promise<void>((resolve) => child.once("exit", () => resolve()));
   }
 });

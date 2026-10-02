@@ -111,6 +111,15 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.getByRole('button', { name: "Поставить шоурил на паузу" }).click();
         assert.equal(await video.evaluate((v: HTMLVideoElement) => v.paused), true);
         await page.goto(origin + "/calculator");
+        await page.goto(origin + "/photo");
+        assert.equal(await page.getByRole('link', { name: 'Рассчитать стоимость фотосъёмки' }).first().getAttribute('href'), '/calculator?service=photo-studio');
+        await page.goto(origin + "/calculator?service=photo-reportage");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Репортажная фотосъёмка'));
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 6 000 ₽');
+        await page.goto(origin + "/calculator?service=photo-studio");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 000 ₽');
+        await page.goto(origin + "/calculator");
         const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
         for (const [shootType, data] of Object.entries(ESTIMATE_DATA)) {
           await page.getByRole('button', { name: shootType, exact: true }).click();

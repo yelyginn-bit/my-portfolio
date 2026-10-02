@@ -47,6 +47,26 @@ test("sitemap is generated from the indexable route manifest", () => {
   }
 });
 
+test("robots.txt permits the public gallery terms while keeping galleries and app routes private", () => {
+  for (const file of ["robots.txt", "public/robots.txt"]) {
+    const robots = read(file);
+    assert.match(robots, /^Allow: \/gallery-terms\$$/mu, `${file}: exact allow rule for public /gallery-terms`);
+    assert.match(robots, /^Disallow: \/gallery$/mu, `${file}: private /gallery remains blocked`);
+    assert.match(robots, /^Disallow: \/photo\/$/mu, `${file}: nested /photo/ paths remain blocked`);
+    assert.match(robots, /^Disallow: \/portfolio\/photo$/mu, `${file}: private photo gallery remains blocked`);
+    assert.doesNotMatch(robots, /^Disallow: \/photo$/mu, `${file}: public /photo page must remain crawlable`);
+  }
+});
+
+test("photo delivery promises match the owner-confirmed preview and gallery timing", () => {
+  const photoPage = read("photo.html");
+  const pricingSource = read("src/lib/pricing.data.ts");
+  assert.match(photoPage, /первое превью — в течение 48 часов/iu);
+  assert.match(photoPage, /готовая галерея — обычно за 3–5 рабочих дней/iu);
+  assert.doesNotMatch(photoPage, /5–10 рабочих дней/iu);
+  assert.match(pricingSource, /Превью — в течение 48 часов; готовая галерея — обычно за 3–5 рабочих дней/gu);
+});
+
 test("private application pages are noindex", () => {
   for (const file of ["account.html", "admin.html", "gallery.html", "journal.html", "portfolio-photo.html"]) {
     assert.match(read(file), /name="robots" content="noindex,nofollow"/u, file);

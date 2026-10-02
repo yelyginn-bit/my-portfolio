@@ -23,6 +23,17 @@ test("Discovery uses public prices and actual project credits", () => {
   }
 });
 
+test("Public person entity uses one stable photo-and-video identity", () => {
+  for (const route of ["/", "/about", "/contact", "/photo"]) {
+    const graph = discoveryGraph(route)["@graph"];
+    const person = graph.find((node) => node["@type"] === "Person")!;
+    assert.equal(person["@id"], "https://yelyginn.ru/#person");
+    assert.match(String(person.jobTitle), /фотограф/iu);
+    assert.match(String(person.description), /семейн/iu);
+    assert.ok(graph.some((node) => node["@type"] === "LocalBusiness" && node["@id"] === "https://yelyginn.ru/#business"));
+  }
+});
+
 test("Every public output has generated parseable discovery; private paths remain excluded", () => {
   for (const route of INDEXABLE_ROUTES) {
     const rel = route.path === "/" ? "" : route.path.slice(1);

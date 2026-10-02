@@ -2,10 +2,12 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /account
+Disallow: /api/
 Disallow: /gallery
+Allow: /gallery-terms$
 Disallow: /g/
 Disallow: /journal
-Disallow: /photo
+Disallow: /photo/
 Disallow: /portfolio/photo
 
 Sitemap: https://yelyginn.ru/sitemap.xml

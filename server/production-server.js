@@ -87,6 +87,19 @@ app.get("/cases", (_req, res) => {
   res.redirect(301, "/portfolio");
 });
 
+app.get("/photo/", (req, res, next) => {
+  // Express matches trailing-slash routes in both forms unless strict routing
+  // is enabled; preserve /photo itself and redirect only the duplicate URL.
+  if (req.path !== "/photo/") return next();
+  const query = req.originalUrl.includes("?") ? req.originalUrl.slice(req.originalUrl.indexOf("?")) : "";
+  return res.redirect(301, `/photo${query}`);
+});
+
+app.get("/photo.html", (req, res) => {
+  const query = req.originalUrl.includes("?") ? req.originalUrl.slice(req.originalUrl.indexOf("?")) : "";
+  res.redirect(301, `/photo${query}`);
+});
+
 app.get("/portfolio/photo", (_req, res) => {
   res.redirect(301, "/photo#gallery");
 });
@@ -131,7 +144,6 @@ app.get("*", (req, res) => {
   }
   let fileName = pageMap.get(urlPath);
 
-  if (!fileName && urlPath.startsWith("/portfolio/")) fileName = "project.html";
   if (!fileName && urlPath.startsWith("/g/")) fileName = "gallery.html";
   if (!fileName && urlPath.startsWith("/journal/")) fileName = "journal.html";
   if (!fileName && urlPath.startsWith("/blog/")) {

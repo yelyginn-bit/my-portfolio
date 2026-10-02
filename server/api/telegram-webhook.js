@@ -3,7 +3,7 @@
 // callback «✅ Подтвердить вход» (подтверждение по кнопке).
 import { getAdmin } from "./_lib/db.js";
 import { askContact, tg } from "./_lib/telegram.js";
-import { normalizePhone } from "./_lib/util.js";
+import { isValidPhone, normalizePhone } from "./_lib/util.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ ok: false });
@@ -37,7 +37,9 @@ export default async function handler(req, res) {
       const chatId = msg.chat.id;
       const contact = msg.contact;
       // Контакт должен принадлежать отправителю (а не пересланный чужой).
-      if (contact.user_id && msg.from?.id && contact.user_id !== msg.from.id) {
+      if (!Number.isSafeInteger(contact.user_id) || !Number.isSafeInteger(msg.from?.id)
+        || contact.user_id !== msg.from.id || msg.chat?.type !== "private"
+        || chatId !== msg.from.id || !isValidPhone(contact.phone_number)) {
         await tg("sendMessage", { chat_id: chatId, text: "Пожалуйста, отправьте СВОЙ номер кнопкой ниже." });
         return res.status(200).json({ ok: true });
       }
@@ -65,7 +67,7 @@ export default async function handler(req, res) {
           .limit(1)
           .maybeSingle();
         if (pending) {
-          await admin.from("auth_otp").update({ status: "confirmed", phone, used_at: new Date().toISOString() }).eq("id", pending.id);
+          await admin.from("auth_otp").update({ status: "confirmed", phone, used_at: new Date().toISOString() }).eq("id", pending.id).eq("status", "pending").is("used_at", null).gt("expires_at", new Date().toISOString());
         }
       }
       await tg("sendMessage", {
@@ -81,11 +83,13 @@ export default async function handler(req, res) {
       const cq = update.callback_query;
       const data = cq.data || "";
       const chatId = cq.message?.chat?.id;
-      if (admin && data.startsWith("confirm_") && data.length <= 220) {
+      if (admin && typeof data === "string" && /^confirm_[A-Za-z0-9_-]{43}$/.test(data)
+        && cq.message?.chat?.type === "private" && Number.isSafeInteger(cq.from?.id)
+        && chatId === cq.from.id) {
         const token = data.slice(8);
         const { data: row } = await admin.from("auth_otp").select("id, chat_id").eq("token", token).eq("status", "pending").gt("expires_at", new Date().toISOString()).maybeSingle();
-        if (row && (!row.chat_id || row.chat_id === chatId)) {
-          await admin.from("auth_otp").update({ status: "confirmed", used_at: new Date().toISOString() }).eq("id", row.id);
+        if (row && row.chat_id === chatId) {
+          await admin.from("auth_otp").update({ status: "confirmed", used_at: new Date().toISOString() }).eq("id", row.id).eq("chat_id", chatId).eq("status", "pending").is("used_at", null).gt("expires_at", new Date().toISOString());
         }
       }
       await tg("answerCallbackQuery", { callback_query_id: cq.id, text: "Запрос обработан" });

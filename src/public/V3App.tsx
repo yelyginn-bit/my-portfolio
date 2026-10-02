@@ -4,6 +4,7 @@ import { AiAskBlock } from "../components/site/AiAskBlock";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
 import { secureFetch } from "../lib/api";
+import { trackAnalyticsEvent } from "../lib/analytics";
 import { COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
 import ColorCompare from "../components/ColorCompare";
 import {
@@ -134,7 +135,7 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="v3-footer">
-      <div className="v3-footer__wordmark" aria-label="YELYGINN">
+      <div className="v3-footer__wordmark" role="img" aria-label="YELYGINN">
         <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
           <text x="0" y="0">YELYGINN</text>
         </svg>
@@ -159,40 +160,60 @@ export function SiteFooter() {
 
 function HeroShowreel() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const userControlled = useRef(false);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [fallbackOpen, setFallbackOpen] = useState(false);
 
+  const startPlayback = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || videoFailed) return;
+    // Set the source and play in the same user gesture for mobile Safari.
+    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
+    video.play().catch(() => {
+      setPlaying(false);
+      if (video.error) setVideoFailed(true);
+    });
+  }, [videoFailed]);
+
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-    // The prerendered media can fail before React attaches its event handlers.
-    if (video.error) { setVideoFailed(true); return; }
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      video.play().catch(() => {
-        setPlaying(false);
-        if (video.error) setVideoFailed(true);
-      });
-    }
-    return () => video.pause();
-  }, []);
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const deferToUser = window.matchMedia("(max-width: 767px)").matches
+      || window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      || connection?.saveData;
+    if (!video || deferToUser) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const schedule = () => {
+      timer = setTimeout(() => { if (!userControlled.current) startPlayback(); }, 1200);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+    return () => {
+      window.removeEventListener("load", schedule);
+      clearTimeout(timer);
+      video.pause();
+    };
+  }, [startPlayback]);
 
   const togglePlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video || videoFailed) return;
-    if (video.paused) video.play().catch(() => setPlaying(false));
+    userControlled.current = true;
+    if (video.paused) startPlayback();
     else video.pause();
-  }, [videoFailed]);
+  }, [videoFailed, startPlayback]);
 
   const toggleSound = useCallback(() => {
     const video = videoRef.current;
     if (!video || videoFailed) return;
+    userControlled.current = true;
     video.muted = !video.muted;
     setMuted(video.muted);
-    if (video.paused) video.play().catch(() => setPlaying(false));
-  }, [videoFailed]);
+    if (video.paused) startPlayback();
+  }, [videoFailed, startPlayback]);
 
   return (
     <section
@@ -211,12 +232,11 @@ function HeroShowreel() {
         />
         {!videoFailed && <video
           ref={videoRef}
-          src="/v3-assets/hero-showreel.mp4"
           poster="/v3-assets/hero-showreel-poster.webp"
-          muted
+          muted={muted}
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -228,7 +248,7 @@ function HeroShowreel() {
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
         <div className="v32-hero__title" aria-hidden="true">СНИМАЮ<span>МОНТИРУЮ</span><span>ФОТОГРАФИРУЮ</span></div>
         <div className="v32-hero__position"><b>YELYGINN</b><span>НИЖНИЙ НОВГОРОД // РОССИЯ // ВЫЕЗД // УДАЛЁННЫЙ ПОСТ</span></div>
-        <p className="v32-hero__lead">Реклама, события, репортаж. Многокамерный монтаж и цвет. На трансляциях работаю в команде. Портфолио — сначала видео, потом слова.</p>
+        <p className="v32-hero__lead">Фото для бизнеса, деловые и личные портреты, семейные серии и мероприятия. Реклама, Reels, многокамерный монтаж и цвет. На трансляциях работаю в команде.</p>
         <div className="v32-hero__actions">
           <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ РАБОТЫ <ArrowRight /></a>
           <a className="v3-button v3-button--line" href="#contact">ОБСУДИТЬ ПРОЕКТ <ArrowUpRight /></a>
@@ -281,7 +301,7 @@ function HomeServices() {
     <section className="v32-services v3-shell" aria-labelledby="home-services-title">
       <header className="v32-services__head">
         <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
-        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Видеосъёмка и видеопродакшн в Нижнем Новгороде") } as CSSProperties}>Видеосъёмка и видеопродакшн в Нижнем Новгороде</h1>
+        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Фотограф и видеооператор в Нижнем Новгороде") } as CSSProperties}>Фотограф и видеооператор в Нижнем Новгороде</h1>
         <h2>Услуги видеосъёмки в Нижнем Новгороде</h2>
       </header>
       <div className="v32-services__grid">
@@ -455,6 +475,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
       const body = await response.json().catch(() => ({}));
       if (!response.ok || !body?.ok) throw new Error("delivery failed");
       setStatus("success");
+      trackAnalyticsEvent("lead_submit", { service, source: window.location.pathname });
       setName(""); setContact(""); setMessage(""); setPrivacy(false); setConsent(false);
     } catch {
       setStatus("error");
@@ -507,13 +528,14 @@ function HomePage() {
             <p className="v3-kicker">ОБО МНЕ</p>
             <h2>СНИМАЮ <span>//</span> <i>МОНТИРУЮ</i></h2>
             <ul className="v3-about__roles" aria-label="Роли">
-              <li>Оператор</li>
+              <li>Фотограф</li>
+              <li>Видеооператор</li>
               <li>Режиссёр монтажа</li>
               <li>Колорист</li>
             </ul>
           </div>
           <div className="v3-about__text">
-            <p>Я оператор и режиссёр монтажа из Нижнего Новгорода. Снимаю сам и работаю в составе production-команд.</p>
+            <p>Я фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода. Снимаю для бизнеса, деловые и личные портреты, семейные серии и мероприятия. В видеопроектах работаю сам и в составе production-команд.</p>
             <p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p>
             <p>Преподаю видеопроизводство на Медиафоруме молодых журналистов в ВДЦ «Смена», стажировался на ГТРК «Нижний Новгород».</p>
             <p>Среди клиентов — Сберуниверситет, СИБУР, Cartier, HOFF, Caprigo.</p>

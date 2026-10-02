@@ -19,6 +19,17 @@ import { SITE } from "../src/config/site";
 
 const REQUIRED_HEADER_LINKS: readonly NavLink[] = [PORTFOLIO_OVERVIEW_LINK, PHOTO_LINK, PRICES_LINK, BLOG_LINK, ABOUT_LINK, CALCULATOR_LINK];
 
+/** Apply static-page layout before first paint, preserving existing body attributes. */
+export function markStaticBody(html: string): string {
+  return html.replace(/<body\b([^>]*)>/iu, (_tag, attrs: string) => {
+    const classAttr = attrs.match(/\bclass=(['"])(.*?)\1/iu);
+    if (!classAttr) return `<body${attrs} class="site-static">`;
+    const classes = classAttr[2].split(/\s+/u).filter(Boolean);
+    if (classes.includes("site-static")) return `<body${attrs}>`;
+    return `<body${attrs.replace(classAttr[0], `class=${classAttr[1]}${[...classes, "site-static"].join(" ")}${classAttr[1]}`)}>`;
+  });
+}
+
 /** Возвращает те из REQUIRED_HEADER_LINKS, которых ещё нет в переданном HTML шапки. */
 function missingLinks(headerHtml: string): NavLink[] {
   return REQUIRED_HEADER_LINKS.filter((item) => !headerHtml.includes(`href="${item.href}"`));
@@ -157,7 +168,7 @@ export function renderV3Footer(active: V3ChromeActive = {}): string {
     return `<nav aria-label="${escapeHtml(group.title)}"><strong>${escapeHtml(group.title)}</strong>${links}</nav>`;
   }).join("");
   return `<footer class="v3-footer">
-      <div class="v3-footer__wordmark" aria-label="YELYGINN">
+      <div class="v3-footer__wordmark" role="img" aria-label="YELYGINN">
         <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
           <text x="0" y="0">YELYGINN</text>
         </svg>

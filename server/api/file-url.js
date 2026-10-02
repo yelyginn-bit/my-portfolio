@@ -14,6 +14,7 @@
 import { presign, r2Config } from "./_lib/r2.js";
 import { getAdmin } from "./_lib/db.js";
 import { verifySupabaseJwt } from "./_lib/jwt.js";
+import { hasUnexpiredTimestamp } from "./_lib/util.js";
 import { parseCookies, verifyCsrf } from "./_lib/security.js";
 
 /** Bearer-токен из заголовка Authorization, либо null. */
@@ -38,7 +39,9 @@ async function ticketGrantsKey(admin, ticket, key) {
   if (!claims?.gallery_access || !claims.gallery_id || !claims.share_id) return false;
   const { data: link } = await admin.from("share_links").select("id,gallery_id,expires_at").eq("id", claims.share_id).eq("gallery_id", claims.gallery_id).maybeSingle();
   if (!link) return false;
-  if (link.expires_at && new Date(link.expires_at).getTime() < Date.now()) return false;
+  if (link.expires_at !== null && !hasUnexpiredTimestamp(link.expires_at)) return false;
+  const { data: gallery } = await admin.from("galleries").select("id").eq("id", link.gallery_id).eq("published", true).maybeSingle();
+  if (!gallery) return false;
   const { data: asset } = await admin
     .from("assets")
     .select("id")

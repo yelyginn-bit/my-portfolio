@@ -60,3 +60,10 @@ export function readJsonBody(req) {
     return {};
   }
 }
+
+/** Не принимаем отсутствующий, некорректный или уже истёкший срок OTP. */
+export function hasUnexpiredTimestamp(value, now = Date.now()) {
+  if (typeof value !== "string" || !value) return false;
+  const expires = Date.parse(value);
+  return Number.isFinite(expires) && expires > now;
+}

@@ -112,3 +112,33 @@ test("shared navigation: readable labels, low-window scroll, cookie choice and k
     }
   } finally { server.close(); }
 });
+
+
+test("static photo layout survives a delayed shell without moving the hero", async () => {
+  const { server, origin } = await startLocalServer();
+  const browser = await chromium.launch();
+  try {
+    for (const width of [1440, 390]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 } });
+      let releaseShell!: () => void;
+      const shellGate = new Promise<void>(resolve => { releaseShell = resolve; });
+      await page.route("**/site-shell.js", async route => { await shellGate; await route.continue(); });
+      await page.goto(origin + "/photo", { waitUntil: "commit" });
+      await page.locator(".service-hero-layout").waitFor({ state: "visible" });
+      await page.evaluate(() => document.fonts.ready);
+      const geometry = () => page.evaluate(() => ({
+        staticClass: document.body.classList.contains("site-static"),
+        hero: document.querySelector(".service-hero-layout")!.getBoundingClientRect().toJSON(),
+        overflow: document.documentElement.scrollWidth - innerWidth,
+      }));
+      const before = await geometry();
+      assert.equal(before.staticClass, true, "static layout is in the initial HTML before shell execution");
+      releaseShell();
+      await page.waitForLoadState("domcontentloaded");
+      const after = await geometry();
+      assert.deepEqual(after.hero, before.hero, "deferred shell cannot switch the hero layout");
+      assert.equal(after.overflow, 0);
+      await page.close();
+    }
+  } finally { await browser.close(); server.close(); }
+});

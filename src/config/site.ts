@@ -2,6 +2,7 @@ import { PUBLIC_PRICE_BY_ID } from "../lib/pricing.data";
 
 export const SITE = {
   brand: "YELYGINN",
+  metrikaId: 110355040,
   owner: "Юрий Елыгин",
   location: "Нижний Новгород",
   regionLabel: "Нижний Новгород // Россия",

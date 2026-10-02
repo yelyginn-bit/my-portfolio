@@ -17,7 +17,10 @@ export default async function handler(req, res) {
 
   const token = genToken();
   const passwordHash = password ? hashPassword(String(password)) : null;
-  const safeExpiresAt = expiresAt && Number.isFinite(new Date(expiresAt).getTime()) ? new Date(expiresAt).toISOString() : null;
+  if (expiresAt != null && expiresAt !== "" && (typeof expiresAt !== "string" || !Number.isFinite(Date.parse(expiresAt)) || Date.parse(expiresAt) <= Date.now())) {
+    return res.status(400).json({ ok: false, error: "Некорректный срок действия" });
+  }
+  const safeExpiresAt = expiresAt ? new Date(expiresAt).toISOString() : null;
   const { data, error } = await admin.from("share_links").insert({
     gallery_id: gallery.id,
     token,

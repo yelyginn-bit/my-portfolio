@@ -1,6 +1,6 @@
 import { getAdmin } from "./_lib/db.js";
 import { rateLimit, requestIp, verifyCsrf } from "./_lib/security.js";
-import { readJsonBody, sha256, verifyPassword } from "./_lib/util.js";
+import { hasUnexpiredTimestamp, readJsonBody, sha256, verifyPassword } from "./_lib/util.js";
 import { signSupabaseJwt, verifySupabaseJwt } from "./_lib/jwt.js";
 
 const kinds = new Set(["like", "retouch", "print"]);
@@ -9,7 +9,7 @@ const cleanText = (value, limit) => String(value || "").replace(/[\u0000-\u001f\
 async function access(admin, token, password) {
   if (!token || typeof token !== "string" || token.length > 200) return null;
   const { data: link } = await admin.from("share_links").select("id,gallery_id,password_hash,can_download,expires_at").eq("token", token).maybeSingle();
-  if (!link || (link.expires_at && new Date(link.expires_at).getTime() < Date.now())) return null;
+  if (!link || (link.expires_at !== null && !hasUnexpiredTimestamp(link.expires_at))) return null;
   if (link.password_hash && !verifyPassword(password || "", link.password_hash)) return { password: true };
   return link;
 }
@@ -18,8 +18,9 @@ async function ticketAccess(admin, ticket) {
   const claims = verifySupabaseJwt(ticket, process.env.SUPABASE_JWT_SECRET);
   if (!claims?.gallery_access || !claims.share_id || !claims.gallery_id) return null;
   const { data: link } = await admin.from("share_links").select("id,gallery_id,can_download,expires_at").eq("id", claims.share_id).eq("gallery_id", claims.gallery_id).maybeSingle();
-  if (!link || (link.expires_at && new Date(link.expires_at).getTime() < Date.now())) return null;
-  return link;
+  if (!link || (link.expires_at !== null && !hasUnexpiredTimestamp(link.expires_at))) return null;
+  const { data: gallery } = await admin.from("galleries").select("id").eq("id", link.gallery_id).eq("published", true).maybeSingle();
+  return gallery ? link : null;
 }
 
 const assetDto = (a) => ({ id: a.id, galleryId: a.gallery_id, albumId: a.album_id || undefined, type: a.type, storageKey: a.storage_key, webKey: a.web_key || undefined, thumbKey: a.thumb_key || undefined, filename: a.filename || undefined, mime: a.mime || undefined, width: a.width || undefined, height: a.height || undefined, durationSec: a.duration_sec || undefined, sizeBytes: a.size_bytes || undefined, videoProvider: a.video_provider || undefined, videoUid: a.video_uid || undefined, aiTags: a.ai_tags || [], faceGroup: a.face_group || undefined, sortOrder: a.sort_order || 0, createdAt: a.created_at });

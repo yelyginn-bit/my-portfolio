@@ -4,7 +4,8 @@ import path from 'path';
 import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
 import {extractPriceLikeNumbers} from './scripts/priceGuard';
 import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
-import {augmentStaticHeader, augmentStaticFooter, STATIC_SHELL_FILES, replaceWithV3Chrome, type V3ChromeActive} from './scripts/staticShellTemplate';
+import {SITE} from './src/config/site';
+import {augmentStaticHeader, augmentStaticFooter, markStaticBody, STATIC_SHELL_FILES, replaceWithV3Chrome, type V3ChromeActive} from './scripts/staticShellTemplate';
 import {augmentServiceRelatedWork, augmentBlogContext, BLOG_SERVICE} from './scripts/relatedWork';
 
 /**
@@ -45,9 +46,10 @@ const bakeStaticShellNav = () => ({
   transformIndexHtml(html: string, ctx: {filename: string}) {
     const relativePath = path.relative(process.cwd(), ctx.filename).split(path.sep).join('/');
     if (!STATIC_SHELL_FILES.includes(relativePath)) return html;
+    const staticHtml = markStaticBody(html);
     const withShell = relativePath in V3_CHROME_FILES
-      ? replaceWithV3Chrome(html, relativePath, V3_CHROME_FILES[relativePath])
-      : augmentStaticFooter(augmentStaticHeader(html, relativePath), relativePath);
+      ? replaceWithV3Chrome(staticHtml, relativePath, V3_CHROME_FILES[relativePath])
+      : augmentStaticFooter(augmentStaticHeader(staticHtml, relativePath), relativePath);
     const withRelatedWork = augmentServiceRelatedWork(withShell, relativePath);
     if (relativePath in BLOG_SERVICE) return augmentBlogContext(withRelatedWork, relativePath);
     return withRelatedWork;
@@ -152,7 +154,7 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       bakeStaticShellNav(),
       pryamyeTranslyaciiJsonLd(),
-      sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID || '', env.VITE_GA_ID || ''),
+      sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID ?? String(SITE.metrikaId), env.VITE_GA_ID || ''),
     ],
     resolve: {
       alias: {

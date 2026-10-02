@@ -42,10 +42,14 @@ export function verifySupabaseJwt(token, secret) {
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
   let payload;
   try {
+    const header = JSON.parse(Buffer.from(h, "base64url").toString("utf8"));
+    if (header?.alg !== "HS256") return null;
     payload = JSON.parse(Buffer.from(p.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
   } catch {
     return null;
   }
-  if (payload.exp && Math.floor(Date.now() / 1000) >= payload.exp) return null;
+  const now = Math.floor(Date.now() / 1000);
+  if (!payload || typeof payload !== "object" || !Number.isSafeInteger(payload.exp) || payload.exp <= now) return null;
+  if (payload.nbf !== undefined && (!Number.isSafeInteger(payload.nbf) || payload.nbf > now)) return null;
   return payload;
 }

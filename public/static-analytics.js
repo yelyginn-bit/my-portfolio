@@ -6,6 +6,7 @@
   const allowedEvents = new Set(["lead_submit", "telegram_click", "calculator_use", "portfolio_view", "discuss_project_click"]);
   const allowedParams = new Set(["page", "service", "source", "section", "total_min", "total_max"]);
   let started = false;
+  let portfolioTracked = false;
 
   const appendScript = (src) => {
     if (document.querySelector(`script[src="${src}"]`)) return;
@@ -15,7 +16,7 @@
     document.head.appendChild(script);
   };
 
-  const privatePath = /^\/(?:account|admin|g)(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
+  const privatePath = /^\/(?:account|admin|g|gallery|journal)(?:\/|$)|^\/photo\/|^\/portfolio\/photo(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
   const hasConsent = () => {
     try { return Boolean(JSON.parse(localStorage.getItem(consentKey) || "null")?.analytics); } catch { return false; }
   };
@@ -33,6 +34,7 @@
     started = true;
 
     if (/^G-[A-Z0-9]+$/u.test(gaId)) {
+      window[`ga-disable-${gaId}`] = false;
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };
       window.gtag("js", new Date());
@@ -59,6 +61,10 @@
       });
       appendScript("https://mc.yandex.ru/metrika/tag.js");
     }
+    if (!portfolioTracked && /^\/portfolio(?:\/|$)/u.test(location.pathname)) {
+      portfolioTracked = true;
+      track("portfolio_view", { page: safePath() });
+    }
   };
 
   const track = (name, params = {}) => {
@@ -76,9 +82,6 @@
     const href = link.href;
     const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
     if (href.includes("t.me/")) track("telegram_click", { page: safePath() });
-    if (/\/portfolio(?:\/|$)/u.test(new URL(href, location.href).pathname)) {
-      track("portfolio_view", { section: "portfolio" });
-    }
     if (/обсудить (?:похожий )?проект/iu.test(label)) {
       track("discuss_project_click", { page: location.pathname });
     }
@@ -88,7 +91,14 @@
   window.addEventListener("yelyginn:cookie-consent", (event) => {
     if (event.detail?.analytics) start();
     else {
-      document.querySelectorAll('script[src*="googletagmanager.com"],script[src*="mc.yandex.ru/metrika"]').forEach((script) => script.remove());
+      if (Number.isFinite(metrikaId) && metrikaId > 0) {
+        if (window.ym?.a) window.ym.a.splice(0, window.ym.a.length, ...window.ym.a.filter((args) => Number(args[0]) !== metrikaId));
+        window.ym?.(metrikaId, "destruct");
+      }
+      if (gaId) {
+        window[`ga-disable-${gaId}`] = true;
+        window.gtag?.("consent", "update", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+      }
       started = false;
     }
   });

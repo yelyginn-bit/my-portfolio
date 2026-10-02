@@ -1,8 +1,26 @@
 // POST /api/auth-verify  { phone, code, token }
 // Проверяет код, помечает запрос подтверждённым, создаёт/находит клиента.
 import { getAdmin } from "./_lib/db.js";
-import { normalizePhone, readJsonBody, safeEqual, sha256 } from "./_lib/util.js";
+import { hasUnexpiredTimestamp, isValidPhone, normalizePhone, readJsonBody, safeEqual, sha256 } from "./_lib/util.js";
 import { rateLimit, requestIp, verifyCsrf } from "./_lib/security.js";
+
+// Compare-and-swap сохраняет каждую неудачную попытку и при параллельных запросах.
+async function recordFailedAttempt(admin, initial) {
+  let row = initial;
+  for (let retry = 0; retry < 5; retry += 1) {
+    if (!row || row.status !== "pending" || row.used_at || !hasUnexpiredTimestamp(row.expires_at)) return;
+    const attempts = Number(row.attempts);
+    if (!Number.isInteger(attempts) || attempts < 0 || attempts >= 5) return;
+    const updated = await admin.from("auth_otp")
+      .update({ attempts: attempts + 1 }).eq("id", row.id).eq("status", "pending")
+      .is("used_at", null).eq("attempts", attempts).gt("expires_at", new Date().toISOString())
+      .select("id").maybeSingle();
+    if (updated.data || updated.error) return;
+    const current = await admin.from("auth_otp").select("id,status,used_at,attempts,expires_at").eq("id", row.id).maybeSingle();
+    if (current.error) return;
+    row = current.data;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).json({ ok: true });
@@ -20,6 +38,11 @@ export default async function handler(req, res) {
     return res.status(429).json({ ok: false, error: genericError });
   }
 
+  if (!isValidPhone(p) || typeof token !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(token)
+    || typeof code !== "string" || !/^\d{6}$/.test(code.trim())) {
+    return res.status(400).json({ ok: false, error: genericError });
+  }
+
   const admin = getAdmin();
   if (!admin) return res.status(200).json({ ok: false, mode: "local" });
 
@@ -29,20 +52,23 @@ export default async function handler(req, res) {
     .eq("token", token)
     .maybeSingle();
 
-  if (!row || row.phone !== p) return res.status(400).json({ ok: false, error: genericError });
-  if (new Date(row.expires_at).getTime() < Date.now())
+  if (!row || row.phone !== p || row.status !== "pending" || row.used_at
+    || !hasUnexpiredTimestamp(row.expires_at) || !Number.isInteger(row.attempts)
+    || row.attempts < 0 || row.attempts >= 5) {
     return res.status(400).json({ ok: false, error: genericError });
-  if (row.used_at || Number(row.attempts || 0) >= 5) return res.status(400).json({ ok: false, error: genericError });
-  if (row.status !== "confirmed") {
-    if (!row.code_hash || !safeEqual(sha256(String(code).trim()), row.code_hash)) {
-      await admin.from("auth_otp").update({ attempts: Number(row.attempts || 0) + 1 }).eq("id", row.id);
-      await admin.from("security_events").insert({ event_type: "otp_verify_failed", subject_hash: sha256(p), ip, user_agent: String(req.headers?.["user-agent"] || "").slice(0, 400), details: { token_hash: sha256(String(token || "")) } });
-      return res.status(400).json({ ok: false, error: genericError });
-    }
-    await admin.from("auth_otp").update({ status: "confirmed", used_at: new Date().toISOString() }).eq("id", row.id);
-  } else {
-    await admin.from("auth_otp").update({ used_at: new Date().toISOString() }).eq("id", row.id);
   }
+  if (!row.code_hash || !safeEqual(sha256(code.trim()), row.code_hash)) {
+    await recordFailedAttempt(admin, row);
+    await admin.from("security_events").insert({ event_type: "otp_verify_failed", subject_hash: sha256(p), ip, user_agent: String(req.headers?.["user-agent"] || "").slice(0, 400), details: { token_hash: sha256(token) } });
+    return res.status(400).json({ ok: false, error: genericError });
+  }
+
+  // Проверка и одноразовое погашение должны быть одной операцией БД.
+  const confirmed = await admin.from("auth_otp")
+    .update({ status: "confirmed", used_at: new Date().toISOString() })
+    .eq("id", row.id).eq("phone", p).eq("status", "pending").is("used_at", null)
+    .lt("attempts", 5).gt("expires_at", new Date().toISOString()).select("id").maybeSingle();
+  if (!confirmed.data || confirmed.error) return res.status(400).json({ ok: false, error: genericError });
 
   // Создать/найти клиента.
   const { data: client } = await admin

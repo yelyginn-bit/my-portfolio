@@ -1,11 +1,16 @@
+import { SITE } from "../config/site";
+
 const CONSENT_KEY = "cookie_consent_v2";
 const CONSENT_EVENT = "yelyginn:cookie-consent";
-const PRIVATE_PATH = /^\/(?:account|admin|g)(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
+const PRIVATE_PATH = /^\/(?:account|admin|g|gallery|journal)(?:\/|$)|^\/photo\/|^\/portfolio\/photo(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
 const ALLOWED_EVENTS = new Set(["lead_submit", "telegram_click", "calculator_use", "portfolio_view", "discuss_project_click"]);
 const ALLOWED_PARAMS = new Set(["page", "service", "source", "section", "total_min", "total_max"]);
 
 let initialized = false;
 let clickTrackingBound = false;
+let portfolioTracked = false;
+const metrikaId = Number.parseInt((import.meta.env?.VITE_YANDEX_METRIKA_ID ?? String(SITE.metrikaId)).trim(), 10);
+const gaId = (import.meta.env?.VITE_GA_ID || "").trim();
 
 const appendScript = (src: string) => {
   if (document.querySelector(`script[src="${src}"]`)) return;
@@ -29,8 +34,15 @@ const sanitizeParams = (params: Record<string, string | number | boolean>) => Ob
 );
 
 const stopAnalytics = () => {
-  document.querySelectorAll<HTMLScriptElement>('script[src*="googletagmanager.com"],script[src*="mc.yandex.ru/metrika"]')
-    .forEach((script) => script.remove());
+  if (Number.isFinite(metrikaId) && metrikaId > 0) {
+    // Drop pending initialization if consent was withdrawn while the tag loaded.
+    if (window.ym?.a) window.ym.a.splice(0, window.ym.a.length, ...window.ym.a.filter((args) => Number(args[0]) !== metrikaId));
+    window.ym?.(metrikaId, "destruct");
+  }
+  if (gaId) {
+    window[`ga-disable-${gaId}`] = true;
+    window.gtag?.("consent", "update", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  }
   initialized = false;
 };
 
@@ -40,8 +52,8 @@ const startAnalytics = () => {
   if (initialized || !consent?.analytics || PRIVATE_PATH.test(window.location.pathname)) return;
   initialized = true;
 
-  const gaId = (import.meta.env.VITE_GA_ID || "").trim();
   if (gaId) {
+    window[`ga-disable-${gaId}`] = false;
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function gtag(...args: unknown[]) {
       window.dataLayer?.push(args);
@@ -57,7 +69,6 @@ const startAnalytics = () => {
     appendScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`);
   }
 
-  const metrikaId = Number.parseInt((import.meta.env.VITE_YANDEX_METRIKA_ID || "").trim(), 10);
   if (Number.isFinite(metrikaId) && metrikaId > 0) {
     window.ym = window.ym || function ym(...args: unknown[]) {
       (window.ym!.a = window.ym!.a || []).push(args);
@@ -70,6 +81,10 @@ const startAnalytics = () => {
       webvisor: false,
     });
     appendScript("https://mc.yandex.ru/metrika/tag.js");
+  }
+  if (!portfolioTracked && /^\/portfolio(?:\/|$)/u.test(window.location.pathname)) {
+    portfolioTracked = true;
+    trackAnalyticsEvent("portfolio_view", { page: safePath() });
   }
 };
 
@@ -85,7 +100,6 @@ export const trackAnalyticsEvent = (
   const safeParams = sanitizeParams(params);
   window.gtag?.("event", eventName, safeParams);
 
-  const metrikaId = Number.parseInt((import.meta.env.VITE_YANDEX_METRIKA_ID || "").trim(), 10);
   if (Number.isFinite(metrikaId) && metrikaId > 0) {
     window.ym?.(metrikaId, "reachGoal", eventName, safeParams);
   }
@@ -104,9 +118,6 @@ const bindClickTracking = () => {
     const href = link.href;
     if (href.includes("t.me/")) {
       trackAnalyticsEvent("telegram_click", { page: safePath() });
-    }
-    if (/\/portfolio(?:\/|$)/u.test(new URL(href, window.location.href).pathname)) {
-      trackAnalyticsEvent("portfolio_view", { section: "portfolio" });
     }
     const label = (link.textContent || "").trim().replace(/\s+/gu, " ").slice(0, 120);
     if (/обсудить (?:похожий )?проект/iu.test(label)) {
@@ -133,6 +144,7 @@ export const grantAnalyticsConsent = () => {
 
 declare global {
   interface Window {
+    [key: `ga-disable-${string}`]: boolean | undefined;
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
     ym?: ((...args: unknown[]) => void) & { a?: unknown[][]; l?: number };

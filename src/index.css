@@ -49,7 +49,7 @@
 /* Yelyginn unified production skin.
    Палитра больше не задаётся здесь: имена указывают на общие токены
    из design-system.css, чтобы на сайте была одна тема, а не три.
-   PROMPT-35 §4: --color-nothing-*/--color-mineral-* (@theme выше и
+   PROMPT-35 §4: --color-nothing-* и --color-mineral-* (@theme выше и
    --color-nothing-red ниже) удалены — проверено, что compiled CSS их не
    использует нигде в разметке (grep по *.tsx/*.html), а не только «не
    доказано, что читает». body { @apply bg-nothing-white text-nothing-black }

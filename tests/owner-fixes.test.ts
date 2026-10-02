@@ -183,3 +183,43 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
     }
   } finally { server.close(); }
 });
+
+test("hero avoids MP4 requests on mobile, reduced motion and saveData until a gesture", async () => {
+  const { server, origin } = await startLocalServer();
+  const browser = await chromium.launch();
+  try {
+    for (const mode of ['mobile', 'reduced', 'save-data', 'desktop']) {
+      const context = await browser.newContext({
+        viewport: { width: mode === 'mobile' ? 390 : 1440, height: 844 },
+        reducedMotion: mode === 'reduced' ? 'reduce' : 'no-preference',
+      });
+      const page = await context.newPage();
+      if (mode === 'save-data') await page.addInitScript(() => {
+        Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true } });
+      });
+      await page.route('**/api/**', r => r.fulfill({ contentType: 'application/json', body: '{"available":false}' }));
+      let mp4Requests = 0;
+      page.on('request', r => { if (r.url().includes('hero-showreel.mp4')) mp4Requests++; });
+      await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
+      assert.equal(mp4Requests, 0, mode + ': initial document does not fetch MP4');
+      if (mode === 'desktop') {
+        await page.waitForFunction(() => !!document.querySelector('video')?.getAttribute('src'));
+        assert.ok(mp4Requests > 0, 'desktop delayed autoplay requests MP4');
+      } else {
+        await page.waitForTimeout(1800);
+        assert.equal(mp4Requests, 0, mode + ': remains poster only without gesture');
+        assert.equal(await page.locator('video').getAttribute('src'), null);
+        await page.getByRole('button', { name: 'Воспроизвести шоурил', exact: true }).click();
+      }
+      await page.waitForFunction(() => {
+        const video = document.querySelector('video');
+        return !!video && !video.paused && video.currentTime > 0;
+      });
+      assert.ok(mp4Requests > 0, mode + ': genuine playback after request');
+      await page.getByRole('button', { name: 'Поставить шоурил на паузу', exact: true }).click();
+      await page.waitForTimeout(1400);
+      assert.equal(await page.locator('video').evaluate((v: HTMLVideoElement) => v.paused), true, mode + ': manual pause is preserved');
+      await context.close();
+    }
+  } finally { await browser.close(); server.close(); }
+});

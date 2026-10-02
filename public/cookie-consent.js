@@ -2,7 +2,7 @@
   const KEY = "cookie_consent_v2";
   const VERSION = "1.0";
   const EVENT = "yelyginn:cookie-consent";
-  const privatePath = /^\/(?:account|admin|g)(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
+  const privatePath = /^\/(?:account|admin|g|gallery|journal)(?:\/|$)|^\/photo\/|^\/portfolio\/photo(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
 
   const read = () => {
     try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; }
@@ -14,12 +14,11 @@
       document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`;
       document.cookie = `${name}=; Max-Age=0; path=/; domain=.${location.hostname}; SameSite=Lax`;
     });
-    window[`yaCounter${document.currentScript?.dataset?.metrikaId || ""}`]?.destruct?.();
   };
   const save = (analytics) => {
     localStorage.setItem(KEY, JSON.stringify({ necessary: true, analytics: Boolean(analytics), version: VERSION, updatedAt: new Date().toISOString() }));
-    if (!analytics) clearAnalytics();
     window.dispatchEvent(new CustomEvent(EVENT, { detail: { analytics: Boolean(analytics) } }));
+    if (!analytics) clearAnalytics();
   };
 
   const style = document.createElement("style");

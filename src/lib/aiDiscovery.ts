@@ -1,6 +1,6 @@
 import { SITE } from "../config/site";
 
-export const AI_QUESTION = `Расскажи о видеографе Юрии Елыгине (YELYGINN) из Нижнего Новгорода: какие услуги он оказывает, какие работы представлены и какую роль он выполнял в проектах. Используй https://yelyginn.ru/about, https://yelyginn.ru/portfolio и https://yelyginn.ru/ceny, дай ссылки на источники. Если сведений недостаточно, укажи это. Не придумывай опыт, роли и цены.`;
+export const AI_QUESTION = `Расскажи о фотографе и видеооператоре Юрии Елыгине (YELYGINN) из Нижнего Новгорода: какие фото- и видеоуслуги он оказывает, какие работы представлены и какую роль выполнял в проектах. Используй https://yelyginn.ru/about, https://yelyginn.ru/photo, https://yelyginn.ru/portfolio и https://yelyginn.ru/ceny. Дай ссылки на источники. Если сведений недостаточно, укажи это. Не придумывай опыт, роли и цены.`;
 
 export const AI_SERVICES = [
   { label: "ChatGPT", href: `https://chatgpt.com/?q=${encodeURIComponent(AI_QUESTION)}` },

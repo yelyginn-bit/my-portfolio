@@ -3,7 +3,7 @@
 // — скидка постоянного клиента подтягивается по телефону из хранилища;
 // — отправка заявки в Telegram (best-effort) + сохранение заказа в DataStore.
 // Auth по OTP появится в Фазе 2 и заменит ручной ввод телефона здесь.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getActiveEstimateData, getActiveShootTypes, hydratePriceRules } from "../lib/pricing.runtime";
 import { MAX_DAYS, URGENCY_SURCHARGE } from "../lib/pricing.config";
 import { computeBreakdown, formatRubRange } from "../lib/calc";
@@ -57,6 +57,12 @@ export default function Calculator() {
   );
   const [optSel, setOptSel] = useState<Set<string>>(new Set());
   const [urgent, setUrgent] = useState(false);
+  const usageTracked = useRef(false);
+  const recordUse = (target: EventTarget) => {
+    if (usageTracked.current || !(target instanceof Element) || !target.closest(".calc-type,.calc-row,.calc-range,[role=switch]")) return;
+    usageTracked.current = true;
+    trackAnalyticsEvent("calculator_use", { service: shootType });
+  };
   const hasSelectedDayItems = typeData.base.some((item) => item.unit === "day" && baseSel.has(item.name))
     || typeData.options.some((item) => item.unit === "day" && optSel.has(item.name));
   useEffect(() => { if (!hasSelectedDayItems) setDays(1); }, [hasSelectedDayItems]);
@@ -158,12 +164,6 @@ export default function Calculator() {
     if (breakdown.subtotalMax === 0) { setError("Выберите хотя бы одну позицию сметы."); return; }
     if (!consentAccepted) { setError("Подтвердите согласие на обработку персональных данных."); return; }
 
-    trackAnalyticsEvent("calculator_use", {
-      service: shootType,
-      total_min: breakdown.totalMin,
-      total_max: breakdown.totalMax,
-    });
-
     setSubmitting(true);
     try {
       // Заявка и событие согласия создаются только сервером после валидации.
@@ -201,15 +201,12 @@ export default function Calculator() {
             pageUrl: window.location.pathname,
           }),
         });
-        if (!response.ok && !import.meta.env.DEV) {
-          throw new Error("notification failed");
-        }
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok || body.ok !== true) throw new Error("notification failed");
       } catch {
-        if (!import.meta.env.DEV) {
-          setStatus("error");
-          setError("Расчёт сохранён, но уведомление не отправилось. Напишите в Telegram @YuriElygin.");
-          return;
-        }
+        setStatus("error");
+        setError("Не удалось отправить заявку. Напишите в Telegram @YuriElygin.");
+        return;
       }
 
       setStatus("success");
@@ -229,7 +226,7 @@ export default function Calculator() {
   return (
     <RoutePathContext.Provider value="/calculator">
     <SiteHeader />
-    <div className="calc-wrap">
+    <div className="calc-wrap" onClickCapture={(event) => recordUse(event.target)} onChangeCapture={(event) => recordUse(event.target)}>
 
       <main>
       <p className="calc-eyebrow">Калькулятор сметы</p>

@@ -102,7 +102,7 @@ export const PRIMARY_NAV: readonly PrimaryNavEntry[] = [
 export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] }[] = [
   {
     title: "Работы",
-    links: [PORTFOLIO_OVERVIEW_LINK, ...PORTFOLIO_CATEGORY_LINKS, PHOTO_LINK],
+    links: [PORTFOLIO_OVERVIEW_LINK, ...PORTFOLIO_CATEGORY_LINKS.map((item) => item.href === "/portfolio/color" ? { ...item, label: "Работы с цветокоррекцией" } : item), PHOTO_LINK],
   },
   {
     title: "Цены и расчёт",

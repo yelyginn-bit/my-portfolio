@@ -29,6 +29,9 @@ const V3_CHROME_FILES: Readonly<Record<string, V3ChromeActive>> = {
   'blog/skolko-stoit-snyat-reklamnyy-rolik.html': {},
   'blog/video-dlya-kartochek-wildberries.html': {},
   'blog/videosemka-meropriyatiy-nn.html': {},
+  'blog/videograf-operator-postanovshchik.html': {},
+  'blog/podgotovka-intervyu.html': {},
+
 };
 
 /**
@@ -191,6 +194,8 @@ export default defineConfig(({mode}) => {
           blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),
           blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),
           blogEvents: path.resolve(__dirname, 'blog/videosemka-meropriyatiy-nn.html'),
+          blogRoles: path.resolve(__dirname, 'blog/videograf-operator-postanovshchik.html'),
+          blogInterview: path.resolve(__dirname, 'blog/podgotovka-intervyu.html'),
           legal: path.resolve(__dirname, 'legal.html'),
           notFound: path.resolve(__dirname, '404.html'),
           kit: path.resolve(__dirname, '_kit.html'),

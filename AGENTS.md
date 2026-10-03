@@ -2,7 +2,7 @@
 
 - Source precedence: owner V3 brief → `ссылки на работы.docx` and `транскрибация с описанием проекта.docx` → current branch code → live production → historical docs.
 - Never invent credits, equipment, dates, metrics, brands or project outcomes. Omit missing fields. Later corrections in the transcript win.
-- Canonical public portfolio: 89 unique Kinescope assets, 75 landscape + 14 portrait. Keep project and video as separate entities.
+- Canonical public portfolio: 90 unique Kinescope assets, 76 landscape + 14 portrait. Keep project and video as separate entities.
 - Journal, account, admin and private galleries are not public navigation products. Hidden routes still require auth/RLS and `noindex`. Photo (`/photo`) IS a public navigation product — owner override, PROMPT-21 §4 (2026-09-23): it belongs in the header, mobile menu and footer of every system, same as Портфолио/Цены/Блог.
 - Do not deploy, change production secrets, apply production database migrations or change prices without explicit owner approval.
 - Work on `codex/cyber-portfolio-v3`; preserve the user patch saved as `YELYGINN_PRE_V3_USER_CHANGES.patch`.

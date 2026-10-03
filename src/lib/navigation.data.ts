@@ -133,6 +133,8 @@ export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] 
     title: "Блог",
     links: [
       BLOG_LINK,
+      link("/blog/videograf-operator-postanovshchik", "Видеограф, оператор и постановщик"),
+      link("/blog/podgotovka-intervyu", "Как подготовиться к интервью"),
       link("/blog/skolko-stoit-snyat-reklamnyy-rolik", "Сколько стоит рекламный ролик"),
       link("/blog/kak-snimat-reels-dlya-biznesa", "Как подготовить Reels для бизнеса"),
       link("/blog/video-dlya-kartochek-wildberries", "Видео для карточек товара"),

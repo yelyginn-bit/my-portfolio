@@ -1134,5 +1134,37 @@
     "clipY": 0,
     "offscreen": 0,
     "checked": 84
+  },
+  "/blog/videograf-operator-postanovshchik@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 127
+  },
+  "/blog/podgotovka-intervyu@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 127
+  },
+  "/blog/videograf-operator-postanovshchik@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 119
+  },
+  "/blog/podgotovka-intervyu@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 119
   }
 }

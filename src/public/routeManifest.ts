@@ -61,6 +61,8 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/videosemka-meropriyatiy-nn", render: "static", indexable: true, priority: 0.7, theme: "dark" },
+  { path: "/blog/videograf-operator-postanovshchik", render: "static", indexable: true, priority: 0.7, theme: "dark" },
+  { path: "/blog/podgotovka-intervyu", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/portfolio/editing", render: "redirect", indexable: false },
   /* PROMPT-30 §3.4: служебная витрина компонентов брендбука — не публичный
    * продукт, не в PRIMARY_NAV/FOOTER_GROUPS, indexable: false держит её вне

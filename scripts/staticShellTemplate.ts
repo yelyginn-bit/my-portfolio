@@ -94,6 +94,8 @@ export const STATIC_SHELL_FILES: readonly string[] = [
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html",
   "blog/video-dlya-kartochek-wildberries.html",
   "blog/videosemka-meropriyatiy-nn.html",
+  "blog/videograf-operator-postanovshchik.html",
+  "blog/podgotovka-intervyu.html",
 ];
 
 // ── V3 chrome — общая шапка/подвал (PROMPT-32 §10-11, PROMPT-33 §Б) ────────

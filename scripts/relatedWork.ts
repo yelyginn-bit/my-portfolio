@@ -74,6 +74,8 @@ export const BLOG_SERVICE: Readonly<Record<string, string>> = {
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html": "/reklamnye-roliki",
   "blog/video-dlya-kartochek-wildberries.html": "/video-dlya-marketpleysov",
   "blog/videosemka-meropriyatiy-nn.html": "/event-video",
+  "blog/videograf-operator-postanovshchik.html": "/event-video",
+  "blog/podgotovka-intervyu.html": "/reklamnye-roliki",
 };
 
 export function augmentBlogContext(html: string, fileLabel: string): string {

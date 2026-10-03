@@ -108,6 +108,21 @@ function outputFileFor(route: string) {
     : path.join(prerenderDir, route.slice(1), "index.html");
 }
 
+// Avoid a render-blocking stylesheet round trip on the landing page. Keep the
+// complete compiled CSS so the initial and hydrated layouts stay identical.
+// Other routes continue to use the shared cacheable stylesheet.
+async function inlineHomeStyles(html: string): Promise<string> {
+  const links = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="(\/assets\/[a-zA-Z0-9._-]+\.css)"[^>]*>/g)];
+  if (!links.length) throw new Error("Home stylesheet missing from Vite template");
+  let result = html;
+  for (const [tag, href] of links) {
+    const css = await readFile(path.join(distDir, href.slice(1)), "utf8");
+    if (/<\/style/i.test(css)) throw new Error("Unsafe inline stylesheet content");
+    result = result.replace(tag, `<style data-home-styles>${css}</style>`);
+  }
+  return result;
+}
+
 async function main() {
   const duplicateRoutes = ROUTE_MANIFEST
     .map((route) => route.path)
@@ -146,7 +161,7 @@ async function main() {
     );
     const outputFile = outputFileFor(routePath);
     await mkdir(path.dirname(outputFile), { recursive: true });
-    await writeFile(outputFile, html);
+    await writeFile(outputFile, routePath === "/" ? await inlineHomeStyles(html) : html);
     generated.push(routePath);
   }
 

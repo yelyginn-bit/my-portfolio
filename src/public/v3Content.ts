@@ -62,6 +62,9 @@ export const RESOLVE_STAGES = resolveTimestamps.map((timestamp, index) => {
 });
 
 export const BLOG_ENTRIES = [
+  {"href": "/blog/videograf-operator-postanovshchik", "tag": "РОЛИ НА ПРОЕКТЕ", "title": "Видеограф, оператор и оператор-постановщик: кого выбрать", "description": "Как выбрать объём видеоработ: съёмка в команде, постановка света и кадра или монтаж готового материала. Примеры проектов Юрия Елыгина."},
+  {"href": "/blog/podgotovka-intervyu", "tag": "ИНТЕРВЬЮ", "title": "Как подготовиться к съёмке интервью: площадка, кадр и монтаж", "description": "Что подготовить заказчику перед интервью: место записи, участники, ракурсы, звук и требования к монтажу. Разбор съёмки и постпродакшна."},
+
   {
     href: "/blog/skolko-stoit-snyat-reklamnyy-rolik",
     tag: "ПРОДАКШН",

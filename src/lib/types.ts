@@ -1,15 +1,17 @@
 // Доменные типы продающей части сайта (калькулятор, заказы, клиенты, скидки).
 // Слой данных абстрагирован (см. store.ts), типы общие для localStorage и Supabase.
 
-export type PriceUnit = "project" | "day" | "person" | "hour";
+export type PriceUnit = "project" | "day" | "person" | "hour" | "frame";
 
 /** Одна строка прайса: услуга с вилкой цены и единицей измерения. */
 export interface PriceItem {
   name: string;
   priceMin: number;
   priceMax: number;
-  /** project — за проект (разово), day — за смену (× кол-во дней), person/hour — за единицу. */
+  /** project — за проект, day — за смену, hour — за час, frame — за кадр. */
   unit: PriceUnit;
+  /** Если задано, выбранная опция заменяет указанную базовую позицию в смете. */
+  replaces?: string;
   /** Участвует в наценке за согласованный экспресс-монтаж (+50%). */
   rushEligible?: boolean;
 }

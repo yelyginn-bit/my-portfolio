@@ -40,6 +40,7 @@ function unitLabel(unit: PriceItem["unit"]): string {
     case "day": return "за смену";
     case "person": return "за чел.";
     case "hour": return "за час";
+    case "frame": return "за кадр";
     default: return "за проект";
   }
 }
@@ -168,13 +169,34 @@ export default function Calculator() {
     setter(next);
   };
 
+  const toggleBase = (name: string) => {
+    if (shootType === "Цветокоррекция") {
+      const tierNames = typeData.options.filter((item) => item.replaces === name).map((item) => item.name);
+      if (tierNames.some((tier) => optSel.has(tier))) {
+        setOptSel(new Set([...optSel].filter((item) => !tierNames.includes(item))));
+        setBaseSel(new Set([...baseSel, name]));
+        return;
+      }
+    }
+    toggle(baseSel, name, setBaseSel);
+  };
+
   const toggleOption = (name: string) => {
     const isTier = (value: string) => value.startsWith("Монтаж одного Reels —")
       || value.startsWith("Заменить на ");
     if ((shootType === "Reels / Shorts" || shootType === "Монтаж Reels" || shootType === "Цветокоррекция") && isTier(name)) {
       const next = new Set([...optSel].filter((value) => !isTier(value)));
-      if (!optSel.has(name)) next.add(name);
+      const turningOff = optSel.has(name);
+      if (!turningOff) next.add(name);
       setOptSel(next);
+      const replacement = typeData.options.find((item) => item.name === name)?.replaces;
+      if (replacement) {
+        setBaseSel((current) => {
+          const updated = new Set(current);
+          turningOff ? updated.add(replacement) : updated.delete(replacement);
+          return updated;
+        });
+      }
       return;
     }
     toggle(optSel, name, setOptSel);
@@ -333,7 +355,7 @@ export default function Calculator() {
                     key={item.name}
                     className="calc-row"
                     data-on={on}
-                    onClick={() => toggle(baseSel, item.name, setBaseSel)}
+                    onClick={() => toggleBase(item.name)}
                   >
                     <span className="calc-check" aria-hidden="true"><Check /></span>
                     <span className="calc-row-name">

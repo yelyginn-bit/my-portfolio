@@ -61,10 +61,23 @@ test("robots.txt permits the public gallery terms while keeping galleries and ap
 test("photo delivery promises match the owner-confirmed preview and gallery timing", () => {
   const photoPage = read("photo.html");
   const pricingSource = read("src/lib/pricing.data.ts");
+  const homeMetrics = read("src/config/site.ts");
   assert.match(photoPage, /первое превью — в течение 48 часов/iu);
   assert.match(photoPage, /готовая галерея — обычно за 3–5 календарных дней/iu);
   assert.doesNotMatch(photoPage, /5–10 рабочих дней/iu);
   assert.match(pricingSource, /10–15 превью — в течение 48 часов; готовая галерея — обычно за 3–5 календарных дней/iu);
+  assert.match(homeMetrics, /\{ value: "48 часов", label: "ориентир для первого превью" \}/u);
+});
+
+test("event and Reels content use the approved duration and avoid an unconfirmed edit deadline", () => {
+  const eventArticle = read("blog/videosemka-meropriyatiy-nn.html");
+  const advertisingArticle = read("blog/skolko-stoit-snyat-reklamnyy-rolik.html");
+  const publicPrices = read("src/lib/pricing.data.ts");
+  assert.match(eventArticle, /aftermovie \(до 3 минут\)/iu);
+  assert.doesNotMatch(eventArticle, /aftermovie \(3–5 мин\)/iu);
+  assert.match(advertisingArticle, /<h3>Имиджевый фильм о компании<\/h3>/u);
+  assert.doesNotMatch(advertisingArticle, /Имиджевый фильм о компании \(3–5 мин\)/u);
+  assert.match(publicPrices, /timeline: "Срок согласуется по объёму исходников и выбранному уровню монтажа\."/u);
 });
 
 test("private application pages are noindex", () => {

@@ -29,9 +29,11 @@ export function computeBreakdown(
   let subMax = 0;
 
   if (typeData) {
+    const selectedOptions = typeData.options.filter((i) => selection.optionItems.includes(i.name));
+    const replacedBaseItems = new Set(selectedOptions.flatMap((item) => item.replaces ? [item.replaces] : []));
     const chosen: PriceItem[] = [
-      ...typeData.base.filter((i) => selection.baseItems.includes(i.name)),
-      ...typeData.options.filter((i) => selection.optionItems.includes(i.name)),
+      ...typeData.base.filter((i) => selection.baseItems.includes(i.name) && !replacedBaseItems.has(i.name)),
+      ...selectedOptions,
     ];
     for (const item of chosen) {
       const c = itemCost(item, selection.days, selection.hours ?? 1);

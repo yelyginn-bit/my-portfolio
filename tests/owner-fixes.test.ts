@@ -4,13 +4,51 @@ import { chromium, webkit, type Page } from "playwright";
 import { startLocalServer } from "../scripts/computed-style-audit";
 import { ESTIMATE_DATA } from "../src/lib/pricing.data";
 import { computeBreakdown, formatRubRange } from "../src/lib/calc";
+import { estimateDataToRules, rulesToEstimateData } from "../src/lib/pricing.runtime";
 
 const normalized = (text: string) => text.replace(/\s+/gu, " ").trim();
 const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+const contrastRatio = (foreground: string, background: string) => {
+  const luminance = (color: string) => {
+    const channels = color.match(/[\d.]+/gu)?.slice(0, 3).map(Number);
+    assert.ok(channels?.length === 3, `expected an rgb() color, got ${color}`);
+    const [r, g, b] = channels.map((channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+  };
+  const a = luminance(foreground), b = luminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+};
 const checkboxFor = (page: Page, item: (typeof ESTIMATE_DATA)[keyof typeof ESTIMATE_DATA]["base"][number]) => {
-  const unit = item.unit === "day" ? "за смену" : item.unit === "hour" ? "за час" : item.unit === "person" ? "за чел." : "за проект";
+  const unit = item.unit === "day" ? "за смену" : item.unit === "hour" ? "за час" : item.unit === "person" ? "за чел." : item.unit === "frame" ? "за кадр" : "за проект";
   return page.getByRole("checkbox", { name: new RegExp(`^${escapeRegex(item.name)} · ${unit} `, "u") });
 };
+
+test("approved color tiers replace the base price and photo retouch is priced per frame", () => {
+  const color = ESTIMATE_DATA["Цветокоррекция"];
+  const base = color.base[0]!;
+  const extended = color.options[0]!;
+  const complex = color.options[1]!;
+  const total = (optionItems: string[], baseItems = [base.name]) => computeBreakdown({
+    shootType: "Цветокоррекция", days: 1, hours: 1, urgent: false,
+    baseItems, optionItems,
+  }, 0, ESTIMATE_DATA).subtotalMin;
+
+  assert.equal(total([]), 5000);
+  assert.equal(total([extended.name]), 9000, "a tier remains full price even when stale UI state still includes the base");
+  assert.equal(total([extended.name], []), 9000, "the extended tier stands alone");
+  assert.equal(total([complex.name]), 15000);
+  assert.equal(total([complex.name], []), 15000);
+  assert.equal(ESTIMATE_DATA["Студийная фотосъёмка"].options[0]?.unit, "frame");
+  assert.equal(ESTIMATE_DATA["Репортажная фотосъёмка"].options[0]?.unit, "frame");
+
+  const activeRules = estimateDataToRules(ESTIMATE_DATA).map((rule, index) => ({ ...rule, id: String(index) }));
+  const hydrated = rulesToEstimateData(activeRules);
+  assert.equal(hydrated["Цветокоррекция"].options[0]?.replaces, "Цветокоррекция — базовый формат");
+  assert.equal(hydrated["Студийная фотосъёмка"].options[0]?.unit, "frame");
+});
 async function testMenu(page: Page, origin: string, route: string) {
   await page.goto(origin + route);
   const button = page.locator('.nav-dropdown > button').first();
@@ -82,6 +120,14 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.waitForTimeout(500);
         const after = await track.evaluate((el) => el.getBoundingClientRect().x);
         assert.ok(Math.abs(after - before) > 2, `${engine.name()}: client tape moves`);
+        const marqueeColors = await page.locator('.v3-marquee__track span, .v3-marquee__track b').evaluateAll((els) => els.map((el) => ({
+          foreground: getComputedStyle(el).color,
+          background: getComputedStyle(el.closest('.v3-marquee')!).backgroundColor,
+        })));
+        assert.ok(marqueeColors.length > 0, `${engine.name()}: marquee labels exist`);
+        for (const colors of marqueeColors) {
+          assert.ok(contrastRatio(colors.foreground, colors.background) >= 4.5, `${engine.name()}: marquee contrast is below WCAG AA`);
+        }
         assert.equal(await page.locator('.v3-marquee__toggle').count(), 0, `${engine.name()}: no pause control inside the marquee`);
         const motionToggle = page.getByRole('button', { name: 'Отключить движение', exact: true });
         await motionToggle.click();
@@ -121,6 +167,27 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Контент для бизнеса'));
         const contentDayTotal = normalized(await page.locator('.calc-total-val').innerText());
         assert.equal(contentDayTotal, 'от 45 000 ₽');
+        await page.goto(origin + "/calculator?service=color");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Цветокоррекция'));
+        const color = ESTIMATE_DATA["Цветокоррекция"];
+        const colorBase = checkboxFor(page, color.base[0]!);
+        const colorExtended = checkboxFor(page, color.options[0]!);
+        const colorComplex = checkboxFor(page, color.options[1]!);
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await colorExtended.click();
+        assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 9 000 ₽');
+        await colorBase.click();
+        assert.equal(await colorExtended.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await colorComplex.click();
+        assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 15 000 ₽');
+        await page.getByRole('button', { name: 'Студийная фотосъёмка', exact: true }).click();
+        const retouch = checkboxFor(page, ESTIMATE_DATA["Студийная фотосъёмка"].options[0]!);
+        assert.match(await retouch.getAttribute('aria-label') ?? await retouch.innerText(), /за кадр/u);
+        await retouch.click();
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 300 ₽');
         await page.goto(origin + "/calculator");
         const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
         for (const [shootType, data] of Object.entries(ESTIMATE_DATA)) {

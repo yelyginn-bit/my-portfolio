@@ -20,6 +20,20 @@ test("live portfolio registry passes full validation", () => {
   assert.deepEqual(result.errors, []);
 });
 
+test("SBER case attributes only the confirmed editing work", () => {
+  const project = projects.find((item) => item.id === "sber-architecture");
+  assert.ok(project);
+  assert.deepEqual(project.roles, ["edit"]);
+  assert.deepEqual(project.responsibilities, [
+    "Монтаж трёх обучающих роликов",
+    "Работа с транскрипциями",
+    "Подстановка готовых графики и цвета",
+  ]);
+  assert.match(project.description, /трёх обучающих роликов и тизера/u);
+  assert.match(project.description, /весь курс из шести видео/u);
+  assert.doesNotMatch(project.description, /мультикамер|монтаж курса/u);
+});
+
 test("catches the two known duplicate Kinescope IDs from YELYGINN-registry-proektov.md", () => {
   // Реальные конфликты из реестра: iXmVYXkXdmFiHpn6NCNoyq числился и за VK Fest,
   // и за «Горький в тени войны»; fvxndmGGHqWtuCcK5TnB4j — и за тизером СИБУРа,

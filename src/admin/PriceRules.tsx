@@ -7,7 +7,7 @@ import { logAudit } from "../lib/audit";
 import type { PriceRule } from "../lib/types";
 
 const store = getStore();
-const UNITS = ["project", "day", "hour", "person", "item"];
+const UNITS = ["project", "day", "hour", "person", "frame", "item"];
 
 export default function PriceRules() {
   const [rules, setRules] = useState<PriceRule[]>([]);

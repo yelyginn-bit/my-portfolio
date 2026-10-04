@@ -18,6 +18,8 @@ const pageServices: Record<string, keyof typeof serviceLabels> = {
   "/cvetokorrekciya": "color",
   "/event-video": "event",
   "/photo": "photo",
+  "/portretnaya-fotosessiya": "photo",
+  "/reportazhnaya-fotosemka": "photo",
   "/pryamye-translyacii": "livestream",
   "/reels": "reels",
   "/reklamnye-roliki": "advertising",

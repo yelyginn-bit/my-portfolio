@@ -28,6 +28,20 @@ test("service CTA context is limited to known services and public source pages",
     service: "Фотосъёмка",
     sourcePath: "/photo",
   });
+  const sourcePages = [
+    ["/portretnaya-fotosessiya", "photo", "photo-studio"],
+    ["/reportazhnaya-fotosemka", "photo", "photo-reportage"],
+    ["/reels", "reels", "reels"],
+    ["/reklamnye-roliki", "advertising", "advertising"],
+    ["/event-video", "event", "event"],
+    ["/cvetokorrekciya", "color", "color"],
+    ["/pryamye-translyacii", "livestream", "livestream"],
+  ] as const;
+  for (const [path, service, calculatorService] of sourcePages) {
+    assert.equal(resolveServiceContext(`?service=${service}&from=${encodeURIComponent(path)}`, "/").sourcePath, path);
+    assert.equal(resolveServiceContext(`?service=${calculatorService}&from=${encodeURIComponent(path)}`, "/calculator").sourcePath, path);
+    assert.equal(serviceContactHref(service, path), `/?service=${service}&from=${encodeURIComponent(path)}#contact`);
+  }
 });
 
 test("calculator only preselects service types represented by its active estimate", () => {

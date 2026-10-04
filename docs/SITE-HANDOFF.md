@@ -22,6 +22,8 @@ PR #5 с галереями портретной и репортажной съ�
 
 Для HEAD `0c0a7d8` GitHub CI run `37229246457` прошёл. На PR #7 `Vercel – my-portfolio` и `Vercel – ai-studio-zip-project` прошли; `Vercel – my-portfolio-github-copy` и Netlify `yelyginn-portfolio/deploy-preview` упали. Эти статусы принадлежат указанным проектам/preview, а не доказывают сборку или отказ production проекта `yelyginn-v3`. Внешний PageSpeed mobile для главной снят в 18:56 МСК — до публикации галерей в 19:51 — поэтому его нельзя считать замером последнего релиза; LCP 4.7 с остаётся отдельной задачей.
 
+После push commit `b52ed663` run `37233611253` всё ещё выполнялся на срезе 04.10 23:52 МСК. На нём уже завершились ошибкой Netlify `Header rules`, `Pages changed`, `Redirect rules` и Vercel `my-portfolio-github-copy`; Vercel `my-portfolio`, `ai-studio-zip-project` и Preview Comments прошли. Ни один из этих статусов не измеряет production-проект `yelyginn-v3`; причины preview-ошибок в доступном статусе не указаны.
+
 Уточнённые проверки в этом проходе изолированные и не посылают настоящих заявок. Тесты формы и здоровье прошли отдельно; полный `npm run check` и CI для нового diff должны быть зафиксированы ниже после прогона. Не обходить обязательный журнал, не применять старую миграцию целиком и не помещать секреты в документы.
 
 ### Внешнее SEO — состояние на 04.10.2026

@@ -16,12 +16,25 @@ export function NavDropdownMenu({ entry, path, mobile, onNavigate }: { entry: Na
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const menuKey = useRef(entry.label);
   const isActive = isNavEntryActive(entry, path);
   const cancelClose = () => { clearTimeout(closeTimer.current); };
   const scheduleClose = () => { cancelClose(); closeTimer.current = setTimeout(() => setOpen(false), 350); };
-  const openNow = () => { cancelClose(); setOpen(true); };
   const close = () => { cancelClose(); setOpen(false); };
+  const openNow = () => {
+    cancelClose();
+    document.dispatchEvent(new CustomEvent("yelyginn:open-nav-dropdown", { detail: menuKey.current }));
+    setOpen(true);
+  };
   const contains = (target: EventTarget | null) => target instanceof Node && (buttonRef.current?.contains(target) || menuRef.current?.contains(target));
+
+  useEffect(() => {
+    const closeSibling = (event: Event) => {
+      if ((event as CustomEvent<string>).detail !== menuKey.current) close();
+    };
+    document.addEventListener("yelyginn:open-nav-dropdown", closeSibling);
+    return () => document.removeEventListener("yelyginn:open-nav-dropdown", closeSibling);
+  }, []);
 
   useEffect(() => {
     if (!open || !buttonRef.current) return;

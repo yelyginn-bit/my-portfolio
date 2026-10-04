@@ -85,6 +85,8 @@ export const STATIC_SHELL_FILES: readonly string[] = [
   "content-day.html",
   "event-video.html",
   "photo.html",
+  "portretnaya-fotosessiya.html",
+  "reportazhnaya-fotosemka.html",
   "reels.html",
   "reklamnye-roliki.html",
   "pryamye-translyacii.html",
@@ -171,15 +173,15 @@ export function renderV3Footer(active: V3ChromeActive = {}): string {
   }).join("");
   return `<footer class="v3-footer">
       <div class="v3-footer__wordmark" role="img" aria-label="YELYGINN">
-        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
-          <text x="0" y="0">YELYGINN</text>
+        <svg viewBox="0 -981 4713 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+          <text x="0" y="0" textLength="4713" lengthAdjust="spacing">YELYGINN</text>
         </svg>
       </div>
       <div class="v3-footer__groups">${groups}</div>
       ${renderToStaticMarkup(createElement(AiAskBlock))}
       <div class="v3-footer__meta">
         <span>© 2026 YELYGINN</span>
-        <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>
+        <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button><button type="button" data-motion-toggle aria-pressed="false">Отключить движение</button></nav>
         <span>НИЖНИЙ НОВГОРОД // РОССИЯ</span>
       </div>
     </footer>`;

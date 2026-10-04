@@ -80,7 +80,7 @@ function ProjectImage({ project, index = 0, priority = false, sizes, alt }: { pr
 
 const visualCountForProject = (project: Project) => PROJECT_STILLS[project.id]?.length || assetsForProject(project.id).length;
 const materialLabel = (count: number) => count === 1 ? "материал" : count < 5 ? "материала" : "материалов";
-const textLedProjectIds = new Set(["gorky-memory"]);
+const textLedProjectIds = new Set<string>();
 
 function MediaCluster({ project, priority = false }: { project: Project; priority?: boolean }) {
   const assets = assetsForProject(project.id);
@@ -90,7 +90,7 @@ function MediaCluster({ project, priority = false }: { project: Project; priorit
   const secondaryCount = Math.min(2, Math.max(0, visualCount - 1));
   const fallbackPoster = posterUrl(main.kinescopeId, "md");
   return (
-    <div className={`portfolio-media-cluster portfolio-media-cluster--${main.orientation} portfolio-media-cluster--count-${Math.min(3, visualCount)}`}>
+    <div className={`portfolio-media-cluster portfolio-media-cluster--${main.orientation} portfolio-media-cluster--${project.slug} portfolio-media-cluster--count-${Math.min(3, visualCount)}`}>
       <figure className="portfolio-media-cluster__main">
         <ProjectImage project={project} alt={`Кадр из проекта «${project.title}»`} priority={priority} sizes="(max-width: 700px) 94vw, 62vw" />
       </figure>

@@ -29,6 +29,12 @@ const pages = INDEXABLE_ROUTES.map((r) => {
 
 // title статьи «Сколько стоит…» владелец задал дословно, без бренда
 const NO_BRAND = new Set(["/blog/skolko-stoit-snyat-reklamnyy-rolik"]);
+// These owner-approved service titles intentionally use the personal name, not the generic site brand.
+const OWNER_NAMED_BRAND = new Set([
+  "/content-day", "/reklamnye-roliki", "/event-video", "/reels", "/cvetokorrekciya",
+  "/pryamye-translyacii", "/ceny", "/photo", "/portretnaya-fotosessiya",
+  "/reportazhnaya-fotosemka", "/video-dlya-marketpleysov",
+]);
 
 test("у каждого индексируемого маршрута есть текст в seoCopy.ts", () => {
   assert.equal(pages.length, INDEXABLE_ROUTES.length);
@@ -39,7 +45,8 @@ test("title: 30–70 знаков, бренд | YELYGINN (у главной | Ю
   for (const p of pages) {
     assert.ok(p.title.length >= 30 && p.title.length <= 70, `${p.route}: title ${p.title.length} знаков — «${p.title}»`);
     if (p.route === "/") assert.ok(p.title.endsWith("| Юрий Елыгин"), `${p.route}: бренд главной`);
-    else if (!NO_BRAND.has(p.route)) assert.ok(p.title.endsWith("| YELYGINN"), `${p.route}: бренд «${p.title}»`);
+    else if (!NO_BRAND.has(p.route) && !OWNER_NAMED_BRAND.has(p.route)) assert.ok(p.title.endsWith("| YELYGINN"), `${p.route}: бренд «${p.title}»`);
+    if (OWNER_NAMED_BRAND.has(p.route)) assert.match(p.title, /Юрий Елыгин$/u, `${p.route}: имя владельца в утверждённом title`);
     assert.equal(p.ogTitle, p.title, `${p.route}: og:title расходится с title`);
   }
 });

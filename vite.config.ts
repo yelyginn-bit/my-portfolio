@@ -24,6 +24,8 @@ const V3_CHROME_FILES: Readonly<Record<string, V3ChromeActive>> = {
   'content-day.html': {serviceHref: '/content-day'},
   'pryamye-translyacii.html': {serviceHref: '/pryamye-translyacii'},
   'photo.html': {topLevelHref: '/photo'},
+  'portretnaya-fotosessiya.html': {serviceHref: '/portretnaya-fotosessiya'},
+  'reportazhnaya-fotosemka.html': {serviceHref: '/reportazhnaya-fotosemka'},
   'sajty.html': {topLevelHref: '/sajty'},
   'blog/kak-snimat-reels-dlya-biznesa.html': {},
   'blog/skolko-stoit-snyat-reklamnyy-rolik.html': {},
@@ -169,6 +171,8 @@ export default defineConfig(({mode}) => {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           photo: path.resolve(__dirname, 'photo.html'),
+          portraitPhotography: path.resolve(__dirname, 'portretnaya-fotosessiya.html'),
+          reportagePhotography: path.resolve(__dirname, 'reportazhnaya-fotosemka.html'),
           portfolio: path.resolve(__dirname, 'portfolio.html'),
           portfolioReels: path.resolve(__dirname, 'portfolio-reels.html'),
           portfolioEvents: path.resolve(__dirname, 'portfolio-events.html'),

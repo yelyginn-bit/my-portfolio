@@ -1,10 +1,11 @@
 import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, X } from "lucide-react";
 import { AiAskBlock } from "../components/site/AiAskBlock";
 import { LEGAL } from "../config/legal";
 import { SITE } from "../config/site";
 import { secureFetch } from "../lib/api";
 import { trackAnalyticsEvent } from "../lib/analytics";
+import { resolveServiceContext } from "../lib/service-context";
 import { COLOR_COMPARE_PAIRS } from "../lib/colorCompare.data";
 import ColorCompare from "../components/ColorCompare";
 import {
@@ -48,7 +49,7 @@ const formatLabels: Record<string, string> = {
   architecture: "архитектура", education: "обучение", factory: "производство",
   presentation: "презентация", broadcast: "прямой эфир", showreel: "шоурил",
 };
-const contactServices = ["Съёмка // оператор", "Фотосъёмка", "Рекламный ролик", "Событие", "Reels", "Прямая трансляция", "Монтаж", "Цветокоррекция", "SDE // отчётное видео", "Интервью // подкаст", "Другая задача"];
+const contactServices = ["Съёмка // оператор", "Фотосъёмка", "Рекламный ролик", "Событие", "Reels", "Прямая трансляция", "Монтаж", "Цветокоррекция", "Контент-съёмка // фото и видео", "SDE // отчётное видео", "Интервью // подкаст", "Другая задача"];
 const selectedWorkProjectIds = ["metro-concerts", "sibur-women", "scientists-nn", "sber-architecture"] as const;
 
 export function SiteHeader() {
@@ -136,8 +137,8 @@ export function SiteFooter() {
   return (
     <footer className="v3-footer">
       <div className="v3-footer__wordmark" role="img" aria-label="YELYGINN">
-        <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
-          <text x="0" y="0">YELYGINN</text>
+        <svg viewBox="0 -981 4713 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+          <text x="0" y="0" textLength="4713" lengthAdjust="spacing">YELYGINN</text>
         </svg>
       </div>
       <div className="v3-footer__groups">
@@ -151,11 +152,29 @@ export function SiteFooter() {
       <AiAskBlock />
       <div className="v3-footer__meta">
         <span>© 2026 YELYGINN</span>
-        <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>
+        <nav aria-label="Юридическая информация"><a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a><a href="/cookie-policy">Cookies</a><button type="button" data-cookie-settings>Настройки cookie</button><MotionPreferenceToggle /></nav>
         <span>НИЖНИЙ НОВГОРОД // РОССИЯ</span>
       </div>
     </footer>
   );
+}
+
+function MotionPreferenceToggle() {
+  const [stopped, setStopped] = useState(false);
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("yelyginn-motion") === "off";
+      setStopped(stored);
+      document.documentElement.dataset.motionPreference = stored ? "reduce" : "full";
+    } catch { setStopped(false); }
+  }, []);
+  const toggle = () => {
+    const next = !stopped;
+    setStopped(next);
+    document.documentElement.dataset.motionPreference = next ? "reduce" : "full";
+    try { window.localStorage.setItem("yelyginn-motion", next ? "off" : "on"); } catch { /* preference remains active until navigation */ }
+  };
+  return <button type="button" data-motion-toggle aria-pressed={stopped} onClick={toggle}>{stopped ? "Включить движение" : "Отключить движение"}</button>;
 }
 
 function HeroShowreel() {
@@ -164,7 +183,6 @@ function HeroShowreel() {
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
   const [fallbackOpen, setFallbackOpen] = useState(false);
 
   const startPlayback = useCallback(() => {
@@ -172,28 +190,28 @@ function HeroShowreel() {
     if (!video || videoFailed) return;
     // Set the source and play in the same user gesture for mobile Safari.
     if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
-    video.play().catch(() => {
-      setPlaying(false);
-      if (video.error) setVideoFailed(true);
-    });
+    void video.play().catch(() => setPlaying(false));
   }, [videoFailed]);
 
   useEffect(() => {
     const video = videoRef.current;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const deferToUser = window.matchMedia("(max-width: 767px)").matches
-      || window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      || connection?.saveData;
-    if (!video || deferToUser) return;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const schedule = () => {
-      timer = setTimeout(() => { if (!userControlled.current) startPlayback(); }, 1200);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!video || reduceMotion.matches || connection?.saveData) return;
+    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || userControlled.current || document.hidden) return;
+      startPlayback();
+    }, { threshold: 0.25 });
+    observer.observe(video);
+    const onVisibility = () => {
+      if (document.hidden) video.pause();
+      else if (!userControlled.current && video.getBoundingClientRect().bottom > 0 && video.getBoundingClientRect().top < window.innerHeight) startPlayback();
     };
-    if (document.readyState === "complete") schedule();
-    else window.addEventListener("load", schedule, { once: true });
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      window.removeEventListener("load", schedule);
-      clearTimeout(timer);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
       video.pause();
     };
   }, [startPlayback]);
@@ -204,15 +222,6 @@ function HeroShowreel() {
     userControlled.current = true;
     if (video.paused) startPlayback();
     else video.pause();
-  }, [videoFailed, startPlayback]);
-
-  const toggleSound = useCallback(() => {
-    const video = videoRef.current;
-    if (!video || videoFailed) return;
-    userControlled.current = true;
-    video.muted = !video.muted;
-    setMuted(video.muted);
-    if (video.paused) startPlayback();
   }, [videoFailed, startPlayback]);
 
   return (
@@ -233,10 +242,10 @@ function HeroShowreel() {
         {!videoFailed && <video
           ref={videoRef}
           poster="/v3-assets/hero-showreel-poster.webp"
-          muted={muted}
+          muted
           loop
           playsInline
-          preload="none"
+          preload="metadata"
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -256,7 +265,6 @@ function HeroShowreel() {
       </div>
       {videoFailed ? <button type="button" className="v32-showreel-toggle" onClick={() => setFallbackOpen(true)}><Play fill="currentColor" /><span>ШОУРИЛ // СМОТРЕТЬ</span></button> : <div className="v32-showreel-controls">
         <button type="button" onClick={togglePlayback} aria-label={playing ? "Поставить шоурил на паузу" : "Воспроизвести шоурил"}>{playing ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}<span>{playing ? "ПАУЗА" : "ШОУРИЛ"}</span></button>
-        <button type="button" onClick={toggleSound} aria-label={muted ? "Включить звук" : "Выключить звук"}>{muted ? <VolumeX /> : <Volume2 />}<span>{muted ? "ЗВУК" : "ВКЛЮЧЁН"}</span></button>
       </div>}
       {fallbackOpen && <ShowreelDialog onClose={() => setFallbackOpen(false)} />}
     </section>
@@ -273,17 +281,20 @@ function ShowreelDialog({ onClose }: { onClose: () => void }) {
 }
 
 function ClientMarquee() {
-  const [paused, setPaused] = useState(false);
-  useEffect(() => { setPaused(window.matchMedia("(prefers-reduced-motion: reduce)").matches); }, []);
-  return <section className="v3-marquee" aria-label="Бренды и проекты" data-motion={!paused}>
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return <section className="v3-marquee" aria-label="Бренды и проекты" data-motion={!reducedMotion}>
     <div className="v3-marquee__track">
       {[0, 1].map((copy) => <div className="v3-marquee__group" key={copy} aria-hidden={copy === 1 ? true : undefined}>
         {MARQUEE_ITEMS.map((brand) => <span key={brand}>{brand}<b>//</b></span>)}
       </div>)}
     </div>
-    <button type="button" className="v3-marquee__toggle" onClick={() => setPaused((value) => !value)} aria-label={paused ? "Запустить ленту клиентов" : "Остановить ленту клиентов"} aria-pressed={paused}>
-      {paused ? <Play size={16} /> : <Pause size={16} />}
-    </button>
   </section>;
 }
 
@@ -302,7 +313,13 @@ function HomeServices() {
       <header className="v32-services__head">
         <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
         <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Фотограф и видеооператор в Нижнем Новгороде") } as CSSProperties}>Фотограф и видеооператор в Нижнем Новгороде</h1>
-        <h2>Услуги видеосъёмки в Нижнем Новгороде</h2>
+        <h2>Фото, видеосъёмка и монтаж в Нижнем Новгороде</h2>
+        <nav className="v32-home-service-shortcuts" aria-label="Выбрать задачу">
+          <a href="/photo">Нужен фотограф</a>
+          <a href="/event-video">Снять мероприятие</a>
+          <a href="/reels">Смонтировать короткий ролик</a>
+          <a href="/pryamye-translyacii">Организовать эфир</a>
+        </nav>
       </header>
       <div className="v32-services__grid">
         {HOME_SERVICES.map((service) => (
@@ -420,9 +437,9 @@ function ProductionProof() {
         <div className="v32-proof__grid">
           <MultiAngleColorComparison />
           <ResolveBreakdown />
-          <figure className="v32-proof__operator"><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="lazy" decoding="async" alt="Юрий Елыгин за камерой на съёмочной площадке" /><figcaption><span>ЮРИЙ ЕЛЫГИН // BTS</span><b>Я НА СЪЁМКЕ</b></figcaption></figure>
-          <figure className="v32-proof__vertical"><img src="/v3-assets/vertical-podcast-cover.webp" width="720" height="1280" loading="lazy" decoding="async" alt="Вертикальная обложка подкаст-ролика в формате 9 на 16" /><figcaption><span>ВЕРТИКАЛЬНЫЙ ФОРМАТ // 9:16</span><b>ОБЛОЖКА РОЛИКА</b></figcaption></figure>
-          <figure className="v32-proof__live"><img src="/v3-assets/bts-broadcast-camera.webp" width="720" height="1565" loading="lazy" decoding="async" alt="Камеры на площадке прямого эфира" /><figcaption><span>ЭФИР // МУЛЬТИКАМ</span><b>РАБОТА В КОМАНДЕ</b></figcaption></figure>
+          <figure className="v32-proof__operator"><img src="/v3-assets/about/portrait.webp" width="1200" height="1200" loading="lazy" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина" /><figcaption><span>ЮРИЙ ЕЛЫГИН</span><b>ПОРТРЕТ</b></figcaption></figure>
+          <figure className="v32-proof__vertical"><img src="/v3-assets/reels-dji-osmo-mobile-8-v2.webp" width="900" height="1600" loading="lazy" decoding="async" alt="Иллюстрация: смартфон на ручном стабилизаторе для съёмки коротких вертикальных видео" /><figcaption><span>ИЛЛЮСТРАЦИЯ ФОРМАТА // 9:16</span><b>REELS ДЛЯ БИЗНЕСА</b></figcaption></figure>
+          <figure className="v32-proof__live"><img src="/v3-assets/multicam-sony-pxw-z190-smallrig-v2-portrait.webp" width="900" height="1600" loading="lazy" decoding="async" alt="Иллюстрация многокамерной съёмки: три видеокамеры на отдельных штативах в зале" /><figcaption><span>ИЛЛЮСТРАЦИЯ // МУЛЬТИКАМ</span><b>РАБОТА В КОМАНДЕ</b></figcaption></figure>
         </div>
       </div>
     </section>
@@ -441,23 +458,27 @@ function ProjectEvidence({ project }: { project: Project }) {
 }
 
 function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
+  const routePath = useContext(RoutePathContext);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [service, setService] = useState(contactServices[0]);
+  const serviceTouchedRef = useRef(false);
   const [message, setMessage] = useState("");
   const [privacy, setPrivacy] = useState(false);
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const submittingRef = useRef(false);
 
-  // PROMPT-32 §15: клик по карточке тарифа на /video-dlya-marketpleysov ведёт
-  // сюда с ?tariff=... — подставляем название тарифа началом сообщения,
-  // дальше человек дописывает сам. Только при первом монтаже, не перетирает
-  // то, что уже начали печатать.
+  // Preselect only a known service context. The select remains fully editable;
+  // tariff text and service context never overwrite a visitor's own input.
   useEffect(() => {
-    const tariff = new URLSearchParams(window.location.search).get("tariff");
+    const context = resolveServiceContext(window.location.search, routePath);
+    const params = new URLSearchParams(window.location.search);
+    const serviceWasProvided = params.has("service") || context.sourcePath !== "/";
+    if (serviceWasProvided && !serviceTouchedRef.current) setService(context.service);
+    const tariff = params.get("tariff");
     if (tariff) setMessage((current) => current || `Тариф: ${tariff}\n`);
-  }, []);
+  }, [routePath]);
   const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
   const Heading = pageHeading ? "h1" : "h2";
 
@@ -470,7 +491,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
       const response = await secureFetch("/api/send-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), contact: contact.trim(), service, message: message.trim(), website: "", source: window.location.pathname, consentAccepted: true, consentVersion: LEGAL.consentVersion, policyVersion: LEGAL.policyVersion, formId: "homepage-contact", pageUrl: window.location.pathname }),
+        body: JSON.stringify({ name: name.trim(), contact: contact.trim(), service, message: message.trim(), website: "", source: resolveServiceContext(window.location.search, routePath).sourcePath, consentAccepted: true, consentVersion: LEGAL.consentVersion, policyVersion: LEGAL.policyVersion, formId: "homepage-contact", pageUrl: resolveServiceContext(window.location.search, routePath).sourcePath }),
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok || !body?.ok) throw new Error("delivery failed");
@@ -482,7 +503,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
     } finally {
       submittingRef.current = false;
     }
-  }, [consent, contact, message, name, privacy, service]);
+  }, [consent, contact, message, name, privacy, routePath, service]);
 
   return (
     <section id="contact" className="v3-contact v3-contact--unified v3-shell">
@@ -498,7 +519,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
       <form className="v3-form" onSubmit={submit}>
         <label><span>01 // КАК ВАС ЗОВУТ?</span><input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Имя или компания" /></label>
         <label><span>02 // КАК С ВАМИ СВЯЗАТЬСЯ?</span><input value={contact} onChange={(e) => setContact(e.target.value)} required placeholder="Telegram, email или телефон" /></label>
-        <label><span>03 // ЧТО НУЖНО?</span><select value={service} onChange={(e) => setService(e.target.value)}>{contactServices.map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label><span>03 // ЧТО НУЖНО?</span><select value={service} onChange={(e) => { serviceTouchedRef.current = true; setService(e.target.value); }}>{contactServices.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label><span>04 // О ПРОЕКТЕ</span><textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={4} placeholder="Формат, дата, город, объём и ссылка на референс — если есть" /></label>
         <label className="v3-check"><input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} required /><span><Check />Ознакомлен с <a href="/privacy-policy">политикой обработки данных</a></span></label>
         <label className="v3-check"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required /><span><Check />Даю <a href="/personal-data-consent">согласие на обработку данных</a></span></label>
@@ -535,7 +556,7 @@ function HomePage() {
             </ul>
           </div>
           <div className="v3-about__text">
-            <p>Я фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода. Снимаю для бизнеса, деловые и личные портреты, семейные серии и мероприятия. В видеопроектах работаю сам и в составе production-команд.</p>
+            <p>Снимаю портреты, концерты и мероприятия, делаю видео для бизнеса и личных проектов. Как видеограф и монтажёр помогаю от съёмки до готового ролика; монтаж и цветокоррекция доступны удалённо.</p>
             <p>После площадки собираю мультикам, делаю монтаж и цвет. Могу вести задачу целиком или подключиться на отдельный этап.</p>
             <p>Преподаю видеопроизводство на Медиафоруме молодых журналистов в ВДЦ «Смена», стажировался на ГТРК «Нижний Новгород».</p>
             <p>Среди клиентов — Сберуниверситет, СИБУР, Cartier, HOFF, Caprigo.</p>
@@ -611,7 +632,7 @@ function BlogPage() {
 
 function AboutPage() {
   return (
-    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — фотограф и видеооператор</h1><p>Фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/bts-operator.webp" width="1280" height="853" loading="eager" decoding="async" alt="Юрий Елыгин работает с камерой на съёмочной площадке" /><figcaption>СЪЁМОЧНАЯ ПЛОЩАДКА // BTS</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Снимаю деловые и личные портреты, семейные серии, мероприятия и контент для бизнеса. В видеопроектах могу вести съёмку целиком или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/photo">ФОТОСЪЁМКА <ArrowRight /></a> <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ ВИДЕОРАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-photos v3-shell" aria-label="Юрий Елыгин: портреты и съёмочная работа">
+    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — фотограф и видеооператор</h1><p>Фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/about/portrait.webp" width="1200" height="1200" loading="eager" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина" /><figcaption>ПОРТРЕТ // ЮРИЙ ЕЛЫГИН</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Снимаю деловые и личные портреты, семейные серии, мероприятия и контент для бизнеса. В видеопроектах могу вести съёмку целиком или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/photo">ФОТОСЪЁМКА <ArrowRight /></a> <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ ВИДЕОРАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-photos v3-shell" aria-label="Юрий Елыгин: портреты и съёмочная работа">
   <figure><img src="/v3-assets/about/portrait.webp" srcSet="/v3-assets/about/portrait-480w.webp 480w, /v3-assets/about/portrait.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина в чёрной одежде" /><figcaption>ПОРТРЕТ</figcaption></figure>
   <figure><img src="/v3-assets/about/live-camera.webp" srcSet="/v3-assets/about/live-camera-480w.webp 480w, /v3-assets/about/live-camera.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин работает у видеокамеры перед сценой" /><figcaption>У КАМЕРЫ</figcaption></figure>
   <figure><img src="/v3-assets/about/on-set.webp" srcSet="/v3-assets/about/on-set-480w.webp 320w, /v3-assets/about/on-set.webp 800w" sizes="50vw" width="800" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин сидит на кофре с камерой на съёмочной площадке" /><figcaption>НА ПЛОЩАДКЕ</figcaption></figure>

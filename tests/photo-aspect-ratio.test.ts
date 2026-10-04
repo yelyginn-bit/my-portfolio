@@ -45,6 +45,7 @@ const COVER_ALLOWLIST = [
   ".v32-camera img",
   ".v32-showreel img", // постер шоурила на главной
   ".v3-about-page figure img", // /about — портретная панель, min-height:600px + cover, задумано
+  ".v3-about-photos figure img", // /about — редакционная фотосетка с едиными карточками и cover
   ".service-showcase-main img, .service-showcase-side img", // статические услуги — hero-обложка Kinescope
   ".kinescope-embed-poster", // постер видео — тот же формат, что рамка плеера
   ".editorial-service-media img",

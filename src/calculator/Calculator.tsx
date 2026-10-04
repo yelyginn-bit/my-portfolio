@@ -4,15 +4,17 @@
 // — отправка заявки в Telegram (best-effort) + сохранение заказа в DataStore.
 // Auth по OTP появится в Фазе 2 и заменит ручной ввод телефона здесь.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getActiveEstimateData, getActiveShootTypes, hydratePriceRules } from "../lib/pricing.runtime";
+import { ESTIMATE_DATA } from "../lib/pricing.data";
+import { hydrateTiers } from "../lib/discounts";
 import { MAX_DAYS, URGENCY_SURCHARGE } from "../lib/pricing.config";
 import { computeBreakdown, formatRubRange } from "../lib/calc";
-import { hydrateTiers, resolveTier } from "../lib/discounts";
+import { resolveTier } from "../lib/discounts";
 import { getStore, isValidPhone, normalizePhone } from "../lib/store";
 import { getSession } from "../lib/auth";
 import { trackAnalyticsEvent } from "../lib/analytics";
 import { secureFetch } from "../lib/api";
 import { LEGAL } from "../config/legal";
+import { resolveCalculatorType, resolveServiceContext } from "../lib/service-context";
 import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
 import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
@@ -38,6 +40,7 @@ function unitLabel(unit: PriceItem["unit"]): string {
     case "day": return "за смену";
     case "person": return "за чел.";
     case "hour": return "за час";
+    case "frame": return "за кадр";
     default: return "за проект";
   }
 }
@@ -45,18 +48,22 @@ function unitLabel(unit: PriceItem["unit"]): string {
 export default function Calculator() {
   const [session, setSession] = useState<ReturnType<typeof getSession>>(null);
   // Прайс берётся из активного набора (БД-override или конфиг); пересчёт по priceReady.
-  const TYPES = getActiveShootTypes();
-  const DATA = getActiveEstimateData();
-  const [shootType, setShootType] = useState<string>(() => getActiveShootTypes()[0]);
+  const DATA = ESTIMATE_DATA;
+  const TYPES = Object.keys(DATA);
+  const [shootType, setShootType] = useState<string>(() => TYPES[0]);
   const typeData = DATA[shootType] ?? DATA[TYPES[0]];
   const hasDayItems = [...typeData.base, ...typeData.options].some((item) => item.unit === "day");
 
   const [days, setDays] = useState(1);
+  const [hours, setHours] = useState(1);
+  const hasHourItems = [...typeData.base, ...typeData.options].some((item) => item.unit === "hour");
   const [baseSel, setBaseSel] = useState<Set<string>>(
-    () => new Set((getActiveEstimateData()[getActiveShootTypes()[0]]?.base ?? []).map((i) => i.name)),
+    () => new Set((DATA[TYPES[0]]?.base ?? []).map((i) => i.name)),
   );
   const [optSel, setOptSel] = useState<Set<string>>(new Set());
   const [urgent, setUrgent] = useState(false);
+  const hasSelectedHourItems = typeData.base.some((item) => item.unit === "hour" && baseSel.has(item.name))
+    || typeData.options.some((item) => item.unit === "hour" && optSel.has(item.name));
   const usageTracked = useRef(false);
   const recordUse = (target: EventTarget) => {
     if (usageTracked.current || !(target instanceof Element) || !target.closest(".calc-type,.calc-row,.calc-range,[role=switch]")) return;
@@ -66,6 +73,7 @@ export default function Calculator() {
   const hasSelectedDayItems = typeData.base.some((item) => item.unit === "day" && baseSel.has(item.name))
     || typeData.options.some((item) => item.unit === "day" && optSel.has(item.name));
   useEffect(() => { if (!hasSelectedDayItems) setDays(1); }, [hasSelectedDayItems]);
+  useEffect(() => { if (!hasSelectedHourItems) setHours(1); }, [hasSelectedHourItems]);
 
   // Контакты + скидка. Если клиент вошёл — подставляем телефон/имя из сессии,
   // и скидка подтянется автоматически (эффект ниже реагирует на phone).
@@ -89,19 +97,17 @@ export default function Calculator() {
     if (currentSession?.name) setName(currentSession.name);
   }, []);
 
-  // Photo CTAs select the matching estimate after mount so static HTML and
-  // the first hydration render stay identical.
+  // Service CTAs select an existing estimate after mount, preserving the
+  // static HTML and first hydration render.
   useEffect(() => {
-    const service = new URLSearchParams(window.location.search).get("service");
-    const target = service === "photo-reportage" ? "Репортажная фотосъёмка"
-      : service === "photo-studio" ? "Студийная фотосъёмка" : null;
-    if (target && TYPES.includes(target)) setShootType(target);
+    const target = resolveCalculatorType(new URLSearchParams(window.location.search).get("service"), TYPES);
+    if (target) setShootType(target);
   }, []);
 
   // Скидки и прайс могут быть отредактированы в админке/БД — подтягиваем их.
   const [tiersReady, setTiersReady] = useState(0);
   useEffect(() => {
-    Promise.all([hydrateTiers(), hydratePriceRules()]).then(() => setTiersReady((v) => v + 1));
+    hydrateTiers().then(() => setTiersReady((v) => v + 1));
   }, []);
 
   // При смене типа (или загрузке прайса) — выбрать все базовые позиции, сбросить опции.
@@ -109,6 +115,7 @@ export default function Calculator() {
     setBaseSel(new Set((typeData?.base ?? []).map((i) => i.name)));
     setOptSel(new Set());
     setDays(1);
+    setHours(shootType === "Репортажная фотосъёмка" ? 2 : 1);
   }, [shootType, tiersReady]);
 
   // Подтянуть скидку по телефону (из прошлых заказов в хранилище).
@@ -139,22 +146,60 @@ export default function Calculator() {
     () => ({
       shootType,
       days,
+      hours: shootType === "Репортажная фотосъёмка" ? Math.max(2, hours) : hours,
       baseItems: [...baseSel],
       optionItems: [...optSel],
       urgent,
     }),
-    [shootType, days, baseSel, optSel, urgent],
+    [shootType, days, hours, baseSel, optSel, urgent],
   );
 
   const breakdown = useMemo(
-    () => computeBreakdown(selection, discountPercent),
+    () => computeBreakdown(selection, discountPercent, DATA),
     [selection, discountPercent],
   );
+  const rushAvailable = [...(DATA[shootType]?.base ?? []), ...(DATA[shootType]?.options ?? [])]
+    .some((item) => item.rushEligible && (baseSel.has(item.name) || optSel.has(item.name)));
+
+  useEffect(() => setUrgent(false), [shootType]);
 
   const toggle = (set: Set<string>, name: string, setter: (s: Set<string>) => void) => {
     const next = new Set(set);
     next.has(name) ? next.delete(name) : next.add(name);
     setter(next);
+  };
+
+  const toggleBase = (name: string) => {
+    if (shootType === "Цветокоррекция") {
+      const tierNames = typeData.options.filter((item) => item.replaces === name).map((item) => item.name);
+      if (tierNames.some((tier) => optSel.has(tier))) {
+        setOptSel(new Set([...optSel].filter((item) => !tierNames.includes(item))));
+        setBaseSel(new Set([...baseSel, name]));
+        return;
+      }
+    }
+    toggle(baseSel, name, setBaseSel);
+  };
+
+  const toggleOption = (name: string) => {
+    const isTier = (value: string) => value.startsWith("Монтаж одного Reels —")
+      || value.startsWith("Заменить на ");
+    if ((shootType === "Reels / Shorts" || shootType === "Монтаж Reels" || shootType === "Цветокоррекция") && isTier(name)) {
+      const next = new Set([...optSel].filter((value) => !isTier(value)));
+      const turningOff = optSel.has(name);
+      if (!turningOff) next.add(name);
+      setOptSel(next);
+      const replacement = typeData.options.find((item) => item.name === name)?.replaces;
+      if (replacement) {
+        setBaseSel((current) => {
+          const updated = new Set(current);
+          turningOff ? updated.add(replacement) : updated.delete(replacement);
+          return updated;
+        });
+      }
+      return;
+    }
+    toggle(optSel, name, setOptSel);
   };
 
   const handleSubmit = async () => {
@@ -178,6 +223,7 @@ export default function Calculator() {
         `🧮 Расчёт из калькулятора\n` +
         `Тип: ${shootType}\n` +
         (hasDayItems ? `Смен: ${days}\n` : "") +
+        (hasHourItems ? `Часов: ${hours}\n` : "") +
         (urgent ? `Срочность: да (+${Math.round(URGENCY_SURCHARGE * 100)}%)\n` : "") +
         opts +
         discLine +
@@ -198,7 +244,9 @@ export default function Calculator() {
             consentVersion: LEGAL.consentVersion,
             policyVersion: LEGAL.policyVersion,
             formId: "calculator-lead",
-            pageUrl: window.location.pathname,
+            pageUrl: resolveServiceContext(window.location.search, "/calculator").sourcePath === "/"
+              ? window.location.pathname
+              : resolveServiceContext(window.location.search, "/calculator").sourcePath,
           }),
         });
         const body = await response.json().catch(() => ({}));
@@ -281,6 +329,17 @@ export default function Calculator() {
             </div>
           )}
 
+          {hasHourItems && (
+            <div className="calc-section">
+              <label className="calc-label" htmlFor="estimate-hours">Количество часов (минимум {shootType === "Репортажная фотосъёмка" ? 2 : 1})</label>
+              <div className="calc-slider-row">
+                <input id="estimate-hours" className="calc-range" type="range" min={shootType === "Репортажная фотосъёмка" ? 2 : 1} max={10} step={1} disabled={!hasSelectedHourItems} value={Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)} onChange={(e) => setHours(Number(e.target.value))} />
+                <div className="calc-days-val"><b>{Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)}</b> <span>часов</span></div>
+              </div>
+              <p className="calc-days-hint">Ставка за час умножается на выбранную длительность.</p>
+            </div>
+          )}
+
           <div className="calc-section">
             <div className="calc-label">
               Состав сметы <b>{baseSel.size} из {typeData.base.length}</b>
@@ -296,7 +355,7 @@ export default function Calculator() {
                     key={item.name}
                     className="calc-row"
                     data-on={on}
-                    onClick={() => toggle(baseSel, item.name, setBaseSel)}
+                    onClick={() => toggleBase(item.name)}
                   >
                     <span className="calc-check" aria-hidden="true"><Check /></span>
                     <span className="calc-row-name">
@@ -326,7 +385,7 @@ export default function Calculator() {
                       key={item.name}
                       className="calc-row"
                       data-on={on}
-                      onClick={() => toggle(optSel, item.name, setOptSel)}
+                      onClick={() => toggleOption(item.name)}
                     >
                       <span className="calc-check" aria-hidden="true"><Check /></span>
                       <span className="calc-row-name">
@@ -350,14 +409,17 @@ export default function Calculator() {
               aria-checked={urgent}
               className="calc-toggle"
               data-on={urgent}
+              disabled={!rushAvailable}
+              aria-describedby="calc-rush-note"
               onClick={() => setUrgent((v) => !v)}
             >
               <span className="calc-switch" aria-hidden="true" />
               <span className="calc-toggle-txt">
                 <b>Срочный проект</b>
-                <span>Сжатые сроки — наценка +{Math.round(URGENCY_SURCHARGE * 100)}%</span>
+                <span>Экспресс-монтаж видео за 24 часа — +{Math.round(URGENCY_SURCHARGE * 100)}%, после подтверждения возможности.</span>
               </span>
             </button>
+            <p id="calc-rush-note" className="calc-note">Наценка применяется только к выбранным позициям монтажа; к съёмке, цветокоррекции и фото не применяется.</p>
           </div>
         </div>
 
@@ -377,7 +439,7 @@ export default function Calculator() {
           ) : (
             <>
               <div className="calc-sum-type">
-                {shootType}{hasDayItems ? ` · ${days} ${daysWord(days)}` : ""}
+                {shootType}{hasDayItems ? ` · ${days} ${daysWord(days)}` : ""}{hasHourItems ? ` · ${Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)} ч` : ""}
               </div>
 
               <div style={{ marginTop: 14 }}>

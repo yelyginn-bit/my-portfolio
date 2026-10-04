@@ -4,8 +4,51 @@ import { chromium, webkit, type Page } from "playwright";
 import { startLocalServer } from "../scripts/computed-style-audit";
 import { ESTIMATE_DATA } from "../src/lib/pricing.data";
 import { computeBreakdown, formatRubRange } from "../src/lib/calc";
+import { estimateDataToRules, rulesToEstimateData } from "../src/lib/pricing.runtime";
 
 const normalized = (text: string) => text.replace(/\s+/gu, " ").trim();
+const escapeRegex = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+const contrastRatio = (foreground: string, background: string) => {
+  const luminance = (color: string) => {
+    const channels = color.match(/[\d.]+/gu)?.slice(0, 3).map(Number);
+    assert.ok(channels?.length === 3, `expected an rgb() color, got ${color}`);
+    const [r, g, b] = channels.map((channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+  };
+  const a = luminance(foreground), b = luminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+};
+const checkboxFor = (page: Page, item: (typeof ESTIMATE_DATA)[keyof typeof ESTIMATE_DATA]["base"][number]) => {
+  const unit = item.unit === "day" ? "за смену" : item.unit === "hour" ? "за час" : item.unit === "person" ? "за чел." : item.unit === "frame" ? "за кадр" : "за проект";
+  return page.getByRole("checkbox", { name: new RegExp(`^${escapeRegex(item.name)} · ${unit} `, "u") });
+};
+
+test("approved color tiers replace the base price and photo retouch is priced per frame", () => {
+  const color = ESTIMATE_DATA["Цветокоррекция"];
+  const base = color.base[0]!;
+  const extended = color.options[0]!;
+  const complex = color.options[1]!;
+  const total = (optionItems: string[], baseItems = [base.name]) => computeBreakdown({
+    shootType: "Цветокоррекция", days: 1, hours: 1, urgent: false,
+    baseItems, optionItems,
+  }, 0, ESTIMATE_DATA).subtotalMin;
+
+  assert.equal(total([]), 5000);
+  assert.equal(total([extended.name]), 9000, "a tier remains full price even when stale UI state still includes the base");
+  assert.equal(total([extended.name], []), 9000, "the extended tier stands alone");
+  assert.equal(total([complex.name]), 15000);
+  assert.equal(total([complex.name], []), 15000);
+  assert.equal(ESTIMATE_DATA["Студийная фотосъёмка"].options[0]?.unit, "frame");
+  assert.equal(ESTIMATE_DATA["Репортажная фотосъёмка"].options[0]?.unit, "frame");
+
+  const activeRules = estimateDataToRules(ESTIMATE_DATA).map((rule, index) => ({ ...rule, id: String(index) }));
+  const hydrated = rulesToEstimateData(activeRules);
+  assert.equal(hydrated["Цветокоррекция"].options[0]?.replaces, "Цветокоррекция — базовый формат");
+  assert.equal(hydrated["Студийная фотосъёмка"].options[0]?.unit, "frame");
+});
 async function testMenu(page: Page, origin: string, route: string) {
   await page.goto(origin + route);
   const button = page.locator('.nav-dropdown > button').first();
@@ -77,80 +120,119 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.waitForTimeout(500);
         const after = await track.evaluate((el) => el.getBoundingClientRect().x);
         assert.ok(Math.abs(after - before) > 2, `${engine.name()}: client tape moves`);
-        await page.getByRole('button', { name: "Остановить ленту клиентов" }).click();
-        await page.locator('.v3-marquee[data-motion="false"]').waitFor();
-        // Wait for the browser's pending pause and font layout, not a fixed 50 ms.
-        await track.evaluate(async (el) => {
-          await document.fonts.ready;
-          const animations = el.getAnimations();
-          await Promise.all(animations.map((animation) => animation.ready));
-          await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-        });
-        const paused = await track.evaluate((el) => ({
-          x: el.getBoundingClientRect().x,
-          animations: el.getAnimations().map((animation) => ({ state: animation.playState, time: animation.currentTime })),
-        }));
-        assert.ok(paused.animations.length > 0, `${engine.name()}: pause preserves animation`);
-        assert.ok(paused.animations.every((animation) => animation.state === "paused"), `${engine.name()}: animation is paused`);
-        await page.waitForTimeout(250);
-        const still = await track.evaluate((el) => ({
-          x: el.getBoundingClientRect().x,
-          times: el.getAnimations().map((animation) => animation.currentTime),
-        }));
-        assert.deepEqual(still.times, paused.animations.map((animation) => animation.time), `${engine.name()}: paused timeline does not advance`);
-        assert.ok(Math.abs(still.x - paused.x) < 1, `${engine.name()}: paused client tape does not move`);
+        const marqueeColors = await page.locator('.v3-marquee__track span, .v3-marquee__track b').evaluateAll((els) => els.map((el) => ({
+          foreground: getComputedStyle(el).color,
+          background: getComputedStyle(el.closest('.v3-marquee')!).backgroundColor,
+        })));
+        assert.ok(marqueeColors.length > 0, `${engine.name()}: marquee labels exist`);
+        for (const colors of marqueeColors) {
+          assert.ok(contrastRatio(colors.foreground, colors.background) >= 4.5, `${engine.name()}: marquee contrast is below WCAG AA`);
+        }
+        assert.equal(await page.locator('.v3-marquee__toggle').count(), 0, `${engine.name()}: no pause control inside the marquee`);
+        const motionToggle = page.getByRole('button', { name: 'Отключить движение', exact: true });
+        await motionToggle.click();
+        assert.equal(await page.locator('.v3-marquee__track').evaluate((el) => getComputedStyle(el).animationName), 'none');
+        assert.equal(await page.getByRole('button', { name: 'Включить движение', exact: true }).getAttribute('aria-pressed'), 'true');
+        await page.getByRole('button', { name: 'Включить движение', exact: true }).click();
+        // Moving through unrelated controls must not pause the continuously moving client tape.
+        await page.locator('.v3-nav__cta').first().click();
+        await page.goto(origin + '/');
+        const afterNavigation = await track.evaluate((el) => el.getBoundingClientRect().x);
+        await page.waitForTimeout(350);
+        const stillMoving = await track.evaluate((el) => el.getBoundingClientRect().x);
+        assert.ok(Math.abs(stillMoving - afterNavigation) > 1, `${engine.name()}: client tape resumes after navigation`);
         const video = page.locator('video');
         await video.evaluate((v: HTMLVideoElement) => v.pause());
         await page.getByRole('button', { name: "Воспроизвести шоурил", exact: true }).click();
         await page.waitForTimeout(500);
         assert.ok(await video.evaluate((v: HTMLVideoElement) => !v.paused && v.currentTime > 0));
-        await page.getByRole('button', { name: "Включить звук", exact: true }).click();
-        assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted), false);
-        await page.getByRole('button', { name: "Выключить звук", exact: true }).click();
-        assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted), true);
         await page.getByRole('button', { name: "Поставить шоурил на паузу" }).click();
         assert.equal(await video.evaluate((v: HTMLVideoElement) => v.paused), true);
         await page.goto(origin + "/calculator");
         await page.goto(origin + "/photo");
-        assert.equal(await page.getByRole('link', { name: 'Рассчитать стоимость фотосъёмки' }).first().getAttribute('href'), '/calculator?service=photo-studio');
+        assert.equal(await page.getByRole('link', { name: 'Рассчитать стоимость фотосъёмки' }).first().getAttribute('href'), '/calculator?service=photo-studio&from=%2Fphoto');
         await page.goto(origin + "/calculator?service=photo-reportage");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Репортажная фотосъёмка'));
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 6 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 12 000 ₽');
+        await page.locator('#estimate-hours').focus();
+        await page.keyboard.press('ArrowRight');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 18 000 ₽');
         await page.goto(origin + "/calculator?service=photo-studio");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 000 ₽');
+        await page.locator('#estimate-hours').focus();
+        await page.keyboard.press('ArrowRight');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 16 000 ₽');
+        await page.goto(origin + "/calculator?service=content-day&from=%2Fcontent-day");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Контент для бизнеса'));
+        const contentDayTotal = normalized(await page.locator('.calc-total-val').innerText());
+        assert.equal(contentDayTotal, 'от 45 000 ₽');
+        await page.goto(origin + "/calculator?service=color");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Цветокоррекция'));
+        const color = ESTIMATE_DATA["Цветокоррекция"];
+        const colorBase = checkboxFor(page, color.base[0]!);
+        const colorExtended = checkboxFor(page, color.options[0]!);
+        const colorComplex = checkboxFor(page, color.options[1]!);
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await colorExtended.click();
+        assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 9 000 ₽');
+        await colorBase.click();
+        assert.equal(await colorExtended.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await colorComplex.click();
+        assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 15 000 ₽');
+        await page.getByRole('button', { name: 'Студийная фотосъёмка', exact: true }).click();
+        const retouch = checkboxFor(page, ESTIMATE_DATA["Студийная фотосъёмка"].options[0]!);
+        assert.match(await retouch.getAttribute('aria-label') ?? await retouch.innerText(), /за кадр/u);
+        await retouch.click();
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 300 ₽');
         await page.goto(origin + "/calculator");
         const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
         for (const [shootType, data] of Object.entries(ESTIMATE_DATA)) {
           await page.getByRole('button', { name: shootType, exact: true }).click();
           const base = data.base.map((i) => i.name); const options: string[] = [];
           const checkTotal = async (days = 1, urgent = false) => {
-            const b = computeBreakdown({shootType, days, urgent, baseItems: base, optionItems: options}, 0, ESTIMATE_DATA);
+            const hours = shootType === 'Репортажная фотосъёмка' ? 2 : 1;
+            const b = computeBreakdown({shootType, days, hours, urgent, baseItems: base, optionItems: options}, 0, ESTIMATE_DATA);
             const expected = normalized(formatRubRange(b.totalMin, b.totalMax));
             await page.waitForFunction((value) => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === value, expected, { timeout: 1500 });
             assert.equal(normalized(await page.locator('.calc-total-val').innerText()), expected, `${engine.name()}: ${shootType}`);
           };
           await checkTotal();
           for (const item of data.base) {
-            const button = page.getByRole('checkbox', { name: new RegExp(item.name) });
+            const button = checkboxFor(page, item);
             await button.focus(); await page.keyboard.press('Space'); base.splice(base.indexOf(item.name), 1); await checkTotal();
             await button.click(); base.push(item.name); await checkTotal();
           }
           for (const item of data.options) {
-            const button = page.getByRole('checkbox', { name: new RegExp(item.name) });
+            const button = checkboxFor(page, item);
             await button.click(); options.push(item.name); await checkTotal();
             await button.click(); options.splice(options.indexOf(item.name), 1); await checkTotal();
           }
           const dayItem = data.base.find((i) => i.unit === 'day') || data.options.find((i) => i.unit === 'day');
           if (dayItem) {
-            if (!base.includes(dayItem.name)) { await page.getByRole('checkbox', { name: new RegExp(dayItem.name) }).click(); options.push(dayItem.name); }
+            if (!base.includes(dayItem.name)) { await checkboxFor(page, dayItem).click(); options.push(dayItem.name); }
             assert.equal(await range.isEnabled(), true);
             await range.focus(); await page.keyboard.press('Home'); await page.keyboard.press('ArrowRight'); await page.keyboard.press('ArrowRight');
             await checkTotal(3);
           }
-          await page.getByRole('switch').click(); await checkTotal(dayItem ? 3 : 1, true);
-          await page.getByRole('switch').click();
+          const rushSwitch = page.getByRole('switch');
+          const rushEligible = [...data.base, ...data.options].some((item) => item.rushEligible && (base.includes(item.name) || options.includes(item.name)));
+          if (rushEligible) {
+            await rushSwitch.click(); await checkTotal(dayItem ? 3 : 1, true);
+            await rushSwitch.click();
+          } else {
+            assert.equal(await rushSwitch.isDisabled(), true, `${shootType}: express edit not available for this selection`);
+          }
         }
+        await page.getByRole('button', { name: 'Монтаж Reels', exact: true }).click();
+        const rushSwitch = page.getByRole('switch');
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Монтаж Reels') && !document.querySelector('[role="switch"]')?.hasAttribute('disabled'));
+        assert.equal(await rushSwitch.isEnabled(), true);
+        await rushSwitch.click();
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), '3 000 ₽ – 13 500 ₽');
         // A real failed media request must offer the embedded fallback player.
         await page.route('**/hero-showreel.mp4', (route) => route.fulfill({ status: 404, body: 'not found' }));
         await page.goto(origin + '/');
@@ -165,8 +247,8 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),true);
         await rp.getByRole('button',{name:'Воспроизвести шоурил',exact:true}).click();await rp.waitForTimeout(500);
         assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),false);
-        await rp.getByRole('button',{name:'Запустить ленту клиентов'}).click();
-        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
+        assert.equal(await rp.locator('.v3-marquee__toggle').count(), 0);
+        assert.equal(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
         for (const route of ['/', '/reklamnye-roliki', '/account', '/calculator']) {
           await rp.goto(origin + route);
           await rp.getByRole('button', { name: 'Открыть меню', exact: true }).click();
@@ -184,7 +266,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
   } finally { server.close(); }
 });
 
-test("hero avoids MP4 requests on mobile, reduced motion and saveData until a gesture", async () => {
+test("hero autoplays muted on mobile and desktop, and defers for reduced motion/saveData", async () => {
   const { server, origin } = await startLocalServer();
   const browser = await chromium.launch();
   try {
@@ -201,20 +283,24 @@ test("hero avoids MP4 requests on mobile, reduced motion and saveData until a ge
       let mp4Requests = 0;
       page.on('request', r => { if (r.url().includes('hero-showreel.mp4')) mp4Requests++; });
       await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
-      assert.equal(mp4Requests, 0, mode + ': initial document does not fetch MP4');
-      if (mode === 'desktop') {
-        await page.waitForFunction(() => !!document.querySelector('video')?.getAttribute('src'));
-        assert.ok(mp4Requests > 0, 'desktop delayed autoplay requests MP4');
+      const video = page.locator('video');
+      assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted && v.playsInline), true, mode + ': muted inline video');
+      if (mode === 'mobile' || mode === 'desktop') {
+        await page.waitForFunction(() => {
+          const v = document.querySelector('video');
+          return !!v?.getAttribute('src') && !v.paused && v.currentTime > 0;
+        });
+        assert.ok(mp4Requests > 0, mode + ': autoplay loads and advances video');
       } else {
         await page.waitForTimeout(1800);
         assert.equal(mp4Requests, 0, mode + ': remains poster only without gesture');
-        assert.equal(await page.locator('video').getAttribute('src'), null);
+        assert.equal(await video.getAttribute('src'), null);
         await page.getByRole('button', { name: 'Воспроизвести шоурил', exact: true }).click();
+        await page.waitForFunction(() => {
+          const v = document.querySelector('video');
+          return !!v && !v.paused && v.currentTime > 0;
+        });
       }
-      await page.waitForFunction(() => {
-        const video = document.querySelector('video');
-        return !!video && !video.paused && video.currentTime > 0;
-      });
       assert.ok(mp4Requests > 0, mode + ': genuine playback after request');
       await page.getByRole('button', { name: 'Поставить шоурил на паузу', exact: true }).click();
       await page.waitForTimeout(1400);

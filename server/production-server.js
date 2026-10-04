@@ -26,6 +26,8 @@ const pageMap = new Map([
   ["/gallery-terms", "legal.html"],
   ["/data-request", "legal.html"],
   ["/photo", "photo.html"],
+  ["/portretnaya-fotosessiya", "portretnaya-fotosessiya.html"],
+  ["/reportazhnaya-fotosemka", "reportazhnaya-fotosemka.html"],
   ["/portfolio", "portfolio.html"],
   ["/portfolio/reels", "portfolio-reels.html"],
   ["/portfolio/events", "portfolio-events.html"],

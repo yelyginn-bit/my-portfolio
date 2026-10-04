@@ -45,6 +45,8 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/pryamye-translyacii", render: "static", indexable: true, priority: 0.9, theme: "dark" },
   { path: "/ceny", render: "static", indexable: true, priority: 0.8, theme: "dark" },
   { path: "/photo", render: "static", indexable: true, priority: 0.75, theme: "dark" },
+  { path: "/portretnaya-fotosessiya", render: "static", indexable: true, priority: 0.75, theme: "dark" },
+  { path: "/reportazhnaya-fotosemka", render: "static", indexable: true, priority: 0.75, theme: "dark" },
   { path: "/portfolio/photo", render: "private", indexable: false },
   { path: "/account", render: "private", indexable: false },
   { path: "/admin", render: "private", indexable: false },
@@ -144,7 +146,7 @@ function resolveV3RouteRaw(rawPath: string, rawSearch = ""): V3RouteResolution {
   if (path === "/cases" || path === "/cases.html") return { path, kind: "redirect", seo: { title: "Портфолио | YELYGINN", description: "Работы Юрия Елыгина.", canonical: "/portfolio" } };
   if (category) return { path, kind: "category", category, seo: { title: `${CATEGORY_META[category].title} | YELYGINN`, description: CATEGORY_META[category].description, canonical: `/portfolio/${category}` } };
   if (project) return { path, kind: "project", project, seo: { title: `${project.title} | YELYGINN`, description: project.description || `${project.title}: ${project.responsibilities.join(", ")}.`, canonical: `/portfolio/${project.slug}` } };
-  if (path === "/") return { path, kind: "home", seo: { title: "Видеограф и видеооператор в Нижнем Новгороде — съёмка, монтаж, цвет | Юрий Елыгин", description: "Профессиональная видеосъёмка в Нижнем Новгороде: рекламные ролики, съёмка мероприятий, Reels, монтаж и цветокоррекция. Работаю с брендами и бизнесом. Смета после брифа.", canonical: "/" } };
+  if (path === "/") return { path, kind: "home", seo: { title: "Фотограф и видеооператор в Нижнем Новгороде | Юрий Елыгин", description: "Портретная и репортажная фотосъёмка, видео мероприятий, Reels, монтаж и цветокоррекция. Съёмка в Нижнем Новгороде, постпродакшн удалённо. Юрий Елыгин.", canonical: "/" } };
   return { path, kind: "unknown", seo: { title: "YELYGINN", description: "Операторская работа, монтаж, цвет и live production.", canonical: path } };
 }
 

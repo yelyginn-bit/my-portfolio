@@ -41,8 +41,12 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
     const frame = frameRef.current;
     if (!frame) return;
     const rect = frame.getBoundingClientRect();
-    if (rect.width === 0) return;
-    const next = ((clientX - rect.left) / rect.width) * 100;
+    const contentWidth = frame.clientWidth;
+    if (contentWidth === 0 || rect.width === 0) return;
+    // rect includes the frame border; CSS percentages for the absolutely
+    // positioned image and handle are based on its padding box. Use the same
+    // coordinate system so the divider tracks the visible clip edge exactly.
+    const next = ((clientX - rect.left - frame.clientLeft) / contentWidth) * 100;
     setPosition(Math.min(100, Math.max(0, next)));
   }, []);
 

@@ -212,7 +212,8 @@ test("production health endpoint is routed without exposing secrets", () => {
 
 test("public prices use the reviewed 2026 market entry points", () => {
   const prices = read("src/lib/pricing.data.ts");
-  for (const value of ["от 5 000 ₽", "от 15 000 ₽", "от 22 000 ₽", "от 35 000 ₽", "от 25 000 ₽", "от 6 000 ₽/час", "от 8 000 ₽/час", "от 60 000 ₽", "от 70 000 ₽"]) {
+  for (const value of ["от 5 000 ₽", "от 15 000 ₽", "от 20 000 ₽", "от 25 000 ₽", "от 30 000 ₽", "от 45 000 ₽", "от 60 000 ₽", "от 6 000 ₽/час", "8 000 ₽/час"]) {
     assert.match(prices, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&"), "u"));
   }
+  assert.doesNotMatch(prices, /от 22 000 ₽|от 35 000 ₽|от 48 000 ₽|от 70 000 ₽/u);
 });

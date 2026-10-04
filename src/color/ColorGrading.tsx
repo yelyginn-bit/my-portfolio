@@ -26,32 +26,32 @@ const RELATED_PROJECTS = [...projectsForCategory("color").filter((p) => p.featur
 /** Публичные стартовые цены на цветокоррекцию. */
 const TIERS = [
   {
-    id: "podcast",
-    title: "Подкаст или интервью",
+    id: "base",
+    title: "Базовая цветокоррекция",
     price: "от 5 000 ₽",
     unit: "за проект",
-    body: "Многокамерная запись в одном интерьере. Свожу камеры к одному тону, чтобы склейки не читались.",
+    body: "Базовый баланс и единый тон для согласованного объёма материала.",
   },
   {
-    id: "business",
-    title: "Бизнес-видео до 5 минут",
-    price: "от 5 000 ₽",
+    id: "extended",
+    title: "Расширенная цветокоррекция",
+    price: "от 9 000 ₽",
     unit: "за проект",
-    body: "Рекламный, имиджевый или продуктовый ролик. Разбор по сценам, вторичная коррекция, финальный мастер.",
+    body: "Сведение сцен и камер, вторичная коррекция и более детальная работа по кадрам.",
   },
   {
-    id: "lut",
-    title: "Разработка LUT / Look Dev",
-    price: "от 5 000 ₽",
-    unit: "за услугу",
-    body: "Единый look под бренд или сериал роликов, чтобы дальше снимать и монтировать в одном характере.",
+    id: "complex",
+    title: "Сложная цветокоррекция",
+    price: "от 15 000 ₽",
+    unit: "за проект",
+    body: "Для сложных сцен, нескольких условий освещения или выразительного look. Объём уточняется после просмотра исходников.",
   },
   {
     id: "hourly",
     title: "Почасовая работа",
-    price: "от 5 000 ₽",
+    price: "от 3 500 ₽",
     unit: "за час, минимум 3 часа",
-    body: "Для интернет-рекламы и ТВ, когда объём заранее не известен или материал нужно смотреть вместе.",
+    body: "Для задач, где удобнее оценивать совместный разбор или работу по времени. Минимум — 3 часа.",
   },
 ] as const;
 
@@ -75,7 +75,7 @@ const PROCESS = [
   { step: "01", title: "Смотрю материал", body: "Оцениваю запас по цвету и что вообще достижимо. Если материал не тянет — говорю сразу, а не после оплаты." },
   { step: "02", title: "Считаю и фиксирую", body: "Стоимость и срок после просмотра исходников, не по названию задачи." },
   { step: "03", title: "Первичная коррекция", body: "Баланс, экспозиция, сведение камер и сцен к одной базе." },
-  { step: "04", title: "Грейд и правки", body: "Характер, вторичные коррекции, работа по кадру. Два круга правок включены." },
+    { step: "04", title: "Грейд и согласование", body: "Характер, вторичные коррекции и работа по кадру. Состав согласования фиксируем после просмотра материала." },
 ];
 
 export default function ColorGrading() {
@@ -91,13 +91,13 @@ export default function ColorGrading() {
           <PageContainer className="color-hero-grid">
             <div className="color-hero-copy">
             <p className="ds-eyebrow">Цветокоррекция</p>
-            <h1>Цвет в DaVinci&nbsp;Resolve</h1>
+            <h1>Цветокоррекция видео</h1>
             <p className="color-hero-lead">
               Отдельная услуга без выезда: присылаете исходники — возвращаю грейд.
               Работаю с материалом из любого города, съёмочная география здесь роли не играет.
             </p>
             <div className="color-hero-actions">
-              <a className="color-btn" href="/#contact">Обсудить проект</a>
+              <a className="color-btn" href="/?service=color&from=%2Fcvetokorrekciya#contact">Обсудить проект</a>
               <a className="color-btn color-btn--ghost" href={SITE.telegramUrl} target="_blank" rel="noreferrer">
                 Telegram <ArrowUpRight size={15} aria-hidden="true" />
               </a>
@@ -117,7 +117,7 @@ export default function ColorGrading() {
             <PageContainer>
               <SectionHeader
                 eyebrow="До и после"
-                title="Что меняется"
+                title="Примеры цветокоррекции"
                 intro="Один и тот же кадр, один кроп, одно разрешение. Слева — исходник с камеры."
               />
               {COLOR_COMPARE_GROUP_ORDER.map((group) => {
@@ -145,7 +145,7 @@ export default function ColorGrading() {
           <PageContainer>
             <SectionHeader
               eyebrow="Стоимость"
-              title="Сколько стоит"
+              title="Стоимость и два раунда правок"
               intro="Ориентиры для первичной оценки. Точная сумма — после просмотра исходников."
             />
             <div className="color-tier-list">
@@ -206,7 +206,8 @@ export default function ColorGrading() {
                 {RELATED_PROJECTS.map((project) => <a key={project.slug} className="color-related-card" href={`/portfolio/${project.slug}`}>{project.title}</a>)}
               </div>
               <div className="color-related-actions">
-                <a className="color-btn color-btn--ghost" href="/portfolio/color">Все работы категории «{CATEGORY_META.color.title}»</a>
+              <a className="color-btn color-btn--ghost" href="/portfolio/color">Все работы категории «{CATEGORY_META.color.title}»</a>
+              <a className="color-btn color-btn--ghost" href="/portfolio/post">Монтаж и постпродакшн</a>
                 <a className="color-btn color-btn--ghost" href={PRICES_LINK.href}>{PRICES_LINK.label}</a>
                 <a className="color-btn color-btn--ghost" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label}</a>
               </div>
@@ -216,9 +217,9 @@ export default function ColorGrading() {
 
         <Section className="color-cta">
           <PageContainer>
-            <h2>Пришлите материал — посмотрю и скажу, что с ним можно сделать</h2>
+            <h2>Как передать материалы для цветокоррекции</h2>
             <div>
-              <a className="color-btn" href="/#contact">Оставить заявку</a>
+              <a className="color-btn" href="/?service=color&from=%2Fcvetokorrekciya#contact">Оставить заявку</a>
               <a className="color-btn color-btn--ghost" href="/ceny">Все услуги и цены</a>
             </div>
           </PageContainer>

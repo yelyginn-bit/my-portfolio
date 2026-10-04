@@ -75,6 +75,19 @@ export function changedUrls(before, after) {
   return [...new Set([...old.keys(), ...next.keys()])].filter((url) => old.get(url) !== next.get(url)).sort();
 }
 
+/** Keep the exact public URL delta and source snapshots for a later owner-approved submit. */
+export function deferredQueue(before, after, beforeFile, afterFile, queuedAt = new Date().toISOString()) {
+  return {
+    schema: 1,
+    origin: ORIGIN,
+    queuedAt,
+    urlList: changedUrls(before, after),
+    beforeSnapshot: path.basename(beforeFile),
+    afterSnapshot: path.basename(afterFile),
+    submitted: false,
+  };
+}
+
 function validDay(value) {
   return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
     && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
@@ -186,6 +199,16 @@ async function cli() {
     await writeFile(options.output, JSON.stringify(next, null, 2) + "\n");
     await writeFile(filename, sitemap);
     console.log(`Sitemap content dates: ${next.routes.filter((item) => item.lastmod).length}/${next.routes.length}`);
+    return;
+  }
+  if (command === "queue") {
+    if (!options.before || !options.after || !options.output) throw new Error("queue needs --before, --after and --output");
+    const before = JSON.parse(await readFile(options.before, "utf8"));
+    const after = JSON.parse(await readFile(options.after, "utf8"));
+    const queue = deferredQueue(before, after, options.before, options.after);
+    await mkdir(path.dirname(options.output), { recursive: true });
+    await writeFile(options.output, JSON.stringify(queue, null, 2) + "\n");
+    console.log(`Deferred IndexNow queue: ${queue.urlList.length} public URLs`);
     return;
   }
   if (command !== "notify" || !options.before || !options.after || !options.journal) throw new Error("notify needs --before, --after and --journal; default is dry-run");

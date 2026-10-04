@@ -26,7 +26,7 @@ export function discoveryGraph(route: string) {
     { "@type": "WebSite", "@id": websiteId, url: siteOrigin, name: SITE.brand, inLanguage: "ru" },
     { "@type": "WebPage", "@id": `${url}#webpage`, url, name: copy?.title, description: copy?.description, inLanguage: "ru", isPartOf: ref(websiteId), about: ref(personId) },
   ];
-  if (["/", "/about", "/contact", "/ceny", "/photo"].includes(route)) {
+  if (["/", "/about", "/contact", "/ceny", "/photo", "/portretnaya-fotosessiya", "/reportazhnaya-fotosemka"].includes(route)) {
     graph.push(
       { "@type": "Person", "@id": personId, name: SITE.owner, alternateName: SITE.brand, jobTitle: "Фотограф, видеооператор, режиссёр монтажа и колорист", url: `${siteOrigin}/about`, description: OWNER_DESCRIPTION, homeLocation: city, email: SITE.email, sameAs: SOCIALS.filter((s) => !s.href.startsWith("mailto:")).map((s) => s.href) },
       { "@type": "LocalBusiness", "@id": businessId, name: `${SITE.owner} — ${SITE.brand}`, url: siteOrigin, description: OWNER_DESCRIPTION, email: SITE.email, address: { "@type": "PostalAddress", addressLocality: SITE.location, addressCountry: "RU" }, areaServed: city },

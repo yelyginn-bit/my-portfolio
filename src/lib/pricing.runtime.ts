@@ -27,7 +27,15 @@ export function rulesToEstimateData(rules: PriceRule[]): EstimateData {
   const data: EstimateData = {};
   for (const r of [...rules].sort((a, b) => a.sortOrder - b.sortOrder)) {
     if (!data[r.shootType]) data[r.shootType] = { base: [], options: [] };
-    const item: PriceItem = { name: r.name, priceMin: r.priceMin, priceMax: r.priceMax, unit: r.unit as PriceUnit };
+    const configuredItem = [...(ESTIMATE_DATA[r.shootType]?.base ?? []), ...(ESTIMATE_DATA[r.shootType]?.options ?? [])]
+      .find((candidate) => candidate.name === r.name);
+    const item: PriceItem = {
+      name: r.name,
+      priceMin: r.priceMin,
+      priceMax: r.priceMax,
+      unit: r.unit as PriceUnit,
+      ...(configuredItem?.replaces ? { replaces: configuredItem.replaces } : {}),
+    };
     (r.kind === "option" ? data[r.shootType].options : data[r.shootType].base).push(item);
   }
   return data;

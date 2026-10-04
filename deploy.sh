@@ -8,6 +8,12 @@ cd "$ROOT_DIR"
 readonly APP_NAME="yelyginn-site"
 readonly LOCAL_ORIGIN="http://127.0.0.1:3000"
 readonly BUILD_STARTED_AT="$(date +%s)"
+readonly DEFER_INDEXNOW="${DEFER_INDEXNOW:-0}"
+
+if [[ "$DEFER_INDEXNOW" != "0" && "$DEFER_INDEXNOW" != "1" ]]; then
+  echo "ERROR: DEFER_INDEXNOW must be 0 or 1." >&2
+  exit 1
+fi
 
 # Never overwrite concurrent work or switch an unexpected checkout.
 if [[ -n "$(git status --porcelain)" ]]; then
@@ -97,8 +103,12 @@ done
 # A live HTTPS content/key preflight prevents announcing an unpublished build.
 # A provider failure is journalled separately from the successful site release.
 mv "$TASK_DEPLOY_SNAPSHOT-history.json" "$TASK_DEPLOY_STATE_DIR/content-history.json"
-if ! node scripts/indexnow.mjs notify --before "$TASK_DEPLOY_SNAPSHOT-before.json" --after "$TASK_DEPLOY_SNAPSHOT-after.json" --journal "$TASK_DEPLOY_STATE_DIR/indexnow-results.jsonl" --submit; then
-  echo "WARNING: IndexNow not accepted; inspect the journal and retry only this release notification." >&2
+if [[ "$DEFER_INDEXNOW" == "1" ]]; then
+  node scripts/indexnow.mjs queue --before "$TASK_DEPLOY_SNAPSHOT-before.json" --after "$TASK_DEPLOY_SNAPSHOT-after.json" --output "$TASK_DEPLOY_STATE_DIR/indexnow-deferred/$(basename "$TASK_DEPLOY_SNAPSHOT").json"
+else
+  if ! node scripts/indexnow.mjs notify --before "$TASK_DEPLOY_SNAPSHOT-before.json" --after "$TASK_DEPLOY_SNAPSHOT-after.json" --journal "$TASK_DEPLOY_STATE_DIR/indexnow-results.jsonl" --submit; then
+    echo "WARNING: IndexNow not accepted; inspect the journal and retry only this release notification." >&2
+  fi
 fi
 
 echo "DEPLOYED_COMMIT=$(git rev-parse --short HEAD)"

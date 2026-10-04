@@ -92,7 +92,7 @@
       <div class="site-static-footer">
         <div class="site-static-footer__brand">
           <a class="site-static-footer__wordmark" href="/" aria-label="YELYGINN">
-            <svg viewBox="-12 -981 4725 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true"><text x="0" y="0">YELYGINN</text></svg>
+            <svg viewBox="0 -981 4713 1235" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true"><text x="0" y="0" textLength="4713" lengthAdjust="spacing">YELYGINN</text></svg>
           </a>
           <p>Операторская работа, монтаж, цвет и live production.</p>
         </div>
@@ -110,8 +110,34 @@
           <a href="/privacy-policy">Политика</a><a href="/personal-data-consent">Согласие</a>
           <a href="/cookie-policy">Cookies</a><a href="/terms">Условия</a>
           <button type="button" data-cookie-settings>Настройки cookie</button>
+          <button type="button" data-motion-toggle aria-pressed="false">Отключить движение</button>
         </div>
       </div>
     `;
   }
+
+  const footerControls = footer?.querySelector(".site-static-footer__legal, .v3-footer__meta nav");
+  if (footerControls && !footerControls.querySelector("[data-motion-toggle]")) {
+    footerControls.insertAdjacentHTML("beforeend", '<button type="button" data-motion-toggle aria-pressed="false">Отключить движение</button>');
+  }
+
+  const motionButtons = [...document.querySelectorAll("[data-motion-toggle]")];
+  let motionStopped = false;
+  try { motionStopped = window.localStorage.getItem("yelyginn-motion") === "off"; } catch { /* use the system preference */ }
+  const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const applyMotion = () => {
+    const reduced = motionStopped || systemMotion.matches;
+    document.documentElement.dataset.motionPreference = reduced ? "reduce" : "full";
+    motionButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(motionStopped));
+      button.textContent = motionStopped ? "Включить движение" : "Отключить движение";
+    });
+  };
+  applyMotion();
+  systemMotion.addEventListener("change", applyMotion);
+  motionButtons.forEach((button) => button.addEventListener("click", () => {
+    motionStopped = !motionStopped;
+    try { window.localStorage.setItem("yelyginn-motion", motionStopped ? "off" : "on"); } catch { /* preference remains active until navigation */ }
+    applyMotion();
+  }));
 })();

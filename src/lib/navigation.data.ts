@@ -21,6 +21,8 @@ function link(href: string, label: string): NavLink {
 
 /** Десять посадочных услуг из ROUTE_MANIFEST (render: "static"), кроме /photo и /ceny — у них свои пункты верхнего уровня. */
 export const SERVICE_LINKS: readonly NavLink[] = [
+  link("/portretnaya-fotosessiya", "Портретная фотосессия"),
+  link("/reportazhnaya-fotosemka", "Репортажная фотосъёмка"),
   link("/reklamnye-roliki", "Рекламные ролики"),
   link("/event-video", "Видеосъёмка мероприятий"),
   link("/reels", "Reels для бизнеса"),

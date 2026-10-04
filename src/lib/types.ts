@@ -10,6 +10,8 @@ export interface PriceItem {
   priceMax: number;
   /** project — за проект (разово), day — за смену (× кол-во дней), person/hour — за единицу. */
   unit: PriceUnit;
+  /** Участвует в наценке за согласованный экспресс-монтаж (+50%). */
+  rushEligible?: boolean;
 }
 
 /** Данные по одному типу съёмки: обязательные позиции + опциональные доп-услуги. */
@@ -227,6 +229,8 @@ export interface OrderSelection {
   shootType: string;
   /** Кол-во съёмочных смен (множитель для позиций с unit==="day"). */
   days: number;
+  /** Количество оплачиваемых часов для услуг с unit === "hour". */
+  hours?: number;
   /** Названия выбранных обязательных позиций. */
   baseItems: string[];
   /** Названия выбранных доп-услуг. */

@@ -9,9 +9,9 @@ import { getActiveEstimateData } from "./pricing.runtime";
 import { URGENCY_SURCHARGE } from "./pricing.config";
 import { applyDiscount } from "./discounts";
 
-/** Стоимость одной позиции с учётом числа смен (для unit==="day"). */
-function itemCost(item: PriceItem, days: number): { min: number; max: number } {
-  const mult = item.unit === "day" ? Math.max(1, days) : 1;
+/** Стоимость позиции с учётом количества смен или часов. */
+function itemCost(item: PriceItem, days: number, hours: number): { min: number; max: number } {
+  const mult = item.unit === "day" ? Math.max(1, days) : item.unit === "hour" ? Math.max(1, hours) : 1;
   return { min: item.priceMin * mult, max: item.priceMax * mult };
 }
 
@@ -34,15 +34,11 @@ export function computeBreakdown(
       ...typeData.options.filter((i) => selection.optionItems.includes(i.name)),
     ];
     for (const item of chosen) {
-      const c = itemCost(item, selection.days);
-      subMin += c.min;
-      subMax += c.max;
+      const c = itemCost(item, selection.days, selection.hours ?? 1);
+      const rush = selection.urgent && item.rushEligible ? URGENCY_SURCHARGE : 0;
+      subMin += Math.round(c.min * (1 + rush));
+      subMax += Math.round(c.max * (1 + rush));
     }
-  }
-
-  if (selection.urgent) {
-    subMin = Math.round(subMin * (1 + URGENCY_SURCHARGE));
-    subMax = Math.round(subMax * (1 + URGENCY_SURCHARGE));
   }
 
   return {

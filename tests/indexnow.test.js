@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { ORIGIN, ENDPOINT, KEY_LOCATION, publicUrl, documentRecord, changedUrls, notifyPublished, contentHistory, sitemapWithHistory } from "../scripts/indexnow.mjs";
+import { ORIGIN, ENDPOINT, KEY_LOCATION, publicUrl, documentRecord, changedUrls, deferredQueue, notifyPublished, contentHistory, sitemapWithHistory } from "../scripts/indexnow.mjs";
 
 const key = "fixture-indexnow-public-key";
 const html = (url, text, options = "") => `<html><head><title>Title</title><meta name="description" content="Description"><link rel="canonical" href="${url}">${options}</head><body><header>Header</header><main><h1>Heading</h1><p>${text}</p></main><footer>Footer</footer></body></html>`;
@@ -25,6 +25,14 @@ test("Changes distinguish visible content from asset churn and record additions/
   assert.deepEqual(changedUrls(snapshot(), after), [url]);
   assert.deepEqual(changedUrls(before, snapshot()), [url]);
   assert.throws(() => changedUrls(before, snapshot(after.routes[0], after.routes[0])));
+});
+
+test("Deferred owner-approved indexing stores the exact URL delta and snapshots without submitting", () => {
+  const queue = deferredQueue(before, after, "/state/before.json", "/state/after.json", "2026-10-04T12:00:00.000Z");
+  assert.deepEqual(queue.urlList, [url]);
+  assert.equal(queue.beforeSnapshot, "before.json");
+  assert.equal(queue.afterSnapshot, "after.json");
+  assert.equal(queue.submitted, false);
 });
 
 test("Dry-run and unchanged release perform no network requests", async () => {

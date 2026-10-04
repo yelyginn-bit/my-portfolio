@@ -62,9 +62,9 @@ test("photo delivery promises match the owner-confirmed preview and gallery timi
   const photoPage = read("photo.html");
   const pricingSource = read("src/lib/pricing.data.ts");
   assert.match(photoPage, /первое превью — в течение 48 часов/iu);
-  assert.match(photoPage, /готовая галерея — обычно за 3–5 рабочих дней/iu);
+  assert.match(photoPage, /готовая галерея — обычно за 3–5 календарных дней/iu);
   assert.doesNotMatch(photoPage, /5–10 рабочих дней/iu);
-  assert.match(pricingSource, /Превью — в течение 48 часов; готовая галерея — обычно за 3–5 рабочих дней/gu);
+  assert.match(pricingSource, /10–15 превью — в течение 48 часов; готовая галерея — обычно за 3–5 календарных дней/iu);
 });
 
 test("private application pages are noindex", () => {

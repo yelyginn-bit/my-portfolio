@@ -14,7 +14,7 @@ import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 import { CATEGORY_SEO, PAGE_SEO, seoCopyFor } from "../src/public/seoCopy.ts";
 import { siteOrigin } from "./sitemap.ts";
 
-const LANDINGS = ["/reklamnye-roliki", "/event-video", "/reels", "/video-dlya-marketpleysov", "/pryamye-translyacii", "/content-day", "/cvetokorrekciya", "/photo", "/sajty"];
+const LANDINGS = ["/reklamnye-roliki", "/event-video", "/reels", "/video-dlya-marketpleysov", "/pryamye-translyacii", "/content-day", "/cvetokorrekciya", "/photo", "/portretnaya-fotosessiya", "/reportazhnaya-fotosemka", "/sajty"];
 const link = (route: string, label?: string) => `- [${label ?? seoCopyFor(route)?.title.replace(/\s*\|.*$/u, "") ?? route}](${siteOrigin}${route}): ${seoCopyFor(route)?.description ?? ""}`.replace(/: $/u, "");
 
 export function llmsTxt(): string {

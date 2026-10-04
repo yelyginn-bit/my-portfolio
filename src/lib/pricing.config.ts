@@ -2,8 +2,8 @@
 // МЕНЯЙ ЗДЕСЬ — ядро (calc.ts, discounts.ts) и UI трогать не нужно.
 import type { DiscountTier } from "./types";
 
-/** Наценка за срочность (ускоренные сроки): +25% к итогу. */
-export const URGENCY_SURCHARGE = 0.25;
+/** Экспресс-монтаж за согласованные 24 часа: +50% к итогу. */
+export const URGENCY_SURCHARGE = 0.5;
 
 /** Максимум съёмочных смен в слайдере калькулятора. */
 export const MAX_DAYS = 10;

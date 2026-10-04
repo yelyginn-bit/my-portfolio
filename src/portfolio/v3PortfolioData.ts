@@ -313,6 +313,9 @@ export const projectsForCategory = (category: PortfolioCategory) => projects.fil
 export const assetsForProject = (projectId: string) => workAssets.filter((asset) => asset.projectId === projectId);
 export const featuredProjects = projects.filter((project) => project.featured);
 const localPosterFallbacks = new Map<string, string>([
+  ["0e6mxyEoYRosiGzuBzBdwb", "yango-campaign-2026-10-03"],
+  ["mLGNoFi4cj3vAdBrqrsdtP", "yango-arabic-15-2026-10-03"],
+  ["2PzbBYe3Xb3XQSGCZH3kMn", "gorky-memory-2026-10-03"],
   ["g7DBRUGGfASR1yy1FQs6PT", "oesfViYTJW9KWuKo4rpFxq"],
   ["xmf2EeT1FwDVkDkXdGxNQL", "a5xv428qM8GECjN197KwFx"],
   ["g5pJM7qcHVkTbYPXTaCH3K", "a5xv428qM8GECjN197KwFx"],

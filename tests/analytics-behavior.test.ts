@@ -71,12 +71,17 @@ test('Only actual portfolio pages produce portfolio_view; private pages remain q
 test('Homepage and calculator count leads only after a successful server body',async()=>{
  const {server,origin}=await startLocalServer();const browser=await chromium.launch();
  try{
-  for(const route of ['/contact','/calculator?service=photo-studio']){
+  for(const route of ['/contact?service=reels&from=%2Freels','/calculator?service=photo-studio&from=%2Fphoto']){
    const context=await browser.newContext();const page=await context.newPage();await fixtures(page);
    await page.goto(origin+route);await grant(page);
    let responseOk=false;
-   await page.route('**/api/send-form',r=>r.fulfill({contentType:'application/json',body:JSON.stringify({ok:responseOk})}));
-   if(route==='/contact'){
+   let submittedPayload:any=null;
+   await page.route('**/api/send-form',r=>{
+    submittedPayload=r.request().postDataJSON();
+    return r.fulfill({contentType:'application/json',body:JSON.stringify({ok:responseOk})});
+   });
+   if(route.startsWith('/contact')){
+    assert.equal(await page.locator('.v3-form select').inputValue(),'Reels','known service context is preselected');
     await page.getByPlaceholder('Имя или компания').fill('Локальный тест');
     await page.getByPlaceholder('Telegram, email или телефон').fill('@local_test');
     await page.locator('.v3-form select').selectOption('Фотосъёмка');
@@ -89,6 +94,7 @@ test('Homepage and calculator count leads only after a successful server body',a
     assert.ok(await page.locator('.v3-form input[type=checkbox]').nth(1).isChecked());
     await page.getByRole('button',{name:'ОТПРАВИТЬ ЗАДАЧУ'}).click();await page.getByRole('alert').waitFor();
    }else{
+    await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
     await page.getByRole('button',{name:'Студийная фотосъёмка',exact:true}).click();
     await page.getByPlaceholder('Как к вам обращаться').fill('Локальный тест');
     await page.getByPlaceholder('Телефон, напр. +7 999 123-45-67').fill('+7 999 123-45-67');
@@ -99,8 +105,19 @@ test('Homepage and calculator count leads only after a successful server body',a
    }
    assert.equal((await goals(page)).filter((a:any[])=>a[2]==='lead_submit').length,0,'HTTP 200 ok:false is not success');
    responseOk=true;
-   await page.getByRole('button',{name:route==='/contact'?'ОТПРАВИТЬ ЗАДАЧУ':'Отправить заявку',exact:true}).click();
+   await page.getByRole('button',{name:route.startsWith('/contact')?'ОТПРАВИТЬ ЗАДАЧУ':'Отправить заявку',exact:true}).click();
    await page.waitForFunction(()=>((window as any).__goals||[]).some((a:any[])=>a[2]==='lead_submit'));
+   if(route.startsWith('/contact')){
+    assert.equal(submittedPayload?.service,'Фотосъёмка','manual selection overrides the preselected service');
+    assert.equal(submittedPayload?.source,'/reels');
+    assert.equal(submittedPayload?.pageUrl,'/reels');
+   }else{
+    assert.equal(submittedPayload?.service,'Студийная фотосъёмка');
+    assert.match(submittedPayload?.message||'',/Студийная фотосъёмка/u);
+    assert.match(submittedPayload?.message||'',/ИТОГ:/u);
+    assert.equal(submittedPayload?.formId,'calculator-lead');
+    assert.equal(submittedPayload?.pageUrl,'/photo','calculator inquiry keeps its allowlisted source page');
+   }
    const captured=await goals(page);assert.equal(captured.filter((a:any[])=>a[2]==='lead_submit').length,1);
    const payload=JSON.stringify(captured.filter((a:any[])=>a[1]==='reachGoal'));
    assert.doesNotMatch(payload,/local_test|999|Локальный тест|внешней доставки/);

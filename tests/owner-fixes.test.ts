@@ -260,6 +260,14 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
           await link.click();
           await rp.waitForURL(origin + '/reklamnye-roliki');
         }
+        await rp.goto(origin + '/photo');
+        const necessaryCookies = rp.getByRole('button', { name: 'Только необходимые', exact: true });
+        if (await necessaryCookies.isVisible()) await necessaryCookies.click();
+        await rp.getByRole('button', { name: 'Включить движение', exact: true }).click();
+        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'full', 'static footer enables motion in one click');
+        await rp.goto(origin + '/');
+        await rp.waitForFunction(() => document.querySelector('.v3-marquee')?.getAttribute('data-motion') === 'true');
+        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e => getComputedStyle(e).animationName), 'none', 'static footer preference reaches React marquee');
         await reduced.close();
       } finally { await browser.close(); }
     }
@@ -270,12 +278,13 @@ test("hero autoplays muted on mobile and desktop, and defers for reduced motion/
   const { server, origin } = await startLocalServer();
   const browser = await chromium.launch();
   try {
-    for (const mode of ['mobile', 'reduced', 'save-data', 'desktop']) {
+    for (const mode of ['mobile', 'reduced', 'save-data', 'desktop', 'explicit-on']) {
       const context = await browser.newContext({
         viewport: { width: mode === 'mobile' ? 390 : 1440, height: 844 },
-        reducedMotion: mode === 'reduced' ? 'reduce' : 'no-preference',
+        reducedMotion: mode === 'reduced' || mode === 'explicit-on' ? 'reduce' : 'no-preference',
       });
       const page = await context.newPage();
+      if (mode === 'explicit-on') await page.addInitScript(() => localStorage.setItem('yelyginn-motion', 'on'));
       if (mode === 'save-data') await page.addInitScript(() => {
         Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true } });
       });
@@ -285,7 +294,7 @@ test("hero autoplays muted on mobile and desktop, and defers for reduced motion/
       await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
       const video = page.locator('video');
       assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted && v.playsInline), true, mode + ': muted inline video');
-      if (mode === 'mobile' || mode === 'desktop') {
+      if (mode === 'mobile' || mode === 'desktop' || mode === 'explicit-on') {
         await page.waitForFunction(() => {
           const v = document.querySelector('video');
           return !!v?.getAttribute('src') && !v.paused && v.currentTime > 0;
@@ -308,4 +317,82 @@ test("hero autoplays muted on mobile and desktop, and defers for reduced motion/
       await context.close();
     }
   } finally { await browser.close(); server.close(); }
+});
+
+test("color divider follows the clip boundary during drag, hover and scrolling in Chromium/WebKit", async () => {
+  const { server, origin } = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+        await page.goto(origin + '/');
+        await page.addStyleTag({ content: 'html { scroll-behavior: auto !important; }' });
+        const frame = page.locator('.color-compare-frame').first();
+        const handle = frame.getByRole('slider');
+        const checkBoundary = async (expected: number) => {
+          const value = await frame.evaluate((element) => {
+            const image = element.querySelector('.color-compare-img--before')!;
+            const divider = element.querySelector('.color-compare-handle')!;
+            const rect = image.getBoundingClientRect(), grip = divider.getBoundingClientRect();
+            const clip = getComputedStyle(image).clipPath;
+            const right = Number(clip.match(/([\d.]+)%/u)?.[1]);
+            return { boundary: rect.left + rect.width * (1 - right / 100), center: grip.left + grip.width / 2, position: Number(divider.getAttribute('aria-valuenow')), transform: getComputedStyle(image).transform };
+          });
+          assert.ok(Math.abs(value.boundary - value.center) <= 2, `${engine.name()}: clip/divider drift at ${expected}%`);
+          assert.ok(Math.abs(value.position - expected) <= 1, `${engine.name()}: slider reaches ${expected}%`);
+          assert.equal(value.transform, 'none', 'hover does not move the comparison image');
+        };
+        for (const position of [20, 50, 80]) {
+          await frame.scrollIntoViewIfNeeded();
+          const rect = (await frame.boundingBox())!;
+          await page.mouse.move(rect.x + rect.width / 2, rect.y + rect.height / 2);
+          await page.mouse.down();
+          await page.mouse.move(rect.x + rect.width * position / 100, rect.y + rect.height / 2, { steps: 4 });
+          await page.mouse.up();
+          await checkBoundary(position);
+          await frame.hover();
+          await page.waitForTimeout(200);
+          await page.evaluate(() => window.scrollBy(0, 120));
+          await checkBoundary(position);
+        }
+        await handle.focus();
+        await page.keyboard.press('Home'); await checkBoundary(0);
+        await page.keyboard.press('End'); await checkBoundary(100);
+      } finally { await browser.close(); }
+    }
+  } finally { server.close(); }
+});
+
+test("desktop navigation highlights orange, contact opens, and five raster AI logos load on React/static pages", async () => {
+  const { server, origin } = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+        await page.route('**/api/**', r => r.fulfill({ contentType: 'application/json', body: '{"available":false}' }));
+        for (const path of ['/photo', '/ceny', '/calculator', '/video-dlya-marketpleysov']) {
+          await page.goto(origin + path);
+          for (const link of [page.locator('.v3-nav__links a[href="/photo"]').first(), page.locator('.v3-nav__links a[href="/ceny"]').first(), page.locator('.v3-nav__cta')]) {
+            await link.hover(); await page.waitForTimeout(250);
+            const colors = await link.evaluate(a => ({ color: getComputedStyle(a).color, background: getComputedStyle(a).backgroundColor }));
+            assert.equal(colors.background, 'rgb(255, 100, 34)', `${engine.name()} ${path}: orange hover`);
+            assert.equal(colors.color, 'rgb(10, 10, 10)', `${engine.name()} ${path}: dark hover text`);
+          }
+          const logos = page.locator('.v3-ai-ask__actions nav img');
+          assert.equal(await logos.count(), 5);
+          await logos.first().scrollIntoViewIfNeeded();
+          await page.waitForFunction(() => [...document.querySelectorAll<HTMLImageElement>('.v3-ai-ask__actions nav img')].every(i => i.complete && i.naturalWidth > 0));
+          assert.ok((await logos.evaluateAll(images => images.map(i => i.getAttribute('src')))).every(src => /\.(png|webp)$/u.test(src!)));
+          const contact = page.locator('.v3-nav__cta');
+          const destination = new URL((await contact.getAttribute('href'))!, origin);
+          assert.ok(destination.pathname === '/contact' || (destination.pathname === '/' && destination.hash === '#contact'), 'CTA targets a contact form');
+          await contact.click();
+          await page.waitForURL(destination.href);
+          assert.equal(await page.locator('#contact').isVisible(), true);
+        }
+      } finally { await browser.close(); }
+    }
+  } finally { server.close(); }
 });

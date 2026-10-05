@@ -123,10 +123,12 @@
 
   const motionButtons = [...document.querySelectorAll("[data-motion-toggle]")];
   let motionStopped = false;
-  try { motionStopped = window.localStorage.getItem("yelyginn-motion") === "off"; } catch { /* use the system preference */ }
+  let explicitMotion = null;
+  try { explicitMotion = window.localStorage.getItem("yelyginn-motion"); } catch { /* use the system preference */ }
   const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const applyMotion = () => {
-    const reduced = motionStopped || systemMotion.matches;
+    const reduced = explicitMotion === "on" ? false : explicitMotion === "off" || systemMotion.matches;
+    motionStopped = reduced;
     document.documentElement.dataset.motionPreference = reduced ? "reduce" : "full";
     motionButtons.forEach((button) => {
       button.setAttribute("aria-pressed", String(motionStopped));
@@ -136,8 +138,8 @@
   applyMotion();
   systemMotion.addEventListener("change", applyMotion);
   motionButtons.forEach((button) => button.addEventListener("click", () => {
-    motionStopped = !motionStopped;
-    try { window.localStorage.setItem("yelyginn-motion", motionStopped ? "off" : "on"); } catch { /* preference remains active until navigation */ }
+    explicitMotion = motionStopped ? "on" : "off";
+    try { window.localStorage.setItem("yelyginn-motion", explicitMotion); } catch { /* preference remains active until navigation */ }
     applyMotion();
   }));
 })();

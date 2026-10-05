@@ -49,6 +49,10 @@ const COVER_ALLOWLIST = [
   ".service-showcase-main img, .service-showcase-side img", // статические услуги — hero-обложка Kinescope
   ".kinescope-embed-poster", // постер видео — тот же формат, что рамка плеера
   ".editorial-service-media img",
+  ".service-design .service-hero-media img", // owner 05.10: cinematic hero frames, cover with an explicit crop
+  ".service-product-media > a img", // product service: same framed hero
+  ".photo-service-hero__media img", // owner 05.10: photographic hero next to copy
+  ".service-photo-posters img", // portrait 3:4 / reportage 3:2 poster compositions
   ".related-work-list .bb-project-card__media img",
   ".service-page .price-card img.service-price-photo", // owner 02.10: equal-height photo covers in broadcast price cards; the gallery keeps native ratios
 ];

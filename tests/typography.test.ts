@@ -49,7 +49,7 @@ test("roles descend: page > doc >= section >= sub (PROMPT-36 §2)", () => {
 });
 
 // Список растёт по мере перевода на токены (как было с цветом, PROMPT-20 §7.3).
-const SCANNED_FILES = ["src/design-system.css", "src/v3-polish.css"];
+const SCANNED_FILES = ["src/design-system.css", "src/v3-polish.css", "src/desktop-design.css"];
 
 // Не нарушение: сама декларация токенов (--ds-font-display/body/mono) и
 // @font-face для self-hosted Inter — они и есть источник литералов. Плюс

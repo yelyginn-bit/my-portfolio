@@ -1,12 +1,37 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv, type HtmlTagDescriptor} from 'vite';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {defineConfig, loadEnv, type HtmlTagDescriptor, type Plugin} from 'vite';
 import {extractPriceLikeNumbers} from './scripts/priceGuard';
 import {PUBLIC_PRICE_BY_ID} from './src/lib/pricing.data';
 import {SITE} from './src/config/site';
 import {augmentStaticHeader, augmentStaticFooter, markStaticBody, STATIC_SHELL_FILES, replaceWithV3Chrome, type V3ChromeActive} from './scripts/staticShellTemplate';
 import {augmentServiceRelatedWork, augmentBlogContext, BLOG_SERVICE} from './scripts/relatedWork';
+
+// Keep desktop composition separate from the shared stylesheet. The media
+// condition prevents desktop rules from affecting small screens; the content
+// hash invalidates cached styles on release. Post order keeps the cascade after
+// the compiled shared/legacy styles in every HTML entry, including prerender.
+const desktopDesignStyles = (): Plugin => {
+  const css = readFileSync(path.resolve(__dirname, 'src/desktop-design.css'), 'utf8');
+  const name = `assets/desktop-design-${createHash('sha256').update(css).digest('hex').slice(0, 12)}.css`;
+  let building = false;
+  return {
+    name: 'desktop-design-styles',
+    configResolved(config) { building = config.command === 'build'; },
+    buildStart() {
+      if (building) this.emitFile({ type: 'asset', fileName: name, source: css });
+    },
+    transformIndexHtml: {
+      order: 'post',
+      handler() {
+        return [{ tag: 'link', attrs: { rel: 'stylesheet', href: building ? `/${name}` : '/src/desktop-design.css', media: '(min-width: 1024px)' }, injectTo: 'head' }];
+      },
+    },
+  };
+};
 
 /**
  * Файлы, где шапка/подвал заменяются целиком на общий V3-компонент
@@ -160,6 +185,7 @@ export default defineConfig(({mode}) => {
       bakeStaticShellNav(),
       pryamyeTranslyaciiJsonLd(),
       sharedHeadAssets(env.VITE_YANDEX_METRIKA_ID ?? String(SITE.metrikaId), env.VITE_GA_ID || ''),
+      desktopDesignStyles(),
     ],
     resolve: {
       alias: {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { ColorComparePair } from "../lib/colorCompare.data";
 
 /**
@@ -71,7 +71,10 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
       pendingX = event.clientX;
       if (rafId === null) rafId = requestAnimationFrame(flush);
     };
-    const onUp = () => setDragging(false);
+    const onUp = (event: PointerEvent) => {
+      if (event.type === "pointerup") setFromClientX(event.clientX);
+      setDragging(false);
+    };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
@@ -112,6 +115,7 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
       <div
         ref={frameRef}
         className="color-compare-frame"
+        style={{ "--compare-position": `${effectivePosition}%` } as CSSProperties}
         data-dragging={dragging || undefined}
         data-mobile-view={isNarrow ? mobileView : undefined}
         onPointerDown={(event) => {
@@ -144,7 +148,7 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
             переключателя (мобильный — 0% или 100%, без промежуточных). */}
         <img
           className="color-compare-img color-compare-img--before"
-          style={{ clipPath: `inset(0 ${100 - effectivePosition}% 0 0)` }}
+          style={{ clipPath: "inset(0 calc(100% - var(--compare-position)) 0 0)" }}
           src={pair.before}
           alt={beforeVisible ? pair.beforeAlt : ""}
           aria-hidden={beforeVisible ? undefined : "true"}
@@ -166,7 +170,7 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
           aria-valuenow={Math.round(position)}
           aria-valuetext={`Исходник виден на ${Math.round(position)} процентов`}
           className="color-compare-handle"
-          style={{ left: `${position}%` }}
+          style={{ left: "var(--compare-position)" }}
           onKeyDown={onKeyDown}
         >
           <span className="color-compare-grip" aria-hidden="true" />

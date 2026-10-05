@@ -28,8 +28,8 @@
 .v32-showreel > video {
   filter: saturate(.82) contrast(1.1) brightness(.62);
   z-index: 1;
-  opacity: 0;
-  transition: opacity .45s ease;
+  /* Safari pauses invisible autoplay media. Its poster already covers loading. */
+  opacity: 1;
 }
 .v32-showreel.is-ready > video { opacity: 1; }.v32-showreel-controls {
   position: absolute;
@@ -814,6 +814,34 @@ html[data-motion-preference="reduce"] .v3-marquee__track { animation: none !impo
 .v3-ai-ask__actions nav { display: flex; flex-wrap: wrap; gap: 8px; }
 .v3-ai-ask__actions nav a, .v3-ai-ask button { min-height: 44px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ds-fog); border-radius: var(--ds-radius); background: transparent; color: var(--ds-on-dark); font: 500 14px/1.4 var(--ds-font-body); text-decoration: none; cursor: pointer; }
 .v3-ai-ask__actions nav a:hover, .v3-ai-ask button:hover { border-color: var(--ds-orange); color: var(--ds-orange); }
+
+/* Owner desktop brief, 05.10. Shared behavior before the desktop composition. */
+.v3-nav :is(a, .nav-dropdown > button):is(:hover, :focus-visible) {
+  color: var(--ds-on-accent) !important;
+  background: var(--ds-orange) !important;
+  border-color: var(--ds-orange) !important;
+}
+.v3-nav :is(a, .nav-dropdown > button):focus-visible { outline: 2px solid var(--ds-scrim); outline-offset: 3px; }
+.v3-nav > .v3-nav__cta { cursor: pointer; pointer-events: auto; }
+.v3-marquee[data-motion="true"] > .v3-marquee__track { animation: phase1-marquee 32s linear infinite !important; }
+.v3-marquee[data-motion="false"] > .v3-marquee__track { animation: none !important; }
+.color-compare-handle::before { left: 50%; transform: translateX(-50%); }
+.v32-proof__grid .color-compare .color-compare-img,
+.color-compare-frame .color-compare-img { transform: none !important; transition: none !important; filter: none !important; }
+.v3-ai-ask__actions nav { display: flex; flex-wrap: wrap; gap: 12px; }
+.v3-ai-ask__actions nav a {
+  display: grid; grid-template-columns: 48px auto 12px; align-items: center; gap: 12px;
+  min-width: 0; padding: 12px 16px; border-radius: var(--ds-radius-card);
+  color: var(--ds-on-dark); background: var(--ds-charcoal); border: 1px solid var(--ds-border-strong);
+}
+.v3-ai-ask__actions nav a img { width: 48px; height: 48px; display: block; object-fit: contain; border-radius: var(--ds-radius-sm); }
+.v3-ai-ask__actions nav a .v3-ai-ask__name { font-size: .75rem; }
+.v3-ai-ask__actions nav a .v3-ai-ask__arrow { align-self: start; color: var(--ds-orange); }
+.v3-ai-ask__actions nav a:is(:hover, :focus-visible) { color: var(--ds-on-dark); border-color: var(--ds-orange); }
+.photo-service-hero__media { margin: 24px 0; }
+.photo-service-hero__media img { display: block; width: 100%; height: auto; }
+.photo-service-hero__media figcaption { padding-block: 12px; font: 600 12px/1.4 var(--ds-font-mono); color: var(--ds-text-secondary); }
+
 .v3-ai-ask :is(a, button, summary, textarea):focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 3px; }
 .v3-ai-ask details { margin-top: 12px; }
 .v3-ai-ask summary { min-height: 44px; padding-block: 10px; color: var(--ds-fog); font: 400 14px/1.5 var(--ds-font-body); cursor: pointer; }

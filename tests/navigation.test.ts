@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { PORTFOLIO_CATEGORY_ORDER } from "../src/portfolio/v3PortfolioData.ts";
 import { ROUTE_MANIFEST } from "../src/public/routeManifest.ts";
 import { CALCULATOR_LINK, FOOTER_GROUPS, PHOTO_LINK, PRIMARY_NAV, type NavLink, type PrimaryNavEntry } from "../src/lib/navigation.data.ts";
+import { augmentStaticHeader } from "../scripts/staticShellTemplate.ts";
 
 // Никаких захардкоженных чисел — всё выводится из ROUTE_MANIFEST
 // (PROMPT-21 §7: "захардкоженные счётчики в тестах у нас уже расходились с кодом").
@@ -50,4 +51,14 @@ test("\"Фото\" is present in the primary (header) navigation", () => {
 
 test("the calculator link is a valid, indexable route (rendered in every header outside PRIMARY_NAV, next to the main CTA)", () => {
   assert.ok(indexablePaths.has(CALCULATOR_LINK.href), "CALCULATOR_LINK does not point to an indexable route");
+});
+
+test("static navigation keeps the service-aware calculator URL without adding a duplicate", () => {
+  const href = "/calculator?service=marketplace&amp;from=%2Fvideo-dlya-marketpleysov";
+  const html = `<header><nav><a href="${href}">Рассчитать стоимость</a></nav></header>`;
+  const result = augmentStaticHeader(html, "marketplace fixture");
+  assert.equal((result.match(/href="\/calculator/g) ?? []).length, 1);
+  assert.ok(result.includes(href), "the service and source query are preserved");
+  assert.ok(result.includes('href="/photo"'), "missing destinations are still added");
+  assert.equal(augmentStaticHeader(result, "marketplace fixture"), result, "augmentation is idempotent");
 });

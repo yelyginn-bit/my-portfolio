@@ -86,7 +86,7 @@ export default function ColorGrading() {
     <RoutePathContext.Provider value="/cvetokorrekciya">
       <SiteHeader />
 
-      <main id="main">
+      <main id="main" className="service-color">
         <Section className="color-hero">
           <PageContainer className="color-hero-grid">
             <div className="color-hero-copy">

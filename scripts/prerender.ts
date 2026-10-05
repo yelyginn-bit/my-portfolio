@@ -116,6 +116,8 @@ async function inlineHomeStyles(html: string): Promise<string> {
   if (!links.length) throw new Error("Home stylesheet missing from Vite template");
   let result = html;
   for (const [tag, href] of links) {
+    // The desktop layer remains a media-qualified, cacheable stylesheet.
+    if (href.startsWith('/assets/desktop-design-')) continue;
     const css = await readFile(path.join(distDir, href.slice(1)), "utf8");
     if (/<\/style/i.test(css)) throw new Error("Unsafe inline stylesheet content");
     result = result.replace(tag, `<style data-home-styles>${css}</style>`);

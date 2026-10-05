@@ -32,7 +32,10 @@ export function markStaticBody(html: string): string {
 
 /** Возвращает те из REQUIRED_HEADER_LINKS, которых ещё нет в переданном HTML шапки. */
 function missingLinks(headerHtml: string): NavLink[] {
-  return REQUIRED_HEADER_LINKS.filter((item) => !headerHtml.includes(`href="${item.href}"`));
+  // A service-aware calculator URL is already the same navigation destination.
+  const paths = [...headerHtml.matchAll(/\bhref=(["'])(.*?)\1/gu)]
+    .map((match) => match[2].split(/[?#]/u)[0]);
+  return REQUIRED_HEADER_LINKS.filter((item) => !paths.includes(item.href));
 }
 
 /**

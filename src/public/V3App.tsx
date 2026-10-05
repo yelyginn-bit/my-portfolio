@@ -30,6 +30,7 @@ import { isNavEntryActive, NavDropdownMenu } from "../components/site/NavMenu";
 import { KinescopeEmbed } from "../components/media/KinescopeEmbed";
 import { longestWordEm } from "../lib/capsFit";
 import { projectWork } from "./seoCopy";
+import { setMotionAllowed, useMotionAllowed } from "../lib/motion";
 
 /** PROMPT-36 §4.7: «<название> — <вид работы>, кадр NN из MM»; имён людей нет. */
 const posterAlt = (project: { slug: string; title: string }, index: number, total: number) =>
@@ -160,24 +161,12 @@ export function SiteFooter() {
 }
 
 function MotionPreferenceToggle() {
-  const [stopped, setStopped] = useState(false);
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem("yelyginn-motion") === "off";
-      setStopped(stored);
-      document.documentElement.dataset.motionPreference = stored ? "reduce" : "full";
-    } catch { setStopped(false); }
-  }, []);
-  const toggle = () => {
-    const next = !stopped;
-    setStopped(next);
-    document.documentElement.dataset.motionPreference = next ? "reduce" : "full";
-    try { window.localStorage.setItem("yelyginn-motion", next ? "off" : "on"); } catch { /* preference remains active until navigation */ }
-  };
-  return <button type="button" data-motion-toggle aria-pressed={stopped} onClick={toggle}>{stopped ? "Включить движение" : "Отключить движение"}</button>;
+  const allowed = useMotionAllowed();
+  return <button type="button" data-motion-toggle aria-pressed={!allowed} onClick={() => setMotionAllowed(!allowed)}>{allowed ? "Отключить движение" : "Включить движение"}</button>;
 }
 
 function HeroShowreel() {
+  const motionAllowed = useMotionAllowed();
   const videoRef = useRef<HTMLVideoElement>(null);
   const userControlled = useRef(false);
   const [videoReady, setVideoReady] = useState(false);
@@ -188,6 +177,8 @@ function HeroShowreel() {
   const startPlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video || videoFailed) return;
+    video.muted = true;
+    video.defaultMuted = true;
     // Set the source and play in the same user gesture for mobile Safari.
     if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
     void video.play().catch(() => setPlaying(false));
@@ -196,12 +187,16 @@ function HeroShowreel() {
   useEffect(() => {
     const video = videoRef.current;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!video || reduceMotion.matches || connection?.saveData) return;
+    if (!video) return;
+    if (!motionAllowed || connection?.saveData) { video.pause(); return; }
     if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
+    // Start on mount, then retry when media is ready. Visibility observation
+    // controls off-screen playback rather than delaying the initial attempt.
+    if (!document.hidden && !userControlled.current) startPlayback();
     const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting || userControlled.current || document.hidden) return;
-      startPlayback();
+      if (userControlled.current) return;
+      if (!entry.isIntersecting || document.hidden) video.pause();
+      else startPlayback();
     }, { threshold: 0.25 });
     observer.observe(video);
     const onVisibility = () => {
@@ -214,7 +209,7 @@ function HeroShowreel() {
       document.removeEventListener("visibilitychange", onVisibility);
       video.pause();
     };
-  }, [startPlayback]);
+  }, [startPlayback, motionAllowed]);
 
   const togglePlayback = useCallback(() => {
     const video = videoRef.current;
@@ -223,6 +218,15 @@ function HeroShowreel() {
     if (video.paused) startPlayback();
     else video.pause();
   }, [videoFailed, startPlayback]);
+
+  useEffect(() => {
+    // Retry with a visible, ready frame; browser autoplay policy may still
+    // require the visitor to use the explicit play control.
+    const video = videoRef.current;
+    if (!videoReady || !motionAllowed || userControlled.current || document.hidden || !video) return;
+    const rect = video.getBoundingClientRect();
+    if (rect.bottom > 0 && rect.top < window.innerHeight) startPlayback();
+  }, [videoReady, motionAllowed, startPlayback]);
 
   return (
     <section
@@ -243,11 +247,12 @@ function HeroShowreel() {
           ref={videoRef}
           poster="/v3-assets/hero-showreel-poster.webp"
           muted
+          autoPlay={motionAllowed}
           loop
           playsInline
-          preload="metadata"
+          preload={motionAllowed ? "auto" : "none"}
           onCanPlay={() => setVideoReady(true)}
-          onPlaying={() => setPlaying(true)}
+          onPlaying={() => { setVideoReady(true); setPlaying(true); }}
           onPause={() => setPlaying(false)}
           onError={() => { setVideoFailed(true); setPlaying(false); }}
           aria-label="Шоурил YELYGINN"
@@ -281,15 +286,8 @@ function ShowreelDialog({ onClose }: { onClose: () => void }) {
 }
 
 function ClientMarquee() {
-  const [reducedMotion, setReducedMotion] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-  return <section className="v3-marquee" aria-label="Бренды и проекты" data-motion={!reducedMotion}>
+  const motionAllowed = useMotionAllowed();
+  return <section className="v3-marquee" aria-label="Бренды и проекты" data-motion={motionAllowed}>
     <div className="v3-marquee__track">
       {[0, 1].map((copy) => <div className="v3-marquee__group" key={copy} aria-hidden={copy === 1 ? true : undefined}>
         {MARQUEE_ITEMS.map((brand) => <span key={brand}>{brand}<b>//</b></span>)}

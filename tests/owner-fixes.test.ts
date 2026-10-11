@@ -243,12 +243,12 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await context.close();
         const reduced = await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
         const rp = await reduced.newPage();await rp.goto(origin+'/');
-        await rp.waitForTimeout(250);
-        assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),true);
-        await rp.getByRole('button',{name:'Воспроизвести шоурил',exact:true}).click();await rp.waitForTimeout(500);
-        assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),false);
+        // PROMPT-40 §1: the system "reduce motion" setting no longer stops the hero video or the marquee.
+        // Playwright's WebKit only honours `autoplay` after a user gesture (see tests/motion-always.test.ts).
+        if (engine.name() === 'webkit') await rp.locator('.v32-hero').click({ position: { x: 2, y: 400 } });
+        await rp.waitForFunction(()=>{const v=document.querySelector('video');return !!v&&!v.paused&&v.currentTime>0;});
         assert.equal(await rp.locator('.v3-marquee__toggle').count(), 0);
-        assert.equal(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
+        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
         for (const route of ['/', '/reklamnye-roliki', '/account', '/calculator']) {
           await rp.goto(origin + route);
           await rp.getByRole('button', { name: 'Открыть меню', exact: true }).click();
@@ -263,18 +263,20 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await rp.goto(origin + '/photo');
         const necessaryCookies = rp.getByRole('button', { name: 'Только необходимые', exact: true });
         if (await necessaryCookies.isVisible()) await necessaryCookies.click();
-        await rp.getByRole('button', { name: 'Включить движение', exact: true }).click();
-        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'full', 'static footer enables motion in one click');
+        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'full', 'system reduce motion does not stop motion');
+        await rp.getByRole('button', { name: 'Отключить движение', exact: true }).click();
+        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'reduce', 'static footer switches motion off in one click');
         await rp.goto(origin + '/');
-        await rp.waitForFunction(() => document.querySelector('.v3-marquee')?.getAttribute('data-motion') === 'true');
-        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e => getComputedStyle(e).animationName), 'none', 'static footer preference reaches React marquee');
+        await rp.waitForFunction(() => document.querySelector('.v3-marquee')?.getAttribute('data-motion') === 'false');
+        assert.equal(await rp.locator('.v3-marquee__track').evaluate(e => getComputedStyle(e).animationName), 'none', 'static footer choice reaches React marquee');
+        assert.equal(await rp.locator('video').evaluate((v: HTMLVideoElement) => v.paused), true, 'static footer choice stops the hero video');
         await reduced.close();
       } finally { await browser.close(); }
     }
   } finally { server.close(); }
 });
 
-test("hero autoplays muted on mobile and desktop, and defers for reduced motion/saveData", async () => {
+test("hero autoplays muted on mobile, desktop and system reduced motion, and defers only for saveData", async () => {
   const { server, origin } = await startLocalServer();
   const browser = await chromium.launch();
   try {
@@ -294,16 +296,15 @@ test("hero autoplays muted on mobile and desktop, and defers for reduced motion/
       await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
       const video = page.locator('video');
       assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted && v.playsInline), true, mode + ': muted inline video');
-      if (mode === 'mobile' || mode === 'desktop' || mode === 'explicit-on') {
+      if (mode !== 'save-data') {
         await page.waitForFunction(() => {
           const v = document.querySelector('video');
-          return !!v?.getAttribute('src') && !v.paused && v.currentTime > 0;
+          return !!v?.currentSrc && !v.paused && v.currentTime > 0;
         });
         assert.ok(mp4Requests > 0, mode + ': autoplay loads and advances video');
       } else {
         await page.waitForTimeout(1800);
-        assert.equal(mp4Requests, 0, mode + ': remains poster only without gesture');
-        assert.equal(await video.getAttribute('src'), null);
+        assert.equal(await video.evaluate((v: HTMLVideoElement) => v.paused), true, mode + ': remains poster only without gesture');
         await page.getByRole('button', { name: 'Воспроизвести шоурил', exact: true }).click();
         await page.waitForFunction(() => {
           const v = document.querySelector('video');

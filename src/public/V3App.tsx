@@ -179,8 +179,8 @@ function HeroShowreel() {
     if (!video || videoFailed) return;
     video.muted = true;
     video.defaultMuted = true;
-    // Set the source and play in the same user gesture for mobile Safari.
-    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
+    // The source is already in the markup (autoplay muted playsinline for Safari);
+    // this only resumes or retries playback, it never assigns a new source.
     void video.play().catch(() => setPlaying(false));
   }, [videoFailed]);
 
@@ -188,11 +188,20 @@ function HeroShowreel() {
     const video = videoRef.current;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     if (!video) return;
-    if (!motionAllowed || connection?.saveData) { video.pause(); return; }
-    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
-    // Start on mount, then retry when media is ready. Visibility observation
-    // controls off-screen playback rather than delaying the initial attempt.
-    if (!document.hidden && !userControlled.current) startPlayback();
+    // The source is requested while the HTML is parsed, so its error can fire before hydration.
+    if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) { setVideoFailed(true); setPlaying(false); return; }
+    // Only the visitor's own footer switch (or Save-Data) stops the video; the
+    // system "reduce motion" setting does not.
+    if (!motionAllowed || connection?.saveData) {
+      video.pause();
+      // A later gesture can make the browser honour `autoplay`; keep the visitor's choice.
+      const keepStopped = () => { if (!userControlled.current) video.pause(); };
+      video.addEventListener("play", keepStopped);
+      return () => video.removeEventListener("play", keepStopped);
+    }
+    // The markup autoplays; pick up the playing video and retry only if the
+    // browser paused it. Visibility observation controls off-screen playback.
+    if (video.paused && !document.hidden && !userControlled.current) startPlayback();
     const observer = new IntersectionObserver(([entry]) => {
       if (userControlled.current) return;
       if (!entry.isIntersecting || document.hidden) video.pause();
@@ -247,16 +256,16 @@ function HeroShowreel() {
           ref={videoRef}
           poster="/v3-assets/hero-showreel-poster.webp"
           muted
-          autoPlay={motionAllowed}
+          autoPlay
           loop
           playsInline
-          preload={motionAllowed ? "auto" : "none"}
+          preload="metadata"
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => { setVideoReady(true); setPlaying(true); }}
           onPause={() => setPlaying(false)}
           onError={() => { setVideoFailed(true); setPlaying(false); }}
           aria-label="Шоурил YELYGINN"
-        />}
+        ><source src="/v3-assets/hero-showreel.mp4" type="video/mp4" onError={() => { setVideoFailed(true); setPlaying(false); }} /></video>}
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>

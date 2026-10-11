@@ -319,7 +319,7 @@ function HomeServices() {
     <section className="v32-services v3-shell" aria-labelledby="home-services-title">
       <header className="v32-services__head">
         <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
-        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Фотограф и видеооператор в Нижнем Новгороде") } as CSSProperties}>Фотограф и видеооператор в Нижнем Новгороде</h1>
+        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Видеограф и фотограф в Нижнем Новгороде") } as CSSProperties}>Видеограф и фотограф в Нижнем Новгороде</h1>
         <h2>Фото, видеосъёмка и монтаж в Нижнем Новгороде</h2>
         <nav className="v32-home-service-shortcuts" aria-label="Выбрать задачу">
           <a href="/photo">Нужен фотограф</a>

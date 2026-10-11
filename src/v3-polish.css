@@ -846,3 +846,4 @@ html[data-motion-preference="reduce"] .v3-marquee__track { animation: none !impo
 .v3-ai-ask textarea { box-sizing: border-box; display: block; width: 100%; max-width: 100%; margin-block: 12px; padding: 12px; resize: vertical; background: var(--ds-surface); color: var(--ds-on-dark); border: 1px solid var(--ds-fog); border-radius: var(--ds-radius); font: 400 14px/1.5 var(--ds-font-body); }
 .v3-ai-ask [data-ai-status] { display: block; margin-top: 8px; }
 @media (max-width: 767px) { .v3-ai-ask { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+.v3-catalog__related { margin-top: clamp(2rem, 4vw, 3.5rem); }

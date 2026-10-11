@@ -42,7 +42,7 @@ const posterAlt = (project: { slug: string; title: string }, index: number, tota
 export const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
   camera: "камера", operator: "оператор", edit: "монтаж", multicam: "мультикам",
-  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE", light: "свет",
+  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "монтаж день в день", light: "свет",
 };
 const formatLabels: Record<string, string> = {
   commercial: "реклама", event: "событие", reels: "reels", concert: "концерт",
@@ -590,7 +590,7 @@ function PortfolioPage({ category }: { category?: PortfolioCategory }) {
   });
   const meta = category ? CATEGORY_META[category] : null;
   return (
-    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header><nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell"><PortfolioSystem projects={presented} firstMediaPriority /></section></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header><nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell"><PortfolioSystem projects={presented} firstMediaPriority /></section>{category === "events" && <aside className="v3-shell v3-catalog__related" aria-label="Смотрите также"><p className="v3-kicker">СМОТРИТЕ ТАКЖЕ</p><nav className="v32-home-service-shortcuts" aria-label="Связанные страницы"><a href="/event-video">Видеосъёмка мероприятий — услуга</a><a href="/portfolio/concerts">Концерты — работы</a><a href="/reportazhnaya-fotosemka">Репортажная фотосъёмка</a></nav></aside>}</main><SiteFooter /></>
   );
 }
 

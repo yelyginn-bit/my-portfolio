@@ -49,13 +49,22 @@ test("approved color tiers replace the base price and photo retouch is priced pe
   assert.equal(hydrated["Цветокоррекция"].options[0]?.replaces, "Цветокоррекция — базовый формат");
   assert.equal(hydrated["Студийная фотосъёмка"].options[0]?.unit, "frame");
 });
-async function testMenu(page: Page, origin: string, route: string) {
+async function testMenu(page: Page, origin: string, route: string, beforeLeave?: () => Promise<void>) {
   await page.goto(origin + route);
   const button = page.locator('.nav-dropdown > button').first();
   await button.hover();
   const menu = page.locator('.nav-dropdown-menu.is-open');
+  // hover() finishes the input event, not React's render/portal placement.
+  await menu.waitFor({ state: "visible" });
+  await page.waitForFunction(() => {
+    const trigger = document.querySelector('.nav-dropdown > button');
+    const popup = document.querySelector('.nav-dropdown-menu.is-open');
+    return trigger?.getAttribute('aria-expanded') === 'true' && !!popup
+      && Math.abs(popup.getBoundingClientRect().top - trigger.getBoundingClientRect().bottom) < 1;
+  });
   assert.equal(await menu.count(), 1);
   const rect = await button.boundingBox();
+  await beforeLeave?.();
   await page.mouse.move(rect!.x + 20, rect!.y + rect!.height + 3);
   await page.waitForTimeout(450);
   assert.equal(await button.getAttribute("aria-expanded"), "true", `${route}: hover bridge`);
@@ -77,7 +86,9 @@ test("negative control detects the old immediate-close menu defect", async () =>
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({viewport: {width:1440,height:900}});
-    await page.addInitScript(() => {
+    // Arm the old defect only after the menu has opened: the negative
+    // control must fail on crossing the bridge, not on startup rendering.
+    await assert.rejects(() => testMenu(page, origin, '/', () => page.evaluate(() => {
       document.addEventListener('mouseout', (event) => {
         const button = (event.target as Element)?.closest('.nav-dropdown > button');
         if (button) {
@@ -85,10 +96,23 @@ test("negative control detects the old immediate-close menu defect", async () =>
           document.querySelector('.nav-dropdown-menu.is-open')?.classList.remove('is-open');
         }
       }, true);
-    });
-    await assert.rejects(() => testMenu(page, origin, '/'), /hover bridge/u);
+    })), /hover bridge/u);
   } finally { await browser.close(); server.close(); }
 });
+
+async function selectEstimateType(page: Page, shootType: string) {
+  // Settle font/layout work before a pointer action scrolls to another type.
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+  await page.getByRole('button', { name: shootType, exact: true }).click();
+  // A completed click is not a committed React selection. Check the actual
+  // state before looking for rows whose accessible names belong to that type.
+  await page.waitForFunction((expected) =>
+    document.querySelector('.calc-type[data-active="true"]')?.textContent === expected, shootType);
+  const data = ESTIMATE_DATA[shootType as keyof typeof ESTIMATE_DATA];
+  for (const item of [...data.base, ...data.options]) {
+    await checkboxFor(page, item).waitFor({ state: 'visible' });
+  }
+}
 
 test("owner fixes: menu, media, marquee and every estimate control in Chromium/WebKit", async () => {
   const { server, origin } = await startLocalServer();
@@ -183,7 +207,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await colorComplex.click();
         assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 15 000 ₽');
-        await page.getByRole('button', { name: 'Студийная фотосъёмка', exact: true }).click();
+        await selectEstimateType(page, 'Студийная фотосъёмка');
         const retouch = checkboxFor(page, ESTIMATE_DATA["Студийная фотосъёмка"].options[0]!);
         assert.match(await retouch.getAttribute('aria-label') ?? await retouch.innerText(), /за кадр/u);
         await retouch.click();
@@ -191,7 +215,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.goto(origin + "/calculator");
         const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
         for (const [shootType, data] of Object.entries(ESTIMATE_DATA)) {
-          await page.getByRole('button', { name: shootType, exact: true }).click();
+          await selectEstimateType(page, shootType);
           const base = data.base.map((i) => i.name); const options: string[] = [];
           const checkTotal = async (days = 1, urgent = false) => {
             const hours = shootType === 'Репортажная фотосъёмка' ? 2 : 1;
@@ -227,7 +251,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
             assert.equal(await rushSwitch.isDisabled(), true, `${shootType}: express edit not available for this selection`);
           }
         }
-        await page.getByRole('button', { name: 'Монтаж Reels', exact: true }).click();
+        await selectEstimateType(page, 'Монтаж Reels');
         const rushSwitch = page.getByRole('switch');
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Монтаж Reels') && !document.querySelector('[role="switch"]')?.hasAttribute('disabled'));
         assert.equal(await rushSwitch.isEnabled(), true);

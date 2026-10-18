@@ -101,6 +101,9 @@ test("negative control detects the old immediate-close menu defect", async () =>
 });
 
 async function selectEstimateType(page: Page, shootType: string) {
+  // The prerender already exposes buttons before React attaches handlers.
+  // Especially after goto(/calculator), load/fonts alone do not mean hydrated.
+  await page.locator('.calc-wrap[data-calculator-ready="true"]').waitFor({ state: 'visible' });
   // Settle font/layout work before a pointer action scrolls to another type.
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.getByRole('button', { name: shootType, exact: true }).click();

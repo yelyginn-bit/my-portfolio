@@ -70,6 +70,7 @@ export function augmentServiceRelatedWork(html: string, fileLabel: string): stri
 /** Файл статьи блога → услуга, о которой она (PROMPT-21 §5: «статья блога →
  * услуга, о которой она, и калькулятор»). */
 export const BLOG_SERVICE: Readonly<Record<string, string>> = {
+  "blog/skolko-stoit-fotograf-na-meropriyatie.html": "/reportazhnaya-fotosemka",
   "blog/kak-snimat-reels-dlya-biznesa.html": "/reels",
   "blog/skolko-stoit-snyat-reklamnyy-rolik.html": "/reklamnye-roliki",
   "blog/video-dlya-kartochek-wildberries.html": "/video-dlya-marketpleysov",

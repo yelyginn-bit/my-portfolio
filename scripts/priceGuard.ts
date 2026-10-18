@@ -70,3 +70,10 @@ export function renderPriceReferences(html: string): string {
     return item.price;
   });
 }
+
+/** The article shares the exact price, scope and delivery data used by /ceny. */
+export function renderPhotoArticleReferences(html: string): string {
+  const item = PUBLIC_PRICE_BY_ID.photo;
+  const escape = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  return renderPriceReferences(html).replace(/<span data-photo-price-detail="(limitations|includes|timeline)"><\/span>/gu, (_marker, field: "limitations" | "includes" | "timeline") => escape(field === "includes" ? item.includes.join(", ") : item[field]));
+}

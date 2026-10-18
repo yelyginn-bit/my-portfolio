@@ -4,6 +4,7 @@ import { AiAskBlock } from "../src/components/site/AiAskBlock";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { applyOgImage } from "./ogImages";
 import { SITE } from "../src/config/site";
 import { SOCIALS } from "../src/config/socials";
 import { OWNER_DESCRIPTION } from "../src/lib/aiDiscovery";
@@ -60,7 +61,7 @@ async function imageDimensions(src: string, dist: string) {
 }
 
 export async function enrichPublicHtml(html: string, route: string, dist: string) {
-  let result = html;
+  let result = applyOgImage(html, route);
   if (result.includes('class="v3-footer"') && !result.includes("data-ai-ask")) result = result.replace('<div class="v3-footer__meta">', `${renderToStaticMarkup(createElement(AiAskBlock))}<div class="v3-footer__meta">`);
   const tags = [...result.matchAll(/<img\b[^>]*>/giu)];
   for (const match of tags) {

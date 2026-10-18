@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { transform as transformCss } from "esbuild";
 import { createElement, StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import Calculator from "../src/calculator/Calculator";
@@ -125,6 +126,25 @@ async function inlineHomeStyles(html: string): Promise<string> {
   return result;
 }
 
+// /photo has a text LCP. Inline the existing shared styles in their original
+// order, minified from the build output, to avoid blocking CSS round trips.
+// Keeping complete styles preserves gallery, menu and lightbox states.
+async function inlinePhotoStyles(html: string): Promise<string> {
+  const links = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)];
+  let result = html;
+  for (const [tag, href] of links) {
+    if (href.startsWith("/assets/desktop-design-")) continue;
+    if (!/^\/(?:tokens\.css|site-skin\.css|assets\/[a-zA-Z0-9._-]+\.css)$/.test(href)) {
+      throw new Error(`Unexpected photo stylesheet: ${href}`);
+    }
+    const css = await readFile(path.join(distDir, href.slice(1)), "utf8");
+    const { code } = await transformCss(css, { loader: "css", minify: true });
+    if (/<\/style/i.test(code)) throw new Error("Unsafe inline stylesheet content");
+    result = result.replace(tag, `<style data-photo-styles>${code}</style>`);
+  }
+  return result;
+}
+
 async function main() {
   const duplicateRoutes = ROUTE_MANIFEST
     .map((route) => route.path)
@@ -231,6 +251,7 @@ async function main() {
       await writeFile(prerenderedOutput, outputHtml);
       generated.push(route.path);
     }
+    if (route.path === "/photo") outputHtml = await inlinePhotoStyles(outputHtml);
     await writeFile(file, outputHtml);
   }
 

@@ -1230,5 +1230,21 @@
     "clipY": 0,
     "offscreen": 0,
     "checked": 110
+  },
+  "/video-dlya-kompaniy@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 119
+  },
+  "/video-dlya-kompaniy@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 111
   }
 }

@@ -109,8 +109,24 @@ async function selectEstimateType(page: Page, shootType: string) {
   await page.getByRole('button', { name: shootType, exact: true }).click();
   // A completed click is not a committed React selection. Check the actual
   // state before looking for rows whose accessible names belong to that type.
-  await page.waitForFunction((expected) =>
-    document.querySelector('.calc-type[data-active="true"]')?.textContent === expected, shootType);
+  try {
+    await page.waitForFunction((expected) =>
+      document.querySelector('.calc-type[data-active="true"]')?.textContent === expected, shootType);
+  } catch (error) {
+    const state = await page.evaluate(() => ({
+      active: document.querySelector('.calc-type[data-active="true"]')?.textContent,
+      ready: document.querySelector('.calc-wrap')?.getAttribute('data-calculator-ready'),
+      focus: document.activeElement?.textContent?.slice(0, 160), scrollY,
+      events: (window as any).__ownerInputs,
+      buttons: [...document.querySelectorAll('.calc-type')].map((button) => {
+        const r = button.getBoundingClientRect();
+        return { text: button.textContent, top: r.top, bottom: r.bottom, left: r.left, right: r.right };
+      }),
+    }));
+    console.error('OWNER_SELECTION_DIAGNOSTIC ' + JSON.stringify({ engine: page.context().browser()?.browserType().name(), requested: shootType, state }));
+    console.error('OWNER_SELECTION_SCREENSHOT ' + (await page.screenshot()).toString('base64'));
+    throw error;
+  }
   const data = ESTIMATE_DATA[shootType as keyof typeof ESTIMATE_DATA];
   for (const item of [...data.base, ...data.options]) {
     await checkboxFor(page, item).waitFor({ state: 'visible' });
@@ -125,6 +141,17 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
       try {
         const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
         const page = await context.newPage();
+        await page.addInitScript(() => {
+          const events: Record<string, unknown>[] = [];
+          (window as any).__ownerInputs = events;
+          for (const type of ['pointerdown', 'pointerup', 'click', 'focusin']) {
+            document.addEventListener(type, (event) => {
+              const target = event.target instanceof Element ? event.target.closest('button') : null;
+              events.push({ type, at: Math.round(performance.now()), target: target?.textContent?.replace(/\s+/gu, ' ').trim().slice(0, 160), x: (event as MouseEvent).clientX, y: (event as MouseEvent).clientY, active: document.querySelector('.calc-type[data-active="true"]')?.textContent, scrollY });
+              if (events.length > 24) events.shift();
+            }, true);
+          }
+        });
         await page.route('**/api/**', (route) => route.fulfill({ contentType: "application/json", body: '{"available":false}' }));
         for (const route of ["/", "/reklamnye-roliki", "/reels", "/calculator"]) {
           await testMenu(page, origin, route);

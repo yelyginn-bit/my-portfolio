@@ -4,6 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sitemapXml, siteOrigin } from "../scripts/sitemap.ts";
+import sharp from "sharp";
+import { OG_IMAGES } from "../src/public/ogImages.data";
 import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -204,5 +206,27 @@ test("every indexable route ships one H1, unique title/description, canonical an
   for (const [path_, list] of Object.entries(SEO_EXCEPTIONS)) {
     assert.ok(INDEXABLE_ROUTES.some((r) => r.path === path_), `исключение «${path_}» больше не нужен — маршрута нет в манифесте`);
     for (const e of list) assert.ok(e.why.length > 10, `${path_}: у исключения «${e.field}» нет причины`);
+  }
+});
+
+
+test("every indexable route has its generated absolute 1200×630 OG image", async () => {
+  const inspected = new Set<string>();
+  for (const route of INDEXABLE_ROUTES) {
+    const html = fs.readFileSync(servedFile(route.path), "utf8");
+    const tags = [...html.matchAll(/<meta property="og:image" content="([^"]+)"/gu)];
+    assert.equal(tags.length, 1, `${route.path}: one OG image`);
+    const image = OG_IMAGES[route.path];
+    assert.equal(tags[0][1], siteOrigin + image.path, route.path);
+    assert.match(html, new RegExp(`name="twitter:image" content="${siteOrigin}${image.path}"`, "u"), route.path);
+    assert.match(html, /property="og:image:width" content="1200"/u, route.path);
+    assert.match(html, /property="og:image:height" content="630"/u, route.path);
+    const file = path.join(root, "dist", image.path.slice(1));
+    assert.ok(fs.existsSync(file), route.path);
+    if (!inspected.has(file)) {
+      const size = await sharp(file).metadata();
+      assert.equal(size.width, 1200, file); assert.equal(size.height, 630, file);
+      inspected.add(file);
+    }
   }
 });

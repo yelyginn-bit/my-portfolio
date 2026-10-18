@@ -18,6 +18,7 @@ import {
   resolveV3Route,
 } from "../src/public/routeManifest";
 import { seoCopyFor } from "../src/public/seoCopy";
+import { generateOgImages } from "./ogImages";
 import { enrichPublicOutput } from "./aiDiscovery";
 import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
@@ -258,6 +259,7 @@ async function main() {
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);
 
+  await generateOgImages(rootDir, distDir);
   await enrichPublicOutput(distDir);
 
   const sitemap = sitemapXml();

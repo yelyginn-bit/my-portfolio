@@ -59,6 +59,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/cancellation-refund", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
   { path: "/gallery-terms", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
   { path: "/data-request", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/blog/skolko-stoit-fotograf-na-meropriyatie", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/skolko-stoit-snyat-reklamnyy-rolik", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7, theme: "dark" },
@@ -98,10 +99,7 @@ export const V3_PRERENDER_ROUTES = ROUTE_MANIFEST
   .filter((route) => route.render === "v3")
   .map((route) => route.path);
 
-export const PRERENDER_ROUTES = [
-  ...V3_PRERENDER_ROUTES,
-  "/calculator",
-];
+export const PRERENDER_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable).map((route) => route.path);
 
 export const INDEXABLE_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable);
 

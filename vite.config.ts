@@ -42,6 +42,7 @@ const desktopDesignStyles = (): Plugin => {
  * совпадением, у ссылки-пункта нет "начинается с").
  */
 const V3_CHROME_FILES: Readonly<Record<string, V3ChromeActive>> = {
+  "blog/skolko-stoit-fotograf-na-meropriyatie.html": {},
   '404.html': {},
   'reels.html': {serviceHref: '/reels'},
   'event-video.html': {serviceHref: '/event-video'},
@@ -220,6 +221,7 @@ export default defineConfig(({mode}) => {
           marketplace: path.resolve(__dirname, 'video-dlya-marketpleysov.html'),
           sajty: path.resolve(__dirname, 'sajty.html'),
           broadcast: path.resolve(__dirname, 'pryamye-translyacii.html'),
+          blogPhotoPrice: path.resolve(__dirname, "blog/skolko-stoit-fotograf-na-meropriyatie.html"),
           blogReels: path.resolve(__dirname, 'blog/kak-snimat-reels-dlya-biznesa.html'),
           blogPrice: path.resolve(__dirname, 'blog/skolko-stoit-snyat-reklamnyy-rolik.html'),
           blogMarketplace: path.resolve(__dirname, 'blog/video-dlya-kartochek-wildberries.html'),

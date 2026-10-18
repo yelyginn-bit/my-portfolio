@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { sitemapXml, siteOrigin } from "../scripts/sitemap.ts";
 import sharp from "sharp";
 import { OG_IMAGES } from "../src/public/ogImages.data";
+import { PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data";
 import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -229,4 +230,22 @@ test("every indexable route has its generated absolute 1200×630 OG image", asyn
       inspected.add(file);
     }
   }
+});
+
+test("event-photo price article ships its source prices, links, schema and prerender", () => {
+  const route = "/blog/skolko-stoit-fotograf-na-meropriyatie";
+  const html = read("dist/prerender" + route + "/index.html");
+  const item = PUBLIC_PRICE_BY_ID.photo;
+  for (const value of [item.price, item.limitations, item.timeline, item.includes.join(", ")]) assert.ok(html.includes(value), value);
+  assert.doesNotMatch(html, /data-(?:photo-price-detail|price-reference)=/u);
+  assert.equal((html.match(/<h1\b/gu) || []).length, 1);
+  assert.ok((/<title>(.*?)<\/title>/u.exec(html)?.[1].length || Infinity) <= 60);
+  const description = /name="description" content="([^"]+)"/u.exec(html)?.[1] || "";
+  assert.ok(description.length > 0 && description.length <= 160);
+  for (const href of ["/reportazhnaya-fotosemka", "/ceny", "/photo"]) assert.ok(html.includes(`href="${href}"`), href);
+  for (const frame of ["kvn-05-960w.webp", "kvn-06-960w.webp"]) assert.ok(html.includes(frame), frame);
+  for (const type of ["BlogPosting", "BreadcrumbList"]) assert.ok(html.includes(`"@type": "${type}"`) || html.includes(`"@type":"${type}"`), type);
+  assert.ok(JSON.parse(read("dist/prerender-manifest.json")).routes.includes(route));
+  assert.ok(read("dist/sitemap.xml").includes(siteOrigin + route));
+  for (const file of ["reportazhnaya-fotosemka.html", "dist/prerender/blog/index.html"]) assert.ok(read(file).includes(`href="${route}"`), file);
 });

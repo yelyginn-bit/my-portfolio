@@ -19,6 +19,7 @@ function categoryFrame(category: PortfolioCategory): string {
   return projectFrame(project);
 }
 const sourceByRoute: Readonly<Record<string, string>> = {
+  "/blog/skolko-stoit-fotograf-na-meropriyatie": "/portfolio-photos/kvn-05-960w.webp",
   "/photo": "/portfolio-photos/portraits-05-960w.webp",
   "/portretnaya-fotosessiya": "/portfolio-photos/portraits-05-960w.webp",
   "/reportazhnaya-fotosemka": "/portfolio-photos/kvn-05-960w.webp",

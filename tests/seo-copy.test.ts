@@ -70,3 +70,16 @@ test("в текстах нет «ИП» и запрещённых упомина
     assert.ok(!/лукойл|1xbet/iu.test(text), `${p.route}: запрещённое упоминание`);
   }
 });
+
+
+test("PROMPT-44 metadata stays within 60/160 and identifies the home services and city", () => {
+  const routes = ["/", "/ceny", "/pryamye-translyacii", "/portfolio/become-legendary-architecture"];
+  for (const route of routes) {
+    const page = pages.find((item) => item.route === route);
+    assert.ok(page, route);
+    assert.ok(page.title.length <= 60, `${route}: title ${page.title.length}`);
+    assert.ok(page.description.length <= 160, `${route}: description ${page.description.length}`);
+  }
+  const home = pages.find((item) => item.route === "/")!;
+  for (const word of ["видеограф", "фотограф", "Нижний Новгород"]) assert.ok(home.description.toLowerCase().includes(word.toLowerCase()), word);
+});

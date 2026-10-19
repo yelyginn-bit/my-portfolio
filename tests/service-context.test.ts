@@ -51,3 +51,15 @@ test("calculator only preselects service types represented by its active estimat
   assert.equal(resolveCalculatorType("livestream", available), undefined);
   assert.equal(resolveCalculatorType("not-a-service", available), undefined);
 });
+
+
+test("catalogue work links point directly to indexable public pages", async () => {
+  const { PUBLIC_PRICES } = await import("../src/lib/pricing.data");
+  const { SERVICE_SUMMARIES } = await import("../src/config/site");
+  const { INDEXABLE_ROUTES } = await import("../src/public/routeManifest");
+  const canonical = new Set(INDEXABLE_ROUTES.map((route) => route.path));
+  for (const item of [...PUBLIC_PRICES, ...SERVICE_SUMMARIES]) {
+    const route = new URL(item.portfolioHref, "https://yelyginn.ru").pathname;
+    assert.ok(canonical.has(route), `${item.id}: work link ${item.portfolioHref} must not use a private route or redirect`);
+  }
+});

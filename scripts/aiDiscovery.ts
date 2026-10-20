@@ -8,7 +8,7 @@ import { applyOgImage } from "./ogImages";
 import { SITE } from "../src/config/site";
 import { SOCIALS } from "../src/config/socials";
 import { OWNER_DESCRIPTION } from "../src/lib/aiDiscovery";
-import { PUBLIC_PRICES } from "../src/lib/pricing.data";
+import { PUBLIC_PRICES, type PublicPriceItem } from "../src/lib/pricing.data";
 import { projects } from "../src/portfolio/v3PortfolioData";
 import { INDEXABLE_ROUTES } from "../src/public/routeManifest";
 import { seoCopyFor } from "../src/public/seoCopy";
@@ -19,6 +19,18 @@ const businessId = `${siteOrigin}/#business`;
 const websiteId = `${siteOrigin}/#website`;
 const city = { "@type": "City", name: SITE.location };
 const ref = (id: string) => ({ "@id": id });
+
+const pricesForRoute = (route: string) => route === "/ceny"
+  ? PUBLIC_PRICES.filter((p) => p.showOnCatalog !== false)
+  : PUBLIC_PRICES.filter((p) => p.href.split("#")[0] === route && route !== "/calculator");
+const serviceFor = (p: PublicPriceItem) => ({ "@type": "Service", name: p.title, description: p.description, provider: ref(personId), areaServed: city });
+const catalogItemFor = (p: PublicPriceItem) => {
+  const amount = p.price.match(/\d[\d\s ]*/u)?.[0].replace(/[\s ]/gu, "");
+  // An individually estimated service has no public numeric offer. Never
+  // invent a zero price to satisfy the Offer gate.
+  if (!amount) return { ...serviceFor(p), description: `${p.price}. ${p.limitations}` };
+  return { "@type": "Offer", "@id": `${siteOrigin}/#offer-${p.id}`, name: p.title, price: amount, priceCurrency: "RUB", url: `${siteOrigin}${p.href}`, seller: ref(businessId), description: `${p.price}. ${p.limitations}`, itemOffered: serviceFor(p) };
+};
 
 export function discoveryGraph(route: string) {
   const url = `${siteOrigin}${route}`;
@@ -33,9 +45,9 @@ export function discoveryGraph(route: string) {
       { "@type": "LocalBusiness", "@id": businessId, name: `${SITE.owner} — ${SITE.brand}`, url: siteOrigin, description: OWNER_DESCRIPTION, email: SITE.email, address: { "@type": "PostalAddress", addressLocality: SITE.location, addressCountry: "RU" }, areaServed: city },
     );
   }
-  const prices = route === "/ceny" ? PUBLIC_PRICES.filter((p) => p.showOnCatalog !== false) : PUBLIC_PRICES.filter((p) => p.href === route && route !== "/calculator");
+  const prices = pricesForRoute(route);
   if (prices.length) {
-    graph.push({ "@type": "OfferCatalog", "@id": `${url}#offers`, name: route === "/ceny" ? "Услуги и ориентиры стоимости" : copy?.title, itemListElement: prices.map((p) => ({ "@type": "Offer", "@id": `${siteOrigin}/#offer-${p.id}`, url: `${siteOrigin}${p.href}`, seller: ref(businessId), description: `${p.price}. ${p.limitations}`, itemOffered: { "@type": "Service", name: p.title, description: p.description, provider: ref(personId), areaServed: city } })) });
+    graph.push({ "@type": "OfferCatalog", "@id": `${url}#offers`, name: route === "/ceny" ? "Услуги и ориентиры стоимости" : copy?.title, itemListElement: prices.map(catalogItemFor) });
     if (route === "/ceny") graph.find((n) => n["@id"] === businessId)!.hasOfferCatalog = ref(`${url}#offers`);
   }
   if (route === "/portfolio") {
@@ -49,6 +61,42 @@ export function discoveryGraph(route: string) {
     graph.find((n) => n["@type"] === "WebPage")!.mainEntity = ref(workId);
   }
   return { "@context": "https://schema.org", "@graph": graph };
+}
+
+/** Normalize the existing authored facts and supplement missing page types. */
+function pageStructuredData(html: string, route: string) {
+  const copy = seoCopyFor(route);
+  const types = new Set<string>();
+  const article = route.startsWith("/blog/");
+  const service = INDEXABLE_ROUTES.some((r) => r.path === route && r.render === "static") && !article && route !== "/ceny";
+  const normalize = (value: any): void => {
+    if (Array.isArray(value)) { value.forEach(normalize); return; }
+    if (!value || typeof value !== "object") return;
+    if (article && value["@type"] === "Article") value["@type"] = "BlogPosting";
+    const type = value["@type"];
+    if (typeof type === "string") types.add(type);
+    if (["BlogPosting", "FAQPage", "Offer"].includes(type) && !value.name) value.name = value.headline || value.description || copy?.title;
+    if (type === "Service" && value.offers) {
+      const offers = pricesForRoute(route).map(catalogItemFor).filter((p) => p["@type"] === "Offer");
+      if (offers.length) value.offers = offers;
+      else delete value.offers;
+    }
+    for (const child of Object.values(value)) normalize(child);
+  };
+  const output = html.replace(/(<script\b[^>]*type="application\/ld\+json"[^>]*>)([\s\S]*?)(<\/script>)/giu, (_tag, open, raw, close) => {
+    const data = JSON.parse(raw);
+    normalize(data);
+    return open + JSON.stringify(data).replaceAll("<", "\\u003c") + close;
+  });
+  const extra: Record<string, unknown>[] = [];
+  const url = siteOrigin + route;
+  if (service && !types.has("Service")) extra.push({ "@type": "Service", "@id": `${url}#service`, name: copy?.title, description: copy?.description, url, provider: ref(businessId), areaServed: city });
+  if (article && !types.has("BlogPosting")) extra.push({ "@type": "BlogPosting", "@id": `${url}#article`, name: copy?.title, headline: copy?.title, description: copy?.description, author: { "@type": "Person", name: SITE.owner, "@id": personId }, mainEntityOfPage: url, inLanguage: "ru" });
+  if ((service || article) && !types.has("BreadcrumbList")) {
+    const trail = [{ name: "Главная", item: siteOrigin + "/" }, ...(article ? [{ name: "Блог", item: siteOrigin + "/blog" }] : []), { name: copy?.title, item: url }];
+    extra.push({ "@type": "BreadcrumbList", "@id": `${url}#breadcrumbs`, name: "Навигация по странице", itemListElement: trail.map((item, i) => ({ "@type": "ListItem", position: i + 1, ...item })) });
+  }
+  return { html: output, extra };
 }
 
 const dimensions = new Map<string, Promise<{ width?: number; height?: number }>>();
@@ -76,7 +124,11 @@ export async function enrichPublicHtml(html: string, route: string, dist: string
     result = result.replace(tag, tag.replace(/\s*\/?>(?=$)/u, `${attrs}>`));
   }
   // Developer comments are not page content and must not be counted as images.
-  const schema = JSON.stringify(discoveryGraph(route)).replaceAll("<", "\\u003c");
+  const normalized = pageStructuredData(result, route);
+  result = normalized.html;
+  const graph = discoveryGraph(route);
+  graph["@graph"].push(...normalized.extra);
+  const schema = JSON.stringify(graph).replaceAll("<", "\\u003c");
   result = result.replace("</head>", `<script type="application/ld+json" data-ai-discovery>${schema}</script>\n</head>`);
   if (result.includes("data-ai-ask") && !result.includes('src="/ai-ask.js"')) result = result.replace("</body>", '<script src="/ai-ask.js" defer></script>\n</body>');
   return result;

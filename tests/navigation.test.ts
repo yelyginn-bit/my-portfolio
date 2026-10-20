@@ -62,3 +62,65 @@ test("static navigation keeps the service-aware calculator URL without adding a 
   assert.ok(result.includes('href="/photo"'), "missing destinations are still added");
   assert.equal(augmentStaticHeader(result, "marketplace fixture"), result, "augmentation is idempotent");
 });
+
+test("public pages expose Russian language, named controls and a continuous heading outline", async () => {
+  const { chromium } = await import("playwright");
+  const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
+  const local = await startLocalServer();
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await page.route("**/*", (route) => ["GET", "HEAD", "OPTIONS"].includes(route.request().method()) ? route.continue() : route.abort());
+    for (const route of indexableRoutes) {
+      await page.goto(local.origin + route.path, { waitUntil: "domcontentloaded" });
+      assert.match(await page.locator("html").getAttribute("lang") ?? "", /^ru(?:-|$)/u, route.path);
+      const headings = await page.locator("h1,h2,h3,h4,h5,h6").evaluateAll((nodes) => nodes.filter((node) => node.getClientRects().length > 0 && !node.closest('[aria-hidden="true"]')).map((node) => Number(node.tagName[1])));
+      assert.equal(headings[0], 1, `${route.path}: the outline starts with H1`);
+      for (let i = 1; i < headings.length; i++) assert.ok(headings[i]! <= headings[i - 1]! + 1, `${route.path}: heading level skipped`);
+      const unnamed = await page.locator('input:not([type="hidden"]),select,textarea').evaluateAll((nodes) => nodes.filter((node) => node.getClientRects().length > 0 && !node.closest('[aria-hidden="true"]')).filter((node) => !node.getAttribute("aria-label")?.trim() && !node.getAttribute("aria-labelledby")?.split(/\s+/u).some((id) => document.getElementById(id)?.textContent?.trim()) && !Array.from((node as HTMLInputElement).labels ?? []).some((label) => label.textContent?.trim())).map((node) => node.outerHTML));
+      assert.deepEqual(unnamed, [], `${route.path}: controls require an accessible name`);
+    }
+  } finally {
+    await browser.close();
+    local.server.closeAllConnections();
+    await new Promise<void>((resolve) => local.server.close(() => resolve()));
+  }
+});
+
+test("keyboard focus is painted on form controls, checkbox and workflow buttons", async () => {
+  const { chromium, webkit } = await import("playwright");
+  const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
+  const local = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        for (const width of [390, 1440]) {
+          const page = await browser.newPage({ viewport: { width, height: 900 } });
+          await page.route("**/*", (route) => ["GET", "HEAD", "OPTIONS"].includes(route.request().method()) ? route.continue() : route.abort());
+          await page.goto(local.origin, { waitUntil: "load" });
+          const consent = page.getByRole("button", { name: "Только необходимые", exact: true });
+          if (await consent.isVisible()) await consent.click();
+          await page.keyboard.press("Tab");
+          for (const selector of ['.v3-form input:not([type="checkbox"])', '.v3-form select', '.v3-form textarea', '.v3-check input', '.v32-resolve-chapter__markers button']) {
+            const control = page.locator(selector).first();
+            await control.focus();
+            assert.equal(await control.evaluate((node) => node.matches(":focus-visible")), true, selector);
+            const painted = selector === '.v3-check input' ? page.locator('.v3-check input + span svg').first() : control;
+            const outline = await painted.evaluate((node) => ({ style: getComputedStyle(node).outlineStyle, width: parseFloat(getComputedStyle(node).outlineWidth) }));
+            assert.equal(outline.style, "solid", `${engine.name()} ${width}: ${selector}`);
+            assert.ok(outline.width >= 2, selector);
+          }
+          const secondStage = page.locator('.v32-resolve-chapter__markers button').nth(1);
+          await secondStage.focus();
+          await page.keyboard.press("Space");
+          await page.waitForFunction(() => document.querySelectorAll('.v32-resolve-chapter__markers button')[1]?.getAttribute('aria-pressed') === 'true', undefined, { timeout: 1500 });
+          await page.close();
+        }
+      } finally { await browser.close(); }
+    }
+  } finally {
+    local.server.closeAllConnections();
+    await new Promise<void>((resolve) => local.server.close(() => resolve()));
+  }
+});

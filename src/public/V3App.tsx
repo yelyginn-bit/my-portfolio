@@ -487,7 +487,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
     const tariff = params.get("tariff");
     if (tariff) setMessage((current) => current || `Тариф: ${tariff}\n`);
   }, [routePath]);
-  const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
+  const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nКонтакт: ${contact}\nЗадача: ${message}\nИсточник: ${routePath}`)}`;
   const Heading = pageHeading ? "h1" : "h2";
 
   const submit = useCallback(async (event: FormEvent) => {
@@ -497,6 +497,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
     setStatus("sending");
     try {
       const response = await secureFetch("/api/send-form", {
+        signal: AbortSignal.timeout(30_000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), contact: contact.trim(), service, message: message.trim(), website: "", source: resolveServiceContext(window.location.search, routePath).sourcePath, consentAccepted: true, consentVersion: LEGAL.consentVersion, policyVersion: LEGAL.policyVersion, formId: "homepage-contact", pageUrl: resolveServiceContext(window.location.search, routePath).sourcePath }),
@@ -533,7 +534,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
         <label className="v3-check"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required /><span><Check />Даю <a href="/personal-data-consent">согласие на обработку данных</a></span></label>
         <button className="v3-button v3-button--dark" type="submit" disabled={status === "sending"}>{status === "sending" ? "ОТПРАВКА…" : "ОТПРАВИТЬ ЗАДАЧУ"}<ArrowUpRight /></button>
         {status === "success" && <p role="status" className="v3-form__status">Заявка отправлена. Юрий свяжется с вами по указанному контакту.</p>}
-        {status === "error" && <p role="alert" className="v3-form__status v3-form__status--error">Сайт не смог доставить заявку. <a href={telegramUrl}>Продолжить в Telegram ↗</a></p>}
+        {status === "error" && <p role="alert" className="v3-form__status v3-form__status--error">Не удалось подтвердить отправку заявки. Текст сохранён в форме. <a href={telegramUrl} target="_blank" rel="noreferrer">Отправить в Telegram ↗</a> или напишите на <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>}
       </form>
     </section>
   );

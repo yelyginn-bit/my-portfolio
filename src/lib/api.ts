@@ -3,7 +3,7 @@ let csrfToken = "";
 export async function secureFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
   const method = String(init.method || "GET").toUpperCase();
   if (!["GET", "HEAD", "OPTIONS"].includes(method) && !csrfToken) {
-    const response = await fetch("/api/csrf", { credentials: "same-origin" });
+    const response = await fetch("/api/csrf", { credentials: "same-origin", signal: init.signal });
     const data = await response.json();
     csrfToken = data.csrfToken || "";
   }

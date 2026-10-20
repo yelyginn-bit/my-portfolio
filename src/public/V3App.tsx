@@ -265,7 +265,7 @@ function HeroShowreel() {
           onPause={() => setPlaying(false)}
           onError={() => { setVideoFailed(true); setPlaying(false); }}
           aria-label="Шоурил YELYGINN"
-        ><source src="/v3-assets/hero-showreel.mp4" type="video/mp4" onError={() => { setVideoFailed(true); setPlaying(false); }} /></video>}
+        ><source src="/v3-assets/hero-showreel-48.mp4" type="video/mp4" onError={() => { setVideoFailed(true); setPlaying(false); }} /></video>}
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>

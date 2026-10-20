@@ -304,7 +304,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await waitForEstimateTotal(page, '3 000 ₽ – 13 500 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), '3 000 ₽ – 13 500 ₽');
         // A real failed media request must offer the embedded fallback player.
-        await page.route('**/hero-showreel.mp4', (route) => route.fulfill({ status: 404, body: 'not found' }));
+        await page.route('**/hero-showreel-48.mp4', (route) => route.fulfill({ status: 404, body: 'not found' }));
         await page.goto(origin + '/');
         await page.getByRole('button', { name: 'ШОУРИЛ // СМОТРЕТЬ' }).click();
         assert.equal(await page.getByRole('dialog', { name: 'Шоурил YELYGINN' }).isVisible(), true);
@@ -362,7 +362,7 @@ test("hero autoplays muted on mobile, desktop and system reduced motion, and def
       });
       await page.route('**/api/**', r => r.fulfill({ contentType: 'application/json', body: '{"available":false}' }));
       let mp4Requests = 0;
-      page.on('request', r => { if (r.url().includes('hero-showreel.mp4')) mp4Requests++; });
+      page.on('request', r => { if (r.url().includes('hero-showreel-48.mp4')) mp4Requests++; });
       await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
       const video = page.locator('video');
       assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted && v.playsInline), true, mode + ': muted inline video');

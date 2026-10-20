@@ -21,7 +21,7 @@ test("home prerender has a Safari-autoplayable hero video with the source in the
   assert.match(video, /playsinline/iu);
   assert.match(video, /preload="(metadata|auto)"/u);
   assert.match(video, /poster="\/v3-assets\/hero-showreel-poster\.webp"/u);
-  assert.match(home, /<video[^>]*>\s*<source src="\/v3-assets\/hero-showreel\.mp4" type="video\/mp4"/u);
+  assert.match(home, /<video[^>]*>\s*<source src="\/v3-assets\/hero-showreel-48\.mp4" type="video\/mp4"/u);
   assert.match(home, /class="v3-marquee"[^>]*data-motion="true"/u, "marquee is already moving in the server HTML");
 });
 

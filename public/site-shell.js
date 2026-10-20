@@ -124,10 +124,11 @@
   const motionButtons = [...document.querySelectorAll("[data-motion-toggle]")];
   let motionStopped = false;
   let explicitMotion = null;
-  try { explicitMotion = window.localStorage.getItem("yelyginn-motion"); } catch { /* use the system preference */ }
-  const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  try { explicitMotion = window.localStorage.getItem("yelyginn-motion"); } catch { /* nothing was switched off */ }
+  // Hero video and marquee stop only by the visitor's own choice, not by the
+  // system "reduce motion" setting (owner decision, 11.10.2026).
   const applyMotion = () => {
-    const reduced = explicitMotion === "on" ? false : explicitMotion === "off" || systemMotion.matches;
+    const reduced = explicitMotion === "off";
     motionStopped = reduced;
     document.documentElement.dataset.motionPreference = reduced ? "reduce" : "full";
     motionButtons.forEach((button) => {
@@ -136,7 +137,6 @@
     });
   };
   applyMotion();
-  systemMotion.addEventListener("change", applyMotion);
   motionButtons.forEach((button) => button.addEventListener("click", () => {
     explicitMotion = motionStopped ? "on" : "off";
     try { window.localStorage.setItem("yelyginn-motion", explicitMotion); } catch { /* preference remains active until navigation */ }

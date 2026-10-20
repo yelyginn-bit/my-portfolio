@@ -698,9 +698,6 @@ body:has(.v3-header) { margin: 0; background: var(--ds-bg); color: var(--ds-text
   .v3-next strong { grid-column: 1 / -1; --fit: calc(100cqw / var(--title-em, 10)); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .v3-marquee > div { animation: none; }
-}
 .v32-work-proof { position: relative; isolation: isolate; overflow: hidden; background: #0a0a0a; }
 .v32-work-proof::before { content: ""; position: absolute; z-index: 0; inset: 0; background: linear-gradient(158deg, #0a0a0a 0%, #101016 25%, #171116 47%, #0e1119 72%, #0a0a0a 100%); pointer-events: none; }
 .v32-work-proof > * { position: relative; z-index: 1; }
@@ -941,16 +938,11 @@ body.v3-menu-open { overflow: hidden; }
   /* Контакты в меню: INK + подчёркивание, ORANGE остаётся маркером, не чернилами. */
   .v3-mobile-menu .v3-mobile-menu__contacts a { color: var(--ds-scrim); text-decoration: underline; text-underline-offset: 3px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .v3-marquee__track { animation: none; }
-  /* Без анимации строка стоит на первом кадре и режет имя на границе
-     контейнера (на 390px — уже третье, «БАРЬЕР» — видно только «БАРЬ»).
-     Мягкое затухание вместо жёсткого обреза — реального имени не
-     дочитать в статике в любом случае, так честнее, чем ровный срез.
-     PROMPT-32 §1.1.5: было только с правого края — с левого точно так же
-     обрезано первое имя, симметрично. */
-  .v3-marquee { -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); }
-}
+/* Бегущая строка стоит только по выбору посетителя (кнопка «Отключить движение»).
+   Без анимации она стоит на первом кадре и режет имя на границе контейнера
+   (на 390px — «БАРЬЕР» видно как «БАРЬ»): мягкое затухание с обеих сторон
+   честнее ровного среза. Системное «уменьшение движения» строку не останавливает. */
+.v3-marquee[data-motion="false"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); }
 
 /* ── V3 visual repair: progressive media, TP-7 navigation, editorial portfolio ── */
 .v3-nav {

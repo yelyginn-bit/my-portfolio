@@ -1246,5 +1246,21 @@
     "clipY": 0,
     "offscreen": 0,
     "checked": 111
+  },
+  "/semka-spektakley@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 116
+  },
+  "/semka-spektakley@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 108
   }
 }

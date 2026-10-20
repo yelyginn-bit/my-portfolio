@@ -47,6 +47,8 @@ function unitLabel(unit: PriceItem["unit"]): string {
 }
 
 export default function Calculator() {
+  const [interactive, setInteractive] = useState(false);
+  useEffect(() => setInteractive(true), []);
   const [session, setSession] = useState<ReturnType<typeof getSession>>(null);
   // Прайс берётся из активного набора (БД-override или конфиг); пересчёт по priceReady.
   const DATA = ESTIMATE_DATA;
@@ -276,7 +278,7 @@ export default function Calculator() {
   return (
     <RoutePathContext.Provider value="/calculator">
     <SiteHeader />
-    <div className="calc-wrap" onClickCapture={(event) => recordUse(event.target)} onChangeCapture={(event) => recordUse(event.target)}>
+    <div className="calc-wrap" data-calculator-ready={interactive} onClickCapture={(event) => recordUse(event.target)} onChangeCapture={(event) => recordUse(event.target)}>
 
       <main>
       <p className="calc-eyebrow">Калькулятор сметы</p>

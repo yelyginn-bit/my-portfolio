@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-theme="dark">
+<html lang="ru" data-theme="dark" data-page="calculator">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +23,9 @@
          объявлений. */
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
+      /* Native focus and programmatic scrolling must settle before a click
+         releases; smooth viewport motion can move another control underneath. */
+      html[data-page="calculator"] { scroll-behavior: auto; }
       body {
         background: var(--ds-bg);
         color: var(--ds-text);

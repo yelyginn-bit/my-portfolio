@@ -397,3 +397,37 @@ test("desktop navigation highlights orange, contact opens, and five raster AI lo
     }
   } finally { server.close(); }
 });
+
+
+test("calculator pointer clicks stay on the intended type during programmatic scrolling", async () => {
+  const { server, origin } = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+        await page.route('**/api/**', (route) => route.fulfill({ contentType: "application/json", body: '{"available":false}' }));
+        await page.goto(origin + "/calculator");
+        await page.locator('.calc-wrap[data-calculator-ready="true"]').waitFor({ state: "visible" });
+        await page.evaluate(() => document.fonts.ready.then(() => undefined));
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+        const button = page.getByRole("button", { name: "Студийная фотосъёмка", exact: true });
+        // Capture the pointer position in the same task as the scroll request.
+        // With the old smooth rule the button moves before pointerup (and can
+        // even put a different type under the pointer). No DOM click dispatch.
+        const box = await button.evaluate((element) => {
+          window.scrollTo({ top: 100 });
+          const r = element.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        });
+        await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { delay: 80 });
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent === "Студийная фотосъёмка", null, { timeout: 1500 });
+        assert.equal(await page.locator('.calc-type[data-active="true"]').textContent(), "Студийная фотосъёмка", engine.name());
+        // Selection commits before its base-price reset effect. As in
+        // checkTotal above, await the actual total without relaxing the value.
+        await page.waitForFunction(() => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === "от 8 000 ₽", null, { timeout: 1500 });
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), "от 8 000 ₽", engine.name());
+      } finally { await browser.close(); }
+    }
+  } finally { server.close(); }
+});

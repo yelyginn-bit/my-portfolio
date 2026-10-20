@@ -12,10 +12,10 @@ import { startLocalServer } from "../scripts/computed-style-audit";
 
 test("Discovery uses public prices and actual project credits", () => {
   const catalog = discoveryGraph("/ceny")["@graph"].find((n) => n["@type"] === "OfferCatalog")!;
-  const offers = catalog.itemListElement as { description: string; itemOffered: { name: string } }[];
+  const offers = catalog.itemListElement as { name: string; description: string; itemOffered?: { name: string } }[];
   const prices = PUBLIC_PRICES.filter((p) => p.showOnCatalog !== false);
   assert.equal(offers.length, prices.length);
-  for (const price of prices) assert.ok(offers.some((o) => o.itemOffered.name === price.title && o.description.startsWith(price.price)));
+  for (const price of prices) assert.ok(offers.some((o) => (o.itemOffered?.name || o.name) === price.title && o.description.startsWith(price.price)));
   for (const project of projects) {
     const work = discoveryGraph(`/portfolio/${project.slug}`)["@graph"].find((n) => n["@type"] === "CreativeWork")!;
     assert.equal(work.creditText, `Юрий Елыгин: ${project.responsibilities.join(", ")}`);

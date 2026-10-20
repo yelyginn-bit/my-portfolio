@@ -100,6 +100,12 @@ test("negative control detects the old immediate-close menu defect", async () =>
   } finally { await browser.close(); server.close(); }
 });
 
+async function waitForEstimateTotal(page: Page, expected: string) {
+  // React may commit the selected type before its base-selection reset effect.
+  // Await the exact settled total, using the same 1500ms contract as checkTotal.
+  await page.waitForFunction((value) => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === value, expected, { timeout: 1500 });
+}
+
 async function selectEstimateType(page: Page, shootType: string) {
   // The prerender already exposes buttons before React attaches handlers.
   // Especially after goto(/calculator), load/fonts alone do not mean hydrated.
@@ -207,15 +213,19 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         assert.equal(await page.getByRole('link', { name: 'Рассчитать стоимость фотосъёмки' }).first().getAttribute('href'), '/calculator?service=photo-studio&from=%2Fphoto');
         await page.goto(origin + "/calculator?service=photo-reportage");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Репортажная фотосъёмка'));
+        await waitForEstimateTotal(page, 'от 12 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 12 000 ₽');
         await page.locator('#estimate-hours').focus();
         await page.keyboard.press('ArrowRight');
+        await waitForEstimateTotal(page, 'от 18 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 18 000 ₽');
         await page.goto(origin + "/calculator?service=photo-studio");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
+        await waitForEstimateTotal(page, 'от 8 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 000 ₽');
         await page.locator('#estimate-hours').focus();
         await page.keyboard.press('ArrowRight');
+        await waitForEstimateTotal(page, 'от 16 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 16 000 ₽');
         await page.goto(origin + "/calculator?service=content-day&from=%2Fcontent-day");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Контент для бизнеса'));
@@ -227,20 +237,25 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         const colorBase = checkboxFor(page, color.base[0]!);
         const colorExtended = checkboxFor(page, color.options[0]!);
         const colorComplex = checkboxFor(page, color.options[1]!);
+        await waitForEstimateTotal(page, 'от 5 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
         await colorExtended.click();
         assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        await waitForEstimateTotal(page, 'от 9 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 9 000 ₽');
         await colorBase.click();
         assert.equal(await colorExtended.getAttribute('aria-checked'), 'false');
+        await waitForEstimateTotal(page, 'от 5 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
         await colorComplex.click();
         assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
+        await waitForEstimateTotal(page, 'от 15 000 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 15 000 ₽');
         await selectEstimateType(page, 'Студийная фотосъёмка');
         const retouch = checkboxFor(page, ESTIMATE_DATA["Студийная фотосъёмка"].options[0]!);
         assert.match(await retouch.getAttribute('aria-label') ?? await retouch.innerText(), /за кадр/u);
         await retouch.click();
+        await waitForEstimateTotal(page, 'от 8 300 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 300 ₽');
         await page.goto(origin + "/calculator");
         const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
@@ -286,6 +301,7 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Монтаж Reels') && !document.querySelector('[role="switch"]')?.hasAttribute('disabled'));
         assert.equal(await rushSwitch.isEnabled(), true);
         await rushSwitch.click();
+        await waitForEstimateTotal(page, '3 000 ₽ – 13 500 ₽');
         assert.equal(normalized(await page.locator('.calc-total-val').innerText()), '3 000 ₽ – 13 500 ₽');
         // A real failed media request must offer the embedded fallback player.
         await page.route('**/hero-showreel.mp4', (route) => route.fulfill({ status: 404, body: 'not found' }));

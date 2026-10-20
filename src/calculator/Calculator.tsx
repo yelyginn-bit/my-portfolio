@@ -14,6 +14,7 @@ import { getSession } from "../lib/auth";
 import { trackAnalyticsEvent } from "../lib/analytics";
 import { secureFetch } from "../lib/api";
 import { LEGAL } from "../config/legal";
+import { SITE } from "../config/site";
 import { resolveCalculatorType, resolveServiceContext } from "../lib/service-context";
 import type { OrderSelection, PriceItem } from "../lib/types";
 import { isSupabaseConfigured } from "../lib/supabaseClient";
@@ -234,6 +235,7 @@ export default function Calculator() {
 
       try {
         const response = await secureFetch(endpoint, {
+          signal: AbortSignal.timeout(30_000),
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -255,7 +257,7 @@ export default function Calculator() {
         if (!response.ok || body.ok !== true) throw new Error("notification failed");
       } catch {
         setStatus("error");
-        setError("Не удалось отправить заявку. Напишите в Telegram @YuriElygin.");
+        setError("Не удалось отправить заявку. Подтверждение не получено; поля и расчёт сохранены. Отправьте текст в Telegram или напишите на почту.");
         return;
       }
 
@@ -269,8 +271,8 @@ export default function Calculator() {
   };
 
   const phoneValid = isValidPhone(phone);
-  const telegramEstimateUrl = `https://t.me/YuriElygin?text=${encodeURIComponent(
-    `Здравствуйте, Юрий!\nРасчёт: ${shootType}\nОриентир: ${formatRubRange(breakdown.totalMin, breakdown.totalMax)}\nКомментарий: ${comment.trim() || "хочу обсудить проект"}`,
+  const telegramEstimateUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(
+    `Здравствуйте, Юрий!\nИмя: ${name}\nКонтакт: ${phone}\nРасчёт: ${shootType}\nПозиции: ${selection.baseItems.join(", ")}\nДополнения: ${selection.optionItems.join(", ")}\nСмен: ${days}, часов: ${hours}, срочно: ${urgent ? "да" : "нет"}\nОриентир: ${formatRubRange(breakdown.totalMin, breakdown.totalMax)}\nКомментарий: ${comment.trim() || "хочу обсудить проект"}`,
   )}`;
 
   return (
@@ -537,7 +539,7 @@ export default function Calculator() {
                 <button className="calc-cta" onClick={handleSubmit} disabled={submitting || !consentAccepted}>
                   {submitting ? "Отправляю…" : "Отправить заявку"}
                 </button>
-                {error && <div className="calc-err">{error}</div>}
+                {error && <div className="calc-err" role="alert">{error}</div>}
                 {error.includes("Telegram") && (
                   <a
                     className="calc-cta calc-cta-ghost"
@@ -546,9 +548,10 @@ export default function Calculator() {
                     rel="noopener noreferrer"
                     style={{ marginTop: 10, textDecoration: "none", textAlign: "center" }}
                   >
-                    Отправить расчёт в Telegram
+                    Отправить в Telegram
                   </a>
                 )}
+                {status === "error" && <p className="calc-hint"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>}
               </div>
             </>
           )}

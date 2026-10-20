@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "./serviceLandings.data";
 /**
  * Единственный источник SEO-текстов (title / description) всех индексируемых
  * маршрутов (PROMPT-36 §0.1–0.2, Часть 4). Их читают routeManifest (V3-страницы),
@@ -20,6 +21,7 @@ const YEL = "YELYGINN";
 
 /** Страницы верхнего уровня, услуги, статьи, юридические. */
 export const PAGE_SEO: Record<string, SeoCopy> = {
+  ...Object.fromEntries(SERVICE_LANDINGS.map((page) => [page.path, {title: page.title, description: page.description}])),
   "/blog/skolko-stoit-fotograf-na-meropriyatie": {"title": "Сколько стоит фотограф на мероприятие | YELYGINN", "description": "Из чего складывается стоимость репортажной фотосъёмки: часы, обработка, срок сдачи и выезд. Что спросить у фотографа и как подготовить событие."},
   "/": {
     title: "Видеограф и фотограф в Нижнем Новгороде | Юрий Елыгин",

@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "./serviceLandings.data";
 import { assetsForProject, posterUrl, projects, projectsForCategory, workAssets, PORTFOLIO_CATEGORY_ORDER, type PortfolioCategory, type Project } from "../portfolio/v3PortfolioData";
 import { INDEXABLE_ROUTES } from "./routeManifest";
 
@@ -19,6 +20,7 @@ function categoryFrame(category: PortfolioCategory): string {
   return projectFrame(project);
 }
 const sourceByRoute: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(SERVICE_LANDINGS.map((page) => [page.path, projectFrame(projects.find((project) => project.id === page.projectIds[0])!)])),
   "/blog/skolko-stoit-fotograf-na-meropriyatie": "/portfolio-photos/kvn-05-960w.webp",
   "/photo": "/portfolio-photos/portraits-05-960w.webp",
   "/portretnaya-fotosessiya": "/portfolio-photos/portraits-05-960w.webp",

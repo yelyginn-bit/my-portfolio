@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "./serviceLandings.data";
 import {
   CATEGORY_META,
   PORTFOLIO_CATEGORY_ORDER,
@@ -91,6 +92,7 @@ const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
 
 export const ROUTE_MANIFEST: readonly PublicRouteRecord[] = [
   ...fixedRoutes,
+  ...SERVICE_LANDINGS.map((page) => ({path: page.path, render: "v3" as const, indexable: true, priority: 0.8, theme: "dark" as const})),
   ...categoryRoutes,
   ...projectRoutes,
 ];
@@ -113,7 +115,7 @@ export const normalizePublicPath = (rawPath: string) => rawPath.replace(/\/+$/u,
 
 export interface V3RouteResolution {
   path: string;
-  kind: "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "redirect" | "unknown";
+  kind: "service" | "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "redirect" | "unknown";
   category?: PortfolioCategory;
   project?: Project;
   seo: { title: string; description: string; canonical: string };
@@ -137,6 +139,7 @@ function resolveV3RouteRaw(rawPath: string, rawSearch = ""): V3RouteResolution {
     || projectBySlug.get(legacySlugs[segment])
     || (legacyAsset ? projectById.get(legacyAsset.projectId) : undefined);
 
+  if (SERVICE_LANDINGS.some((page) => page.path === path)) return {path, kind: "service", seo: {...seoCopyFor(path)!, canonical: path}};
   if (path === "/blog") return { path, kind: "blog", seo: { title: "Блог о съёмке и постпродакшне | YELYGINN", description: "Практические заметки Юрия Елыгина о подготовке, видеосъёмке, монтаже и постпродакшне.", canonical: "/blog" } };
   if (path === "/about") return { path, kind: "about", seo: { title: "Обо мне — Юрий Елыгин | YELYGINN", description: "Юрий Елыгин — оператор, режиссёр монтажа и колорист из Нижнего Новгорода.", canonical: "/about" } };
   if (path === "/contact") return { path, kind: "contact", seo: { title: "Обсудить проект | YELYGINN", description: "Связаться с Юрием Елыгиным: Instagram, Telegram, YouTube, email и короткий бриф проекта.", canonical: "/contact" } };

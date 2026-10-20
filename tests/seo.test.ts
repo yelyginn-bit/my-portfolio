@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -262,4 +263,24 @@ test("event-photo price article ships its source prices, links, schema and prere
   assert.ok(JSON.parse(read("dist/prerender-manifest.json")).routes.includes(route));
   assert.ok(read("dist/sitemap.xml").includes(siteOrigin + route));
   for (const file of ["reportazhnaya-fotosemka.html", "dist/prerender/blog/index.html"]) assert.ok(read(file).includes(`href="${route}"`), file);
+});
+
+
+test("новые услуги доступны поиску с ценами по задаче и подтверждёнными примерами", () => {
+  assert.ok(SERVICE_LANDINGS.length > 0);
+  for (const page of SERVICE_LANDINGS) {
+    const html = read(`dist/prerender${page.path}/index.html`);
+    assert.equal((html.match(/<h1\b/gu)||[]).length, 1, page.path);
+    assert.ok(html.includes(page.h1), page.path);
+    assert.ok(page.title.length <= 60 && page.description.length <= 160, page.path);
+    assert.ok(html.includes(`href="https://yelyginn.ru${page.path}"`), page.path);
+    assert.ok(read("dist/sitemap.xml").includes(`https://yelyginn.ru${page.path}</loc>`), page.path);
+    const graph = JSON.parse(html.match(/<script type="application\/ld\+json" data-ai-discovery>([\s\S]*?)<\/script>/u)![1])["@graph"];
+    assert.ok(graph.some((node) => node["@type"] === "Service" && node.provider && node.areaServed), page.path);
+    assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList" && node.itemListElement.length === 2), page.path);
+    assert.match(html, /Стоимость рассчитаю под задачу/u);
+    assert.ok(page.projectIds.length > 0, page.path);
+    for (const related of page.related) assert.ok(html.includes(`href="${related}"`), related);
+    assert.ok(read("dist/prerender/ceny/index.html").includes(`href="${page.path}"`), page.path+" from prices");
+  }
 });

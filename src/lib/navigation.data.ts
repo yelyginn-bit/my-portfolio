@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "../public/serviceLandings.data";
 // Единый источник пунктов навигации (PROMPT-21 §3): шапка, мобильное меню и
 // подвал всех систем берут пункты отсюда. Маршрут проверяется на существование
 // и индексируемость в ROUTE_MANIFEST при загрузке модуля — ссылка на
@@ -21,6 +22,7 @@ function link(href: string, label: string): NavLink {
 
 /** Десять посадочных услуг из ROUTE_MANIFEST (render: "static"), кроме /photo и /ceny — у них свои пункты верхнего уровня. */
 export const SERVICE_LINKS: readonly NavLink[] = [
+  ...SERVICE_LANDINGS.map((page) => link(page.path, page.label)),
   link("/portretnaya-fotosessiya", "Портретная фотосессия"),
   link("/reportazhnaya-fotosemka", "Репортажная фотосъёмка"),
   link("/reklamnye-roliki", "Рекламные ролики"),

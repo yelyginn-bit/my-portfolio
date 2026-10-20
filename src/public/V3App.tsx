@@ -1,3 +1,4 @@
+import ServiceLandingPage from "./ServiceLandingPage";
 import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, X } from "lucide-react";
 import { AiAskBlock } from "../components/site/AiAskBlock";
@@ -680,7 +681,8 @@ export default function V3App({ initialPath, initialSearch }: { initialPath?: st
   useEffect(() => updateSeo(route.seo.title, route.seo.description, route.seo.canonical), [route.seo]);
 
   let page;
-  if (route.kind === "portfolio") page = <PortfolioPage />;
+  if (route.kind === "service") page = <ServiceLandingPage path={route.path} />;
+  else if (route.kind === "portfolio") page = <PortfolioPage />;
   else if (route.kind === "blog") page = <BlogPage />;
   else if (route.kind === "about") page = <AboutPage />;
   else if (route.kind === "contact") page = <ContactPage />;

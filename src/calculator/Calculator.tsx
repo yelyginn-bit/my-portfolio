@@ -480,6 +480,7 @@ export default function Calculator() {
                 <div className="calc-field">
                   <input
                     className="calc-input"
+                    aria-label="Как к вам обращаться"
                     placeholder="Как к вам обращаться"
                     autoComplete="name"
                     value={name}
@@ -490,6 +491,7 @@ export default function Calculator() {
                   <input
                     className="calc-input"
                     type="tel"
+                    aria-label="Телефон"
                     placeholder="Телефон, напр. +7 999 123-45-67"
                     inputMode="tel"
                     autoComplete="tel"
@@ -516,6 +518,7 @@ export default function Calculator() {
                 <div className="calc-field">
                   <textarea
                     className="calc-textarea"
+                    aria-label="О проекте (необязательно)"
                     placeholder="Коротко о проекте, сроки, референсы (необязательно)"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}

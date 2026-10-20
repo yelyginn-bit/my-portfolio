@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chromium, type Page } from "playwright";
+import { chromium, webkit, type Page } from "playwright";
 import { startLocalServer } from "../scripts/computed-style-audit";
 
 // Deterministic transport fixture: real browser requests, no requests to the vendor.
@@ -124,4 +124,58 @@ test('Homepage and calculator count leads only after a successful server body',a
    await context.close();
   }
  }finally{await browser.close();server.close();}
+});
+
+test('failed lead delivery keeps the draft and offers a complete direct-contact message', async () => {
+ const local = await startLocalServer();
+ try {
+  for (const engine of [chromium, webkit]) {
+   const browser = await engine.launch();
+   try {
+    for (const width of [390, 1440]) {
+     for (const path of ['/contact', '/calculator?service=photo-studio&from=%2Fphoto']) {
+      const page = await browser.newPage({viewport:{width,height:900}}); await fixtures(page);
+      await page.goto(local.origin+path); await page.evaluate(()=>document.fonts.ready);
+      const consent = page.getByRole('button',{name:'Только необходимые',exact:true});
+      if (await consent.isVisible()) await consent.click();
+      const calculator=path.startsWith('/calculator');
+      if(calculator){
+       await page.waitForFunction(()=>document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
+       await page.getByPlaceholder('Как к вам обращаться').fill('Локальный тест');
+       await page.getByPlaceholder('Телефон, напр. +7 999 123-45-67').fill('+7 999 123-45-67');
+       await page.locator('.calc-textarea').fill('Сохранить этот текст после ошибки');
+       await page.getByRole('checkbox',{name:/Даю согласие/}).check();
+      }else{
+       await page.getByPlaceholder('Имя или компания').fill('Локальный тест');
+       await page.getByPlaceholder('Telegram, email или телефон').fill('@local_test');
+       await page.locator('.v3-form textarea').fill('Сохранить этот текст после ошибки');
+       for(const node of await page.locator('.v3-form input[type=checkbox]').all()) {await node.focus();await page.keyboard.press('Space');}
+      }
+      for(const failure of ['504','timedout','failed']){
+       await page.route('**/api/send-form',r=>failure==='504'?r.fulfill({status:504,contentType:'text/html',body:'Gateway timeout'}):r.abort(failure));
+       const submit=page.getByRole('button',{name:calculator?'Отправить заявку':'ОТПРАВИТЬ ЗАДАЧУ',exact:true});
+       await submit.click(); await page.getByRole('alert').waitFor();
+       assert.equal(await page.locator(calculator?'.calc-textarea':'.v3-form textarea').inputValue(),'Сохранить этот текст после ошибки');
+       assert.equal(await page.getByPlaceholder(calculator?'Как к вам обращаться':'Имя или компания').inputValue(),'Локальный тест');
+       assert.equal(await submit.isEnabled(),true,'a failed attempt may be retried');
+       assert.equal(await page.getByText('Заявка отправлена.',{exact:false}).count(),0);
+       const fallback=page.getByRole('link',{name:'Отправить в Telegram',exact:false});
+       assert.equal(await fallback.count(),1); assert.equal(await fallback.isVisible(),true);
+       const url=new URL((await fallback.getAttribute('href'))!);
+       assert.equal(url.origin+url.pathname,'https://t.me/YuriElygin');
+       const text=url.searchParams.get('text')!;
+       assert.ok(text.includes('Локальный тест')&&text.includes('Сохранить этот текст после ошибки'));
+       assert.ok(text.includes(calculator?'+7 999 123-45-67':'@local_test'),'fallback retains the sender contact');
+       if(calculator) assert.match(text,/Позиции:.*\nДополнения:/u);
+       assert.equal(await page.getByRole('link',{name:'y.elyginn@gmail.com',exact:true}).last().getAttribute('href'),'mailto:y.elyginn@gmail.com');
+       assert.equal((await goals(page)).filter((a:any[])=>a[2]==='lead_submit').length,0);
+       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth),false);
+       await page.unroute('**/api/send-form');
+      }
+      await page.close();
+     }
+    }
+   } finally {await browser.close();}
+  }
+ } finally {local.server.closeAllConnections();await new Promise<void>(resolve=>local.server.close(()=>resolve()));}
 });

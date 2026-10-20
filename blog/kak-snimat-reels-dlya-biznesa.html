@@ -47,6 +47,7 @@
       article h2 { font-size: clamp(1.15rem, 2.5vw, 1.5rem); font-weight: 800; letter-spacing: -0.025em; text-transform: uppercase; margin: 40px 0 16px; color: var(--white); }
       article h2 span { color: var(--red); }
       article h3 { font-size: 1rem; font-weight: 700; margin: 28px 0 12px; color: var(--white); }
+      .site-static article :is(p, li) a { color: var(--ds-orange) !important; text-decoration: underline !important; text-underline-offset: 3px; }
       article ul, article ol { padding-left: 20px; margin-bottom: 20px; }
       article li { font-size: 0.95rem; color: rgba(255,255,255,0.75); margin-bottom: 8px; line-height: 1.6; }
       .checklist { list-style: none; padding: 0; }
@@ -55,6 +56,13 @@
       .error-list { list-style: none; padding: 0; }
       .error-list li { padding-left: 24px; position: relative; }
       .error-list li::before { content: "✗"; position: absolute; left: 0; color: rgba(255,100,100,0.8); font-weight: 700; }
+      /* Общий `table { min-width: 760px }` из site-skin.css (для админки) растягивает и эту двухколоночную таблицу: цена уезжала за экран на 390px. */
+      .price-table { width: 100%; min-width: 0; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+      /* PROMPT-31 §2.3: таблица цен шире 390 на телефоне (белый список не помещается без переноса) — оборачивающий контейнер со своим горизонтальным скроллом, текст таблицы не менялся. */
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .price-table th { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); text-align: left; padding: 10px 16px; border-bottom: 1px solid var(--ds-border); }
+      .price-table td { padding: 14px 16px; border-bottom: 1px solid var(--ds-border); color: var(--ds-text-secondary); }
+      .price-table td:last-child { font-weight: 700; color: var(--white); }
       blockquote { border-left: 3px solid var(--red); padding: 16px 20px; margin: 28px 0; background: rgba(255,255,255,0.03); }
       blockquote p { margin: 0; font-style: italic; color: rgba(255,255,255,0.65); }
       .spec-box { border: 1px solid rgba(255,255,255,0.1); padding: 24px; margin: 24px 0; }
@@ -142,9 +150,32 @@
             <p>Один хорошо снятый Reels лучше пяти плохих. Но регулярность важнее идеального качества — алгоритмы любят активных авторов.</p>
           </blockquote>
 
+          <h2>Чек-лист: как <span>подготовиться</span> к съёмке</h2>
+          <ol>
+            <li><strong>Цель каждого ролика.</strong> Что зритель должен сделать после просмотра: написать, сохранить, прийти.</li>
+            <li><strong>Крюк и призыв.</strong> Заранее напишите одной фразой первые секунды и финальный призыв.</li>
+            <li><strong>План кадров.</strong> Список кадров и локаций; проверьте, что в кадр не попадают лишние вывески, личные вещи и люди без их согласия.</li>
+            <li><strong>Люди и реквизит.</strong> Кто говорит, кто в кадре, какой нужен товар, одежда, реквизит.</li>
+            <li><strong>Звук и свет на месте.</strong> Заранее посмотрите, где шум и эхо, и откуда падает свет.</li>
+            <li><strong>Тексты на экране.</strong> Субтитры и титры подготовьте до монтажа, чтобы они не менялись на ходу.</li>
+            <li><strong>Музыка.</strong> Согласуйте трек и убедитесь, что вы вправе его использовать.</li>
+            <li><strong>Публикация.</strong> Решите, где и в какие дни выходят ролики и сколько их нужно в месяц.</li>
+          </ol>
+
           <h2>Как организовать <span>съёмку</span></h2>
           <p>Самая эффективная схема — снимать серию роликов за один день. За 8 часов профессиональной съёмки можно получить 6–10 Reels разных форматов. Это дешевле, чем снимать каждый ролик отдельно, и даёт контент на 2–3 месяца вперёд.</p>
-          <p>Контент-день с подготовкой, съёмкой 3–4 часа, семью готовыми Reels, 30 фотографиями с базовой обработкой и 5 кадрами в детальной ретуши стоит <strong>от 45 000 ₽</strong>. Планируем состав до съёмки.</p>
+          <p>Контент-день с подготовкой, съёмкой 3–4 часа, семью готовыми Reels, 30 фотографиями с базовой обработкой и 5 кадрами в детальной ретуши стоит <strong><span data-price-reference="content-day"></span></strong>. Планируем состав до съёмки. Подробности — на странице <a href="/content-day">«Контент-день»</a>.</p>
+
+          <h2>Монтаж и съёмка — <span>раздельно</span></h2>
+          <p>Это две разные услуги, и считаются они отдельно: монтаж не включает съёмку, а съёмка не включает монтаж роликов.</p>
+          <div class="table-scroll"><table class="price-table">
+            <thead><tr><th>Что нужно</th><th>Стоимость</th></tr></thead>
+            <tbody>
+              <tr><td>Монтаж готовых исходников: монтаж, базовый цвет, звук</td><td><span data-price-reference="editing-reels"></span></td></tr>
+              <tr><td>Съёмка Reels: до трёх часов, камера, базовый свет, запись звука</td><td><span data-price-reference="reels-package"></span></td></tr>
+            </tbody>
+          </table></div>
+          <p>Число роликов в съёмочном блоке определяется планом, а уровень и состав монтажа согласуем до начала работы. О съёмке — на странице <a href="/reels">«Reels для бизнеса»</a>.</p>
 
           <div class="cta-block">
             <p>Нужны Reels для бизнеса в Нижнем Новгороде? Расскажите задачу — предложу формат и рассчитаю стоимость.</p>
@@ -159,6 +190,7 @@
               <a href="/blog/skolko-stoit-snyat-reklamnyy-rolik">Сколько стоит снять рекламный ролик →</a>
               <a href="/blog/video-dlya-kartochek-wildberries">Видео для Wildberries и Ozon →</a>
               <a href="/reels">Reels для бизнеса — страница услуги →</a>
+              <a href="/content-day">Контент-день — фото и 7 Reels за одну съёмку →</a>
             </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ export function discoveryGraph(route: string) {
   ];
   if (["/", "/about", "/contact", "/ceny", "/photo", "/portretnaya-fotosessiya", "/reportazhnaya-fotosemka"].includes(route)) {
     graph.push(
-      { "@type": "Person", "@id": personId, name: SITE.owner, alternateName: SITE.brand, jobTitle: "Фотограф, видеооператор, режиссёр монтажа и колорист", url: `${siteOrigin}/about`, description: OWNER_DESCRIPTION, homeLocation: city, email: SITE.email, sameAs: SOCIALS.filter((s) => !s.href.startsWith("mailto:")).map((s) => s.href) },
+      { "@type": "Person", "@id": personId, name: SITE.owner, alternateName: SITE.brand, jobTitle: "Видеограф, фотограф, видеооператор, режиссёр монтажа и колорист", url: `${siteOrigin}/about`, description: OWNER_DESCRIPTION, homeLocation: city, email: SITE.email, sameAs: SOCIALS.filter((s) => !s.href.startsWith("mailto:")).map((s) => s.href) },
       { "@type": "LocalBusiness", "@id": businessId, name: `${SITE.owner} — ${SITE.brand}`, url: siteOrigin, description: OWNER_DESCRIPTION, email: SITE.email, address: { "@type": "PostalAddress", addressLocality: SITE.location, addressCountry: "RU" }, areaServed: city },
     );
   }

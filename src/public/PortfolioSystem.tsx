@@ -30,7 +30,7 @@ const roleLabels: Record<string, string> = {
   sound: "звук",
   graphics: "графика",
   cleanup: "cleanup",
-  sde: "SDE",
+  sde: "монтаж день в день",
 };
 
 const projectHref = (project: Project) => `/portfolio/${project.slug}`;

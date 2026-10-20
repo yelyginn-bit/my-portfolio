@@ -243,12 +243,12 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await context.close();
         const reduced = await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
         const rp = await reduced.newPage();await rp.goto(origin+'/');
-        await rp.waitForTimeout(250);
-        assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),true);
-        await rp.getByRole('button',{name:'Воспроизвести шоурил',exact:true}).click();await rp.waitForTimeout(500);
-        assert.equal(await rp.locator('video').evaluate((v:HTMLVideoElement)=>v.paused),false);
+        // PROMPT-40 §1: the system "reduce motion" setting no longer stops the hero video or the marquee.
+        // Playwright's WebKit only honours `autoplay` after a user gesture (see tests/motion-always.test.ts).
+        if (engine.name() === 'webkit') await rp.locator('.v32-hero').click({ position: { x: 2, y: 400 } });
+        await rp.waitForFunction(()=>{const v=document.querySelector('video');return !!v&&!v.paused&&v.currentTime>0;});
         assert.equal(await rp.locator('.v3-marquee__toggle').count(), 0);
-        assert.equal(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
+        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e=>getComputedStyle(e).animationName),'none');
         for (const route of ['/', '/reklamnye-roliki', '/account', '/calculator']) {
           await rp.goto(origin + route);
           await rp.getByRole('button', { name: 'Открыть меню', exact: true }).click();
@@ -263,18 +263,20 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await rp.goto(origin + '/photo');
         const necessaryCookies = rp.getByRole('button', { name: 'Только необходимые', exact: true });
         if (await necessaryCookies.isVisible()) await necessaryCookies.click();
-        await rp.getByRole('button', { name: 'Включить движение', exact: true }).click();
-        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'full', 'static footer enables motion in one click');
+        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'full', 'system reduce motion does not stop motion');
+        await rp.getByRole('button', { name: 'Отключить движение', exact: true }).click();
+        assert.equal(await rp.locator('html').getAttribute('data-motion-preference'), 'reduce', 'static footer switches motion off in one click');
         await rp.goto(origin + '/');
-        await rp.waitForFunction(() => document.querySelector('.v3-marquee')?.getAttribute('data-motion') === 'true');
-        assert.notEqual(await rp.locator('.v3-marquee__track').evaluate(e => getComputedStyle(e).animationName), 'none', 'static footer preference reaches React marquee');
+        await rp.waitForFunction(() => document.querySelector('.v3-marquee')?.getAttribute('data-motion') === 'false');
+        assert.equal(await rp.locator('.v3-marquee__track').evaluate(e => getComputedStyle(e).animationName), 'none', 'static footer choice reaches React marquee');
+        assert.equal(await rp.locator('video').evaluate((v: HTMLVideoElement) => v.paused), true, 'static footer choice stops the hero video');
         await reduced.close();
       } finally { await browser.close(); }
     }
   } finally { server.close(); }
 });
 
-test("hero autoplays muted on mobile and desktop, and defers for reduced motion/saveData", async () => {
+test("hero autoplays muted on mobile, desktop and system reduced motion, and defers only for saveData", async () => {
   const { server, origin } = await startLocalServer();
   const browser = await chromium.launch();
   try {
@@ -294,16 +296,15 @@ test("hero autoplays muted on mobile and desktop, and defers for reduced motion/
       await page.goto(origin + '/', { waitUntil: 'domcontentloaded' });
       const video = page.locator('video');
       assert.equal(await video.evaluate((v: HTMLVideoElement) => v.muted && v.playsInline), true, mode + ': muted inline video');
-      if (mode === 'mobile' || mode === 'desktop' || mode === 'explicit-on') {
+      if (mode !== 'save-data') {
         await page.waitForFunction(() => {
           const v = document.querySelector('video');
-          return !!v?.getAttribute('src') && !v.paused && v.currentTime > 0;
+          return !!v?.currentSrc && !v.paused && v.currentTime > 0;
         });
         assert.ok(mp4Requests > 0, mode + ': autoplay loads and advances video');
       } else {
         await page.waitForTimeout(1800);
-        assert.equal(mp4Requests, 0, mode + ': remains poster only without gesture');
-        assert.equal(await video.getAttribute('src'), null);
+        assert.equal(await video.evaluate((v: HTMLVideoElement) => v.paused), true, mode + ': remains poster only without gesture');
         await page.getByRole('button', { name: 'Воспроизвести шоурил', exact: true }).click();
         await page.waitForFunction(() => {
           const v = document.querySelector('video');
@@ -392,6 +393,40 @@ test("desktop navigation highlights orange, contact opens, and five raster AI lo
           await page.waitForURL(destination.href);
           assert.equal(await page.locator('#contact').isVisible(), true);
         }
+      } finally { await browser.close(); }
+    }
+  } finally { server.close(); }
+});
+
+
+test("calculator pointer clicks stay on the intended type during programmatic scrolling", async () => {
+  const { server, origin } = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+        await page.route('**/api/**', (route) => route.fulfill({ contentType: "application/json", body: '{"available":false}' }));
+        await page.goto(origin + "/calculator");
+        await page.locator('.calc-wrap[data-calculator-ready="true"]').waitFor({ state: "visible" });
+        await page.evaluate(() => document.fonts.ready.then(() => undefined));
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+        const button = page.getByRole("button", { name: "Студийная фотосъёмка", exact: true });
+        // Capture the pointer position in the same task as the scroll request.
+        // With the old smooth rule the button moves before pointerup (and can
+        // even put a different type under the pointer). No DOM click dispatch.
+        const box = await button.evaluate((element) => {
+          window.scrollTo({ top: 100 });
+          const r = element.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        });
+        await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { delay: 80 });
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent === "Студийная фотосъёмка", null, { timeout: 1500 });
+        assert.equal(await page.locator('.calc-type[data-active="true"]').textContent(), "Студийная фотосъёмка", engine.name());
+        // Selection commits before its base-price reset effect. As in
+        // checkTotal above, await the actual total without relaxing the value.
+        await page.waitForFunction(() => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === "от 8 000 ₽", null, { timeout: 1500 });
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), "от 8 000 ₽", engine.name());
       } finally { await browser.close(); }
     }
   } finally { server.close(); }

@@ -20,7 +20,7 @@ import { seoCopyFor } from "../src/public/seoCopy";
 import { enrichPublicOutput } from "./aiDiscovery";
 import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
-import { checkJsonLdPrices, renderSajtyPriceReferences } from "./priceGuard";
+import { checkJsonLdPrices, renderPriceReferences, renderSajtyPriceReferences } from "./priceGuard";
 import KinescopeEmbed from "../src/components/media/KinescopeEmbed";
 import { renderSajtyCases } from "../src/public/sajtyCases";
 
@@ -212,6 +212,7 @@ async function main() {
     if (html === null) throw new Error(`Нет собранного html для статического маршрута ${route.path}: ${file}`);
     if (!seoCopyFor(route.path)) throw new Error(`Нет SEO-текстов для ${route.path} в src/public/seoCopy.ts`);
     let outputHtml = applySeoFor(html, route.path);
+    if (route.path !== "/sajty") outputHtml = renderPriceReferences(outputHtml);
     if (route.path === "/sajty") {
       outputHtml = renderSajtyPriceReferences(outputHtml);
       const playerMarkup = renderToString(createElement(KinescopeEmbed, {

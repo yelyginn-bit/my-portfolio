@@ -57,3 +57,16 @@ export function renderSajtyPriceReferences(html: string): string {
   if (/data-price-reference=/u.test(result)) throw new Error("sajty.html: unknown public price reference");
   return result;
 }
+
+/**
+ * Any hand-written static page (blog articles etc.) may reference a price as
+ * `<span data-price-reference="ID"></span>`; the build puts the string from
+ * pricing.data.ts there, so the markup never carries a second copy of a price.
+ */
+export function renderPriceReferences(html: string): string {
+  return html.replace(/<span data-price-reference="([^"]+)"><\/span>/gu, (_marker, id: string) => {
+    const item = PUBLIC_PRICE_BY_ID[id];
+    if (!item) throw new Error(`unknown price reference "${id}" (not in src/lib/pricing.data.ts)`);
+    return item.price;
+  });
+}

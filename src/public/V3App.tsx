@@ -42,7 +42,7 @@ const posterAlt = (project: { slug: string; title: string }, index: number, tota
 export const RoutePathContext = createContext("/");
 const roleLabels: Record<string, string> = {
   camera: "камера", operator: "оператор", edit: "монтаж", multicam: "мультикам",
-  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "SDE", light: "свет",
+  color: "цвет", sound: "звук", graphics: "графика", cleanup: "очистка", sde: "монтаж день в день", light: "свет",
 };
 const formatLabels: Record<string, string> = {
   commercial: "реклама", event: "событие", reels: "reels", concert: "концерт",
@@ -179,8 +179,8 @@ function HeroShowreel() {
     if (!video || videoFailed) return;
     video.muted = true;
     video.defaultMuted = true;
-    // Set the source and play in the same user gesture for mobile Safari.
-    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
+    // The source is already in the markup (autoplay muted playsinline for Safari);
+    // this only resumes or retries playback, it never assigns a new source.
     void video.play().catch(() => setPlaying(false));
   }, [videoFailed]);
 
@@ -188,11 +188,20 @@ function HeroShowreel() {
     const video = videoRef.current;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     if (!video) return;
-    if (!motionAllowed || connection?.saveData) { video.pause(); return; }
-    if (!video.getAttribute("src")) video.src = "/v3-assets/hero-showreel.mp4";
-    // Start on mount, then retry when media is ready. Visibility observation
-    // controls off-screen playback rather than delaying the initial attempt.
-    if (!document.hidden && !userControlled.current) startPlayback();
+    // The source is requested while the HTML is parsed, so its error can fire before hydration.
+    if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) { setVideoFailed(true); setPlaying(false); return; }
+    // Only the visitor's own footer switch (or Save-Data) stops the video; the
+    // system "reduce motion" setting does not.
+    if (!motionAllowed || connection?.saveData) {
+      video.pause();
+      // A later gesture can make the browser honour `autoplay`; keep the visitor's choice.
+      const keepStopped = () => { if (!userControlled.current) video.pause(); };
+      video.addEventListener("play", keepStopped);
+      return () => video.removeEventListener("play", keepStopped);
+    }
+    // The markup autoplays; pick up the playing video and retry only if the
+    // browser paused it. Visibility observation controls off-screen playback.
+    if (video.paused && !document.hidden && !userControlled.current) startPlayback();
     const observer = new IntersectionObserver(([entry]) => {
       if (userControlled.current) return;
       if (!entry.isIntersecting || document.hidden) video.pause();
@@ -247,16 +256,16 @@ function HeroShowreel() {
           ref={videoRef}
           poster="/v3-assets/hero-showreel-poster.webp"
           muted
-          autoPlay={motionAllowed}
+          autoPlay
           loop
           playsInline
-          preload={motionAllowed ? "auto" : "none"}
+          preload="metadata"
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => { setVideoReady(true); setPlaying(true); }}
           onPause={() => setPlaying(false)}
           onError={() => { setVideoFailed(true); setPlaying(false); }}
           aria-label="Шоурил YELYGINN"
-        />}
+        ><source src="/v3-assets/hero-showreel.mp4" type="video/mp4" onError={() => { setVideoFailed(true); setPlaying(false); }} /></video>}
       </div>
       <div className="v32-hero__copy">
         <p className="v3-kicker">ВИДЕОСЪЁМКА // МОНТАЖ // ЦВЕТОКОРРЕКЦИЯ</p>
@@ -310,7 +319,7 @@ function HomeServices() {
     <section className="v32-services v3-shell" aria-labelledby="home-services-title">
       <header className="v32-services__head">
         <p className="v3-kicker">УСЛУГИ // НИЖНИЙ НОВГОРОД</p>
-        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Фотограф и видеооператор в Нижнем Новгороде") } as CSSProperties}>Фотограф и видеооператор в Нижнем Новгороде</h1>
+        <h1 id="home-services-title" style={{ "--title-em": longestWordEm("Видеограф и фотограф в Нижнем Новгороде") } as CSSProperties}>Видеограф и фотограф в Нижнем Новгороде</h1>
         <h2>Фото, видеосъёмка и монтаж в Нижнем Новгороде</h2>
         <nav className="v32-home-service-shortcuts" aria-label="Выбрать задачу">
           <a href="/photo">Нужен фотограф</a>
@@ -477,7 +486,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
     const tariff = params.get("tariff");
     if (tariff) setMessage((current) => current || `Тариф: ${tariff}\n`);
   }, [routePath]);
-  const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nЗадача: ${message}`)}`;
+  const telegramUrl = `${SITE.telegramUrl}?text=${encodeURIComponent(`Здравствуйте, Юрий!\nУслуга: ${service}\nИмя: ${name}\nКонтакт: ${contact}\nЗадача: ${message}\nИсточник: ${routePath}`)}`;
   const Heading = pageHeading ? "h1" : "h2";
 
   const submit = useCallback(async (event: FormEvent) => {
@@ -487,6 +496,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
     setStatus("sending");
     try {
       const response = await secureFetch("/api/send-form", {
+        signal: AbortSignal.timeout(30_000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), contact: contact.trim(), service, message: message.trim(), website: "", source: resolveServiceContext(window.location.search, routePath).sourcePath, consentAccepted: true, consentVersion: LEGAL.consentVersion, policyVersion: LEGAL.policyVersion, formId: "homepage-contact", pageUrl: resolveServiceContext(window.location.search, routePath).sourcePath }),
@@ -523,7 +533,7 @@ function ContactSection({ pageHeading = false }: { pageHeading?: boolean }) {
         <label className="v3-check"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required /><span><Check />Даю <a href="/personal-data-consent">согласие на обработку данных</a></span></label>
         <button className="v3-button v3-button--dark" type="submit" disabled={status === "sending"}>{status === "sending" ? "ОТПРАВКА…" : "ОТПРАВИТЬ ЗАДАЧУ"}<ArrowUpRight /></button>
         {status === "success" && <p role="status" className="v3-form__status">Заявка отправлена. Юрий свяжется с вами по указанному контакту.</p>}
-        {status === "error" && <p role="alert" className="v3-form__status v3-form__status--error">Сайт не смог доставить заявку. <a href={telegramUrl}>Продолжить в Telegram ↗</a></p>}
+        {status === "error" && <p role="alert" className="v3-form__status v3-form__status--error">Не удалось подтвердить отправку заявки. Текст сохранён в форме. <a href={telegramUrl} target="_blank" rel="noreferrer">Отправить в Telegram ↗</a> или напишите на <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>}
       </form>
     </section>
   );
@@ -581,7 +591,7 @@ function PortfolioPage({ category }: { category?: PortfolioCategory }) {
   });
   const meta = category ? CATEGORY_META[category] : null;
   return (
-    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header><nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell"><PortfolioSystem projects={presented} firstMediaPriority /></section></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header><nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell"><PortfolioSystem projects={presented} firstMediaPriority /></section>{category === "events" && <aside className="v3-shell v3-catalog__related" aria-label="Смотрите также"><p className="v3-kicker">СМОТРИТЕ ТАКЖЕ</p><nav className="v32-home-service-shortcuts" aria-label="Связанные страницы"><a href="/event-video">Видеосъёмка мероприятий — услуга</a><a href="/portfolio/concerts">Концерты — работы</a><a href="/reportazhnaya-fotosemka">Репортажная фотосъёмка</a></nav></aside>}</main><SiteFooter /></>
   );
 }
 

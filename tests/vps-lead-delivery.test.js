@@ -8,7 +8,7 @@ async function withApp(options, run) {
   try { await run(`http://127.0.0.1:${server.address().port}`); }
   finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 }
-const configured = { LEAD_VPS_ENABLED: "true", TELEGRAM_BOT_TOKEN: "local-fixture", TELEGRAM_CHAT_ID: "local-fixture", SUPABASE_URL: "https://fixture.invalid", SUPABASE_SERVICE_ROLE_KEY: "local-fixture" };
+const configured = { LEAD_VPS_ENABLED: "true", LEAD_DELIVERY_CHANNEL: "legacy", LEAD_TELEGRAM_ENABLED: "true", TELEGRAM_BOT_TOKEN: "local-fixture", TELEGRAM_CHAT_ID: "local-fixture", SUPABASE_URL: "https://fixture.invalid", SUPABASE_SERVICE_ROLE_KEY: "local-fixture" };
 
 test("prepared VPS delivery is disabled unless all prerequisites exist and relay is off", async () => {
   for (const env of [{}, { ...configured, LEAD_VPS_ENABLED: "false" }, { ...configured, SUPABASE_SERVICE_ROLE_KEY: "" }, { ...configured, TELEGRAM_BOT_TOKEN: "" }, { ...configured, LEAD_RELAY_ENABLED: "true" }]) {

@@ -2,10 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { PassThrough } from 'node:stream';
-import { mkdtemp, readdir, readFile, stat, rm, chmod, symlink } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, readFile, stat, rm, chmod, symlink } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { sendLeadMail, smtpConfigured } from '../server/lead-smtp-transport.js';
 import { createLocalLeadJournal } from '../server/lead-local-journal.js';
+// A clean CI checkout has no ignored report directory.
+await mkdir(resolve('_agent-reports'), { recursive: true });
 const env = { LEAD_SMTP_USER: 'fixture@yandex.ru', LEAD_MAIL_TO: 'owner@example.com', LEAD_SMTP_PASSWORD: 'fixture-only' };
 const lead = { id:'fixture-id',name:'Тест',contact:'test@example.com',service:'Съёмка',message:'.\r\nQUIT\r\nBcc: attacker@example.com',source:'/',receivedAt:'2026-10-20' };
 function fixtureProcess(exitCode, inspect) { return (command,args,options) => {

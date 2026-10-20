@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { createVpsLeadApp } from '../server/lead-delivery-app.js';
+// A clean CI checkout has no ignored report directory.
+await mkdir(resolve('_agent-reports'), { recursive: true });
 let fixtureIp = 1;
 const body = {name:'Локальный тест',contact:'fixture@example.com',message:'Только локальная фикстура',service:'Съёмка',source:'/',formId:'homepage-contact',consentAccepted:true,consentVersion:'1.0',policyVersion:'2.0'};
 async function withSmtp(options,run){

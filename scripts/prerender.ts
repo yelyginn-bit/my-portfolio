@@ -22,7 +22,7 @@ import { generateOgImages } from "./ogImages";
 import { enrichPublicOutput } from "./aiDiscovery";
 import { llmsTxt } from "./llms";
 import { sitemapXml, siteOrigin } from "./sitemap";
-import { checkJsonLdPrices, renderPriceReferences, renderSajtyPriceReferences } from "./priceGuard";
+import { checkJsonLdPrices, renderPhotoArticleReferences, renderPriceReferences, renderSajtyPriceReferences } from "./priceGuard";
 import KinescopeEmbed from "../src/components/media/KinescopeEmbed";
 import { renderSajtyCases } from "../src/public/sajtyCases";
 
@@ -233,6 +233,7 @@ async function main() {
     if (html === null) throw new Error(`Нет собранного html для статического маршрута ${route.path}: ${file}`);
     if (!seoCopyFor(route.path)) throw new Error(`Нет SEO-текстов для ${route.path} в src/public/seoCopy.ts`);
     let outputHtml = applySeoFor(html, route.path);
+    if (route.path === "/blog/skolko-stoit-fotograf-na-meropriyatie") outputHtml = renderPhotoArticleReferences(outputHtml);
     if (route.path !== "/sajty") outputHtml = renderPriceReferences(outputHtml);
     if (route.path === "/sajty") {
       outputHtml = renderSajtyPriceReferences(outputHtml);
@@ -247,12 +248,12 @@ async function main() {
       const casesSlot = '<div data-sajty-cases></div>';
       if (outputHtml.split(casesSlot).length - 1 !== 1) throw new Error("sajty.html: expected one website-cases slot");
       outputHtml = outputHtml.replace(casesSlot, renderSajtyCases());
-      const prerenderedOutput = outputFileFor(route.path);
-      await mkdir(path.dirname(prerenderedOutput), { recursive: true });
-      await writeFile(prerenderedOutput, outputHtml);
-      generated.push(route.path);
     }
     if (route.path === "/photo") outputHtml = await inlinePhotoStyles(outputHtml);
+    const prerenderedOutput = outputFileFor(route.path);
+    await mkdir(path.dirname(prerenderedOutput), { recursive: true });
+    await writeFile(prerenderedOutput, outputHtml);
+    generated.push(route.path);
     await writeFile(file, outputHtml);
   }
 

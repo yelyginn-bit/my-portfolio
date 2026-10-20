@@ -135,6 +135,7 @@ export const FOOTER_GROUPS: readonly { title: string; links: readonly NavLink[] 
     title: "Блог",
     links: [
       BLOG_LINK,
+      link("/blog/skolko-stoit-fotograf-na-meropriyatie", "Сколько стоит фотограф на мероприятие"),
       link("/blog/videograf-operator-postanovshchik", "Видеограф, оператор и постановщик"),
       link("/blog/podgotovka-intervyu", "Как подготовиться к интервью"),
       link("/blog/skolko-stoit-snyat-reklamnyy-rolik", "Сколько стоит рекламный ролик"),

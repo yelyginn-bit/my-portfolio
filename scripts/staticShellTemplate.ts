@@ -84,6 +84,7 @@ export function augmentStaticFooter(html: string, fileLabel: string): string {
 
 /** Файл → человекочитаемая метка для сообщений об ошибках сборки. */
 export const STATIC_SHELL_FILES: readonly string[] = [
+  "blog/skolko-stoit-fotograf-na-meropriyatie.html",
   "404.html",
   "content-day.html",
   "event-video.html",

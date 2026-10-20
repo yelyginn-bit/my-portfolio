@@ -284,3 +284,15 @@ test("новые услуги доступны поиску с ценами по
     assert.ok(read("dist/prerender/ceny/index.html").includes(`href="${page.path}"`), page.path+" from prices");
   }
 });
+
+
+test("every prerendered public image has intrinsic dimensions and an alt attribute", () => {
+  for (const route of INDEXABLE_ROUTES) {
+    const html = read(`dist/prerender${route.path === "/" ? "" : route.path}/index.html`).replace(/<!--[\s\S]*?-->/gu, "");
+    for (const match of html.matchAll(/<img\b[^>]*>/giu)) {
+      assert.match(match[0], /\swidth=["'][1-9]\d*["']/iu, `${route.path}: image width`);
+      assert.match(match[0], /\sheight=["'][1-9]\d*["']/iu, `${route.path}: image height`);
+      assert.match(match[0], /\salt=(?:"[^"]*"|'[^']*')/iu, `${route.path}: image alt`);
+    }
+  }
+});

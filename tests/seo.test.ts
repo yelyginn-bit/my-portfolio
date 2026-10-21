@@ -195,7 +195,21 @@ test("every indexable route ships one H1, unique title/description, canonical an
       const canonical = /<link\s+rel="canonical"\s+href="([^"]+)"/iu.exec(html)?.[1] ?? "";
       assert.ok(canonical.startsWith(siteOrigin), `${route.path}: canonical отсутствует или не абсолютный: «${canonical}»`);
     }
-    for (const m of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/giu)) {
+    const blocks = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/giu)];
+    assert.ok(blocks.length > 0, `${route.path}: JSON-LD отсутствует`);
+    const types = new Set<string>();
+    const inspect = (node: any): void => {
+      if (Array.isArray(node)) { node.forEach(inspect); return; }
+      if (!node || typeof node !== "object") return;
+      if (node["@type"]) types.add(node["@type"]);
+      if (node["@type"] === "Service") for (const key of ["name", "provider", "areaServed"]) assert.ok(node[key], `${route.path}: Service.${key}`);
+      if (node["@type"] === "Offer") for (const key of ["name", "price", "priceCurrency"]) assert.ok(node[key], `${route.path}: Offer.${key}`);
+      Object.values(node).forEach(inspect);
+    };
+    for (const block of blocks) inspect(JSON.parse(block[1]));
+    if (route.path.startsWith("/blog/")) for (const type of ["BlogPosting", "BreadcrumbList"]) assert.ok(types.has(type), `${route.path}: нет ${type}`);
+    if (route.render === "static" && !route.path.startsWith("/blog/") && route.path !== "/ceny") for (const type of ["Service", "BreadcrumbList"]) assert.ok(types.has(type), `${route.path}: нет ${type}`);
+    for (const m of blocks) {
       assert.doesNotThrow(() => JSON.parse(m[1]), `${route.path}: JSON-LD не парсится`);
     }
     assert.match(html, /<html\b[^>]*\blang="ru"/u, `${route.path}: нет lang="ru"`);

@@ -50,6 +50,8 @@ export function KinescopeEmbed({ id, orientation, title, poster }: KinescopeEmbe
 
   return (
     <div ref={frameRef} className="kinescope-embed" data-orientation={orientation} style={{ paddingTop: ASPECT_PADDING[orientation] }}>
+      {/* Keep the poster mounted while activating the iframe so an in-flight image is not cancelled. */}
+      {poster && <img className="kinescope-embed-poster" src={poster.src} srcSet={poster.srcSet} sizes={poster.srcSet ? `auto, ${poster.sizes ?? "100vw"}` : undefined} alt={poster.alt ?? ""} loading="lazy" decoding="async" />}
       {active ? (
         <iframe
           className="kinescope-embed-iframe"
@@ -65,7 +67,6 @@ export function KinescopeEmbed({ id, orientation, title, poster }: KinescopeEmbe
           onClick={() => setActive(true)}
           aria-label={`Воспроизвести видео: ${title}`}
         >
-          {poster && <img className="kinescope-embed-poster" src={poster.src} srcSet={poster.srcSet} sizes={poster.sizes} alt={poster.alt ?? ""} loading="lazy" decoding="async" />}
           {poster && <span className="kinescope-embed-scrim" aria-hidden="true" />}
           <span className="kinescope-embed-play" aria-hidden="true"><Play size={22} fill="currentColor" /></span>
           <span className="kinescope-embed-label">{title}</span>

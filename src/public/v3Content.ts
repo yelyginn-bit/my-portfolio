@@ -61,6 +61,9 @@ export const RESOLVE_STAGES = resolveTimestamps.map((timestamp, index) => {
   };
 });
 
+// Published session steps, shared by the viewer and image derivative pipeline.
+export const RESOLVE_SESSION_STAGES = [0, 2, 4, 6, 8, 10, 13, 16].map((index) => RESOLVE_STAGES[index]);
+
 export const BLOG_ENTRIES = [
   {"href": "/blog/skolko-stoit-fotograf-na-meropriyatie", "tag": "ФОТОСЪЁМКА", "title": "Сколько стоит фотограф на мероприятие", "description": "Из чего складывается стоимость репортажной фотосъёмки: часы, обработка, срок сдачи и выезд. Что спросить у фотографа и как подготовить событие."},
   {"href": "/blog/videograf-operator-postanovshchik", "tag": "РОЛИ НА ПРОЕКТЕ", "title": "Видеограф, оператор и оператор-постановщик: кого выбрать", "description": "Как выбрать объём видеоработ: съёмка в команде, постановка света и кадра или монтаж готового материала. Примеры проектов Юрия Елыгина."},

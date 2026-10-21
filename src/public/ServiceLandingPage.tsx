@@ -1,3 +1,4 @@
+import {posterSrcSet} from "../lib/responsiveImages";
 import type { CSSProperties } from "react";
 import { SiteHeader, SiteFooter } from "./V3App";
 import { SERVICE_LANDINGS } from "./serviceLandings.data";
@@ -15,7 +16,7 @@ export default function ServiceLandingPage({ path }: { path: string }) {
     <section className="v3-project__media" aria-label="Примеры работ">{page.projectIds.map((id) => {
       const project = projectById.get(id); if (!project) throw new Error(`Missing published project: ${id}`);
       const asset = assetsForProject(id)[0]; if (!asset) throw new Error(`Missing published video: ${id}`);
-      return <article key={id}><h2><a href={`/portfolio/${project.slug}`}>{project.title}</a></h2><p>{project.description}</p><p>Моя роль: {project.responsibilities.join(" · ")}.</p><KinescopeEmbed id={asset.kinescopeId} orientation={asset.orientation === "portrait" ? "9:16" : "16:9"} title={project.title} poster={{src: posterUrl(asset.kinescopeId, "md"), alt: `Кадр проекта «${project.title}»`}} /></article>;
+      return <article key={id}><h2><a href={`/portfolio/${project.slug}`}>{project.title}</a></h2><p>{project.description}</p><p>Моя роль: {project.responsibilities.join(" · ")}.</p><KinescopeEmbed id={asset.kinescopeId} orientation={asset.orientation === "portrait" ? "9:16" : "16:9"} title={project.title} poster={{src: posterUrl(asset.kinescopeId, "md"), srcSet: posterSrcSet(asset.kinescopeId), sizes: "(max-width: 720px) 94vw, 80vw", alt: `Кадр проекта «${project.title}»`}} /></article>;
     })}</section>
     <nav className="v3-project__related-actions" aria-label="Близкие услуги">{page.related.map((href,index)=><a key={href} className="v3-project__related-service" href={href}>{page.relatedLabels[index]}</a>)}<a className="v3-project__related-service" href="/ceny">Цены</a></nav>
   </main><SiteFooter /></>;

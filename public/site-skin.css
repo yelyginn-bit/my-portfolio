@@ -1632,3 +1632,21 @@ body:has(.acc-wrap) { background: var(--ds-bg); color: var(--ds-text); }
 .calc-range:focus-visible { outline: 2px solid var(--ds-orange); outline-offset: 8px; }
 .calc-row[data-on="true"] .calc-check { color: var(--ds-on-accent); }
 .calc-range { background: var(--ds-border-strong) !important; }
+
+/* Separate navigation targets on small screens; prose links keep their line box. */
+@media (max-width: 600px) {
+  .related-links a,
+  .cta-block a,
+  p.breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  /* Keep the visible 4px track while enlarging its input box to 44px. */
+  .calc-range {
+    box-sizing: content-box;
+    border-block: 20px solid transparent;
+    background-clip: content-box !important;
+  }
+}

@@ -873,3 +873,14 @@ html[data-motion-preference="reduce"] .v3-marquee__track { animation: none !impo
   .v3-about__text > a,
   .v32-home-service-shortcuts a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }
 }
+
+/* These React pages do not load the static-page site skin. */
+@media (max-width: 600px) {
+  .legal-info nav a,
+  .v3-project__media h2 > a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

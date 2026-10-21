@@ -1,3 +1,6 @@
+import {SHOOTS} from "../src/public/shoots.data";
+import {shootPath,shootSeo} from "../src/shoots/model";
+import {shootPage,shootCards,shootStyles,copyShootAssets} from "./shootPages";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { transform as transformCss } from "esbuild";
@@ -267,6 +270,21 @@ async function main() {
     await writeFile(file, outputHtml);
   }
 
+  if (SHOOTS.length) {
+    const photoFile=path.join(distDir,"photo.html");
+    const photoTemplate=await readFile(photoFile,"utf8");
+    const cards=shootCards();
+    if (!photoTemplate.includes('<section class="photo-gallery"')) throw Error("Photo cards slot missing");
+    const listing=photoTemplate.replace('<section class="photo-gallery"',cards+'<section class="photo-gallery"').replace('</head>',shootStyles+'</head>');
+    if (listing===photoTemplate) throw Error('Photo cards slot missing');
+    await writeFile(photoFile,listing);await writeFile(outputFileFor('/photo'),listing);
+    await copyShootAssets(rootDir,distDir);
+    for (const shoot of SHOOTS) {
+      const route=shootPath(shoot), seo=shootSeo(shoot), file=outputFileFor(route);
+      await mkdir(path.dirname(file),{recursive:true});
+      await writeFile(file,applySeo(shootPage(photoTemplate,shoot),seo.title,seo.description,route));generated.push(route);
+    }
+  }
   const missing = PRERENDER_ROUTES.filter((route) => !generated.includes(route));
   if (missing.length) throw new Error(`Missing prerender output for manifest routes: ${missing.join(", ")}`);
 

@@ -1,3 +1,5 @@
+import {SHOOTS} from "./shoots.data";
+import {shootPath} from "../shoots/model";
 import { SERVICE_LANDINGS } from "./serviceLandings.data";
 import {
   CATEGORY_META,
@@ -11,7 +13,7 @@ import {
 } from "../portfolio/v3PortfolioData";
 import { seoCopyFor } from "./seoCopy";
 
-export type RouteRenderKind = "v3" | "calculator" | "static" | "legal" | "private" | "redirect";
+export type RouteRenderKind = "shoot" | "v3" | "calculator" | "static" | "legal" | "private" | "redirect";
 
 export interface PublicRouteRecord {
   path: string;
@@ -92,6 +94,7 @@ const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
 
 export const ROUTE_MANIFEST: readonly PublicRouteRecord[] = [
   ...fixedRoutes,
+  ...SHOOTS.map(s => ({path: shootPath(s), render: "shoot" as const, indexable: true, priority: 0.7, theme: "dark" as const})),
   ...SERVICE_LANDINGS.map((page) => ({path: page.path, render: "v3" as const, indexable: true, priority: 0.8, theme: "dark" as const})),
   ...categoryRoutes,
   ...projectRoutes,

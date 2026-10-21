@@ -1,3 +1,5 @@
+import {SHOOTS} from "../src/public/shoots.data";
+import {shootPath,photoPath} from "../src/shoots/model";
 import {responsiveSrcSet} from "../src/lib/responsiveImages";
 import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import { createElement } from "react";
@@ -47,6 +49,8 @@ export function discoveryGraph(route: string) {
       { "@type": "LocalBusiness", "@id": businessId, name: `${SITE.owner} — ${SITE.brand}`, url: siteOrigin, description: OWNER_DESCRIPTION, email: SITE.email, address: { "@type": "PostalAddress", addressLocality: SITE.location, addressCountry: "RU" }, areaServed: city },
     );
   }
+  const shoot=SHOOTS.find(s=>shootPath(s)===route);
+  if (shoot) graph.push({"@type":"ImageGallery","@id":`${url}#series`,name:shoot.title,description:shoot.concept.join("\n\n"),dateCreated:shoot.date,url,image:shoot.photos.map(p=>({"@type":"ImageObject",contentUrl:siteOrigin+photoPath(shoot,p,p.widths.at(-1)!),caption:p.alt,width:p.width,height:p.height}))});
   const prices = pricesForRoute(route);
   if (prices.length) {
     graph.push({ "@type": "OfferCatalog", "@id": `${url}#offers`, name: route === "/ceny" ? "Услуги и ориентиры стоимости" : copy?.title, itemListElement: prices.map(catalogItemFor) });

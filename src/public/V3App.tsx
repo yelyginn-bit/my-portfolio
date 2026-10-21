@@ -1,3 +1,4 @@
+import {posterSrcSet, responsiveSrcSet, lazyImageSizes} from "../lib/responsiveImages";
 import ServiceLandingPage from "./ServiceLandingPage";
 import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, X } from "lucide-react";
@@ -24,7 +25,7 @@ import {
 } from "../portfolio/v3PortfolioData";
 import PortfolioSystem from "./PortfolioSystem";
 import { PRIMARY_SOCIALS, SECONDARY_SOCIALS } from "../config/socials";
-import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES } from "./v3Content";
+import { BLOG_ENTRIES, MARQUEE_ITEMS, RESOLVE_STAGES, RESOLVE_SESSION_STAGES } from "./v3Content";
 import { resolveV3Route } from "./routeManifest";
 import { CALCULATOR_LINK, CATEGORY_TO_SERVICE, CONTACT_LINK, FOOTER_GROUPS, PRICES_LINK, PRIMARY_NAV, SERVICE_LINKS, type NavLink } from "../lib/navigation.data";
 import { isNavEntryActive, NavDropdownMenu } from "../components/site/NavMenu";
@@ -359,7 +360,7 @@ function MultiAngleColorComparison() {
       <div className="v32-angle-selector" role="group" aria-label="Ракурс сравнения цвета">
         {COLOR_COMPARE_PAIRS.map((pair, index) => (
           <button key={pair.id} type="button" aria-pressed={pair.id === activeId} onClick={() => setActiveId(pair.id)}>
-            {pair.thumbnail && <img src={pair.thumbnail} width="260" height="146" loading="lazy" decoding="async" alt="" />}
+            {pair.thumbnail && <img src={pair.thumbnail} srcSet={responsiveSrcSet(pair.thumbnail)} sizes="auto, 100vw" width="260" height="146" loading="lazy" decoding="async" alt="" />}
             <span>{String(index + 1).padStart(2, "0")}</span>
           </button>
         ))}
@@ -375,9 +376,11 @@ const RESOLVE_CHAPTERS: ReadonlyArray<{ id: string; label: string; stages: Resol
     id: "grading-session",
     label: "РЕАЛЬНАЯ СЕССИЯ",
     // Из полного рабочего таймлайна оставлены только визуально разные этапы.
-    stages: [0, 2, 4, 6, 8, 10, 13, 16].map((index) => RESOLVE_STAGES[index]),
+    stages: RESOLVE_SESSION_STAGES,
   },
 ];
+
+const RESOLVE_IMAGE_SIZES = "(max-width: 767px) 100vw, 50vw";
 
 function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number]; key?: string }) {
   const [stageIndex, setStageIndex] = useState(0);
@@ -389,6 +392,8 @@ function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number
       if (!stage) return;
       [stage.clean, stage.resolve].forEach((src) => {
         const image = new Image();
+        image.sizes = RESOLVE_IMAGE_SIZES;
+        image.srcset = responsiveSrcSet(src) ?? "";
         image.src = src;
       });
     });
@@ -401,8 +406,8 @@ function ResolveChapter({ chapter }: { chapter: (typeof RESOLVE_CHAPTERS)[number
         <p>{String(stageIndex + 1).padStart(2, "0")} // ЭТАП <span>{active.timestamp}</span></p>
       </header>
       <div className="v32-resolve-chapter__media">
-        <figure><img key={`${active.id}-clean`} src={active.clean} width="1600" height="900" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: чистый кадр`} /><figcaption>ЧИСТЫЙ КАДР</figcaption></figure>
-        <figure><img key={`${active.id}-resolve`} src={active.resolve} width="1800" height="1171" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: настоящее рабочее окно DaVinci Resolve`} /><figcaption>DAVINCI RESOLVE // NODE GRAPH</figcaption></figure>
+        <figure><img key={`${active.id}-clean`} src={active.clean} srcSet={responsiveSrcSet(active.clean)} sizes={RESOLVE_IMAGE_SIZES} width="1600" height="900" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: чистый кадр`} /><figcaption>ЧИСТЫЙ КАДР</figcaption></figure>
+        <figure><img key={`${active.id}-resolve`} src={active.resolve} srcSet={responsiveSrcSet(active.resolve)} sizes={RESOLVE_IMAGE_SIZES} width="1800" height="1171" loading="lazy" decoding="async" alt={`${chapter.label}, этап ${stageIndex + 1}: настоящее рабочее окно DaVinci Resolve`} /><figcaption>DAVINCI RESOLVE // NODE GRAPH</figcaption></figure>
       </div>
       <div className="v32-resolve-chapter__scrubber">
         <input
@@ -630,7 +635,7 @@ function ProjectPage({ project }: { project: Project }) {
   const serviceLinks = resolveRelatedServices(project, category);
   const caseStudy = project.caseStudy;
   return (
-    <><SiteHeader /><main className="v3-project v3-shell"><a className="v3-project__back" href="/portfolio"><ArrowLeft /> ВСЕ РАБОТЫ</a><header className="v3-project__head"><div className="v3-project__title"><p className="v3-kicker">ПРОЕКТ // {String(currentIndex + 1).padStart(2, "0")}</p><h1 style={{ "--title-em": longestWordEm(project.title) } as CSSProperties}>{project.title}</h1></div><dl>{project.client && <><dt>КЛИЕНТ</dt><dd>{project.client}</dd></>}<dt>ФОРМАТ</dt><dd>{project.formats.map((item) => formatLabels[item]).join(" // ")}</dd><dt>МОЯ РОЛЬ</dt><dd>{project.roles.map((item) => roleLabels[item]).join(" // ")}</dd><dt>ВИДЕО</dt><dd>{assets.length}</dd></dl></header>{project.description && <p className="v3-project__description">{project.description}</p>}{caseStudy && <section className="v3-project__case"><div><h2>Задача</h2><p>{caseStudy.task}</p></div><div><h2>Моя роль</h2><p>{caseStudy.role}</p></div><div><h2>Как сделано</h2><p>{caseStudy.method}</p></div><div><h2>Результат</h2><p>{caseStudy.result}</p></div></section>}<section className="v3-project__media">{assets.map((asset, index) => <article key={asset.kinescopeId}><div className="v3-project__media-meta"><span>{String(index + 1).padStart(2, "0")} // {String(assets.length).padStart(2, "0")}</span><a href={`#video-${asset.kinescopeId}`}>{asset.title ?? `ВИДЕО ${String(index + 1).padStart(2, "0")} // ${String(assets.length).padStart(2, "0")}`}</a></div><div id={`video-${asset.kinescopeId}`}><KinescopeEmbed id={asset.kinescopeId} orientation={asset.orientation === "portrait" ? "9:16" : "16:9"} title={asset.title ?? project.title} poster={{ src: posterUrl(asset.kinescopeId, "md"), srcSet: `${posterUrl(asset.kinescopeId, "sm")} 640w, ${posterUrl(asset.kinescopeId, "md")} 1280w`, sizes: "(max-width: 720px) 94vw, 72vw", alt: posterAlt(project, index, assets.length) }} /></div></article>)}</section><ProjectEvidence project={project} /><section className="v3-project__credits"><div><p className="v3-kicker">МОЯ РОЛЬ // ПОДТВЕРЖДЕНО ИСТОЧНИКОМ</p><h2>ЧТО Я СДЕЛАЛ</h2></div><ul>{project.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul></section>{neighbors.length > 0 && <div className="v3-project__related-group"><section className="v3-project__related"><div><p className="v3-kicker">{CATEGORY_META[category].title.toUpperCase()}</p><h2>Соседние <i>кейсы</i></h2></div><div className="v3-project__related-list">{neighbors.map((item) => <a key={item.slug} href={`/portfolio/${item.slug}`}>{item.title}</a>)}</div><div className="v3-project__related-actions">{serviceLinks.map((item) => <a key={item.href} className="v3-project__related-service" href={item.href}>Об услуге «{item.label}» <ArrowUpRight aria-hidden="true" /></a>)}</div></section><div className="v3-project__calculator-row"><a className="v3-project__related-service" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label} <ArrowUpRight aria-hidden="true" /></a></div></div>}<a className="v3-next" href={`/portfolio/${next.slug}`}><span>СЛЕДУЮЩИЙ // ПРОЕКТ</span><strong style={{ "--title-em": longestWordEm(next.title, 0) } as CSSProperties}>{next.title}</strong><ArrowRight /></a></main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-project v3-shell"><a className="v3-project__back" href="/portfolio"><ArrowLeft /> ВСЕ РАБОТЫ</a><header className="v3-project__head"><div className="v3-project__title"><p className="v3-kicker">ПРОЕКТ // {String(currentIndex + 1).padStart(2, "0")}</p><h1 style={{ "--title-em": longestWordEm(project.title) } as CSSProperties}>{project.title}</h1></div><dl>{project.client && <><dt>КЛИЕНТ</dt><dd>{project.client}</dd></>}<dt>ФОРМАТ</dt><dd>{project.formats.map((item) => formatLabels[item]).join(" // ")}</dd><dt>МОЯ РОЛЬ</dt><dd>{project.roles.map((item) => roleLabels[item]).join(" // ")}</dd><dt>ВИДЕО</dt><dd>{assets.length}</dd></dl></header>{project.description && <p className="v3-project__description">{project.description}</p>}{caseStudy && <section className="v3-project__case"><div><h2>Задача</h2><p>{caseStudy.task}</p></div><div><h2>Моя роль</h2><p>{caseStudy.role}</p></div><div><h2>Как сделано</h2><p>{caseStudy.method}</p></div><div><h2>Результат</h2><p>{caseStudy.result}</p></div></section>}<section className="v3-project__media">{assets.map((asset, index) => <article key={asset.kinescopeId}><div className="v3-project__media-meta"><span>{String(index + 1).padStart(2, "0")} // {String(assets.length).padStart(2, "0")}</span><a href={`#video-${asset.kinescopeId}`}>{asset.title ?? `ВИДЕО ${String(index + 1).padStart(2, "0")} // ${String(assets.length).padStart(2, "0")}`}</a></div><div id={`video-${asset.kinescopeId}`}><KinescopeEmbed id={asset.kinescopeId} orientation={asset.orientation === "portrait" ? "9:16" : "16:9"} title={asset.title ?? project.title} poster={{ src: posterUrl(asset.kinescopeId, "md"), srcSet: posterSrcSet(asset.kinescopeId), sizes: "(max-width: 720px) 94vw, 72vw", alt: posterAlt(project, index, assets.length) }} /></div></article>)}</section><ProjectEvidence project={project} /><section className="v3-project__credits"><div><p className="v3-kicker">МОЯ РОЛЬ // ПОДТВЕРЖДЕНО ИСТОЧНИКОМ</p><h2>ЧТО Я СДЕЛАЛ</h2></div><ul>{project.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul></section>{neighbors.length > 0 && <div className="v3-project__related-group"><section className="v3-project__related"><div><p className="v3-kicker">{CATEGORY_META[category].title.toUpperCase()}</p><h2>Соседние <i>кейсы</i></h2></div><div className="v3-project__related-list">{neighbors.map((item) => <a key={item.slug} href={`/portfolio/${item.slug}`}>{item.title}</a>)}</div><div className="v3-project__related-actions">{serviceLinks.map((item) => <a key={item.href} className="v3-project__related-service" href={item.href}>Об услуге «{item.label}» <ArrowUpRight aria-hidden="true" /></a>)}</div></section><div className="v3-project__calculator-row"><a className="v3-project__related-service" href={CALCULATOR_LINK.href}>{CALCULATOR_LINK.label} <ArrowUpRight aria-hidden="true" /></a></div></div>}<a className="v3-next" href={`/portfolio/${next.slug}`}><span>СЛЕДУЮЩИЙ // ПРОЕКТ</span><strong style={{ "--title-em": longestWordEm(next.title, 0) } as CSSProperties}>{next.title}</strong><ArrowRight /></a></main><SiteFooter /></>
   );
 }
 
@@ -642,8 +647,8 @@ function BlogPage() {
 
 function AboutPage() {
   return (
-    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — фотограф и видеооператор</h1><p>Фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/about/portrait.webp" width="1200" height="1200" loading="eager" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина" /><figcaption>ПОРТРЕТ // ЮРИЙ ЕЛЫГИН</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Снимаю деловые и личные портреты, семейные серии, мероприятия и контент для бизнеса. В видеопроектах могу вести съёмку целиком или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/photo">ФОТОСЪЁМКА <ArrowRight /></a> <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ ВИДЕОРАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-photos v3-shell" aria-label="Юрий Елыгин: портреты и съёмочная работа">
-  <figure><img src="/v3-assets/about/portrait.webp" srcSet="/v3-assets/about/portrait-480w.webp 480w, /v3-assets/about/portrait.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина в чёрной одежде" /><figcaption>ПОРТРЕТ</figcaption></figure>
+    <><SiteHeader /><main className="v3-editorial-page"><header className="v3-editorial-hero v3-shell"><p className="v3-kicker">ОБО МНЕ</p><h1>Юрий <i>Елыгин</i> — фотограф и видеооператор</h1><p>Фотограф, видеооператор, режиссёр монтажа и колорист из Нижнего Новгорода.</p></header><section className="v3-about-page v3-shell"><figure><img src="/v3-assets/about/portrait.webp" srcSet={responsiveSrcSet("/v3-assets/about/portrait.webp")} sizes="(min-width: 768px) 56vw, calc(100vw - 40px)" width="1200" height="1200" loading="eager" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина" /><figcaption>ПОРТРЕТ // ЮРИЙ ЕЛЫГИН</figcaption></figure><div><h2>СНИМАЮ И РАБОТАЮ С МАТЕРИАЛОМ ПОСЛЕ ПЛОЩАДКИ.</h2><p>Снимаю деловые и личные портреты, семейные серии, мероприятия и контент для бизнеса. В видеопроектах могу вести съёмку целиком или работать оператором в production-команде.</p><p>Собираю монтаж, мультикам, работаю с цветом и довожу материал до готовой версии. Подключаюсь как на весь процесс, так и на отдельный этап.</p><a className="v3-button v3-button--orange" href="/photo">ФОТОСЪЁМКА <ArrowRight /></a> <a className="v3-button v3-button--orange" href="/portfolio">СМОТРЕТЬ ВИДЕОРАБОТЫ <ArrowRight /></a></div></section><section className="v3-about-photos v3-shell" aria-label="Юрий Елыгин: портреты и съёмочная работа">
+  <figure><img src="/v3-assets/about/portrait.webp" srcSet={responsiveSrcSet("/v3-assets/about/portrait.webp")} sizes={lazyImageSizes("50vw")} width="1200" height="1200" loading="lazy" decoding="async" alt="Чёрно-белый портрет Юрия Елыгина в чёрной одежде" /><figcaption>ПОРТРЕТ</figcaption></figure>
   <figure><img src="/v3-assets/about/live-camera.webp" srcSet="/v3-assets/about/live-camera-480w.webp 480w, /v3-assets/about/live-camera.webp 1200w" sizes="50vw" width="1200" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин работает у видеокамеры перед сценой" /><figcaption>У КАМЕРЫ</figcaption></figure>
   <figure><img src="/v3-assets/about/on-set.webp" srcSet="/v3-assets/about/on-set-480w.webp 320w, /v3-assets/about/on-set.webp 800w" sizes="50vw" width="800" height="1200" loading="lazy" decoding="async" alt="Юрий Елыгин сидит на кофре с камерой на съёмочной площадке" /><figcaption>НА ПЛОЩАДКЕ</figcaption></figure>
   <figure><img src="/v3-assets/about/camera-backstage.webp" srcSet="/v3-assets/about/camera-backstage-480w.webp 480w, /v3-assets/about/camera-backstage.webp 1200w" sizes="50vw" width="1200" height="900" loading="lazy" decoding="async" alt="Юрий Елыгин с камерой и монитором на стадионе" /><figcaption>СЪЁМОЧНАЯ РАБОТА</figcaption></figure>

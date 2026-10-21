@@ -179,3 +179,55 @@ test('failed lead delivery keeps the draft and offers a complete direct-contact 
   }
  } finally {local.server.closeAllConnections();await new Promise<void>(resolve=>local.server.close(()=>resolve()));}
 });
+
+
+test('legacy acceptance migrates; current refusal wins; fresh consent survives repeat visits', async (t) => {
+ const local=await startLocalServer();
+ try {
+  for(const engine of [chromium,webkit]) {
+   const browser=await engine.launch();
+   try {
+    for(const route of ['/', '/photo']) {
+     for(const scenario of ['fresh-accept','necessary','legacy-accept','current-refusal','unknown-legacy']) {
+      t.diagnostic(engine.name()+' '+route+' '+scenario);
+      const context=await browser.newContext({viewport:{width:390,height:844}});
+      const page=await context.newPage();await fixtures(page);
+      let hits=0;page.on('request',r=>{if(r.url().startsWith('https://mc.yandex.ru/watch/')) hits++;});
+      // Seed once; addInitScript would incorrectly overwrite a withdrawal on every navigation.
+      await page.goto(local.origin+'/favicon.svg');
+      await page.evaluate((scenario)=>{
+       if(scenario==='legacy-accept'||scenario==='current-refusal') localStorage.setItem('cookie_consent_v1','accepted');
+       if(scenario==='current-refusal') localStorage.setItem('cookie_consent_v2',JSON.stringify({necessary:true,analytics:false,version:'1.0'}));
+       if(scenario==='unknown-legacy') localStorage.setItem('cookie_consent_v1','unknown');
+      },scenario);
+      await page.goto(local.origin+route);
+      const banner=page.locator('.yel-cookie');
+      if(scenario==='fresh-accept') {
+       await page.getByRole('button',{name:'Принять аналитику',exact:true}).click();
+      } else if(scenario==='necessary') {
+       await page.getByRole('button',{name:'Только необходимые',exact:true}).click();
+      }
+      const permitted=['fresh-accept','legacy-accept'].includes(scenario);
+      assert.equal(await banner.isVisible(),scenario==='unknown-legacy',scenario+' banner before counter wait');
+      if(permitted) await page.waitForFunction(()=>((window as any).__goals||[]).some((call:any[])=>call[1]==='init'));
+      await page.waitForTimeout(200);
+      assert.equal(await banner.isVisible(),scenario==='unknown-legacy',scenario+' banner');
+      assert.equal(await page.evaluate(()=>typeof window.ym),permitted?'function':'undefined',scenario+' ym');
+      assert.equal(hits>0,permitted,scenario+' hit');
+      if(scenario==='legacy-accept') {
+       assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('cookie_consent_v2')||'null')?.analytics),true);
+       assert.equal(await page.evaluate(()=>localStorage.getItem('cookie_consent_v1')),null);
+      }
+      const previousHits=hits;
+      await page.reload();
+      if(permitted) await page.waitForFunction(()=>((window as any).__goals||[]).some((call:any[])=>call[1]==='init'));
+      await page.waitForTimeout(200);
+      assert.equal(await banner.isVisible(),scenario==='unknown-legacy',scenario+' repeat banner');
+      assert.equal(hits>previousHits,permitted,scenario+' repeat hit');
+      await context.close();
+     }
+    }
+   } finally {await browser.close();}
+  }
+ } finally {local.server.closeAllConnections();local.server.close();}
+});

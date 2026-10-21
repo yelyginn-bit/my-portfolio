@@ -1,3 +1,4 @@
+import {posterSrcSet, responsiveImageMetadata} from "../lib/responsiveImages";
 import type { CSSProperties } from "react";
 import { longestWordEm } from "../lib/capsFit";
 import { ArrowUpRight } from "lucide-react";
@@ -38,14 +39,15 @@ const projectRoles = (project: Project) => project.roles.map((role) => roleLabel
 const projectNumber = (projects: Project[], project: Project) => String(projects.indexOf(project) + 1).padStart(2, "0");
 
 function ResponsivePoster({ asset, alt, priority = false, sizes }: { asset: WorkAsset; alt: string; priority?: boolean; sizes: string }) {
-  const portrait = asset.orientation === "portrait";
+  const metadata = responsiveImageMetadata(posterUrl(asset.kinescopeId));
+  if (!metadata) throw new Error(`Missing responsive poster metadata: ${asset.kinescopeId}`);
   return (
     <img
       src={posterUrl(asset.kinescopeId, "md")}
-      srcSet={`${posterUrl(asset.kinescopeId, "sm")} 640w, ${posterUrl(asset.kinescopeId, "md")} 1280w, ${posterUrl(asset.kinescopeId, "lg")} 1920w`}
+      srcSet={posterSrcSet(asset.kinescopeId, 640)}
       sizes={sizes}
-      width={portrait ? 900 : 1600}
-      height={portrait ? 1600 : 900}
+      width={metadata.width}
+      height={metadata.height}
       alt={alt}
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : "auto"}

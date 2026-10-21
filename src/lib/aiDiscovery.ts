@@ -4,7 +4,7 @@ export const AI_QUESTION = `Расскажи о фотографе и видео
 
 export const AI_SERVICES = [
   { label: "ChatGPT", logo: "/ai-logos/chatgpt.webp", href: `https://chatgpt.com/?q=${encodeURIComponent(AI_QUESTION)}` },
-  { label: "Perplexity", logo: "/ai-logos/perplexity.png", href: `https://www.perplexity.ai/search/?q=${encodeURIComponent(AI_QUESTION)}` },
+  { label: "Perplexity", logo: "/ai-logos/perplexity.webp", href: `https://www.perplexity.ai/search/?q=${encodeURIComponent(AI_QUESTION)}` },
   { label: "Gemini", logo: "/ai-logos/gemini.webp", href: "https://gemini.google.com/app" },
   { label: "Claude", logo: "/ai-logos/claude.webp", href: "https://claude.ai/new" },
   { label: "Grok", logo: "/ai-logos/grok.webp", href: "https://x.com/i/grok" },

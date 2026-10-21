@@ -1,3 +1,4 @@
+import {responsiveSrcSet} from "../lib/responsiveImages";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { ColorComparePair } from "../lib/colorCompare.data";
@@ -134,6 +135,8 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
         <img
           className="color-compare-img"
           src={pair.after}
+          srcSet={responsiveSrcSet(pair.after)}
+          sizes={responsiveSrcSet(pair.after) ? "auto, 100vw" : undefined}
           alt={afterVisible ? pair.afterAlt : ""}
           aria-hidden={afterVisible ? undefined : "true"}
           width={pair.width}
@@ -150,6 +153,8 @@ export const ColorCompare = ({ pair }: { pair: ColorComparePair; key?: string | 
           className="color-compare-img color-compare-img--before"
           style={{ clipPath: "inset(0 calc(100% - var(--compare-position)) 0 0)" }}
           src={pair.before}
+          srcSet={responsiveSrcSet(pair.before)}
+          sizes={responsiveSrcSet(pair.before) ? "auto, 100vw" : undefined}
           alt={beforeVisible ? pair.beforeAlt : ""}
           aria-hidden={beforeVisible ? undefined : "true"}
           width={pair.width}

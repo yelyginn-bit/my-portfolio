@@ -1,3 +1,4 @@
+import {responsiveSrcSet} from "../src/lib/responsiveImages";
 import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -129,6 +130,16 @@ export async function enrichPublicHtml(html: string, route: string, dist: string
     const attrs = `${/\bwidth=/iu.test(tag) ? "" : ` width="${width}"`}${/\bheight=/iu.test(tag) ? "" : ` height="${height}"`}`;
     result = result.replace(tag, tag.replace(/\s*\/?>(?=$)/u, `${attrs}>`));
   }
+  result = result.replace(/<img\b[^>]*data-responsive-widths="([0-9, ]+)"[^>]*>/giu, (tag, widths: string) => {
+    const src = /\bsrc="([^"]+)"/iu.exec(tag)?.[1];
+    const candidates = src ? responsiveSrcSet(src) : undefined;
+    if (!candidates) throw new Error(`Responsive image is not processed: ${src}`);
+    const existing = /\bsrcset="([^"]+)"/iu.exec(tag)?.[1];
+    if (!existing) return tag.replace(/\s*\/?>(?=$)/u, ` srcset="${candidates}">`);
+    const requested = new Set(widths.split(",").map(Number));
+    const additions = candidates.split(", ").filter((candidate) => requested.has(Number(candidate.match(/ (\d+)w$/u)?.[1])));
+    return tag.replace(/\bsrcset="[^"]+"/iu, `srcset="${[...additions, existing].join(", ")}"`);
+  });
   // Developer comments are not page content and must not be counted as images.
   const normalized = pageStructuredData(result, route);
   result = normalized.html;

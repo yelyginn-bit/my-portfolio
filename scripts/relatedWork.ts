@@ -1,3 +1,4 @@
+import {posterSrcSet, responsiveImageMetadata} from "../src/lib/responsiveImages";
 // Контекстные ссылки для 6 статических посадочных услуг (PROMPT-21 §5):
 // 2–3 работы из портфолио той же категории + цены + калькулятор. Связи
 // берутся из данных (projectsForCategory), а не прописываются руками —
@@ -34,8 +35,14 @@ export function relatedWorkHtml(category: PortfolioCategory): string {
   const cards = projects
     .map((project) => {
       const asset = assetsForProject(project.id)[0];
-      const media = asset
-        ? `<div class="bb-project-card__media"><img src="${posterUrl(asset.kinescopeId, "md")}" alt="" loading="lazy" decoding="async" width="640" height="${asset.orientation === "portrait" ? 853 : 360}" /></div>`
+      const poster = asset ? responsiveImageMetadata(posterUrl(asset.kinescopeId)) : undefined;
+      if (asset && !poster) throw new Error(`Missing poster dimensions: ${asset.kinescopeId}`);
+      // Cards crop into 4:3. Reserve the raster width needed to cover their height,
+      // not only the CSS box width; viewport fractions conservatively bound the grid.
+      const coverScale = poster ? Math.max(1, poster.width / poster.height / (4 / 3)).toFixed(6) : "1";
+      const sizes = `(max-width: 620px) calc(100vw * ${coverScale}), (max-width: 900px) calc(50vw * ${coverScale}), calc(33.334vw * ${coverScale})`;
+      const media = asset && poster
+        ? `<div class="bb-project-card__media"><img src="${posterUrl(asset.kinescopeId, "md")}" srcset="${posterSrcSet(asset.kinescopeId)}" sizes="${sizes}" alt="" loading="lazy" decoding="async" width="${poster.width}" height="${poster.height}" /></div>`
         : "";
       const role = project.client ? escapeHtml(project.client) : escapeHtml(CATEGORY_META[category].title);
       return `<a class="bb-project-card" href="/portfolio/${project.slug}">${media}<div class="bb-project-card__meta"><p class="bb-project-card__title">${escapeHtml(project.title)}</p><p class="bb-project-card__role">${role}</p></div></a>`;

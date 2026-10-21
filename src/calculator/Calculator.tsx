@@ -4,7 +4,7 @@
 // — отправка заявки в Telegram (best-effort) + сохранение заказа в DataStore.
 // Auth по OTP появится в Фазе 2 и заменит ручной ввод телефона здесь.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ESTIMATE_DATA } from "../lib/pricing.data";
+import { MARKETPLACE_PACKAGE, PUBLIC_CALCULATOR_DATA } from "../lib/calculatorPublicData";
 import { hydrateTiers } from "../lib/discounts";
 import { MAX_DAYS, URGENCY_SURCHARGE } from "../lib/pricing.config";
 import { computeBreakdown, formatRubRange } from "../lib/calc";
@@ -51,7 +51,7 @@ export default function Calculator() {
   useEffect(() => setInteractive(true), []);
   const [session, setSession] = useState<ReturnType<typeof getSession>>(null);
   // Прайс берётся из активного набора (БД-override или конфиг); пересчёт по priceReady.
-  const DATA = ESTIMATE_DATA;
+  const DATA = PUBLIC_CALCULATOR_DATA;
   const TYPES = Object.keys(DATA);
   const [shootType, setShootType] = useState<string>(() => TYPES[0]);
   const typeData = DATA[shootType] ?? DATA[TYPES[0]];
@@ -373,6 +373,7 @@ export default function Calculator() {
                 );
               })}
             </div>
+            {shootType === MARKETPLACE_PACKAGE.title && <p className="calc-days-hint">{MARKETPLACE_PACKAGE.limitations}</p>}
           </div>
 
           {typeData.options.length > 0 && (
@@ -406,7 +407,7 @@ export default function Calculator() {
             </div>
           )}
 
-          <div className="calc-section">
+          {shootType !== MARKETPLACE_PACKAGE.title && <div className="calc-section">
             <button
               type="button"
               role="switch"
@@ -424,7 +425,7 @@ export default function Calculator() {
               </span>
             </button>
             <p id="calc-rush-note" className="calc-note">Наценка применяется только к выбранным позициям монтажа; к съёмке, цветокоррекции и фото не применяется.</p>
-          </div>
+          </div>}
         </div>
 
         {/* ПРАВАЯ КОЛОНКА — смета + заявка */}

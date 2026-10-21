@@ -87,7 +87,7 @@ export const SERVICE_SUMMARIES: ServiceSummary[] = [
     description: "Бизнес-портрет, репортаж и визуальный контент для бренда.",
     price: PUBLIC_PRICE_BY_ID.photo.price,
     href: "/photo",
-    portfolioHref: "/portfolio/photo",
+    portfolioHref: "/photo#gallery",
     mediaId: "txm4qz7vRPifxz3MPbzu1V",
   },
   {

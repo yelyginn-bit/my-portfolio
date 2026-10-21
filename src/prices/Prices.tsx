@@ -1,9 +1,10 @@
+import { SERVICE_LANDINGS } from "../public/serviceLandings.data";
 import { useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { PageContainer } from "../components/site/Layout";
 import { RoutePathContext, SiteFooter, SiteHeader } from "../public/V3App";
 import { SITE } from "../config/site";
-import { PUBLIC_PRICES } from "../lib/pricing.data";
+import { PUBLIC_PRICES, PUBLIC_PRICE_BY_ID } from "../lib/pricing.data";
 
 export default function Prices() {
   /* PROMPT-36c: якорь /ceny#field-video с главной не прокручивал — страница
@@ -17,6 +18,13 @@ export default function Prices() {
   return <RoutePathContext.Provider value="/ceny"><div className="price-page"><SiteHeader /><main>
     <PageContainer as="section" className="price-page-hero"><div><p>Прайс / ориентиры</p><h1>Цены на фото, видеосъёмку и монтаж</h1></div><div><p>Понятные точки входа для съёмки, монтажа, фото и регулярного контента в Нижнем Новгороде.</p><small>Точная стоимость рассчитывается после брифа и фиксируется в смете.</small></div></PageContainer>
     <PageContainer as="section" className="price-page-catalog"><header><p>Основные услуги</p><h2>Выберите подходящий формат</h2></header><div className="price-page-list">{PUBLIC_PRICES.filter((item) => item.showOnCatalog !== false).map((item,index)=><article key={item.id} id={item.id} className={item.featured?"is-featured":""}><div className="price-page-index">{String(index+1).padStart(2,"0")}</div><div className="price-page-name"><span>{item.category}</span><h3>{item.title}</h3><p>{item.description}</p></div><div className="price-page-price"><strong>{item.price}</strong>{item.exampleHref && <a href={item.exampleHref} className="price-page-example">Пример работы</a>}</div><div className="price-page-details"><p>{item.includes.join(" · ")}</p><small>{item.limitations}<br />{item.timeline}.</small></div><div className="price-page-actions"><a href={item.portfolioHref}>Работы</a><a href={item.href} aria-label={`${item.title}: подробнее`}><ArrowUpRight /></a></div></article>)}</div></PageContainer>
+    <PageContainer as="section" className="price-page-catalog" aria-labelledby="price-answers"><header><p>Вопросы о цене</p><h2 id="price-answers">Сколько стоит</h2></header><div className="v3-project__case">{[
+      {question: "Стоимость цветокоррекции видео", id: "color-grading", href: "/cvetokorrekciya", text: "Сложность и объём исходников определяют уровень работы."},
+      {question: "Сколько стоит снять рекламный ролик", id: "advertising", href: "/reklamnye-roliki", text: "Подготовку, съёмку и постпродакшн фиксируем в смете."},
+      {question: "Сколько стоит съёмка мероприятия", id: "event", href: "/event-video", text: "Монтаж итогового ролика рассчитывается отдельно от съёмки."},
+      {question: "Сколько стоят Reels", id: "reels-block", href: "/reels", text: "Съёмочный блок и монтаж — отдельные этапы."},
+    ].map(({question,id,href,text}) => {const item=PUBLIC_PRICE_BY_ID[id]; if(!item) throw new Error(`Unknown FAQ price: ${id}`); return <article key={id}><h3>{question}</h3><p>{item.price}. {text} {item.limitations}</p><a href={href}>Состав услуги</a></article>;})}</div><p><a href="/payment-terms">Как согласуем смету и оплату</a></p></PageContainer>
+    <PageContainer as="section" className="price-page-catalog"><header><h2>Другие форматы съёмки</h2></header><nav className="v32-home-service-shortcuts" aria-label="Форматы съёмки">{SERVICE_LANDINGS.map((page)=><a key={page.path} href={page.path}>{page.label}</a>)}</nav></PageContainer>
     <section className="price-page-cta"><PageContainer><p>Калькулятор даст предварительный ориентир. Финальный состав и стоимость фиксируются после короткого брифа.</p><h2>Есть задача?<br />Соберём точную смету.</h2><div><a className="price-page-cta__primary" href="/calculator">Рассчитать стоимость</a><a href={SITE.telegramUrl}>Написать в Telegram</a></div></PageContainer></section>
   </main><SiteFooter /></div></RoutePathContext.Provider>;
 }

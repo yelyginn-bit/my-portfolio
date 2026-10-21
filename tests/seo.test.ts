@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -6,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { sitemapXml, siteOrigin } from "../scripts/sitemap.ts";
 import sharp from "sharp";
 import { OG_IMAGES } from "../src/public/ogImages.data";
+import { PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data";
 import { INDEXABLE_ROUTES } from "../src/public/routeManifest.ts";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -241,6 +243,56 @@ test("every indexable route has its generated absolute 1200×630 OG image", asyn
       const size = await sharp(file).metadata();
       assert.equal(size.width, 1200, file); assert.equal(size.height, 630, file);
       inspected.add(file);
+    }
+  }
+});
+
+test("event-photo price article ships its source prices, links, schema and prerender", () => {
+  const route = "/blog/skolko-stoit-fotograf-na-meropriyatie";
+  const html = read("dist/prerender" + route + "/index.html");
+  const item = PUBLIC_PRICE_BY_ID.photo;
+  for (const value of [item.price, item.limitations, item.timeline, item.includes.join(", ")]) assert.ok(html.includes(value), value);
+  assert.doesNotMatch(html, /data-(?:photo-price-detail|price-reference)=/u);
+  assert.equal((html.match(/<h1\b/gu) || []).length, 1);
+  assert.ok((/<title>(.*?)<\/title>/u.exec(html)?.[1].length || Infinity) <= 60);
+  const description = /name="description" content="([^"]+)"/u.exec(html)?.[1] || "";
+  assert.ok(description.length > 0 && description.length <= 160);
+  for (const href of ["/reportazhnaya-fotosemka", "/ceny", "/photo"]) assert.ok(html.includes(`href="${href}"`), href);
+  for (const frame of ["kvn-05-960w.webp", "kvn-06-960w.webp"]) assert.ok(html.includes(frame), frame);
+  for (const type of ["BlogPosting", "BreadcrumbList"]) assert.ok(html.includes(`"@type": "${type}"`) || html.includes(`"@type":"${type}"`), type);
+  assert.ok(JSON.parse(read("dist/prerender-manifest.json")).routes.includes(route));
+  assert.ok(read("dist/sitemap.xml").includes(siteOrigin + route));
+  for (const file of ["reportazhnaya-fotosemka.html", "dist/prerender/blog/index.html"]) assert.ok(read(file).includes(`href="${route}"`), file);
+});
+
+
+test("новые услуги доступны поиску с ценами по задаче и подтверждёнными примерами", () => {
+  assert.ok(SERVICE_LANDINGS.length > 0);
+  for (const page of SERVICE_LANDINGS) {
+    const html = read(`dist/prerender${page.path}/index.html`);
+    assert.equal((html.match(/<h1\b/gu)||[]).length, 1, page.path);
+    assert.ok(html.includes(page.h1), page.path);
+    assert.ok(page.title.length <= 60 && page.description.length <= 160, page.path);
+    assert.ok(html.includes(`href="https://yelyginn.ru${page.path}"`), page.path);
+    assert.ok(read("dist/sitemap.xml").includes(`https://yelyginn.ru${page.path}</loc>`), page.path);
+    const graph = JSON.parse(html.match(/<script type="application\/ld\+json" data-ai-discovery>([\s\S]*?)<\/script>/u)![1])["@graph"];
+    assert.ok(graph.some((node) => node["@type"] === "Service" && node.provider && node.areaServed), page.path);
+    assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList" && node.itemListElement.length === 2), page.path);
+    assert.match(html, /Стоимость рассчитаю под задачу/u);
+    assert.ok(page.projectIds.length > 0, page.path);
+    for (const related of page.related) assert.ok(html.includes(`href="${related}"`), related);
+    assert.ok(read("dist/prerender/ceny/index.html").includes(`href="${page.path}"`), page.path+" from prices");
+  }
+});
+
+
+test("every prerendered public image has intrinsic dimensions and an alt attribute", () => {
+  for (const route of INDEXABLE_ROUTES) {
+    const html = read(`dist/prerender${route.path === "/" ? "" : route.path}/index.html`).replace(/<!--[\s\S]*?-->/gu, "");
+    for (const match of html.matchAll(/<img\b[^>]*>/giu)) {
+      assert.match(match[0], /\swidth=["'][1-9]\d*["']/iu, `${route.path}: image width`);
+      assert.match(match[0], /\sheight=["'][1-9]\d*["']/iu, `${route.path}: image height`);
+      assert.match(match[0], /\salt=(?:"[^"]*"|'[^']*')/iu, `${route.path}: image alt`);
     }
   }
 });

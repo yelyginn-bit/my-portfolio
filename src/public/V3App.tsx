@@ -1,3 +1,4 @@
+import ServiceLandingPage from "./ServiceLandingPage";
 import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Menu, Pause, Play, X } from "lucide-react";
 import { AiAskBlock } from "../components/site/AiAskBlock";
@@ -590,8 +591,9 @@ function PortfolioPage({ category }: { category?: PortfolioCategory }) {
     || projects.indexOf(left) - projects.indexOf(right);
   });
   const meta = category ? CATEGORY_META[category] : null;
+  const concertIntro = category === "concerts" ? "Концертные видео: режиссура монтажа выступлений «Станции метро Горьковская» и сборка материала с восьми камер. Моя роль — монтаж; цвет выполнял другой специалист." : null;
   return (
-    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header><nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell"><PortfolioSystem projects={presented} firstMediaPriority /></section>{category === "events" && <aside className="v3-shell v3-catalog__related" aria-label="Смотрите также"><p className="v3-kicker">СМОТРИТЕ ТАКЖЕ</p><nav className="v32-home-service-shortcuts" aria-label="Связанные страницы"><a href="/event-video">Видеосъёмка мероприятий — услуга</a><a href="/portfolio/concerts">Концерты — работы</a><a href="/reportazhnaya-fotosemka">Репортажная фотосъёмка</a></nav></aside>}</main><SiteFooter /></>
+    <><SiteHeader /><main className="v3-catalog"><header className="v3-catalog__hero v3-shell"><p className="v3-kicker">ПОРТФОЛИО // {visible.length} ПРОЕКТОВ</p><h1>{meta ? meta.title : "Портфолио видеосъёмки"}</h1><p>{concertIntro || meta?.description || "Видео сгруппированы по проектам; внутри каждого проекта сохранены все подтверждённые материалы и роли."}</p></header>{category === "concerts" && <nav className="v3-shell v32-home-service-shortcuts" aria-label="Услуги для концертов"><a href="/event-video">Съёмка мероприятий</a><a href="/pryamye-translyacii">Прямые трансляции</a></nav>}<nav className="v3-filters v3-shell" aria-label="Разделы портфолио"><a href="/portfolio" aria-current={!category ? "page" : undefined}>ВСЕ</a><a href="/portfolio/camera" aria-current={category === "camera" ? "page" : undefined}>СЪЁМКА</a><a href="/portfolio/post" aria-current={category === "post" ? "page" : undefined}>ПОСТ</a></nav><section className="v3-catalog__list v3-shell" aria-labelledby="portfolio-list-title"><h2 id="portfolio-list-title" className="v3-catalog__list-title">Проекты портфолио</h2><PortfolioSystem projects={presented} firstMediaPriority /></section>{category === "events" && <aside className="v3-shell v3-catalog__related" aria-label="Смотрите также"><p className="v3-kicker">СМОТРИТЕ ТАКЖЕ</p><nav className="v32-home-service-shortcuts" aria-label="Связанные страницы"><a href="/event-video">Видеосъёмка мероприятий — услуга</a><a href="/portfolio/concerts">Концерты — работы</a><a href="/reportazhnaya-fotosemka">Репортажная фотосъёмка</a></nav></aside>}</main><SiteFooter /></>
   );
 }
 
@@ -610,7 +612,7 @@ function primaryCategory(project: Project): PortfolioCategory {
  * для маркетплейсов»). Без переопределения — прежнее поведение, один
  * авто-вывод по категории, ни один из 37 остальных проектов не меняется. */
 function resolveRelatedServices(project: Project, category: PortfolioCategory): NavLink[] {
-  const overrideHrefs = project.caseStudy?.relatedServiceHrefs;
+  const overrideHrefs = project.caseStudy?.relatedServiceHrefs ?? ({ "well-teaser": ["/reels", "/cvetokorrekciya"], "sber-architecture": ["/reklamnye-roliki"] } as Record<string, string[]>)[project.id];
   if (!overrideHrefs) return [CATEGORY_TO_SERVICE[category] ?? PRICES_LINK];
   return overrideHrefs.map((href) => {
     const known = [...SERVICE_LINKS, PRICES_LINK].find((item) => item.href === href);
@@ -679,7 +681,8 @@ export default function V3App({ initialPath, initialSearch }: { initialPath?: st
   useEffect(() => updateSeo(route.seo.title, route.seo.description, route.seo.canonical), [route.seo]);
 
   let page;
-  if (route.kind === "portfolio") page = <PortfolioPage />;
+  if (route.kind === "service") page = <ServiceLandingPage path={route.path} />;
+  else if (route.kind === "portfolio") page = <PortfolioPage />;
   else if (route.kind === "blog") page = <BlogPage />;
   else if (route.kind === "about") page = <AboutPage />;
   else if (route.kind === "contact") page = <ContactPage />;

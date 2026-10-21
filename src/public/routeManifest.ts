@@ -1,3 +1,4 @@
+import { SERVICE_LANDINGS } from "./serviceLandings.data";
 import {
   CATEGORY_META,
   PORTFOLIO_CATEGORY_ORDER,
@@ -59,6 +60,7 @@ const fixedRoutes: readonly PublicRouteRecord[] = [
   { path: "/cancellation-refund", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
   { path: "/gallery-terms", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
   { path: "/data-request", render: "legal", indexable: true, priority: 0.2, theme: "dark" },
+  { path: "/blog/skolko-stoit-fotograf-na-meropriyatie", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/skolko-stoit-snyat-reklamnyy-rolik", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/kak-snimat-reels-dlya-biznesa", render: "static", indexable: true, priority: 0.7, theme: "dark" },
   { path: "/blog/video-dlya-kartochek-wildberries", render: "static", indexable: true, priority: 0.7, theme: "dark" },
@@ -90,6 +92,7 @@ const projectRoutes: readonly PublicRouteRecord[] = projects.map((project) => ({
 
 export const ROUTE_MANIFEST: readonly PublicRouteRecord[] = [
   ...fixedRoutes,
+  ...SERVICE_LANDINGS.map((page) => ({path: page.path, render: "v3" as const, indexable: true, priority: 0.8, theme: "dark" as const})),
   ...categoryRoutes,
   ...projectRoutes,
 ];
@@ -98,10 +101,7 @@ export const V3_PRERENDER_ROUTES = ROUTE_MANIFEST
   .filter((route) => route.render === "v3")
   .map((route) => route.path);
 
-export const PRERENDER_ROUTES = [
-  ...V3_PRERENDER_ROUTES,
-  "/calculator",
-];
+export const PRERENDER_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable).map((route) => route.path);
 
 export const INDEXABLE_ROUTES = ROUTE_MANIFEST.filter((route) => route.indexable);
 
@@ -115,7 +115,7 @@ export const normalizePublicPath = (rawPath: string) => rawPath.replace(/\/+$/u,
 
 export interface V3RouteResolution {
   path: string;
-  kind: "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "redirect" | "unknown";
+  kind: "service" | "home" | "portfolio" | "category" | "project" | "blog" | "about" | "contact" | "redirect" | "unknown";
   category?: PortfolioCategory;
   project?: Project;
   seo: { title: string; description: string; canonical: string };
@@ -139,6 +139,7 @@ function resolveV3RouteRaw(rawPath: string, rawSearch = ""): V3RouteResolution {
     || projectBySlug.get(legacySlugs[segment])
     || (legacyAsset ? projectById.get(legacyAsset.projectId) : undefined);
 
+  if (SERVICE_LANDINGS.some((page) => page.path === path)) return {path, kind: "service", seo: {...seoCopyFor(path)!, canonical: path}};
   if (path === "/blog") return { path, kind: "blog", seo: { title: "Блог о съёмке и постпродакшне | YELYGINN", description: "Практические заметки Юрия Елыгина о подготовке, видеосъёмке, монтаже и постпродакшне.", canonical: "/blog" } };
   if (path === "/about") return { path, kind: "about", seo: { title: "Обо мне — Юрий Елыгин | YELYGINN", description: "Юрий Елыгин — оператор, режиссёр монтажа и колорист из Нижнего Новгорода.", canonical: "/about" } };
   if (path === "/contact") return { path, kind: "contact", seo: { title: "Обсудить проект | YELYGINN", description: "Связаться с Юрием Елыгиным: Instagram, Telegram, YouTube, email и короткий бриф проекта.", canonical: "/contact" } };
@@ -146,7 +147,7 @@ function resolveV3RouteRaw(rawPath: string, rawSearch = ""): V3RouteResolution {
   if (path === "/cases" || path === "/cases.html") return { path, kind: "redirect", seo: { title: "Портфолио | YELYGINN", description: "Работы Юрия Елыгина.", canonical: "/portfolio" } };
   if (category) return { path, kind: "category", category, seo: { title: `${CATEGORY_META[category].title} | YELYGINN`, description: CATEGORY_META[category].description, canonical: `/portfolio/${category}` } };
   if (project) return { path, kind: "project", project, seo: { title: `${project.title} | YELYGINN`, description: project.description || `${project.title}: ${project.responsibilities.join(", ")}.`, canonical: `/portfolio/${project.slug}` } };
-  if (path === "/") return { path, kind: "home", seo: { title: "Видеограф и фотограф в Нижнем Новгороде | Юрий Елыгин", description: "Видеооператор, видеограф и фотограф в Нижнем Новгороде: съёмка мероприятий, реклама, Reels, монтаж и цветокоррекция. Юрий Елыгин.", canonical: "/" } };
+  if (path === "/") return { path, kind: "home", seo: { title: "Видеограф и фотограф в Нижнем Новгороде | Юрий Елыгин", description: "Видеограф и фотограф: съёмка мероприятий, реклама, Reels, монтаж и цветокоррекция. Нижний Новгород и область. Юрий Елыгин.", canonical: "/" } };
   return { path, kind: "unknown", seo: { title: "YELYGINN", description: "Операторская работа, монтаж, цвет и live production.", canonical: path } };
 }
 

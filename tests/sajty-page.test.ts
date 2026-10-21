@@ -58,7 +58,7 @@ test("sajty prerender has eight content blocks, one H1, FAQPage and the lazy Kin
   assert.equal((served.match(/<h1\b/gu) ?? []).length, 1);
   assert.equal((served.match(/data-price-reference=/gu) ?? []).length, 0);
   assert.equal((served.match(/class="sajty-section"/gu) ?? []).length, 7);
-  assert.match(served, /<h1[^>]*>САЙТЫ ПОД КЛЮЧ<\/h1>/u);
+  assert.match(served, /<h1[^>]*>Сайты под ключ<\/h1>/u);
   assert.match(served, /"@type":"FAQPage"/u);
   assert.match(served, /data-orientation="16:9"/u);
   assert.match(served, /kinescope-embed-placeholder/u);

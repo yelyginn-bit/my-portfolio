@@ -492,7 +492,7 @@
         <button class="lightbox-close" type="button" aria-label="Закрыть">&times;</button>
         <button class="lightbox-prev" type="button" aria-label="Предыдущее фото">&lsaquo;</button>
         <button class="lightbox-next" type="button" aria-label="Следующее фото">&rsaquo;</button>
-        <img class="lightbox-img" id="lightboxImg" alt="" />
+        <img class="lightbox-img" id="lightboxImg" alt="" width="1" height="1" />
       </div>
 
       <section>
@@ -586,6 +586,8 @@
 
         function show(index) {
           var img = activeGroup[index].querySelector("img");
+          lightboxImg.width = Number(img.getAttribute("width")) || img.naturalWidth;
+          lightboxImg.height = Number(img.getAttribute("height")) || img.naturalHeight;
           lightboxImg.src = img.currentSrc || img.src;
           lightboxImg.srcset = img.srcset;
           lightboxImg.sizes = "100vw";

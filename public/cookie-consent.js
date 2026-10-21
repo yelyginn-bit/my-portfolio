@@ -5,7 +5,16 @@
   const privatePath = /^\/(?:account|admin|g|gallery|journal)(?:\/|$)|^\/photo\/|^\/portfolio\/photo(?:\/|$)|\/(?:payment|checkout)(?:\/|$)/u;
 
   const read = () => {
-    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; }
+    try {
+      const current = localStorage.getItem(KEY);
+      if (current !== null) return JSON.parse(current);
+      // Only an explicit legacy acceptance may migrate. A newer v2 choice always wins.
+      if (localStorage.getItem("cookie_consent_v1") !== "accepted") return null;
+      const migrated = { necessary: true, analytics: true, version: VERSION, updatedAt: new Date().toISOString() };
+      localStorage.setItem(KEY, JSON.stringify(migrated));
+      localStorage.removeItem("cookie_consent_v1");
+      return migrated;
+    } catch { return null; }
   };
   const allowed = () => Boolean(read()?.analytics) && !privatePath.test(location.pathname);
   const clearAnalytics = () => {
@@ -53,5 +62,9 @@
     if (control) { event.preventDefault(); open(); }
   });
   window.yelyginnCookieConsent = { open, allowed, save };
-  if (!read()) open();
+  const consent = read();
+  if (!consent) open();
+  // A React module can initialize before this deferred script migrates the old key.
+  // Notify its existing listener; initialization remains idempotent and private routes stay excluded.
+  if (consent?.analytics === true) window.dispatchEvent(new CustomEvent(EVENT, { detail: { analytics: true } }));
 })();

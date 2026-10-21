@@ -29,6 +29,8 @@ import { renderSajtyCases } from "../src/public/sajtyCases";
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const prerenderDir = path.join(distDir, "prerender");
+// Inline only the static services with a measured benefit; React routes retain their CSS links.
+const serviceStyleRoutes = new Set(["/reklamnye-roliki", "/event-video", "/reels", "/content-day", "/pryamye-translyacii", "/sajty"]);
 
 /**
  * Статические страницы с руками вписанным JSON-LD. pryamye-translyacii.html
@@ -135,7 +137,7 @@ async function inlinePhotoStyles(html: string, marker = "photo"): Promise<string
   let result = html;
   for (const [tag, href] of links) {
     if (href.startsWith("/assets/desktop-design-")) continue;
-    if (!/^\/(?:tokens\.css|site-skin\.css|assets\/[a-zA-Z0-9._-]+\.css)$/.test(href)) {
+    if (!/^\/(?:tokens\.css|site-skin\.css|bb-components\.css|assets\/[a-zA-Z0-9._-]+\.css)$/.test(href)) {
       throw new Error(`Unexpected photo stylesheet: ${href}`);
     }
     const css = await readFile(path.join(distDir, href.slice(1)), "utf8");
@@ -249,7 +251,15 @@ async function main() {
       if (outputHtml.split(casesSlot).length - 1 !== 1) throw new Error("sajty.html: expected one website-cases slot");
       outputHtml = outputHtml.replace(casesSlot, renderSajtyCases());
     }
-    if (route.path === "/photo") outputHtml = await inlinePhotoStyles(outputHtml);
+    if (route.path === "/photo" || serviceStyleRoutes.has(route.path)) {
+      outputHtml = await inlinePhotoStyles(outputHtml, route.path === "/photo" ? "photo" : "service");
+    }
+    // The two existing Cyrillic faces prevent the measured font-swap shift on this page.
+    if (route.path === "/pryamye-translyacii") {
+      const preloads = [400, 700].map((weight) => `<link rel="preload" href="/fonts/inter/inter-${weight}-cyrillic.woff2" as="font" type="font/woff2" crossorigin>`).join("");
+      if (!/<meta\b[^>]*charset[^>]*>/i.test(outputHtml)) throw new Error("Charset marker missing before font preloads");
+      outputHtml = outputHtml.replace(/<meta\b[^>]*charset[^>]*>/i, (tag) => tag + preloads);
+    }
     const prerenderedOutput = outputFileFor(route.path);
     await mkdir(path.dirname(prerenderedOutput), { recursive: true });
     await writeFile(prerenderedOutput, outputHtml);

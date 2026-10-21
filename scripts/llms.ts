@@ -41,5 +41,13 @@ export function llmsTxt(): string {
   for (const social of SOCIALS) lines.push(`- ${social.label}: ${social.href.replace(/^mailto:/u, "")}`);
   lines.push("", "## Документы", "");
   for (const route of ["/privacy-policy", "/terms", "/payment-terms", "/cookie-policy"].filter(has)) lines.push(link(route));
+  // Keep the curated overview, then derive its remaining links from the manifest.
+  const linkedPaths = new Set([...lines.join("\n").matchAll(/https:\/\/yelyginn\.ru(\/[^\s)#]*)?/gu)]
+    .map((match) => new URL(match[0]).pathname.replace(/\/$/u, "") || "/"));
+  const remaining = INDEXABLE_ROUTES.filter((route) => !linkedPaths.has(route.path));
+  if (remaining.length) {
+    lines.push("", "## Остальные публичные страницы", "");
+    for (const route of remaining) lines.push(link(route.path));
+  }
   return `${lines.join("\n")}\n`;
 }

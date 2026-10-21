@@ -63,3 +63,64 @@ test("catalogue work links point directly to indexable public pages", async () =
     assert.ok(canonical.has(route), `${item.id}: work link ${item.portfolioHref} must not use a private route or redirect`);
   }
 });
+
+test("marketplace public estimate derives one package from the catalogue without changing existing prices", async () => {
+  const {PUBLIC_CALCULATOR_DATA} = await import("../src/lib/calculatorPublicData");
+  const {ESTIMATE_DATA, PUBLIC_PRICE_BY_ID} = await import("../src/lib/pricing.data");
+  const {computeBreakdown, formatRubRange} = await import("../src/lib/calc");
+  const item = PUBLIC_PRICE_BY_ID.marketplace;
+  const group = PUBLIC_CALCULATOR_DATA[item.title];
+  assert.equal(Object.keys(PUBLIC_CALCULATOR_DATA).length, Object.keys(ESTIMATE_DATA).length + 1);
+  for (const [type, value] of Object.entries(ESTIMATE_DATA)) assert.strictEqual(PUBLIC_CALCULATOR_DATA[type], value, type);
+  assert.equal(group.base.length, 1);
+  assert.equal(group.base[0].name, item.description.replace(/\.$/u, ""));
+  assert.deepEqual(group.options, [], "there are no priced marketplace add-ons in the source");
+  assert.equal(resolveCalculatorType("marketplace", Object.keys(PUBLIC_CALCULATOR_DATA)), item.title);
+  const total = computeBreakdown({shootType:item.title,days:5,hours:8,baseItems:[group.base[0].name],optionItems:[],urgent:true},0,PUBLIC_CALCULATOR_DATA);
+  assert.equal(formatRubRange(total.totalMin,total.totalMax).replace(/\s/gu," "),item.price.replace(/\s/gu," "));
+});
+
+test("marketplace logos load and the page calculator CTA preselects its published package on mobile and desktop", async () => {
+  const {chromium,webkit}=await import("playwright");
+  const {startLocalServer}=await import("../scripts/computed-style-audit.ts");
+  const {PUBLIC_PRICE_BY_ID}=await import("../src/lib/pricing.data");
+  const {readFile}=await import("node:fs/promises");
+  for (const name of ["wildberries","ozon"]) {
+    const svg=await readFile(`public/marketplace-logos/${name}.svg`,"utf8");
+    assert.match(svg,/<svg\b/u);
+    assert.doesNotMatch(svg,/<(?:script|foreignObject|image)\b|\bon\w+=|\b(?:href|xlink:href)=/iu,"logos are self-contained vectors");
+  }
+  const local=await startLocalServer();
+  try {for(const engine of [chromium,webkit]) {
+    const browser=await engine.launch();
+    try {for(const width of [390,1440]) {
+      const page=await browser.newPage({viewport:{width,height:900}});
+      await page.route("**/*",r=>["GET","HEAD","OPTIONS"].includes(r.request().method())?r.continue():r.abort());
+      await page.route("**/api/**",r=>r.fulfill({contentType:"application/json",body:JSON.stringify({available:false,csrfToken:"local-fixture"})}));
+      await page.goto(local.origin+"/video-dlya-marketpleysov");
+      const consent=page.getByRole("button",{name:"Только необходимые",exact:true});if(await consent.isVisible())await consent.click();
+      const row=page.locator(".mk-platforms");
+      assert.match(await row.innerText(),/Видео под требования Wildberries и Ozon/u);
+      assert.doesNotMatch(await row.innerText(),/партнёр|официальный подрядчик/iu);
+      for(const name of ["Wildberries","Ozon"]) {
+        const image=row.getByAltText(name,{exact:true});
+        assert.equal(await image.isVisible(),true);
+        await image.evaluate(e=>(e as HTMLImageElement).decode());
+        assert.equal(await image.evaluate(e=>(e as HTMLImageElement).naturalWidth>0),true);
+      }
+      const cta=page.locator(".bb-hero__ctas").getByRole("link",{name:"Рассчитать стоимость",exact:true});
+      assert.equal(await cta.isVisible(),true);await cta.click();
+      assert.equal(new URL(page.url()).searchParams.get("service"),"marketplace");
+      await page.waitForFunction(()=>document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes("Видео для маркетплейса"));
+      const item=PUBLIC_PRICE_BY_ID.marketplace;
+      assert.equal((await page.locator(".calc-total-val").innerText()).replace(/\s/gu," "),item.price.replace(/\s/gu," "));
+      assert.equal(await page.locator('.calc-row[aria-checked="true"]').count(),1);
+      assert.equal(await page.locator('.calc-type[data-active="true"]').count(),1);
+      assert.equal(await page.getByRole('switch',{name:/Срочный проект/u}).count(),0);
+      assert.equal(await page.getByText(item.limitations,{exact:true}).isVisible(),true);
+      assert.equal(await page.locator(".calc-label").filter({hasText:"Дополнительно"}).count(),0);
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth),false);
+      await page.close();
+    }} finally {await browser.close();}
+  }} finally {local.server.closeAllConnections();local.server.close();}
+});

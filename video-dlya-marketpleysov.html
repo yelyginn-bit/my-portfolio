@@ -141,6 +141,11 @@
       footer .site-static-footer-nav a:hover { color: var(--ds-text); }
       .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
       .mk-foot-copy { font-size: 11px; color: var(--ds-text-secondary); letter-spacing: 0.1em; }
+
+      .mk-platforms { margin: 20px 0; }
+      .mk-platforms p { margin: 0; font: 500 12px/1.5 var(--ds-font-mono, monospace); }
+      .mk-platforms__logos { display: flex; align-items: center; flex-wrap: wrap; gap: 36px; padding: 24px 0; }
+      .mk-platforms__logos img { display: block; height: 24px; width: auto; max-width: 100%; object-fit: contain; }
     </style>
   </head>
   <body id="page-marketplace" class="site-static service-design">
@@ -181,14 +186,14 @@
           <a href="/blog">Блог</a>
           <a href="/about">Обо мне</a>
         </div>
-        <a class="nav-calc-button" href="/calculator?from=%2Fvideo-dlya-marketpleysov">Рассчитать стоимость</a>
+        <a class="nav-calc-button" href="/calculator?service=marketplace&amp;from=%2Fvideo-dlya-marketpleysov">Рассчитать стоимость</a>
         <span class="v3-nav__status">CORE // READY</span>
         <a class="v3-nav__cta" href="/?service=other&amp;from=%2Fvideo-dlya-marketpleysov#contact"><span class="v3-nav__cta-full">ОБСУДИТЬ ПРОЕКТ</span><span class="v3-nav__cta-short">ОБСУДИТЬ</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>
         <button class="v3-nav__menu" type="button" aria-expanded="false" aria-controls="v3-mobile-menu" aria-label="Открыть меню"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button>
       </nav>
     </header>
     <div id="v3-mobile-menu" class="v3-mobile-menu" role="dialog" aria-modal="true" aria-label="Меню сайта" hidden>
-      <a class="v3-mobile-menu__calc" href="/calculator?from=%2Fvideo-dlya-marketpleysov">Рассчитать стоимость</a>
+      <a class="v3-mobile-menu__calc" href="/calculator?service=marketplace&amp;from=%2Fvideo-dlya-marketpleysov">Рассчитать стоимость</a>
       <details class="nav-dropdown-mobile-group">
         <summary aria-current="page">Услуги</summary>
         <a href="/reklamnye-roliki">Рекламные ролики</a>
@@ -232,9 +237,14 @@
           <p class="bb-hero__lead">
             Снимаю видео для карточек товара на Wildberries, Ozon и Яндекс.Маркет в Нижнем Новгороде. Видео помогает наглядно показать товар, его особенности и сценарий использования. Влияние на конверсию зависит от категории, цены, трафика, отзывов и качества карточки.
           </p>
+          <div class="mk-platforms" aria-label="Площадки для видео">
+            <p>Видео под требования Wildberries и Ozon</p>
+            <div class="mk-platforms__logos"><img src="/marketplace-logos/wildberries.svg" width="156" height="24" alt="Wildberries" decoding="async" /><img src="/marketplace-logos/ozon.svg" width="100" height="24" alt="Ozon" decoding="async" /></div>
+          </div>
           <div class="bb-hero__ctas">
             <a href="/?service=other&amp;from=%2Fvideo-dlya-marketpleysov#contact" class="bb-btn">Заказать съёмку</a>
             <a href="/portfolio" class="bb-btn bb-btn--secondary">Смотреть работы</a>
+            <a href="/calculator?service=marketplace&amp;from=%2Fvideo-dlya-marketpleysov" class="bb-btn bb-btn--secondary">Рассчитать стоимость</a>
           </div>
         </div>
         <div class="bb-hero__media service-product-media">
@@ -428,7 +438,7 @@
       <div class="v3-footer__groups">
         <nav aria-label="Услуги"><strong>Услуги</strong><a href="/reklamnye-roliki">Рекламные ролики</a><a href="/event-video">Видеосъёмка мероприятий</a><a href="/reels">Reels для бизнеса</a><a href="/video-dlya-marketpleysov" aria-current="page">Видео для маркетплейсов</a><a href="/content-day">Контент-день</a><a href="/pryamye-translyacii">Прямые трансляции</a><a href="/cvetokorrekciya">Цветокоррекция</a></nav>
         <nav aria-label="Работы"><strong>Работы</strong><a href="/portfolio">Портфолио</a><a href="/portfolio/camera">Операторская работа</a><a href="/portfolio/commercial">Коммерческие проекты</a><a href="/portfolio/events">События и SDE</a><a href="/portfolio/reels">Вертикальные работы</a><a href="/portfolio/concerts">Концерты</a><a href="/portfolio/interviews">Интервью и спецпроекты</a><a href="/portfolio/post">Монтаж и постпродакшн</a><a href="/portfolio/color">Цвет</a><a href="/portfolio/broadcast">Прямая трансляция</a><a href="/portfolio/product">Продуктовое видео</a><a href="/photo">Фото</a></nav>
-        <nav aria-label="Цены и расчёт"><strong>Цены и расчёт</strong><a href="/ceny">Цены</a><a href="/calculator">Рассчитать стоимость</a></nav>
+        <nav aria-label="Цены и расчёт"><strong>Цены и расчёт</strong><a href="/ceny">Цены</a><a href="/calculator?service=marketplace&amp;from=%2Fvideo-dlya-marketpleysov">Рассчитать стоимость</a></nav>
         <nav aria-label="Блог"><strong>Блог</strong><a href="/blog">Блог</a><a href="/blog/skolko-stoit-snyat-reklamnyy-rolik">Сколько стоит рекламный ролик</a><a href="/blog/kak-snimat-reels-dlya-biznesa">Как подготовить Reels для бизнеса</a><a href="/blog/video-dlya-kartochek-wildberries">Видео для карточек товара</a><a href="/blog/videosemka-meropriyatiy-nn">Видеосъёмка мероприятий в НН</a></nav>
         <nav aria-label="О себе и контакты"><strong>О себе и контакты</strong><a href="/about">Обо мне</a><a href="/contact">Контакты</a></nav>
         <nav aria-label="Документы"><strong>Документы</strong><a href="/privacy-policy">Политика обработки данных</a><a href="/personal-data-consent">Согласие на обработку данных</a><a href="/cookie-policy">Cookies</a><a href="/terms">Условия использования</a><a href="/payment-terms">Условия оплаты</a><a href="/cancellation-refund">Отмена и возврат</a><a href="/gallery-terms">Условия доступа к галереям</a><a href="/data-request">Запрос данных</a></nav>

@@ -51,6 +51,7 @@ export function serviceContactHref(service: keyof typeof serviceLabels, from: st
 }
 
 const calculatorTypes: Record<string, string> = {
+  marketplace: "Видео для маркетплейса",
   "photo-reportage": "Репортажная фотосъёмка",
   "photo-studio": "Студийная фотосъёмка",
   "content-day": "Контент для бизнеса",

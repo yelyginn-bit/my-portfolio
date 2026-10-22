@@ -1,5 +1,5 @@
 import {responsiveSrcSet} from "../src/lib/responsiveImages";
-import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
+import { ALL_SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { AiAskBlock } from "../src/components/site/AiAskBlock";
@@ -62,7 +62,7 @@ export function discoveryGraph(route: string) {
     graph.push({ "@type": "CreativeWork", "@id": workId, name: project.title, description: project.description, url, contributor: ref(personId), creditText: `${SITE.owner}: ${project.responsibilities.join(", ")}` });
     graph.find((n) => n["@type"] === "WebPage")!.mainEntity = ref(workId);
   }
-  const landing = SERVICE_LANDINGS.find((page) => page.path === route);
+  const landing = ALL_SERVICE_LANDINGS.find((page) => page.path === route);
   if (landing) {
     graph.push({"@type": "Service", "@id": `${url}#service`, name: landing.h1, description: landing.intro, provider: ref(personId), areaServed: city, url});
     graph.push({"@type": "BreadcrumbList", name: `Навигация: ${landing.h1}`, itemListElement: [{"@type":"ListItem", position:1, name:"Главная", item:siteOrigin+"/"}, {"@type":"ListItem", position:2, name:landing.h1, item:url}]});

@@ -1,4 +1,4 @@
-import { SERVICE_LANDINGS } from "../public/serviceLandings.data";
+import { ALL_SERVICE_LANDINGS } from "../public/serviceLandings.data";
 import { useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { PageContainer } from "../components/site/Layout";
@@ -24,7 +24,7 @@ export default function Prices() {
       {question: "Сколько стоит съёмка мероприятия", id: "event", href: "/event-video", text: "Монтаж итогового ролика рассчитывается отдельно от съёмки."},
       {question: "Сколько стоят Reels", id: "reels-block", href: "/reels", text: "Съёмочный блок и монтаж — отдельные этапы."},
     ].map(({question,id,href,text}) => {const item=PUBLIC_PRICE_BY_ID[id]; if(!item) throw new Error(`Unknown FAQ price: ${id}`); return <article key={id}><h3>{question}</h3><p>{item.price}. {text} {item.limitations}</p><a href={href}>Состав услуги</a></article>;})}</div><p><a href="/payment-terms">Как согласуем смету и оплату</a></p></PageContainer>
-    <PageContainer as="section" className="price-page-catalog"><header><h2>Другие форматы съёмки</h2></header><nav className="v32-home-service-shortcuts" aria-label="Форматы съёмки">{SERVICE_LANDINGS.map((page)=><a key={page.path} href={page.path}>{page.label}</a>)}</nav></PageContainer>
+    <PageContainer as="section" className="price-page-catalog"><header><h2>Другие форматы съёмки</h2></header><nav className="v32-home-service-shortcuts" aria-label="Форматы съёмки">{ALL_SERVICE_LANDINGS.map((page)=><a key={page.path} href={page.path}>{page.label}</a>)}</nav></PageContainer>
     <section className="price-page-cta"><PageContainer><p>Калькулятор даст предварительный ориентир. Финальный состав и стоимость фиксируются после короткого брифа.</p><h2>Есть задача?<br />Соберём точную смету.</h2><div><a className="price-page-cta__primary" href="/calculator">Рассчитать стоимость</a><a href={SITE.telegramUrl}>Написать в Telegram</a></div></PageContainer></section>
   </main><SiteFooter /></div></RoutePathContext.Provider>;
 }

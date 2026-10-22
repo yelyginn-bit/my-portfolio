@@ -1,3 +1,5 @@
+import {SHOOTS} from "./shoots.data";
+import {shootPath,shootSeo} from "../shoots/model";
 import { SERVICE_LANDINGS } from "./serviceLandings.data";
 /**
  * Единственный источник SEO-текстов (title / description) всех индексируемых
@@ -335,6 +337,8 @@ export const PROJECT_SEO: Record<string, SeoCopy> = {
 
 /** Тексты по пути: страницы, категории, проекты. undefined — маршрута нет в копирайте. */
 export function seoCopyFor(routePath: string): SeoCopy | undefined {
+  const shoot=SHOOTS.find(s=>shootPath(s)===routePath);
+  if (shoot) return shootSeo(shoot);
   if (PAGE_SEO[routePath]) return PAGE_SEO[routePath];
   const slug = routePath.match(/^\/portfolio\/([^/]+)$/u)?.[1];
   if (!slug) return undefined;

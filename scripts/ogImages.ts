@@ -9,7 +9,7 @@ export async function generateOgImages(root: string, dist: string) {
   await mkdir(path.join(dist, "og"), { recursive: true });
   let bytes = 0;
   for (const image of unique.values()) {
-    const source = path.join(root, "public", image.source.slice(1));
+    const source = path.join(image.fromDist ? dist : path.join(root, "public"), image.source.slice(1));
     const output = path.join(dist, image.path.slice(1));
     await sharp(source).rotate().resize(1200, 630, { fit: "cover", position: "centre" }).jpeg({ quality: 82 }).toFile(output);
     bytes += (await stat(output)).size;
@@ -25,7 +25,7 @@ export function applyOgImage(html: string, route: string) {
     `<meta property="og:image" content="${url}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
-    '<meta property="og:image:alt" content="Кадр из опубликованной работы Юрия Елыгина" />',
+    `<meta property="og:image:alt" content="${(image.alt || 'Кадр из опубликованной работы Юрия Елыгина').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;')}" />`,
     `<meta name="twitter:image" content="${url}" />`,
   ].join("\n");
   return html.replace(/<meta\b[^>]*(?:property|name)="(?:og:image(?::(?:width|height|alt))?|twitter:image)"[^>]*>/giu, "").replace("</head>", `${meta}\n</head>`);

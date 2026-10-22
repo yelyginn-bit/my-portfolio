@@ -1,3 +1,5 @@
+import {SHOOTS} from "./shoots.data";
+import {shootPath,photoPath} from "../shoots/model";
 import { SERVICE_LANDINGS } from "./serviceLandings.data";
 import { assetsForProject, posterUrl, projects, projectsForCategory, workAssets, PORTFOLIO_CATEGORY_ORDER, type PortfolioCategory, type Project } from "../portfolio/v3PortfolioData";
 import { INDEXABLE_ROUTES } from "./routeManifest";
@@ -41,11 +43,13 @@ const sourceByRoute: Readonly<Record<string, string>> = {
   "/blog/podgotovka-intervyu": categoryFrame("interviews"),
 };
 
-export interface OgImage { source: string; path: string }
+export interface OgImage { source: string; path: string; fromDist?: boolean; alt?: string }
 /** The only route → OG image mapping; project/category routes follow their registry. */
 export const OG_IMAGES: Readonly<Record<string, OgImage>> = Object.fromEntries(INDEXABLE_ROUTES.map((route) => {
   const project = projects.find((p) => route.path === `/portfolio/${p.slug}`);
   const category = PORTFOLIO_CATEGORY_ORDER.find((c) => route.path === `/portfolio/${c}`);
+  const shoot=SHOOTS.find(s=>shootPath(s)===route.path);
+  if (shoot) {const cover=shoot.photos.find(p=>p.id===shoot.cover)!;return [route.path,{source:photoPath(shoot,cover,cover.widths.at(-1)!),path:`/og/shoot-${shoot.slug}.jpg`,fromDist:true,alt:cover.alt}];}
   const source = project ? projectFrame(project) : category ? categoryFrame(category) : sourceByRoute[route.path] || defaultSource;
   if (forbidden.test(source)) throw new Error("Excluded OG source");
   return [route.path, { source, path: `/og/${source.slice(1).replaceAll("/", "-").replace(/\.[^.]+$/u, ".jpg")}` }];

@@ -24,6 +24,7 @@ test('shoot page escapes owner text, has one H1 and uncropped responsive formats
  assert.ok(shootSeo(sample).description.length>=110&&shootSeo(sample).description.length<=165);
 });
 test('shoot importer refuses missing consent before writing, prevents traversal/symlinks/overwrite, strips EXIF and exports real widths',async()=>{
+ await mkdir(path.join(process.cwd(),'_agent-reports'),{recursive:true});
  const temp=await mkdtemp(path.join(process.cwd(),'_agent-reports/test-shoot-'));const root=path.join(temp,'project'),input=path.join(temp,'input');
  await mkdir(path.join(root,'content/shoots'),{recursive:true});await mkdir(path.join(root,'src/public'),{recursive:true});await mkdir(input);await writeFile(path.join(root,'content/shoots/catalog.json'),'[]\n');
  const meta={slug:sample.slug,title:sample.title,date:sample.date,genre:sample.genre,consent:'нет',cover:'fixture.png',photos:[{file:'fixture.png',alt:'Нейтральная тестовая фигура'}]};

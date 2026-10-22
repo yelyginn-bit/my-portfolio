@@ -862,6 +862,7 @@ html[data-motion-preference="reduce"] .v3-marquee__track { animation: none !impo
   .v32-resolve-chapter__scrubber input,
   .v3-form input:not([type="checkbox"]),
   .v3-form select { min-height: 44px; }
+  .v3-form select { height: 44px; }
   .v3-filters a,
   .v3-footer__groups a,
   .v3-footer__meta a,

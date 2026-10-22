@@ -124,3 +124,34 @@ test("keyboard focus is painted on form controls, checkbox and workflow buttons"
     await new Promise<void>((resolve) => local.server.close(() => resolve()));
   }
 });
+
+test("mobile native service select has a 44px target on all contact forms in both engines", async () => {
+  const { chromium, webkit, devices } = await import("playwright");
+  const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
+  const local = await startLocalServer();
+  try {
+    for (const [engine, profile] of [[chromium, devices["Pixel 7"]], [webkit, devices["iPhone 13"]]] as const) {
+      const browser = await engine.launch();
+      try {
+        const page = await browser.newPage({ ...profile, viewport: { width: 390, height: 844 } });
+        await page.route("**/*", (route) => ["GET", "HEAD", "OPTIONS"].includes(route.request().method()) ? route.continue() : route.abort());
+        for (const route of ["/", "/about", "/contact"]) {
+          await page.goto(local.origin + route, { waitUntil: "load" });
+          const select = page.locator(".v3-form select");
+          const box = await select.boundingBox();
+          assert.ok(box && box.height >= 44 && box.width >= 44, engine.name() + route + ": complete 44px native target");
+          assert.notEqual(await select.evaluate((node) => getComputedStyle(node).appearance), "none", "native picker is preserved");
+          const values = await select.locator("option").evaluateAll((nodes) => nodes.map((node) => (node as HTMLOptionElement).value).filter(Boolean));
+          assert.ok(values.length > 1, "service choices remain available");
+          await select.selectOption(values[1]!);
+          assert.equal(await select.inputValue(), values[1], "service selection works");
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, "no horizontal overflow");
+        }
+        await page.close();
+      } finally { await browser.close(); }
+    }
+  } finally {
+    local.server.closeAllConnections();
+    await new Promise<void>((resolve) => local.server.close(() => resolve()));
+  }
+});

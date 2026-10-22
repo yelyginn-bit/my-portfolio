@@ -299,8 +299,9 @@ test("every prerendered public image has intrinsic dimensions and an alt attribu
 
 test("priced service landings keep the exact catalog scope, visible price, discovery and honest examples", () => {
   assert.ok(PRICED_SERVICE_LANDINGS.length > 0);
-  assert.deepEqual(Object.fromEntries(PRICED_SERVICE_LANDINGS.map((page) => [page.path, page.priceIds])), {"/studiynaya-fotosemka": ["photo-studio"]});
+  assert.deepEqual(Object.fromEntries(PRICED_SERVICE_LANDINGS.map((page) => [page.path, page.priceIds])), {"/studiynaya-fotosemka": ["photo-studio"], "/predmetnaya-fotosemka": ["photo-product"]});
   assert.ok(read("dist/prerender/portretnaya-fotosessiya/index.html").includes('href="/studiynaya-fotosemka"'));
+  assert.ok(read("dist/prerender/studiynaya-fotosemka/index.html").includes('href="/predmetnaya-fotosemka"'));
   for (const page of PRICED_SERVICE_LANDINGS) {
     const html = read("dist/prerender" + page.path + "/index.html");
     assert.equal((html.match(/<h1\b/gu)||[]).length, 1, page.path);

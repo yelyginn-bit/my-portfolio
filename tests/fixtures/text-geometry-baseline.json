@@ -1294,5 +1294,21 @@
     "clipY": 0,
     "offscreen": 0,
     "checked": 115
+  },
+  "/predmetnaya-fotosemka@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 121
+  },
+  "/predmetnaya-fotosemka@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 113
   }
 }

@@ -65,6 +65,21 @@ export default function Calculator() {
   );
   const [optSel, setOptSel] = useState<Set<string>>(new Set());
   const [urgent, setUrgent] = useState(false);
+
+  const resetSelection = (type: string) => {
+    setBaseSel(new Set((DATA[type]?.base ?? []).map((item) => item.name)));
+    setOptSel(new Set());
+    setDays(1);
+    setHours(type === "Репортажная фотосъёмка" ? 2 : 1);
+  };
+  const selectType = (type: string) => {
+    if (type === shootType) return;
+    // Commit the type and its defaults in the same React batch: an active
+    // package must never render with the previous type's empty selection.
+    setShootType(type);
+    resetSelection(type);
+    setUrgent(false);
+  };
   const hasSelectedHourItems = typeData.base.some((item) => item.unit === "hour" && baseSel.has(item.name))
     || typeData.options.some((item) => item.unit === "hour" && optSel.has(item.name));
   const usageTracked = useRef(false);
@@ -104,7 +119,7 @@ export default function Calculator() {
   // static HTML and first hydration render.
   useEffect(() => {
     const target = resolveCalculatorType(new URLSearchParams(window.location.search).get("service"), TYPES);
-    if (target) setShootType(target);
+    if (target) selectType(target);
   }, []);
 
   // Скидки и прайс могут быть отредактированы в админке/БД — подтягиваем их.
@@ -113,13 +128,11 @@ export default function Calculator() {
     hydrateTiers().then(() => setTiersReady((v) => v + 1));
   }, []);
 
-  // При смене типа (или загрузке прайса) — выбрать все базовые позиции, сбросить опции.
+  // Preserve the existing reset after settings load. Type changes reset
+  // synchronously in selectType; a later effect must not overwrite a click.
   useEffect(() => {
-    setBaseSel(new Set((typeData?.base ?? []).map((i) => i.name)));
-    setOptSel(new Set());
-    setDays(1);
-    setHours(shootType === "Репортажная фотосъёмка" ? 2 : 1);
-  }, [shootType, tiersReady]);
+    if (tiersReady > 0) resetSelection(shootType);
+  }, [tiersReady]);
 
   // Подтянуть скидку по телефону (из прошлых заказов в хранилище).
   useEffect(() => {
@@ -163,8 +176,6 @@ export default function Calculator() {
   );
   const rushAvailable = [...(DATA[shootType]?.base ?? []), ...(DATA[shootType]?.options ?? [])]
     .some((item) => item.rushEligible && (baseSel.has(item.name) || optSel.has(item.name)));
-
-  useEffect(() => setUrgent(false), [shootType]);
 
   const toggle = (set: Set<string>, name: string, setter: (s: Set<string>) => void) => {
     const next = new Set(set);
@@ -300,7 +311,7 @@ export default function Calculator() {
                   type="button"
                   className="calc-type"
                   data-active={t === shootType}
-                  onClick={() => setShootType(t)}
+                  onClick={() => selectType(t)}
                 >
                   {t}
                 </button>

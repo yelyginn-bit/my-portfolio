@@ -23,6 +23,7 @@ const sourceByRoute: Readonly<Record<string, string>> = {
   ...Object.fromEntries(SERVICE_LANDINGS.map((page) => [page.path, projectFrame(projects.find((project) => project.id === page.projectIds[0])!)])),
   "/blog/skolko-stoit-fotograf-na-meropriyatie": "/portfolio-photos/kvn-05-960w.webp",
   "/photo": "/portfolio-photos/portraits-05-960w.webp",
+  "/studiynaya-fotosemka": "/portfolio-photos/portraits-05-960w.webp",
   "/portretnaya-fotosessiya": "/portfolio-photos/portraits-05-960w.webp",
   "/reportazhnaya-fotosemka": "/portfolio-photos/kvn-05-960w.webp",
   "/reklamnye-roliki": categoryFrame("commercial"),

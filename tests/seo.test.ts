@@ -1,4 +1,4 @@
-import { SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
+import { SERVICE_LANDINGS, PRICED_SERVICE_LANDINGS } from "../src/public/serviceLandings.data";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -294,5 +294,30 @@ test("every prerendered public image has intrinsic dimensions and an alt attribu
       assert.match(match[0], /\sheight=["'][1-9]\d*["']/iu, `${route.path}: image height`);
       assert.match(match[0], /\salt=(?:"[^"]*"|'[^']*')/iu, `${route.path}: image alt`);
     }
+  }
+});
+
+test("priced service landings keep the exact catalog scope, visible price, discovery and honest examples", () => {
+  assert.ok(PRICED_SERVICE_LANDINGS.length > 0);
+  assert.deepEqual(Object.fromEntries(PRICED_SERVICE_LANDINGS.map((page) => [page.path, page.priceIds])), {"/studiynaya-fotosemka": ["photo-studio"]});
+  assert.ok(read("dist/prerender/portretnaya-fotosessiya/index.html").includes('href="/studiynaya-fotosemka"'));
+  for (const page of PRICED_SERVICE_LANDINGS) {
+    const html = read("dist/prerender" + page.path + "/index.html");
+    assert.equal((html.match(/<h1\b/gu)||[]).length, 1, page.path);
+    assert.ok(html.includes(page.h1));
+    assert.ok(html.includes('aria-label="Хлебные крошки"'));
+    assert.ok(read("dist/prerender/ceny/index.html").includes('href="' + page.path + '"'));
+    assert.ok(read("dist/sitemap.xml").includes(siteOrigin + page.path + "</loc>"));
+    assert.ok(read("dist/llms.txt").includes(siteOrigin + page.path));
+    const graph = JSON.parse(html.match(/<script type="application\/ld\+json" data-ai-discovery>([\s\S]*?)<\/script>/u)![1])["@graph"];
+    assert.ok(graph.some((n) => n["@type"] === "Service" && n.provider && n.areaServed));
+    assert.ok(graph.some((n) => n["@type"] === "BreadcrumbList"));
+    for (const id of page.priceIds) {
+      const item = PUBLIC_PRICE_BY_ID[id]; assert.ok(item, id);
+      assert.equal(item.href, page.path);
+      for (const text of [item.price,item.description,item.limitations,item.timeline,...item.includes]) assert.ok(html.includes(text), id + ": " + text);
+      assert.ok(graph.some((n) => n["@type"] === "OfferCatalog" && n.itemListElement.some((offer) => offer["@id"] === siteOrigin + "/#offer-" + id)));
+    }
+    if (page.projectIds.length === 0) assert.ok(!html.includes('class="v3-project__media"'), "do not invent published examples");
   }
 });

@@ -1278,5 +1278,21 @@
     "clipY": 0,
     "offscreen": 0,
     "checked": 105
+  },
+  "/studiynaya-fotosemka@1440": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 123
+  },
+  "/studiynaya-fotosemka@390": {
+    "lines": 0,
+    "overlap": 0,
+    "clipX": 0,
+    "clipY": 0,
+    "offscreen": 0,
+    "checked": 115
   }
 }

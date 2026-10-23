@@ -124,3 +124,51 @@ test("marketplace logos load and the page calculator CTA preselects its publishe
     }} finally {await browser.close();}
   }} finally {local.server.closeAllConnections();local.server.close();}
 });
+
+test("calculator type changes commit their package atomically", async () => {
+  const { chromium, webkit } = await import("playwright");
+  const { startLocalServer } = await import("../scripts/computed-style-audit.ts");
+  const { PUBLIC_PRICE_BY_ID } = await import("../src/lib/pricing.data");
+  const item = PUBLIC_PRICE_BY_ID.marketplace;
+  const expectedPrice = item.price.replace(/\s+/gu, " ").trim();
+  const local = await startLocalServer();
+  try {
+    for (const engine of [chromium, webkit]) {
+      const browser = await engine.launch();
+      try {
+        for (const width of [390, 1440]) {
+          const page = await browser.newPage({ viewport: { width, height: 900 } });
+          await page.route("**/*", (route) => ["GET", "HEAD", "OPTIONS"].includes(route.request().method()) ? route.continue() : route.abort());
+          await page.route("**/api/**", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ available: false, csrfToken: "local-fixture" }) }));
+          await page.addInitScript((title) => {
+            const states: { price: string; checked: number }[] = [];
+            (window as any).__packageStates = states;
+            new MutationObserver(() => {
+              if (document.querySelector('.calc-type[data-active="true"]')?.textContent !== title) return;
+              const price = document.querySelector(".calc-total-val")?.textContent?.replace(/\s+/gu, " ").trim() ?? "";
+              const checked = document.querySelectorAll('.calc-row[aria-checked="true"]').length;
+              const previous = states[states.length - 1];
+              if (!previous || previous.price !== price || previous.checked !== checked) states.push({ price, checked });
+            }).observe(document, { subtree: true, childList: true, characterData: true, attributes: true });
+          }, item.title);
+          await page.goto(local.origin + "/calculator?service=marketplace", { waitUntil: "load" });
+          await page.waitForFunction((expected) => document.querySelector(".calc-total-val")?.textContent?.replace(/\s+/gu, " ").trim() === expected, expectedPrice);
+          await page.getByRole("button", { name: "Reels / Shorts", exact: true }).click();
+          await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent === "Reels / Shorts");
+          await page.getByRole("button", { name: item.title, exact: true }).click();
+          await page.waitForFunction((expected) => document.querySelector('.calc-type[data-active="true"]')?.textContent === expected.title && document.querySelector(".calc-total-val")?.textContent?.replace(/\s+/gu, " ").trim() === expected.price, { title: item.title, price: expectedPrice });
+          const states = await page.evaluate(() => (window as any).__packageStates as { price: string; checked: number }[]);
+          assert.ok(states.length > 0, `${engine.name()} ${width}: observed active package`);
+          assert.deepEqual(states.filter((state) => state.price !== expectedPrice || state.checked !== 1), [], `${engine.name()} ${width}: every active package commit has its own price and selection; ${JSON.stringify(states)}`);
+          // Reselecting an already active type must keep the user's choices.
+          await page.locator('.calc-row[aria-checked="true"]').click();
+          await page.waitForFunction(() => document.querySelectorAll('.calc-row[aria-checked="true"]').length === 0);
+          await page.getByRole("button", { name: item.title, exact: true }).click();
+          await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+          assert.equal(await page.locator('.calc-row[aria-checked="true"]').count(), 0, `${engine.name()} ${width}: active type preserves a manual deselection`);
+          await page.close();
+        }
+      } finally { await browser.close(); }
+    }
+  } finally { local.server.closeAllConnections(); local.server.close(); }
+});

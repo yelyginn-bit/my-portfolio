@@ -86,17 +86,49 @@ test("negative control detects the old immediate-close menu defect", async () =>
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({viewport: {width:1440,height:900}});
+    // Record evidence only: no extra waits, retries, assertions or event changes.
+    await page.addInitScript(() => {
+      const trace: Record<string, unknown>[] = [];
+      Object.assign(window, { __menuNegativeTrace: trace });
+      const record = (kind: string, detail: Record<string, unknown> = {}) => {
+        if (trace.length < 100) trace.push({ at: performance.now(), kind, ...detail });
+      };
+      for (const kind of ['mouseover', 'mouseout', 'pointerover', 'pointerout']) {
+        document.addEventListener(kind, (event) => {
+          const target = event.target as Element | null;
+          record(kind, { tag: target?.tagName, trigger: !!target?.closest?.('.nav-dropdown > button'),
+            related: ((event as MouseEvent).relatedTarget as Element | null)?.tagName });
+        }, true);
+      }
+      new MutationObserver(() => record('mutation', {
+        expanded: document.querySelector('.nav-dropdown > button')?.getAttribute('aria-expanded'),
+        open: !!document.querySelector('.nav-dropdown-menu.is-open'), fonts: document.fonts.status,
+      })).observe(document, { attributes: true, attributeFilter: ['aria-expanded', 'class'], subtree: true });
+    });
+    try {
     // Arm the old defect only after the menu has opened: the negative
     // control must fail on crossing the bridge, not on startup rendering.
     await assert.rejects(() => testMenu(page, origin, '/', () => page.evaluate(() => {
+      const trace = (window as Window & { __menuNegativeTrace?: Record<string, unknown>[] }).__menuNegativeTrace;
+      const trigger = document.querySelector('.nav-dropdown > button');
+      const rect = trigger?.getBoundingClientRect();
+      trace?.push({ at: performance.now(), kind: 'armed', fonts: document.fonts.status,
+        hovered: !!trigger?.matches(':hover'), rect: rect?.toJSON(), viewport: [innerWidth, innerHeight] });
       document.addEventListener('mouseout', (event) => {
         const button = (event.target as Element)?.closest('.nav-dropdown > button');
         if (button) {
+          trace?.push({ at: performance.now(), kind: 'injected-close' });
           button.setAttribute('aria-expanded', 'false');
           document.querySelector('.nav-dropdown-menu.is-open')?.classList.remove('is-open');
         }
       }, true);
     })), /hover bridge/u);
+    } catch (error) {
+      const trace = await page.evaluate(() => (window as Window & { __menuNegativeTrace?: unknown }).__menuNegativeTrace)
+        .catch((diagnosticError) => ({ unavailable: String(diagnosticError) }));
+      console.error('MENU_NEGATIVE_CONTROL_DIAGNOSTIC', JSON.stringify(trace));
+      throw error;
+    }
   } finally { await browser.close(); server.close(); }
 });
 

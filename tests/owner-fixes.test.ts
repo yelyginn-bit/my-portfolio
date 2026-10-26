@@ -63,8 +63,11 @@ async function testMenu(page: Page, origin: string, route: string, beforeLeave?:
       && Math.abs(popup.getBoundingClientRect().top - trigger.getBoundingClientRect().bottom) < 1;
   });
   assert.equal(await menu.count(), 1);
-  const rect = await button.boundingBox();
   await beforeLeave?.();
+  // Fault injection may be armed after a previous pointer exit. Re-establish
+  // the bridge's start point after arming, then measure its current geometry.
+  if (beforeLeave) await button.hover();
+  const rect = await button.boundingBox();
   await page.mouse.move(rect!.x + 20, rect!.y + rect!.height + 3);
   await page.waitForTimeout(450);
   assert.equal(await button.getAttribute("aria-expanded"), "true", `${route}: hover bridge`);
@@ -97,6 +100,29 @@ test("negative control detects the old immediate-close menu defect", async () =>
         }
       }, true);
     })), /hover bridge/u);
+  } finally { await browser.close(); server.close(); }
+});
+
+
+test("negative control detects the close defect after a pre-arm pointer exit", async () => {
+  const { server, origin } = await startLocalServer();
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await assert.rejects(() => testMenu(page, origin, '/', async () => {
+      // Reproduce the event gap: the first mouseout precedes fault injection.
+      const rect = await page.locator('.nav-dropdown > button').first().boundingBox();
+      await page.mouse.move(rect!.x + 20, rect!.y + rect!.height + 3);
+      await page.evaluate(() => {
+        document.addEventListener('mouseout', (event) => {
+          const button = (event.target as Element)?.closest('.nav-dropdown > button');
+          if (button) {
+            button.setAttribute('aria-expanded', 'false');
+            document.querySelector('.nav-dropdown-menu.is-open')?.classList.remove('is-open');
+          }
+        }, true);
+      });
+    }), /hover bridge/u);
   } finally { await browser.close(); server.close(); }
 });
 

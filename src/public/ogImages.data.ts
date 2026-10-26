@@ -25,6 +25,7 @@ const sourceByRoute: Readonly<Record<string, string>> = {
   "/photo": "/portfolio-photos/portraits-05-960w.webp",
   "/predmetnaya-fotosemka": categoryFrame("product"),
   "/videomontazh": categoryFrame("post"),
+  "/operator-s-tehnikoy": categoryFrame("camera"),
   "/studiynaya-fotosemka": "/portfolio-photos/portraits-05-960w.webp",
   "/portretnaya-fotosessiya": "/portfolio-photos/portraits-05-960w.webp",
   "/reportazhnaya-fotosemka": "/portfolio-photos/kvn-05-960w.webp",

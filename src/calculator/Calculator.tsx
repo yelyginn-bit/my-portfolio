@@ -70,7 +70,7 @@ export default function Calculator() {
     setBaseSel(new Set((DATA[type]?.base ?? []).map((item) => item.name)));
     setOptSel(new Set());
     setDays(1);
-    setHours(type === "Репортажная фотосъёмка" ? 2 : 1);
+    setHours(["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(type) ? 2 : 1);
   };
   const selectType = (type: string) => {
     if (type === shootType) return;
@@ -162,7 +162,7 @@ export default function Calculator() {
     () => ({
       shootType,
       days,
-      hours: shootType === "Репортажная фотосъёмка" ? Math.max(2, hours) : hours,
+      hours: ["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? Math.max(2, hours) : hours,
       baseItems: [...baseSel],
       optionItems: [...optSel],
       urgent,
@@ -346,10 +346,10 @@ export default function Calculator() {
 
           {hasHourItems && (
             <div className="calc-section">
-              <label className="calc-label" htmlFor="estimate-hours">Количество часов (минимум {shootType === "Репортажная фотосъёмка" ? 2 : 1})</label>
+              <label className="calc-label" htmlFor="estimate-hours">Количество часов (минимум {["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? 2 : 1})</label>
               <div className="calc-slider-row">
-                <input id="estimate-hours" className="calc-range" type="range" min={shootType === "Репортажная фотосъёмка" ? 2 : 1} max={10} step={1} disabled={!hasSelectedHourItems} value={Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)} onChange={(e) => setHours(Number(e.target.value))} />
-                <div className="calc-days-val"><b>{Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)}</b> <span>часов</span></div>
+                <input id="estimate-hours" className="calc-range" type="range" min={["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? 2 : 1} max={10} step={1} disabled={!hasSelectedHourItems} value={Math.max(hours, ["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? 2 : 1)} onChange={(e) => setHours(Number(e.target.value))} />
+                <div className="calc-days-val"><b>{Math.max(hours, ["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? 2 : 1)}</b> <span>часов</span></div>
               </div>
               <p className="calc-days-hint">Ставка за час умножается на выбранную длительность.</p>
             </div>
@@ -455,7 +455,7 @@ export default function Calculator() {
           ) : (
             <>
               <div className="calc-sum-type">
-                {shootType}{hasDayItems ? ` · ${days} ${daysWord(days)}` : ""}{hasHourItems ? ` · ${Math.max(hours, shootType === "Репортажная фотосъёмка" ? 2 : 1)} ч` : ""}
+                {shootType}{hasDayItems ? ` · ${days} ${daysWord(days)}` : ""}{hasHourItems ? ` · ${Math.max(hours, ["Репортажная фотосъёмка", "Видеосъёмка мероприятия"].includes(shootType) ? 2 : 1)} ч` : ""}
               </div>
 
               <div style={{ marginTop: 14 }}>

@@ -1,3 +1,4 @@
+import { PUBLIC_PRICE_BY_ID, PUBLIC_PRICE_TEXTS } from "../lib/pricing.data";
 /**
  * Страница /cvetokorrekciya — цветокоррекция как отдельная удалённая услуга.
  *
@@ -28,21 +29,21 @@ const TIERS = [
   {
     id: "base",
     title: "Базовая цветокоррекция",
-    price: "от 5 000 ₽",
+    price: PUBLIC_PRICE_BY_ID["color-grading"].price,
     unit: "за проект",
     body: "Базовый баланс и единый тон для согласованного объёма материала.",
   },
   {
     id: "extended",
     title: "Расширенная цветокоррекция",
-    price: "от 9 000 ₽",
+    price: PUBLIC_PRICE_TEXTS["color-extended"],
     unit: "за проект",
     body: "Сведение сцен и камер, вторичная коррекция и более детальная работа по кадрам.",
   },
   {
     id: "complex",
     title: "Сложная цветокоррекция",
-    price: "от 15 000 ₽",
+    price: PUBLIC_PRICE_TEXTS["color-complex"],
     unit: "за проект",
     body: "Для сложных сцен, нескольких условий освещения или выразительного look. Объём уточняется после просмотра исходников.",
   },

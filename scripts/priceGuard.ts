@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { PUBLIC_PRICE_BY_ID } from "../src/lib/pricing.data.ts";
+import { PUBLIC_PRICE_BY_ID, PUBLIC_PRICE_TEXTS } from "../src/lib/pricing.data.ts";
 
 /**
  * Достаёт числа похожие на цену (₽): группы цифр (пробел/nbsp — разделитель
@@ -65,6 +65,7 @@ export function renderSajtyPriceReferences(html: string): string {
  */
 export function renderPriceReferences(html: string): string {
   return html.replace(/<span data-price-reference="([^"]+)"><\/span>/gu, (_marker, id: string) => {
+    if (id in PUBLIC_PRICE_TEXTS) return PUBLIC_PRICE_TEXTS[id];
     const item = PUBLIC_PRICE_BY_ID[id];
     if (!item) throw new Error(`unknown price reference "${id}" (not in src/lib/pricing.data.ts)`);
     return item.price;

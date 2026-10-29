@@ -36,11 +36,11 @@ test("approved color tiers replace the base price and photo retouch is priced pe
     baseItems, optionItems,
   }, 0, ESTIMATE_DATA).subtotalMin;
 
-  assert.equal(total([]), 5000);
-  assert.equal(total([extended.name]), 9000, "a tier remains full price even when stale UI state still includes the base");
-  assert.equal(total([extended.name], []), 9000, "the extended tier stands alone");
-  assert.equal(total([complex.name]), 15000);
-  assert.equal(total([complex.name], []), 15000);
+  assert.equal(total([]), 2000);
+  assert.equal(total([extended.name]), 4000, "a tier remains full price even when stale UI state still includes the base");
+  assert.equal(total([extended.name], []), 4000, "the extended tier stands alone");
+  assert.equal(total([complex.name]), 7000);
+  assert.equal(total([complex.name], []), 7000);
   assert.equal(ESTIMATE_DATA["Студийная фотосъёмка"].options[0]?.unit, "frame");
   assert.equal(ESTIMATE_DATA["Репортажная фотосъёмка"].options[0]?.unit, "frame");
 
@@ -239,57 +239,66 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         assert.equal(await page.getByRole('link', { name: 'Рассчитать стоимость фотосъёмки' }).first().getAttribute('href'), '/calculator?service=photo-studio&from=%2Fphoto');
         await page.goto(origin + "/calculator?service=photo-reportage");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Репортажная фотосъёмка'));
-        await waitForEstimateTotal(page, 'от 12 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 12 000 ₽');
+        await waitForEstimateTotal(page, 'от 5 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
         await page.locator('#estimate-hours').focus();
         await page.keyboard.press('ArrowRight');
-        await waitForEstimateTotal(page, 'от 18 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 18 000 ₽');
+        await waitForEstimateTotal(page, 'от 7 500 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 7 500 ₽');
         await page.goto(origin + "/calculator?service=photo-studio");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Студийная фотосъёмка'));
-        await waitForEstimateTotal(page, 'от 8 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 000 ₽');
+        await waitForEstimateTotal(page, 'от 5 500 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 500 ₽');
         await page.locator('#estimate-hours').focus();
         await page.keyboard.press('ArrowRight');
-        await waitForEstimateTotal(page, 'от 16 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 16 000 ₽');
+        await waitForEstimateTotal(page, 'от 11 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 11 000 ₽');
+        await page.goto(origin + "/calculator?service=event");
+        await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Видеосъёмка мероприятия'));
+        assert.equal(await page.locator('#estimate-hours').getAttribute('min'), '2');
+        await waitForEstimateTotal(page, 'от 6 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 6 000 ₽');
+        await page.locator('#estimate-hours').focus();
+        await page.keyboard.press('ArrowRight');
+        await waitForEstimateTotal(page, 'от 9 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 9 000 ₽');
         await page.goto(origin + "/calculator?service=content-day&from=%2Fcontent-day");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Контент для бизнеса'));
         const contentDayTotal = normalized(await page.locator('.calc-total-val').innerText());
-        assert.equal(contentDayTotal, 'от 45 000 ₽');
+        assert.equal(contentDayTotal, 'от 20 000 ₽');
         await page.goto(origin + "/calculator?service=color");
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Цветокоррекция'));
         const color = ESTIMATE_DATA["Цветокоррекция"];
         const colorBase = checkboxFor(page, color.base[0]!);
         const colorExtended = checkboxFor(page, color.options[0]!);
         const colorComplex = checkboxFor(page, color.options[1]!);
-        await waitForEstimateTotal(page, 'от 5 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await waitForEstimateTotal(page, 'от 2 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 2 000 ₽');
         await colorExtended.click();
         assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
-        await waitForEstimateTotal(page, 'от 9 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 9 000 ₽');
+        await waitForEstimateTotal(page, 'от 4 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 4 000 ₽');
         await colorBase.click();
         assert.equal(await colorExtended.getAttribute('aria-checked'), 'false');
-        await waitForEstimateTotal(page, 'от 5 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 000 ₽');
+        await waitForEstimateTotal(page, 'от 2 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 2 000 ₽');
         await colorComplex.click();
         assert.equal(await colorBase.getAttribute('aria-checked'), 'false');
-        await waitForEstimateTotal(page, 'от 15 000 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 15 000 ₽');
+        await waitForEstimateTotal(page, 'от 7 000 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 7 000 ₽');
         await selectEstimateType(page, 'Студийная фотосъёмка');
         const retouch = checkboxFor(page, ESTIMATE_DATA["Студийная фотосъёмка"].options[0]!);
         assert.match(await retouch.getAttribute('aria-label') ?? await retouch.innerText(), /за кадр/u);
         await retouch.click();
-        await waitForEstimateTotal(page, 'от 8 300 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 8 300 ₽');
+        await waitForEstimateTotal(page, 'от 5 800 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), 'от 5 800 ₽');
         await page.goto(origin + "/calculator");
-        const range = page.locator('.calc-range'); assert.equal(await range.isDisabled(), true);
+        const range = page.locator('#estimate-days'); assert.equal(await range.isDisabled(), true);
         for (const [shootType, data] of Object.entries(ESTIMATE_DATA)) {
           await selectEstimateType(page, shootType);
           const base = data.base.map((i) => i.name); const options: string[] = [];
           const checkTotal = async (days = 1, urgent = false) => {
-            const hours = shootType === 'Репортажная фотосъёмка' ? 2 : 1;
+            const hours = ['Репортажная фотосъёмка', 'Видеосъёмка мероприятия'].includes(shootType) ? 2 : 1;
             const b = computeBreakdown({shootType, days, hours, urgent, baseItems: base, optionItems: options}, 0, ESTIMATE_DATA);
             const expected = normalized(formatRubRange(b.totalMin, b.totalMax));
             await page.waitForFunction((value) => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === value, expected, { timeout: 1500 });
@@ -327,8 +336,8 @@ test("owner fixes: menu, media, marquee and every estimate control in Chromium/W
         await page.waitForFunction(() => document.querySelector('.calc-type[data-active="true"]')?.textContent?.includes('Монтаж Reels') && !document.querySelector('[role="switch"]')?.hasAttribute('disabled'));
         assert.equal(await rushSwitch.isEnabled(), true);
         await rushSwitch.click();
-        await waitForEstimateTotal(page, '3 000 ₽ – 13 500 ₽');
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), '3 000 ₽ – 13 500 ₽');
+        await waitForEstimateTotal(page, '1 500 ₽ – 5 250 ₽');
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), '1 500 ₽ – 5 250 ₽');
         // A real failed media request must offer the embedded fallback player.
         await page.route('**/hero-showreel-48.mp4', (route) => route.fulfill({ status: 404, body: 'not found' }));
         await page.goto(origin + '/');
@@ -521,8 +530,8 @@ test("calculator pointer clicks stay on the intended type during programmatic sc
         assert.equal(await page.locator('.calc-type[data-active="true"]').textContent(), "Студийная фотосъёмка", engine.name());
         // Selection commits before its base-price reset effect. As in
         // checkTotal above, await the actual total without relaxing the value.
-        await page.waitForFunction(() => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === "от 8 000 ₽", null, { timeout: 1500 });
-        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), "от 8 000 ₽", engine.name());
+        await page.waitForFunction(() => document.querySelector('.calc-total-val')?.textContent?.replace(/\s+/gu, " ").trim() === "от 5 500 ₽", null, { timeout: 1500 });
+        assert.equal(normalized(await page.locator('.calc-total-val').innerText()), "от 5 500 ₽", engine.name());
       } finally { await browser.close(); }
     }
   } finally { server.close(); }
